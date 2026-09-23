@@ -4,5 +4,5 @@
 // NUNCA pegues aquí la service_role key.
 window.DESVIADOR_CONFIG = {
   SUPABASE_URL: 'https://ynlrlqtxhueznrrrnlda.supabase.co',
-  SUPABASE_ANON_KEY: 'TU_SUPABASE_ANON_KEY_AQUI',
+  SUPABASE_ANON_KEY: 'sb_publishable_5ytCZP2agnKihBXxK8Ipuw_4JWHajPd',
 };
