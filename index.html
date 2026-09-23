@@ -5,14 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>DESVIADOR — La plataforma técnica e interactiva del ciclismo en Chile</title>
   <meta name="description" content="Mapa nacional de talleres, tiendas, escuelas, bikeparks y tours. Análisis técnico, bolsa de trabajo y comunidad ciclista en Chile." />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#15120e" />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    // Paleta tierra: suelo (soil), arena (sand), musgo (moss), ocre (ochre) y tinta (ink)
     if (window.tailwind) tailwind.config = {
       theme: {
         extend: {
+          colors: {
+            soil:  { 950: '#15120e', 900: '#1f1a14', 800: '#2b241c', 700: '#3d3328', 600: '#54473a' },
+            sand:  { 50: '#f6f1e7', 100: '#ede5d6', 200: '#ddd2bf', 300: '#c9bba3' },
+            moss:  { 300: '#b5c99a', 400: '#8fae6a', 500: '#6e8f4c', 600: '#56743a', 700: '#435c2d' },
+            ochre: { 300: '#e8c27a', 400: '#d9a441', 500: '#c08a2c', 600: '#9c6f22' },
+            ink:   '#241f19',
+          },
           fontFamily: {
             sans: ['Barlow', 'system-ui', 'sans-serif'],
             display: ['"Barlow Condensed"', 'Barlow', 'system-ui', 'sans-serif'],
@@ -39,266 +47,270 @@
   </script>
 
   <style>
-    html, body { background: #0a0a0a; color: #e5e5e5; }
+    html, body { background: #f6f1e7; color: #241f19; }
     /* Altura del mapa en CSS propio: no depende de que Tailwind cargue */
     #map { height: 62vh; min-height: 420px; width: 100%; }
     @media (min-width: 1024px) { #map { height: 100%; min-height: 0; } }
 
-    /* Leaflet en modo oscuro */
-    .leaflet-container { background: #111; font-family: Barlow, system-ui, sans-serif; }
-    .leaflet-control-zoom { border: 0 !important; box-shadow: 0 8px 24px rgba(0,0,0,.5) !important; }
-    .leaflet-control-zoom a { width: 40px !important; height: 40px !important; line-height: 38px !important; font-size: 20px !important; background: #171717 !important; color: #e5e5e5 !important; border-color: #262626 !important; }
-    .leaflet-control-zoom a:hover { background: #262626 !important; }
-    .leaflet-control-attribution { background: rgba(10,10,10,.75) !important; color: #737373 !important; font-size: 10px !important; }
-    .leaflet-control-attribution a { color: #a3a3a3 !important; }
-    .leaflet-control-scale-line { background: rgba(10,10,10,.6); color: #a3a3a3; border-color: #525252; }
+    /* Curvas de nivel de fondo en el panel del hero */
+    .topo-bg {
+      background-color: #ede5d6;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='none' stroke='%2354473a' stroke-opacity='.13' stroke-width='1.2'%3E%3Cpath d='M-20 60c60-30 110 20 170 0s90-50 150-30 70 40 90 30'/%3E%3Cpath d='M-20 95c55-25 105 25 170 5s95-45 150-25 70 35 90 25'/%3E%3Cpath d='M-20 130c50-20 100 30 170 10s100-40 150-20 70 30 90 20'/%3E%3Cpath d='M-20 200c70 30 120-20 180 5s80 45 140 25 50-30 80-20'/%3E%3Cpath d='M-20 235c65 25 115-15 180 10s85 40 140 20 50-25 80-15'/%3E%3Cpath d='M-20 270c60 20 110-10 180 15s90 35 140 15 50-20 80-10'/%3E%3Cellipse cx='250' cy='330' rx='60' ry='22'/%3E%3Cellipse cx='250' cy='330' rx='34' ry='11'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Leaflet en tonos tierra */
+    .leaflet-container { background: #ddd2bf; font-family: Barlow, system-ui, sans-serif; }
+    .leaflet-control-zoom { border: 0 !important; box-shadow: 0 6px 18px rgba(36,31,25,.25) !important; }
+    .leaflet-control-zoom a { width: 40px !important; height: 40px !important; line-height: 38px !important; font-size: 20px !important; background: #f6f1e7 !important; color: #241f19 !important; border-color: #ddd2bf !important; }
+    .leaflet-control-zoom a:hover { background: #ede5d6 !important; }
+    .leaflet-control-attribution { background: rgba(246,241,231,.85) !important; color: #54473a !important; font-size: 10px !important; }
+    .leaflet-control-attribution a { color: #435c2d !important; }
+    .leaflet-control-scale-line { background: rgba(246,241,231,.8); color: #3d3328; border-color: #54473a; }
 
     /* Pines */
-    .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #0a0a0a; box-shadow: 0 6px 16px rgba(0,0,0,.55); display: grid; place-items: center; transition: transform .15s ease, box-shadow .15s ease; }
+    .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #f6f1e7; box-shadow: 0 5px 14px rgba(21,18,14,.45); display: grid; place-items: center; transition: transform .15s ease, box-shadow .15s ease; }
     .pin svg { transform: rotate(45deg); }
-    .pin.is-featured { box-shadow: 0 0 0 3px #a3e635, 0 6px 16px rgba(0,0,0,.55); }
-    .leaflet-marker-icon:hover .pin, .pin.is-selected { transform: rotate(-45deg) scale(1.2); box-shadow: 0 0 0 3px #fff, 0 8px 20px rgba(0,0,0,.6); }
+    .pin.is-featured { box-shadow: 0 0 0 3px #d9a441, 0 5px 14px rgba(21,18,14,.45); }
+    .leaflet-marker-icon:hover .pin, .pin.is-selected { transform: rotate(-45deg) scale(1.2); box-shadow: 0 0 0 3px #15120e, 0 8px 20px rgba(21,18,14,.5); }
 
     /* Drawer: hoja inferior en móvil, panel lateral en escritorio */
     .drawer { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
     .drawer.is-open { transform: none !important; }
-    /* En móvil la ficha tapa la parte baja; en escritorio los botones flotantes se corren a la izquierda de la ficha */
     @media (min-width: 1024px) { .drawer.is-open ~ #mapFabs { right: 404px; } }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
     }
-    input, select, textarea { color-scheme: dark; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { scrollbar-width: none; }
   </style>
 </head>
 
-<body class="bg-neutral-950 font-sans text-neutral-200 antialiased selection:bg-lime-400 selection:text-neutral-950">
+<body class="bg-sand-50 font-sans text-ink antialiased selection:bg-ochre-300 selection:text-soil-950">
 
   <!-- ============ ENCABEZADO ============ -->
-  <header class="sticky top-0 z-[1100] border-b border-white/5 bg-neutral-950/85 backdrop-blur-lg">
+  <header class="sticky top-0 z-[1100] border-b border-soil-700 bg-soil-950/95 backdrop-blur-lg">
     <div class="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-4 sm:px-6">
       <a href="#inicio" class="flex items-center gap-2" aria-label="DESVIADOR, inicio">
-        <span class="grid h-8 w-8 place-items-center rounded-md bg-lime-400 text-neutral-950">
+        <span class="grid h-8 w-8 place-items-center rounded-md bg-ochre-400 text-soil-950">
           <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
         </span>
-        <span class="font-display text-xl font-extrabold uppercase tracking-wide text-white">Desviador<span class="text-lime-400">.</span></span>
+        <span class="font-display text-xl font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span>
       </a>
 
-      <nav class="hidden items-center gap-6 text-sm font-medium text-neutral-400 md:flex" aria-label="Principal">
-        <a href="#inicio" class="transition hover:text-white">Mapa</a>
-        <a href="#noticias" class="transition hover:text-white">Tech</a>
-        <a href="#comunidad" class="transition hover:text-white">Comunidad</a>
-        <a href="#anunciate" class="rounded-full bg-lime-400 px-4 py-1.5 font-semibold text-neutral-950 transition hover:bg-lime-300">Anúnciate / Destaca tu empresa</a>
+      <nav class="hidden items-center gap-6 text-sm font-medium text-sand-300 md:flex" aria-label="Principal">
+        <a href="#inicio" class="transition hover:text-sand-50">Mapa</a>
+        <a href="#noticias" class="transition hover:text-sand-50">Tech</a>
+        <a href="#comunidad" class="transition hover:text-sand-50">Comunidad</a>
+        <a href="#anunciate" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 transition hover:bg-ochre-300">Anúnciate / Destaca tu empresa</a>
       </nav>
 
-      <button id="menuBtn" class="rounded-md p-2 text-neutral-300 ring-1 ring-white/10 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+      <button id="menuBtn" class="rounded-md p-2 text-sand-100 ring-1 ring-soil-600 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       </button>
     </div>
-    <nav id="mobileMenu" class="hidden border-t border-white/5 px-4 pb-4 md:hidden" aria-label="Móvil">
-      <a href="#inicio" class="block border-b border-white/5 py-3 text-neutral-300">Mapa</a>
-      <a href="#noticias" class="block border-b border-white/5 py-3 text-neutral-300">Tech</a>
-      <a href="#comunidad" class="block border-b border-white/5 py-3 text-neutral-300">Comunidad</a>
-      <a href="#anunciate" class="mt-3 block rounded-lg bg-lime-400 py-3 text-center font-semibold text-neutral-950">Anúnciate / Destaca tu empresa</a>
+    <nav id="mobileMenu" class="hidden border-t border-soil-700 px-4 pb-4 md:hidden" aria-label="Móvil">
+      <a href="#inicio" class="block border-b border-soil-800 py-3 text-sand-100">Mapa</a>
+      <a href="#noticias" class="block border-b border-soil-800 py-3 text-sand-100">Tech</a>
+      <a href="#comunidad" class="block border-b border-soil-800 py-3 text-sand-100">Comunidad</a>
+      <a href="#anunciate" class="mt-3 block rounded-lg bg-ochre-400 py-3 text-center font-semibold text-soil-950">Anúnciate / Destaca tu empresa</a>
     </nav>
   </header>
 
   <main>
     <!-- ============ HERO: MAPA PROTAGONISTA ============ -->
-    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-white/5 lg:grid lg:h-[calc(100vh-3.5rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
+    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-sand-300 lg:grid lg:h-[calc(100vh-3.5rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
 
-      <!-- Panel izquierdo -->
-      <div class="contents lg:flex lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-white/5 lg:px-6 lg:py-8">
-       <div class="order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:p-0">
-        <div>
-          <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Mapa nacional · Chile</p>
-          <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-white [text-wrap:balance] sm:text-5xl lg:text-[2.75rem]">
-            La plataforma técnica e interactiva del ciclismo en Chile
-          </h1>
-          <p class="mt-3 hidden max-w-md text-[15px] leading-relaxed text-neutral-400 sm:block">
-            Encuentra talleres, tiendas, escuelas, bikeparks y tours en el mapa. Lee análisis técnicos y conecta con la comunidad.
-          </p>
+      <!-- Panel izquierdo (en móvil se parte: arriba y abajo del mapa) -->
+      <div class="topo-bg contents lg:flex lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:py-8">
+        <div class="topo-bg order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:bg-none lg:p-0">
+          <div>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Mapa nacional · Chile</p>
+            <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.75rem]">
+              La plataforma técnica e interactiva del ciclismo en Chile
+            </h1>
+            <p class="mt-3 hidden max-w-md text-[15px] leading-relaxed text-soil-600 sm:block">
+              Encuentra talleres, tiendas, escuelas, bikeparks y tours en el mapa. Lee análisis técnicos y conecta con la comunidad.
+            </p>
+          </div>
+
+          <!-- Búsqueda -->
+          <div class="relative" id="searchWrap">
+            <label for="search" class="sr-only">Buscar en el mapa</label>
+            <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-soil-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="search" type="search" autocomplete="off" placeholder="Busca un lugar, comuna o región…"
+              class="w-full rounded-xl border-0 bg-sand-50 py-3.5 pl-11 pr-4 text-[15px] text-ink placeholder-soil-600/70 shadow-sm ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600"
+              role="combobox" aria-expanded="false" aria-controls="searchResults" />
+            <ul id="searchResults" role="listbox" class="absolute inset-x-0 top-full z-20 mt-2 hidden max-h-72 overflow-y-auto rounded-xl bg-sand-50 py-1 shadow-2xl ring-1 ring-sand-300"></ul>
+          </div>
+
+          <!-- Accesos directos -->
+          <div>
+            <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">¿Qué buscas hoy?</p>
+            <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
+          </div>
         </div>
 
-        <!-- Búsqueda -->
-        <div class="relative" id="searchWrap">
-          <label for="search" class="sr-only">Buscar en el mapa</label>
-          <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="search" type="search" autocomplete="off" placeholder="Busca un lugar, comuna o región…"
-            class="w-full rounded-xl border-0 bg-neutral-900 py-3.5 pl-11 pr-4 text-[15px] text-white placeholder-neutral-500 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-lime-400"
-            role="combobox" aria-expanded="false" aria-controls="searchResults" />
-          <ul id="searchResults" role="listbox" class="absolute inset-x-0 top-full z-20 mt-2 hidden max-h-72 overflow-y-auto rounded-xl bg-neutral-900 py-1 shadow-2xl ring-1 ring-white/10"></ul>
+        <div class="order-3 flex flex-col gap-5 bg-sand-100 px-4 py-5 sm:px-6 lg:bg-transparent lg:p-0">
+          <!-- Zona -->
+          <div class="flex items-center gap-3">
+            <label for="regionSelect" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">Zona</label>
+            <select id="regionSelect" class="flex-1 rounded-lg border-0 bg-sand-50 px-3 py-2 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600"></select>
+          </div>
+
+          <!-- Resultados (solo escritorio) -->
+          <div class="hidden lg:block">
+            <p class="mb-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"><span id="resultsCount">0</span> lugares en el mapa</p>
+            <ul id="placeList" class="divide-y divide-sand-200 overflow-hidden rounded-xl bg-sand-50 ring-1 ring-sand-300"></ul>
+          </div>
+
+          <!-- CTA comercial -->
+          <a href="#registrar" data-register="negocio" class="group flex items-center gap-3 rounded-xl border border-dashed border-moss-600/50 bg-sand-50/70 p-4 transition hover:border-moss-600 hover:bg-sand-50">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-moss-600 text-sand-50">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><path d="M12 7v5M9.5 9.5h5"/></svg>
+            </span>
+            <span class="text-sm leading-snug text-soil-700">
+              <strong class="block font-semibold text-soil-950">¿Tienes un taller, tienda o escuela?</strong>
+              Aparece en el mapa nacional de DESVIADOR <span class="text-moss-600">→</span>
+            </span>
+          </a>
         </div>
-
-        <!-- Accesos directos -->
-        <div>
-          <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-neutral-300">¿Qué buscas hoy?</p>
-          <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
-        </div>
-
-       </div>
-
-       <div class="order-3 flex flex-col gap-5 px-4 py-5 sm:px-6 lg:p-0">
-        <!-- Zona -->
-        <div class="flex items-center gap-3">
-          <label for="regionSelect" class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">Zona</label>
-          <select id="regionSelect" class="flex-1 rounded-lg border-0 bg-neutral-900 px-3 py-2 text-sm text-white ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-lime-400"></select>
-        </div>
-
-        <!-- Resultados (solo escritorio) -->
-        <div class="hidden lg:block">
-          <p class="mb-2 font-mono text-[11px] uppercase tracking-wider text-neutral-500"><span id="resultsCount">0</span> lugares en el mapa</p>
-          <ul id="placeList" class="divide-y divide-white/5 overflow-hidden rounded-xl ring-1 ring-white/5"></ul>
-        </div>
-
-        <!-- CTA comercial -->
-        <a href="#registrar" data-register="negocio" class="group flex items-center gap-3 rounded-xl border border-dashed border-lime-400/30 bg-lime-400/[.04] p-4 transition hover:border-lime-400/60 hover:bg-lime-400/[.08]">
-          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-lime-400/15 text-lime-400">
-            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><path d="M12 7v5M9.5 9.5h5"/></svg>
-          </span>
-          <span class="text-sm leading-snug text-neutral-300">
-            <strong class="block font-semibold text-white">¿Tienes un taller, tienda o escuela?</strong>
-            Aparece en el mapa nacional de DESVIADOR <span class="text-lime-400">→</span>
-          </span>
-        </a>
-       </div>
       </div>
 
       <!-- Mapa -->
       <div class="relative isolate z-0 order-2 lg:h-full">
         <div id="map" role="region" aria-label="Mapa interactivo de lugares ciclistas en Chile"></div>
 
-        <p class="pointer-events-none absolute bottom-3 left-3 z-[900] rounded-lg bg-neutral-950/85 px-3 py-1.5 font-mono text-[11px] text-neutral-400 ring-1 ring-white/10">
+        <p class="pointer-events-none absolute bottom-3 left-3 z-[900] rounded-lg bg-soil-950/85 px-3 py-1.5 font-mono text-[11px] text-sand-100">
           <span id="visibleCount">0</span> visibles
         </p>
 
         <!-- Estado vacío -->
-        <div id="emptyState" class="absolute inset-x-4 top-1/2 z-[900] mx-auto hidden max-w-sm -translate-y-1/2 rounded-2xl bg-neutral-900/95 p-5 text-center shadow-2xl ring-1 ring-white/10 backdrop-blur">
-          <p id="emptyText" class="text-sm text-neutral-300"></p>
-          <a href="#registrar" data-register="negocio" class="mt-3 inline-block rounded-lg bg-lime-400 px-4 py-2 text-sm font-semibold text-neutral-950 hover:bg-lime-300">Registrar mi negocio</a>
+        <div id="emptyState" class="absolute inset-x-4 top-1/2 z-[900] mx-auto hidden max-w-sm -translate-y-1/2 rounded-2xl bg-sand-50 p-5 text-center shadow-2xl ring-1 ring-sand-300">
+          <p id="emptyText" class="text-sm text-soil-700"></p>
+          <a href="#registrar" data-register="negocio" class="mt-3 inline-block rounded-lg bg-moss-600 px-4 py-2 text-sm font-semibold text-sand-50 hover:bg-moss-700">Registrar mi negocio</a>
         </div>
 
         <!-- Drawer / ficha del lugar -->
-        <aside id="drawer" class="drawer absolute inset-x-0 bottom-0 z-[1000] flex max-h-[78%] translate-y-[105%] flex-col rounded-t-2xl bg-neutral-900 shadow-[0_-12px_40px_rgba(0,0,0,.6)] ring-1 ring-white/10 lg:inset-y-3 lg:bottom-3 lg:left-auto lg:right-3 lg:max-h-none lg:w-[380px] lg:translate-x-[110%] lg:translate-y-0 lg:rounded-2xl"
+        <aside id="drawer" class="drawer absolute inset-x-0 bottom-0 z-[1000] flex max-h-[78%] translate-y-[105%] flex-col rounded-t-2xl bg-sand-50 shadow-[0_-12px_40px_rgba(21,18,14,.35)] ring-1 ring-sand-300 lg:inset-y-3 lg:bottom-3 lg:left-auto lg:right-3 lg:max-h-none lg:w-[380px] lg:translate-x-[110%] lg:translate-y-0 lg:rounded-2xl"
                role="dialog" aria-modal="false" aria-labelledby="drawerTitle" aria-hidden="true">
-          <div class="mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full bg-white/15 lg:hidden"></div>
-          <button id="drawerClose" type="button" class="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/5 text-neutral-300 hover:bg-white/10 hover:text-white" aria-label="Cerrar ficha">
+          <div class="mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full bg-sand-300 lg:hidden"></div>
+          <button id="drawerClose" type="button" class="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200 hover:text-soil-950" aria-label="Cerrar ficha">
             <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
           </button>
           <div id="drawerBody" class="overflow-y-auto px-5 pb-6 pt-3 lg:pt-5"></div>
         </aside>
 
-        <!-- Botones flotantes -->
+        <!-- Botones flotantes (después del drawer para poder desplazarse cuando está abierto) -->
         <div id="mapFabs" class="absolute right-3 top-3 z-[1001] flex flex-col items-end gap-2 transition-[right] duration-300">
-          <button id="layerToggle" type="button" class="flex items-center gap-2 rounded-xl bg-neutral-900/95 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 backdrop-blur transition hover:bg-neutral-800" aria-label="Cambiar a vista satelital">
-            <svg viewBox="0 0 24 24" class="h-4 w-4 text-lime-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
+          <button id="layerToggle" type="button" class="flex items-center gap-2 rounded-xl bg-soil-950/95 px-3.5 py-2.5 text-sm font-semibold text-sand-50 shadow-xl backdrop-blur transition hover:bg-soil-800" aria-label="Cambiar a vista satelital">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 text-ochre-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
             <span id="layerToggleLabel">Satélite</span>
           </button>
-          <button id="locateBtn" type="button" class="grid h-10 w-10 place-items-center rounded-xl bg-neutral-900/95 text-white shadow-xl ring-1 ring-white/10 transition hover:bg-neutral-800" aria-label="Centrar en mi ubicación" title="Mi ubicación">
+          <button id="locateBtn" type="button" class="grid h-10 w-10 place-items-center rounded-xl bg-sand-50 text-soil-950 shadow-xl ring-1 ring-sand-300 transition hover:bg-sand-100" aria-label="Centrar en mi ubicación" title="Mi ubicación">
             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
           </button>
         </div>
-
       </div>
     </section>
 
     <!-- ============ ÚLTIMAS NOTICIAS / TECH ============ -->
     <section id="noticias" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
-      <div class="mb-8 flex items-end justify-between gap-4">
+      <div class="mb-8 flex items-end justify-between gap-4 border-b-2 border-soil-950 pb-3">
         <div>
-          <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Tech</p>
-          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Últimas noticias</h2>
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Tech</p>
+          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Últimas noticias</h2>
         </div>
-        <a href="#" class="shrink-0 text-sm text-neutral-400 hover:text-white">Ver archivo →</a>
+        <a href="#" class="shrink-0 text-sm font-semibold text-moss-700 hover:text-moss-600">Ver archivo →</a>
       </div>
 
       <div id="newsGrid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
     </section>
 
     <!-- ============ BOLSA DE EMPLEO & COMUNIDAD ============ -->
-    <section id="comunidad" class="scroll-mt-16 border-y border-white/5 bg-neutral-900/50">
+    <section id="comunidad" class="scroll-mt-16 border-y border-sand-300 bg-sand-100">
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Comunidad</p>
-            <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Bolsa de empleo &amp; paleros</h2>
-            <p class="mt-2 max-w-xl text-sm text-neutral-400">Ofertas para mecánicos, guías y vendedores, y convocatorias para mantener los senderos que usamos todos.</p>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Comunidad</p>
+            <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Bolsa de empleo &amp; paleros</h2>
+            <p class="mt-2 max-w-xl text-sm text-soil-600">Ofertas para mecánicos, guías y vendedores, y convocatorias para mantener los senderos que usamos todos.</p>
           </div>
           <div id="jobTabs" class="no-scrollbar -mx-4 flex shrink-0 gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
         </div>
 
         <ul id="jobList" class="grid gap-3"></ul>
 
-        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-lime-400 hover:text-lime-300">+ Publicar un aviso o convocatoria</a>
+        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar un aviso o convocatoria</a>
       </div>
     </section>
 
-    <!-- ============ ANÚNCIATE ============ -->
-    <section id="anunciate" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
-      <div class="mb-8 max-w-2xl">
-        <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Para negocios</p>
-        <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Anúnciate / Destaca tu empresa</h2>
-        <p class="mt-2 text-neutral-400">Talleres, tiendas, escuelas, bikeparks y operadores de tours: aparece donde los ciclistas buscan dónde reparar, comprar o rodar.</p>
-      </div>
-
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="flex flex-col rounded-2xl border border-white/10 bg-neutral-900 p-6">
-          <p class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">Ficha básica</p>
-          <p class="mt-1 font-display text-3xl font-extrabold uppercase text-white">Gratis</p>
-          <ul class="mt-5 flex-1 space-y-2.5 text-sm text-neutral-300">
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Pin en el mapa nacional con tu categoría</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Ficha con comuna, dirección y botón "Cómo llegar"</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Aparece en la búsqueda y en los filtros por zona</li>
-          </ul>
-          <a href="#registrar" data-register="negocio" class="mt-6 rounded-lg py-3 text-center text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/5">Registrar mi negocio</a>
+    <!-- ============ ANÚNCIATE (franja oscura) ============ -->
+    <section id="anunciate" class="scroll-mt-16 bg-soil-900 text-sand-100">
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div class="mb-8 max-w-2xl">
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para negocios</p>
+          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-4xl">Anúnciate / Destaca tu empresa</h2>
+          <p class="mt-2 text-sand-300">Talleres, tiendas, escuelas, bikeparks y operadores de tours: aparece donde los ciclistas buscan dónde reparar, comprar o rodar.</p>
         </div>
 
-        <div class="relative flex flex-col rounded-2xl border border-lime-400/40 bg-gradient-to-b from-lime-400/[.07] to-neutral-900 p-6">
-          <span class="absolute right-5 top-5 rounded-full bg-lime-400 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-950">Recomendado</span>
-          <p class="font-mono text-[11px] uppercase tracking-wider text-lime-400">Ficha destacada</p>
-          <p class="mt-1 font-display text-3xl font-extrabold uppercase text-white">Plan comercial</p>
-          <ul class="mt-5 flex-1 space-y-2.5 text-sm text-neutral-300">
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Todo lo de la ficha básica</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Botón de WhatsApp directo y horario en tu ficha</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Pin destacado y prioridad en búsquedas de tu zona</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Sello "Verificado" tras revisión de DESVIADOR</li>
-          </ul>
-          <a href="#registrar" data-register="destacada" class="mt-6 rounded-lg bg-lime-400 py-3 text-center text-sm font-semibold text-neutral-950 transition hover:bg-lime-300">Quiero una ficha destacada</a>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="flex flex-col rounded-2xl border border-soil-700 bg-soil-800 p-6">
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-sand-300">Ficha básica</p>
+            <p class="mt-1 font-display text-3xl font-extrabold uppercase text-sand-50">Gratis</p>
+            <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
+              <li class="flex gap-3"><span class="text-moss-400">✓</span> Pin en el mapa nacional con tu categoría</li>
+              <li class="flex gap-3"><span class="text-moss-400">✓</span> Ficha con comuna, dirección y botón "Cómo llegar"</li>
+              <li class="flex gap-3"><span class="text-moss-400">✓</span> Aparece en la búsqueda y en los filtros por zona</li>
+            </ul>
+            <a href="#registrar" data-register="negocio" class="mt-6 rounded-lg py-3 text-center text-sm font-semibold text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-700">Registrar mi negocio</a>
+          </div>
+
+          <div class="relative flex flex-col rounded-2xl border-2 border-ochre-400 bg-soil-800 p-6">
+            <span class="absolute right-5 top-5 rounded-full bg-ochre-400 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-soil-950">Recomendado</span>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-400">Ficha destacada</p>
+            <p class="mt-1 font-display text-3xl font-extrabold uppercase text-sand-50">Plan comercial</p>
+            <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
+              <li class="flex gap-3"><span class="text-ochre-400">✓</span> Todo lo de la ficha básica</li>
+              <li class="flex gap-3"><span class="text-ochre-400">✓</span> Botón de WhatsApp directo y horario en tu ficha</li>
+              <li class="flex gap-3"><span class="text-ochre-400">✓</span> Pin destacado y prioridad en búsquedas de tu zona</li>
+              <li class="flex gap-3"><span class="text-ochre-400">✓</span> Sello "Verificado" tras revisión de DESVIADOR</li>
+            </ul>
+            <a href="#registrar" data-register="destacada" class="mt-6 rounded-lg bg-ochre-400 py-3 text-center text-sm font-semibold text-soil-950 transition hover:bg-ochre-300">Quiero una ficha destacada</a>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ============ FORMULARIO ============ -->
-    <section id="registrar" class="scroll-mt-16 border-t border-white/5 bg-gradient-to-b from-neutral-900/60 to-neutral-950">
+    <section id="registrar" class="scroll-mt-16">
       <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.25fr]">
         <div>
-          <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Participa</p>
-          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Registra tu negocio o envía un dato</h2>
-          <p class="mt-3 text-neutral-400">Suma tu taller, tienda o escuela al mapa, publica un aviso para la comunidad o avísanos de un sendero cerrado o un dato que corregir.</p>
-          <ul class="mt-6 space-y-3 text-sm text-neutral-400">
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Revisamos cada ficha antes de publicarla en el mapa.</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Te contactamos para confirmar ubicación y datos.</li>
-            <li class="flex gap-3"><span class="text-lime-400">✓</span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Participa</p>
+          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Registra tu negocio o envía un dato</h2>
+          <p class="mt-3 text-soil-600">Suma tu taller, tienda o escuela al mapa, publica un aviso para la comunidad o avísanos de un sendero cerrado o un dato que corregir.</p>
+          <ul class="mt-6 space-y-3 text-sm text-soil-600">
+            <li class="flex gap-3"><span class="text-moss-600">✓</span> Revisamos cada ficha antes de publicarla en el mapa.</li>
+            <li class="flex gap-3"><span class="text-moss-600">✓</span> Te contactamos para confirmar ubicación y datos.</li>
+            <li class="flex gap-3"><span class="text-moss-600">✓</span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
           </ul>
         </div>
 
-        <form id="mainForm" class="space-y-4 rounded-2xl border border-white/10 bg-neutral-900 p-5 sm:p-6" novalidate>
+        <form id="mainForm" class="space-y-4 rounded-2xl border border-sand-300 bg-white/60 p-5 shadow-sm sm:p-6" novalidate>
           <fieldset>
-            <legend class="mb-2 text-sm font-medium text-neutral-300">¿Qué quieres hacer?</legend>
+            <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué quieres hacer?</legend>
             <div class="grid gap-2 text-sm sm:grid-cols-3">
               <label class="cursor-pointer">
                 <input type="radio" id="kind-negocio" name="kind" value="negocio" class="peer sr-only" checked />
-                <span class="flex h-full items-center justify-center rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-lime-400 peer-checked:font-semibold peer-checked:text-neutral-950 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-400">Registrar mi negocio / Ficha destacada</span>
+                <span class="flex h-full items-center justify-center rounded-lg bg-sand-50 px-3 py-2.5 text-center text-soil-700 ring-1 ring-sand-300 transition peer-checked:bg-moss-600 peer-checked:font-semibold peer-checked:text-sand-50 peer-checked:ring-moss-600 peer-focus-visible:ring-2 peer-focus-visible:ring-ochre-400">Registrar mi negocio / Ficha destacada</span>
               </label>
               <label class="cursor-pointer">
                 <input type="radio" id="kind-aviso" name="kind" value="aviso" class="peer sr-only" />
-                <span class="flex h-full items-center justify-center rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-lime-400 peer-checked:font-semibold peer-checked:text-neutral-950 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-400">Publicar aviso</span>
+                <span class="flex h-full items-center justify-center rounded-lg bg-sand-50 px-3 py-2.5 text-center text-soil-700 ring-1 ring-sand-300 transition peer-checked:bg-moss-600 peer-checked:font-semibold peer-checked:text-sand-50 peer-checked:ring-moss-600 peer-focus-visible:ring-2 peer-focus-visible:ring-ochre-400">Publicar aviso</span>
               </label>
               <label class="cursor-pointer">
                 <input type="radio" id="kind-dato" name="kind" value="dato" class="peer sr-only" />
-                <span class="flex h-full items-center justify-center rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-lime-400 peer-checked:font-semibold peer-checked:text-neutral-950 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-400">Enviar dato</span>
+                <span class="flex h-full items-center justify-center rounded-lg bg-sand-50 px-3 py-2.5 text-center text-soil-700 ring-1 ring-sand-300 transition peer-checked:bg-moss-600 peer-checked:font-semibold peer-checked:text-sand-50 peer-checked:ring-moss-600 peer-focus-visible:ring-2 peer-focus-visible:ring-ochre-400">Enviar dato</span>
               </label>
             </div>
           </fieldset>
@@ -306,36 +318,36 @@
           <!-- Negocio -->
           <div data-kind="negocio" class="space-y-4">
             <div>
-              <label for="bizName" class="mb-1.5 block text-sm font-medium text-neutral-300">Nombre del negocio</label>
+              <label for="bizName" class="mb-1.5 block text-sm font-semibold text-soil-800">Nombre del negocio</label>
               <input id="bizName" maxlength="80" placeholder="Ej: Taller Rueda Libre" class="field" />
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label for="bizCat" class="mb-1.5 block text-sm font-medium text-neutral-300">Categoría</label>
+                <label for="bizCat" class="mb-1.5 block text-sm font-semibold text-soil-800">Categoría</label>
                 <select id="bizCat" class="field"></select>
               </div>
               <div>
-                <label for="bizComuna" class="mb-1.5 block text-sm font-medium text-neutral-300">Comuna</label>
+                <label for="bizComuna" class="mb-1.5 block text-sm font-semibold text-soil-800">Comuna</label>
                 <input id="bizComuna" maxlength="60" placeholder="Ej: Ñuñoa" class="field" />
               </div>
             </div>
             <div>
-              <label for="bizAddress" class="mb-1.5 block text-sm font-medium text-neutral-300">Dirección</label>
+              <label for="bizAddress" class="mb-1.5 block text-sm font-semibold text-soil-800">Dirección</label>
               <input id="bizAddress" maxlength="120" placeholder="Calle y número" class="field" />
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label for="bizPhone" class="mb-1.5 block text-sm font-medium text-neutral-300">WhatsApp</label>
+                <label for="bizPhone" class="mb-1.5 block text-sm font-semibold text-soil-800">WhatsApp</label>
                 <input id="bizPhone" type="tel" inputmode="tel" maxlength="20" placeholder="+56 9 1234 5678" class="field" />
               </div>
               <div>
-                <label for="bizEmail" class="mb-1.5 block text-sm font-medium text-neutral-300">Correo <span class="font-normal text-neutral-500">(opcional)</span></label>
+                <label for="bizEmail" class="mb-1.5 block text-sm font-semibold text-soil-800">Correo <span class="font-normal text-soil-600">(opcional)</span></label>
                 <input id="bizEmail" type="email" maxlength="80" placeholder="contacto@tunegocio.cl" class="field" />
               </div>
             </div>
-            <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-lime-400/[.06] p-3 ring-1 ring-lime-400/25">
-              <input id="bizFeatured" type="checkbox" class="mt-0.5 h-4 w-4 accent-lime-400" />
-              <span class="text-sm text-neutral-300"><strong class="font-semibold text-white">Quiero una ficha destacada.</strong> Te enviamos la propuesta comercial con WhatsApp directo, pin destacado y prioridad en búsquedas.</span>
+            <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
+              <input id="bizFeatured" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#56743a]" />
+              <span class="text-sm text-soil-700"><strong class="font-semibold text-soil-950">Quiero una ficha destacada.</strong> Te enviamos la propuesta comercial con WhatsApp directo, pin destacado y prioridad en búsquedas.</span>
             </label>
           </div>
 
@@ -343,7 +355,7 @@
           <div data-kind="aviso" class="space-y-4" hidden>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label for="jobType" class="mb-1.5 block text-sm font-medium text-neutral-300">Tipo de aviso</label>
+                <label for="jobType" class="mb-1.5 block text-sm font-semibold text-soil-800">Tipo de aviso</label>
                 <select id="jobType" class="field">
                   <option value="trabajo">Oferta laboral</option>
                   <option value="voluntariado">Voluntariado / paleros</option>
@@ -351,7 +363,7 @@
                 </select>
               </div>
               <div>
-                <label for="jobPlace" class="mb-1.5 block text-sm font-medium text-neutral-300">Lugar</label>
+                <label for="jobPlace" class="mb-1.5 block text-sm font-semibold text-soil-800">Lugar</label>
                 <input id="jobPlace" maxlength="60" placeholder="Ej: San José de Maipo" class="field" />
               </div>
             </div>
@@ -360,62 +372,62 @@
           <!-- Comunes a aviso y dato -->
           <div data-kind="aviso dato" class="space-y-4" hidden>
             <div>
-              <label for="title" class="mb-1.5 block text-sm font-medium text-neutral-300">Título</label>
+              <label for="title" class="mb-1.5 block text-sm font-semibold text-soil-800">Título</label>
               <input id="title" maxlength="90" placeholder="Ej: Se busca mecánico part-time en Ñuñoa" class="field" />
             </div>
             <div>
-              <label for="contact" class="mb-1.5 block text-sm font-medium text-neutral-300">Contacto <span class="font-normal text-neutral-500">(opcional)</span></label>
+              <label for="contact" class="mb-1.5 block text-sm font-semibold text-soil-800">Contacto <span class="font-normal text-soil-600">(opcional)</span></label>
               <input id="contact" maxlength="80" placeholder="Instagram, correo o teléfono" class="field" />
             </div>
           </div>
 
           <div>
-            <label for="message" class="mb-1.5 block text-sm font-medium text-neutral-300"><span id="messageLabel">Cuéntanos sobre tu negocio</span> <span id="messageOptional" class="font-normal text-neutral-500">(opcional)</span></label>
+            <label for="message" class="mb-1.5 block text-sm font-semibold text-soil-800"><span id="messageLabel">Cuéntanos sobre tu negocio</span> <span id="messageOptional" class="font-normal text-soil-600">(opcional)</span></label>
             <textarea id="message" rows="4" maxlength="600" placeholder="Servicios, marcas con las que trabajas, horario…" class="field resize-y"></textarea>
-            <p class="mt-1 text-right font-mono text-[11px] text-neutral-500"><span id="charCount">0</span>/600</p>
+            <p class="mt-1 text-right font-mono text-[11px] text-soil-600"><span id="charCount">0</span>/600</p>
           </div>
 
           <!-- Anti-spam -->
           <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
 
-          <p id="formError" class="hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300 ring-1 ring-red-500/30" role="alert"></p>
+          <p id="formError" class="hidden rounded-lg bg-red-700/10 px-3 py-2 text-sm text-red-800 ring-1 ring-red-700/30" role="alert"></p>
 
-          <button type="submit" id="submitBtn" class="w-full rounded-lg bg-lime-400 py-3 font-semibold text-neutral-950 transition hover:bg-lime-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Enviar solicitud</button>
-          <p class="text-center font-mono text-[11px] text-neutral-500">Versión de prueba: los envíos todavía no se guardan en un servidor.</p>
+          <button type="submit" id="submitBtn" class="w-full rounded-lg bg-moss-600 py-3 font-semibold text-sand-50 transition hover:bg-moss-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">Enviar solicitud</button>
+          <p class="text-center font-mono text-[11px] text-soil-600">Versión de prueba: los envíos todavía no se guardan en un servidor.</p>
         </form>
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-white/5">
-    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-      <p><span class="font-display text-base font-extrabold uppercase tracking-wide text-neutral-200">Desviador.</span> La plataforma técnica e interactiva del ciclismo en Chile.</p>
+  <footer class="bg-soil-950 text-sand-300">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <p><span class="font-display text-base font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span> La plataforma técnica e interactiva del ciclismo en Chile.</p>
       <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Pie de página">
-        <a href="#inicio" class="hover:text-white">Mapa</a>
-        <a href="#noticias" class="hover:text-white">Tech</a>
-        <a href="#comunidad" class="hover:text-white">Comunidad</a>
-        <a href="#anunciate" class="font-semibold text-lime-400 hover:text-lime-300">Anúnciate / Destaca tu empresa</a>
+        <a href="#inicio" class="hover:text-sand-50">Mapa</a>
+        <a href="#noticias" class="hover:text-sand-50">Tech</a>
+        <a href="#comunidad" class="hover:text-sand-50">Comunidad</a>
+        <a href="#anunciate" class="font-semibold text-ochre-400 hover:text-ochre-300">Anúnciate / Destaca tu empresa</a>
       </nav>
     </div>
   </footer>
 
   <!-- Toast -->
-  <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-lime-400 px-4 py-3 text-sm font-semibold text-neutral-950 opacity-0 shadow-2xl transition duration-300" role="status" aria-live="polite"></div>
+  <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-soil-950 px-4 py-3 text-sm font-semibold text-sand-50 opacity-0 shadow-2xl ring-1 ring-ochre-400/50 transition duration-300" role="status" aria-live="polite"></div>
 
   <!-- Clase utilitaria de campos de formulario -->
   <style type="text/tailwindcss">
-    .field { @apply w-full rounded-lg border-0 bg-neutral-950 px-3.5 py-2.5 text-white placeholder-neutral-600 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-lime-400; }
+    .field { @apply w-full rounded-lg border-0 bg-sand-50 px-3.5 py-2.5 text-ink placeholder-soil-600/60 ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600; }
   </style>
 
   <script>
     // ================= DATOS =================
-    // Íconos SVG por categoría (trazos sobre 24x24)
+    // Colores tierra por categoría e íconos SVG (trazos sobre 24x24)
     const CATEGORIES = {
-      talleres: { label: 'Talleres',             short: 'Taller',           color: '#fb923c', icon: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/>' },
-      clases:   { label: 'Clases / Escuelas',    short: 'Escuela',          color: '#a78bfa', icon: '<path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' },
-      senderos: { label: 'Bikeparks & Senderos', short: 'Bikepark/Sendero', color: '#34d399', icon: '<path d="M3 20l6-10 4 6 3-4 5 8H3z"/>' },
-      tours:    { label: 'Shuttles & Tours',     short: 'Shuttle/Tour',     color: '#f472b6', icon: '<path d="M3 7h11l4 4h3v6H3V7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
-      tiendas:  { label: 'Tiendas',              short: 'Tienda',           color: '#38bdf8', icon: '<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>' },
+      talleres: { label: 'Talleres',             short: 'Taller',           color: '#c08a2c', icon: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/>' },
+      clases:   { label: 'Clases / Escuelas',    short: 'Escuela',          color: '#5b7a99', icon: '<path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' },
+      senderos: { label: 'Bikeparks & Senderos', short: 'Bikepark/Sendero', color: '#56743a', icon: '<path d="M3 20l6-10 4 6 3-4 5 8H3z"/>' },
+      tours:    { label: 'Shuttles & Tours',     short: 'Shuttle/Tour',     color: '#a4532f', icon: '<path d="M3 7h11l4 4h3v6H3V7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
+      tiendas:  { label: 'Tiendas',              short: 'Tienda',           color: '#3f7f7a', icon: '<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>' },
     };
     const svgIcon = (cat, cls = 'h-4 w-4', stroke = 'currentColor') =>
       `<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CATEGORIES[cat].icon}</svg>`;
@@ -430,7 +442,7 @@
       losrios:       { label: 'Los Ríos',        bounds: [[-40.70, -73.80], [-39.30, -71.60]] },
     };
 
-    // Puntos del mapa. Opcionales: direccion, whatsapp (con código país, ej: '56912345678'), horario, destacado.
+    // Puntos del mapa. Opcionales: direccion, whatsapp (con código país, ej: '569XXXXXXXX'), horario, destacado.
     // Deja en null lo que no esté confirmado: la ficha lo muestra como "Por confirmar".
     const puntosIniciales = [
       { id: 'multibike-concepcion', nombre: 'Multibike / Specialized Concepción',   categoria: 'tiendas',  comuna: 'Concepción',            region: 'biobio',        coords: [-36.8275, -73.0503], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
@@ -443,9 +455,9 @@
     ];
 
     const NEWS = [
-      { tag: 'Lanzamientos',        lime: true,  min: 4, date: '2026-09-20', title: 'Gravel 2027: qué cambia de verdad y qué es solo pintura nueva', body: 'Revisamos las fichas técnicas de los cinco lanzamientos del año: geometría, paso de neumático y estándares que importan en el ripio chileno.', grad: 'from-lime-400/25' },
-      { tag: 'Test de Durabilidad', lime: false, min: 7, date: '2026-09-16', title: '3.000 km con una transmisión 1x13: desgaste medido', body: 'Calibrador de cadena cada 250 km, polvo del Cajón del Maipo y barro de Valdivia. Costo por kilómetro y cuándo conviene cambiar.', grad: 'from-neutral-400/20' },
-      { tag: 'Guía Taller',         lime: false, min: 5, date: '2026-09-11', title: 'Horquillas de 140 mm: el servicio de 50 horas en casa', body: 'Herramientas mínimas, aceites que se consiguen en Chile y los errores que más vemos en los talleres. Con tabla de torques.', grad: 'from-orange-400/20' },
+      { tag: 'Lanzamientos',        accent: true,  min: 4, date: '2026-09-20', title: 'Gravel 2027: qué cambia de verdad y qué es solo pintura nueva', body: 'Revisamos las fichas técnicas de los cinco lanzamientos del año: geometría, paso de neumático y estándares que importan en el ripio chileno.', bg: '#56743a' },
+      { tag: 'Test de Durabilidad', accent: false, min: 7, date: '2026-09-16', title: '3.000 km con una transmisión 1x13: desgaste medido', body: 'Calibrador de cadena cada 250 km, polvo del Cajón del Maipo y barro de Valdivia. Costo por kilómetro y cuándo conviene cambiar.', bg: '#3d3328' },
+      { tag: 'Guía Taller',         accent: false, min: 5, date: '2026-09-11', title: 'Horquillas de 140 mm: el servicio de 50 horas en casa', body: 'Herramientas mínimas, aceites que se consiguen en Chile y los errores que más vemos en los talleres. Con tabla de torques.', bg: '#9c6f22' },
     ];
 
     const JOBS = [
@@ -457,9 +469,9 @@
       { type: 'voluntariado', title: 'Jornada de drenajes en sendero de enduro',    place: 'Lo Barnechea',            when: 'Hace 4 días', body: 'Antes de las lluvias: cortes de agua y reparación de curvas. Punto de encuentro a las 9:00.', tags: ['Domingo', 'Herramientas incluidas'] },
     ];
     const JOB_TYPES = {
-      trabajo:      { label: 'Oferta laboral', tab: 'Ofertas laborales', cls: 'bg-lime-400/10 text-lime-300 ring-lime-400/30' },
-      voluntariado: { label: 'Voluntariado',   tab: 'Voluntariado',      cls: 'bg-neutral-400/10 text-neutral-300 ring-neutral-400/30' },
-      comunidad:    { label: 'Comunidad',      tab: 'Comunidad',         cls: 'bg-sky-400/10 text-sky-300 ring-sky-400/30' },
+      trabajo:      { label: 'Oferta laboral', tab: 'Ofertas laborales', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
+      voluntariado: { label: 'Voluntariado',   tab: 'Voluntariado',      cls: 'bg-ochre-400/20 text-ochre-600 ring-ochre-500/40' },
+      comunidad:    { label: 'Comunidad',      tab: 'Comunidad',         cls: 'bg-soil-700/10 text-soil-700 ring-soil-700/25' },
     };
 
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -494,7 +506,7 @@
   <script>
     // ================= MAPA =================
     if (!window.L) {
-      document.getElementById('map').innerHTML = '<div style="display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#a3a3a3;font-size:14px">No se pudo cargar el mapa. Revisa tu conexión o si un bloqueador impide cargar scripts externos.</div>';
+      document.getElementById('map').innerHTML = '<div style="display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#54473a;font-size:14px">No se pudo cargar el mapa. Revisa tu conexión o si un bloqueador impide cargar scripts externos.</div>';
       throw new Error('Leaflet no está disponible');
     }
 
@@ -518,11 +530,11 @@
     L.control.zoom({ position: 'topleft', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(map);
     L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
 
-    // --- Capas: oscura (CARTO) e híbrida (Esri imagen + calles + nombres) ---
+    // --- Capas: terreno (Esri World Topo) e híbrida (Esri imagen + calles + nombres) ---
     const esriBase = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
     const LAYERS = {
-      dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 18,
+      topo: L.tileLayer(esriBase + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Mapa &copy; Esri, HERE, Garmin, USGS, NGA', maxZoom: 18,
       }),
       sat: L.layerGroup([
         L.tileLayer(esriBase + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Imágenes &copy; Esri, Maxar, Earthstar Geographics', maxZoom: 18 }),
@@ -530,20 +542,20 @@
         L.tileLayer(esriBase + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }),
       ]),
     };
-    let currentLayer = 'dark';
+    let currentLayer = 'topo';
     try { if (localStorage.getItem('desviador-capa') === 'sat') currentLayer = 'sat'; } catch (e) {}
     LAYERS[currentLayer].addTo(map);
 
     const layerBtn = document.getElementById('layerToggle');
     const layerLabel = document.getElementById('layerToggleLabel');
     function syncLayerBtn() {
-      const next = currentLayer === 'dark' ? 'Satélite' : 'Oscuro';
+      const next = currentLayer === 'topo' ? 'Satélite' : 'Terreno';
       layerLabel.textContent = next;
       layerBtn.setAttribute('aria-label', `Cambiar a vista ${next.toLowerCase()}`);
     }
     layerBtn.addEventListener('click', () => {
       map.removeLayer(LAYERS[currentLayer]);
-      currentLayer = currentLayer === 'dark' ? 'sat' : 'dark';
+      currentLayer = currentLayer === 'topo' ? 'sat' : 'topo';
       LAYERS[currentLayer].addTo(map);
       try { localStorage.setItem('desviador-capa', currentLayer); } catch (e) {}
       syncLayerBtn();
@@ -553,7 +565,7 @@
     // --- Marcadores ---
     const makeIcon = (p) => L.divIcon({
       className: '',
-      html: `<div class="pin${p.destacado ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#0a0a0a')}</div>`,
+      html: `<div class="pin${p.destacado ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#f6f1e7')}</div>`,
       iconSize: [32, 32],
       iconAnchor: [16, 32],
     });
@@ -583,35 +595,35 @@
     function openDrawer(p) {
       const c = CATEGORIES[p.categoria];
       const status = [
-        p.verificado ? '<span class="inline-flex items-center gap-1 rounded-full bg-lime-400/15 px-2.5 py-1 text-xs font-semibold text-lime-300 ring-1 ring-lime-400/30"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Verificado</span>' : '',
-        p.destacado ? '<span class="rounded-full bg-lime-400 px-2.5 py-1 text-xs font-bold text-neutral-950">Destacado</span>' : '',
+        p.verificado ? '<span class="inline-flex items-center gap-1 rounded-full bg-moss-600/10 px-2.5 py-1 text-xs font-semibold text-moss-700 ring-1 ring-moss-600/30"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Verificado</span>' : '',
+        p.destacado ? '<span class="rounded-full bg-ochre-400 px-2.5 py-1 text-xs font-bold text-soil-950">Destacado</span>' : '',
       ].join('');
 
       const row = (label, value, missing) => `
         <div class="flex gap-3 py-2.5">
-          <dt class="w-24 shrink-0 font-mono text-[11px] uppercase tracking-wider text-neutral-500">${label}</dt>
-          <dd class="text-sm ${missing ? 'text-neutral-500' : 'text-neutral-200'}">${value}</dd>
+          <dt class="w-24 shrink-0 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">${label}</dt>
+          <dd class="text-sm ${missing ? 'text-soil-600/80 italic' : 'text-ink'}">${value}</dd>
         </div>`;
 
       const contactBlock = p.whatsapp
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-lime-400 py-3.5 font-semibold text-neutral-950 transition hover:bg-lime-300">
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-moss-600 py-3.5 font-semibold text-sand-50 transition hover:bg-moss-700">
              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
              WhatsApp directo
            </a>`
-        : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-lime-400/40 p-3.5 text-sm text-neutral-300 transition hover:border-lime-400/70">
-             <strong class="block text-white">¿Es tu negocio?</strong>
-             Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-lime-400">→</span>
+        : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
+             <strong class="block text-soil-950">¿Es tu negocio?</strong>
+             Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-ochre-600">→</span>
            </a>`;
 
       drawerBody.innerHTML = `
         <div class="flex flex-wrap items-center gap-2 pr-10">
-          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-neutral-950" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
           ${status}
         </div>
-        <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-white [text-wrap:balance]">${esc(p.nombre)}</h3>
-        <p class="mt-1.5 text-sm text-neutral-400">${esc(p.comuna)} · ${REGIONES[p.region].label}</p>
+        <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
+        <p class="mt-1.5 text-sm text-soil-600">${esc(p.comuna)} · ${REGIONES[p.region].label}</p>
 
-        <dl class="mt-4 divide-y divide-white/5 border-y border-white/5">
+        <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
           ${row('Dirección', p.direccion ? esc(p.direccion) : 'Por confirmar', !p.direccion)}
           ${row('Horario', p.horario ? esc(p.horario) : 'Por confirmar', !p.horario)}
           ${row('Coordenadas', `<span class="font-mono text-xs tabular-nums">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</span>`)}
@@ -620,11 +632,11 @@
         <div class="mt-5 grid gap-2.5">
           ${contactBlock}
           <div class="grid grid-cols-2 gap-2.5">
-            <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-white/5 text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-lime-400 text-neutral-950 hover:bg-lime-300'}">
+            <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'}">
               <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>
               Cómo llegar
             </a>
-            <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-white/5 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-white/10">Ver en Google</a>
+            <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
           </div>
         </div>`;
 
@@ -664,8 +676,8 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.dataset.cat = s.cat;
-      b.className = 'shortcut inline-flex items-center gap-2 rounded-full bg-neutral-900 px-3.5 py-2 text-sm font-medium text-neutral-200 ring-1 ring-white/10 transition hover:ring-white/30 aria-pressed:bg-lime-400 aria-pressed:text-neutral-950 aria-pressed:ring-lime-400';
-      b.innerHTML = `<span class="grid h-5 w-5 place-items-center rounded-full" style="background:${CATEGORIES[s.cat].color}">${svgIcon(s.cat, 'h-3 w-3', '#0a0a0a')}</span>${s.label}`;
+      b.className = 'shortcut inline-flex items-center gap-2 rounded-full bg-sand-50 px-3.5 py-2 text-sm font-semibold text-soil-800 shadow-sm ring-1 ring-sand-300 transition hover:ring-soil-600 aria-pressed:bg-soil-950 aria-pressed:text-sand-50 aria-pressed:ring-soil-950';
+      b.innerHTML = `<span class="grid h-5 w-5 place-items-center rounded-full" style="background:${CATEGORIES[s.cat].color}">${svgIcon(s.cat, 'h-3 w-3', '#f6f1e7')}</span>${s.label}`;
       b.addEventListener('click', () => {
         if (mapState.cat === s.cat && !s.near) { mapState.cat = null; render(true); return; }
         mapState.cat = s.cat;
@@ -677,7 +689,7 @@
     });
     const resetBtn = document.createElement('button');
     resetBtn.type = 'button';
-    resetBtn.className = 'rounded-full px-3 py-2 text-sm text-neutral-400 underline-offset-4 hover:text-white hover:underline';
+    resetBtn.className = 'rounded-full px-3 py-2 text-sm font-semibold text-moss-700 underline-offset-4 hover:underline';
     resetBtn.textContent = 'Ver todo';
     resetBtn.addEventListener('click', () => { mapState.cat = null; mapState.region = 'all'; regionSelect.value = 'all'; render(true); });
     shortcutsEl.appendChild(resetBtn);
@@ -713,18 +725,18 @@
       if (!visible.length) {
         const what = mapState.cat ? CATEGORIES[mapState.cat].label.toLowerCase() : 'lugares';
         const where = mapState.region !== 'all' ? ` en ${REGIONES[mapState.region].label}` : '';
-        document.getElementById('emptyText').innerHTML = `Todavía no hay <strong class="text-white">${what}</strong> verificados${where}.<br>¿Tienes uno? Aparece en el mapa nacional.`;
+        document.getElementById('emptyText').innerHTML = `Todavía no hay <strong class="text-soil-950">${what}</strong> verificados${where}.<br>¿Tienes uno? Aparece en el mapa nacional.`;
       }
 
       // Listado (escritorio)
-      listEl.innerHTML = visible.length ? '' : '<li class="px-4 py-5 text-sm text-neutral-500">Sin resultados con estos filtros.</li>';
+      listEl.innerHTML = visible.length ? '' : '<li class="px-4 py-5 text-sm text-soil-600">Sin resultados con estos filtros.</li>';
       visible.forEach(({ place }) => {
         const c = CATEGORIES[place.categoria];
         const li = document.createElement('li');
-        li.innerHTML = `<button type="button" class="flex w-full items-center gap-3 bg-neutral-900/40 px-4 py-3 text-left transition hover:bg-white/5">
-            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full" style="background:${c.color}">${svgIcon(place.categoria, 'h-3.5 w-3.5', '#0a0a0a')}</span>
-            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-white">${esc(place.nombre)}</span>
-            <span class="block text-xs text-neutral-500">${c.short} · ${esc(place.comuna)}</span></span></button>`;
+        li.innerHTML = `<button type="button" class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-sand-100">
+            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full" style="background:${c.color}">${svgIcon(place.categoria, 'h-3.5 w-3.5', '#f6f1e7')}</span>
+            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-soil-950">${esc(place.nombre)}</span>
+            <span class="block text-xs text-soil-600">${c.short} · ${esc(place.comuna)}</span></span></button>`;
         li.querySelector('button').addEventListener('click', () => openDrawer(place));
         listEl.appendChild(li);
       });
@@ -741,7 +753,7 @@
           const ll = L.latLng(pos.coords.latitude, pos.coords.longitude);
           if (!CHILE_BOUNDS.contains(ll)) { toast('Tu ubicación está fuera del mapa de Chile'); return onFound(null); }
           if (youAreHere) youAreHere.setLatLng(ll);
-          else youAreHere = L.circleMarker(ll, { radius: 8, color: '#a3e635', weight: 3, fillColor: '#a3e635', fillOpacity: 0.35 }).addTo(map);
+          else youAreHere = L.circleMarker(ll, { radius: 8, color: '#15120e', weight: 3, fillColor: '#d9a441', fillOpacity: 0.9 }).addTo(map);
           onFound(ll);
         },
         () => { toast('No pudimos obtener tu ubicación. Te mostramos todos los talleres.'); onFound(null); },
@@ -772,10 +784,10 @@
       searchHits = puntosIniciales.filter((p) =>
         norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q));
       resultsEl.innerHTML = searchHits.length
-        ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-white/5 focus:bg-white/5 focus:outline-none">
-            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-3 w-3', '#0a0a0a')}</span>
-            <span class="min-w-0"><span class="block truncate text-sm text-white">${esc(p.nombre)}</span><span class="block text-xs text-neutral-500">${esc(p.comuna)} · ${REGIONES[p.region].label}</span></span></button></li>`).join('')
-        : `<li class="px-4 py-3 text-sm text-neutral-500">Sin resultados para "${esc(searchInput.value.trim())}". <a href="#registrar" data-register="dato" class="text-lime-400 hover:underline">Sugiere un lugar</a></li>`;
+        ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-sand-100 focus:bg-sand-100 focus:outline-none">
+            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-3 w-3', '#f6f1e7')}</span>
+            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-soil-950">${esc(p.nombre)}</span><span class="block text-xs text-soil-600">${esc(p.comuna)} · ${REGIONES[p.region].label}</span></span></button></li>`).join('')
+        : `<li class="px-4 py-3 text-sm text-soil-600">Sin resultados para "${esc(searchInput.value.trim())}". <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 hover:underline">Sugiere un lugar</a></li>`;
       resultsEl.classList.remove('hidden');
       searchInput.setAttribute('aria-expanded', 'true');
     }
@@ -811,18 +823,18 @@
     ];
     const fmtDate = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '');
     document.getElementById('newsGrid').innerHTML = NEWS.map((n, i) => `
-      <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-neutral-900 transition hover:-translate-y-1 hover:border-white/15 ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}">
-        <div class="relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${n.grad} via-neutral-900 to-neutral-950">
-          <svg viewBox="0 0 200 112" class="absolute inset-0 h-full w-full text-white/20 transition duration-500 group-hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${NEWS_ART[i % NEWS_ART.length]}</svg>
+      <article class="group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-sand-50 transition hover:-translate-y-1 hover:shadow-lg ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}">
+        <div class="relative aspect-[16/9] overflow-hidden" style="background:${n.bg}">
+          <svg viewBox="0 0 200 112" class="absolute inset-0 h-full w-full text-sand-50/30 transition duration-500 group-hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${NEWS_ART[i % NEWS_ART.length]}</svg>
           <div class="absolute left-3 top-3 flex gap-1.5">
-            <span class="rounded-md px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider ${n.lime ? 'bg-lime-400 text-neutral-950' : 'bg-neutral-700 text-neutral-100'}">${n.tag}</span>
-            <span class="rounded-md bg-neutral-950/70 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-neutral-300 ring-1 ring-white/10">${n.min} min lect.</span>
+            <span class="rounded px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider ${n.accent ? 'bg-ochre-400 text-soil-950' : 'bg-sand-100 text-soil-800'}">${n.tag}</span>
+            <span class="rounded bg-soil-950/60 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-sand-100">${n.min} min lect.</span>
           </div>
         </div>
         <div class="flex flex-1 flex-col p-5">
-          <h3 class="font-display text-xl font-bold uppercase leading-tight tracking-tight text-white [text-wrap:balance] group-hover:text-lime-400">${n.title}</h3>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-neutral-400">${n.body}</p>
-          <footer class="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-mono text-[11px] uppercase text-neutral-500">
+          <h3 class="font-display text-xl font-bold uppercase leading-tight tracking-tight text-soil-950 [text-wrap:balance] group-hover:text-moss-700">${n.title}</h3>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-soil-600">${n.body}</p>
+          <footer class="mt-4 flex items-center justify-between border-t border-sand-200 pt-4 font-mono text-[11px] font-semibold uppercase text-soil-600">
             <span>${n.min} min lect.</span><time datetime="${n.date}">${fmtDate(n.date)}</time>
           </footer>
         </div>
@@ -837,8 +849,8 @@
       const tabs = [['all', 'Todos', JOBS.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, JOBS.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter)];
       jobTabsEl.innerHTML = tabs.map(([k, label, n]) => `
         <button type="button" role="tab" data-type="${k}" aria-selected="${k === jobFilter}"
-          class="shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${k === jobFilter ? 'bg-lime-400 text-neutral-950' : 'bg-neutral-900 text-neutral-300 ring-1 ring-white/10 hover:ring-white/30'}">
-          ${label} <span class="ml-1 font-mono text-[11px] ${k === jobFilter ? 'text-neutral-800' : 'text-neutral-500'}">${n}</span>
+          class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${k === jobFilter ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">
+          ${label} <span class="ml-1 font-mono text-[11px] ${k === jobFilter ? 'text-ochre-300' : 'text-soil-600'}">${n}</span>
         </button>`).join('');
     }
     jobTabsEl.addEventListener('click', (e) => {
@@ -851,24 +863,24 @@
     function renderJobs() {
       renderJobTabs();
       const items = JOBS.filter((j) => jobFilter === 'all' || j.type === jobFilter);
-      jobListEl.innerHTML = items.length ? '' : '<li class="rounded-xl border border-dashed border-white/10 p-6 text-center text-sm text-neutral-500">No hay avisos en esta categoría todavía.</li>';
+      jobListEl.innerHTML = items.length ? '' : '<li class="rounded-xl border border-dashed border-sand-300 p-6 text-center text-sm text-soil-600">No hay avisos en esta categoría todavía.</li>';
       items.forEach((j) => {
         const t = JOB_TYPES[j.type];
         const li = document.createElement('li');
-        li.className = 'rounded-xl border border-white/5 bg-neutral-900 p-4 transition hover:border-white/15 sm:p-5';
+        li.className = 'rounded-xl border border-sand-300 bg-sand-50 p-4 transition hover:border-soil-600/40 hover:shadow-sm sm:p-5';
         li.innerHTML = `
           <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div class="min-w-0">
               <div class="mb-2 flex flex-wrap items-center gap-2">
-                <span class="rounded-md px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider ring-1 ${t.cls}">${t.label}</span>
-                ${j.isNew ? '<span class="rounded-md bg-lime-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-neutral-950">Nuevo</span>' : ''}
-                <span class="text-xs text-neutral-500">${esc(j.place)} · ${esc(j.when)}</span>
+                <span class="rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ring-1 ${t.cls}">${t.label}</span>
+                ${j.isNew ? '<span class="rounded bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
+                <span class="text-xs text-soil-600">${esc(j.place)} · ${esc(j.when)}</span>
               </div>
-              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-white">${esc(j.title)}</h3>
-              <p class="mt-1 text-sm text-neutral-400">${esc(j.body)}</p>
-              ${j.tags.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-white/5 px-2 py-0.5 text-[11px] text-neutral-400">${esc(tag)}</span>`).join('')}</div>` : ''}
+              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${esc(j.title)}</h3>
+              <p class="mt-1 text-sm text-soil-600">${esc(j.body)}</p>
+              ${j.tags.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-sand-200/70 px-2 py-0.5 text-[11px] font-medium text-soil-700">${esc(tag)}</span>`).join('')}</div>` : ''}
             </div>
-            <button type="button" class="reply-btn shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-lime-400 hover:text-neutral-950 hover:ring-lime-400">${j.type === 'voluntariado' ? 'Sumarme' : 'Postular'}</button>
+            <button type="button" class="reply-btn shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-soil-950 ring-1 ring-soil-600/40 transition hover:bg-moss-600 hover:text-sand-50 hover:ring-moss-600">${j.type === 'voluntariado' ? 'Sumarme' : 'Postular'}</button>
           </div>`;
         li.querySelector('.reply-btn').addEventListener('click', () => toast('Pronto podrás responder avisos desde DESVIADOR'));
         jobListEl.appendChild(li);
