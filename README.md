@@ -18,7 +18,7 @@ En `index.html`, busca `const puntosIniciales = [` y agrega objetos con este for
 
 ```js
 { id: 'mi-taller', nombre: 'Mi Taller', categoria: 'talleres', comuna: 'Valdivia', region: 'losrios', coords: [-39.81, -73.24],
-  verificado: true, destacado: false, direccion: 'Av. Ejemplo 123', whatsapp: '56912345678', horario: 'Lun a Vie 10:00–19:00' },
+  verificado: true, destacado: false, direccion: 'Av. Ejemplo 123', whatsapp: '569XXXXXXXX', horario: 'Lun a Vie 10:00–19:00' },
 ```
 
 Si `whatsapp` tiene número, la ficha muestra el botón "WhatsApp directo". Lo que dejes en `null` aparece como "Por confirmar".
