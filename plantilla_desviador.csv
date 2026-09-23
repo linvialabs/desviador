@@ -1,0 +1,3 @@
+﻿nombre_comercio,categoria,region,comuna,direccion,latitud,longitud,whatsapp,horario,descripcion,contacto_admin,necesidad_personal,es_amigo_trail
+Taller Ejemplo Ñuñoa (borrar esta fila),talleres,metropolitana,Ñuñoa,Av. Irarrázaval 0000,-33.4569,-70.5970,,Lun a Vie 10:00-19:00,"Mecánica general, suspensión y frenos",Nombre Apellido +56 9 0000 0000,Mecánico part-time,no
+Sendero Ejemplo (borrar esta fila),senderos,valparaiso,Viña del Mar,,-33.0245,-71.5518,,,Flow trail mantenido por voluntarios,,,si

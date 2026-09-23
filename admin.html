@@ -45,6 +45,9 @@
     }
   </script>
 
+  <!-- PapaParse: lectura de CSV para la carga masiva -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
   <!-- Supabase + credenciales compartidas con el sitio -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
   <script src="supabase-config.js"></script>
@@ -113,6 +116,7 @@
         </div>
         <div class="flex items-center gap-2 text-sm">
           <span id="userEmail" class="hidden max-w-[220px] truncate text-sand-300 md:inline"></span>
+          <button id="importBtn" type="button" class="rounded-lg bg-ochre-400 px-3 py-1.5 font-semibold text-soil-950 hover:bg-ochre-300" title="Importar CSV masivo">📥<span class="hidden sm:inline"> Importar CSV Masivo</span><span class="sr-only sm:hidden"> Importar CSV masivo</span></button>
           <button id="refreshBtn" type="button" class="rounded-lg px-3 py-1.5 text-sand-200 ring-1 ring-soil-700 hover:bg-soil-800" title="Recargar datos">↻<span class="sr-only"> Recargar</span></button>
           <a href="./" target="_blank" rel="noopener" class="hidden rounded-lg px-3 py-1.5 text-sand-200 ring-1 ring-soil-700 hover:bg-soil-800 sm:inline">Ver sitio</a>
           <button id="logoutBtn" type="button" class="rounded-lg bg-soil-800 px-3 py-1.5 font-semibold text-sand-50 hover:bg-soil-700">Salir</button>
@@ -210,6 +214,70 @@
       <p class="mt-2">Pega la <em>Project URL</em> y la <em>anon public key</em> en <code class="rounded bg-soil-800 px-1.5 py-0.5 font-mono text-xs text-ochre-300">supabase-config.js</code> y ejecuta <code class="rounded bg-soil-800 px-1.5 py-0.5 font-mono text-xs text-ochre-300">supabase/admin.sql</code> en el SQL Editor.</p>
     </div>
   </main>
+
+  <!-- ============ MODAL: IMPORTAR CSV ============ -->
+  <div id="importModal" class="fixed inset-0 z-[1500] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden>
+    <div class="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl border border-soil-700 bg-soil-900 shadow-2xl sm:rounded-2xl">
+      <div class="flex items-start justify-between gap-4 border-b border-soil-700 px-5 py-4">
+        <div>
+          <h2 id="importTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50">Importar CSV masivo</h2>
+          <p class="mt-0.5 text-sm text-sand-300">Las filas válidas se publican directo en el mapa como <strong class="text-sand-50">aprobadas</strong>.</p>
+        </div>
+        <button id="importClose" type="button" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-soil-800 text-sand-200 hover:bg-soil-700 disabled:opacity-40" aria-label="Cerrar">✕</button>
+      </div>
+
+      <div class="overflow-y-auto px-5 py-5">
+        <!-- Paso 1: elegir archivo -->
+        <div id="importStep1">
+          <label id="dropZone" for="csvFile" class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-soil-600 bg-soil-950/60 px-4 py-10 text-center transition hover:border-ochre-400">
+            <span class="text-3xl" aria-hidden="true">📥</span>
+            <span class="font-semibold text-sand-50">Arrastra tu archivo CSV aquí</span>
+            <span class="text-sm text-sand-300">o <span class="text-ochre-300 underline underline-offset-2">haz clic para elegirlo</span> · máximo 5 MB y 2.000 filas</span>
+            <input id="csvFile" type="file" accept=".csv,text/csv" class="sr-only" />
+          </label>
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
+            <a href="plantilla_desviador.csv" download="plantilla_desviador.csv" class="font-semibold text-moss-300 hover:underline">⬇ Descargar plantilla_desviador.csv</a>
+            <span class="text-sand-300/80">¿Trabajas en Excel? Usa <em>Guardar como → CSV UTF-8</em>.</span>
+          </div>
+          <details class="mt-4 rounded-lg bg-soil-950/60 p-3 text-xs leading-relaxed text-sand-300">
+            <summary class="cursor-pointer text-sm font-semibold text-sand-200">Columnas y valores aceptados</summary>
+            <ul class="mt-2 space-y-1.5">
+              <li><strong class="text-sand-50">Obligatorias:</strong> <code>nombre_comercio</code>, <code>categoria</code>, <code>region</code>, <code>latitud</code>, <code>longitud</code>.</li>
+              <li><strong class="text-sand-50">Opcionales:</strong> <code>comuna</code>, <code>direccion</code>, <code>whatsapp</code>, <code>horario</code>, <code>descripcion</code>, <code>contacto_admin</code> y <code>necesidad_personal</code> (privados), <code>es_amigo_trail</code>, <code>destacado</code>.</li>
+              <li><strong class="text-sand-50">categoria:</strong> taller, tienda, clases/escuela, bikepark/sendero, shuttle/tour.</li>
+              <li><strong class="text-sand-50">region:</strong> el nombre (Metropolitana, Valparaíso, Biobío, Los Ríos…) o la clave (metropolitana, valparaiso, biobio, losrios…).</li>
+              <li><strong class="text-sand-50">latitud / longitud:</strong> números decimales negativos, con punto o coma (-33.4569 o -33,4569).</li>
+              <li><strong class="text-sand-50">es_amigo_trail / destacado:</strong> sí/no, true/false, 1/0 o x.</li>
+              <li><strong class="text-sand-50">whatsapp:</strong> con o sin +56 (ej: +56 9 1234 5678).</li>
+              <li>Se aceptan separadores coma o punto y coma. Las filas duplicadas (mismo nombre y comuna que un registro existente) se omiten.</li>
+            </ul>
+          </details>
+        </div>
+
+        <!-- Paso 2: revisión -->
+        <div id="importStep2" hidden>
+          <p id="importFileName" class="font-mono text-xs text-sand-300"></p>
+          <div id="importStats" class="mt-3 flex flex-wrap gap-2"></div>
+          <label id="importDupesWrap" class="mt-3 flex items-center gap-2 text-sm text-sand-200" hidden><input id="importDupes" type="checkbox" class="h-4 w-4 accent-[#d9a441]" /> Importar también las filas duplicadas</label>
+          <div id="importPreview" class="mt-4"></div>
+          <div id="importIssues" class="mt-4"></div>
+        </div>
+
+        <!-- Progreso -->
+        <div id="importProgress" class="mt-5" hidden>
+          <div class="flex items-center justify-between gap-3 text-sm"><span id="importProgressText" class="font-semibold text-sand-50"></span><span id="importProgressPct" class="font-mono text-sand-300"></span></div>
+          <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-soil-800" role="progressbar" aria-labelledby="importProgressText" aria-valuemin="0" aria-valuemax="100"><div id="importBar" class="h-full w-0 rounded-full bg-moss-400 transition-all duration-300"></div></div>
+        </div>
+
+        <p id="importError" class="mt-4 hidden rounded-lg bg-clay-500/15 px-3 py-2 text-sm text-clay-300 ring-1 ring-clay-500/40" role="alert"></p>
+      </div>
+
+      <div class="flex flex-wrap justify-end gap-2 border-t border-soil-700 px-5 py-4">
+        <button id="importReset" type="button" class="rounded-lg px-4 py-2.5 text-sm font-semibold text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800 disabled:opacity-40" hidden>Elegir otro archivo</button>
+        <button id="importConfirm" type="button" class="rounded-lg bg-moss-600 px-5 py-2.5 text-sm font-semibold text-sand-50 hover:bg-moss-500 disabled:cursor-not-allowed disabled:opacity-50" disabled>Importar</button>
+      </div>
+    </div>
+  </div>
 
   <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-sand-50 px-4 py-3 text-sm font-semibold text-soil-950 opacity-0 shadow-2xl transition duration-300" role="status" aria-live="polite"></div>
 
@@ -635,6 +703,264 @@
       $('editSave').disabled = false; $('editSave').textContent = 'Guardar cambios';
       if (ok) { state.tab = changes.estado; closeEdit(); }
     });
+
+    // ================= IMPORTACIÓN CSV MASIVA =================
+    const IMPORT_MAX_BYTES = 5 * 1024 * 1024, IMPORT_MAX_ROWS = 2000, IMPORT_BATCH = 100;
+    const REQUIRED_COLS = ['nombre_comercio', 'categoria', 'region', 'latitud', 'longitud'];
+    const LIMITS = { nombre_comercio: 80, comuna: 60, direccion: 120, horario: 80, descripcion: 600, contacto_admin: 120, necesidad_personal: 200 };
+    // "Región de Los Ríos" → "los_rios"
+    const keyOf = (v) => norm(v).replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
+    const HEADER_ALIASES = {
+      nombre: 'nombre_comercio', nombre_comercio: 'nombre_comercio', comercio: 'nombre_comercio', nombre_del_comercio: 'nombre_comercio',
+      categoria: 'categoria', tipo: 'categoria', region: 'region', comuna: 'comuna', ciudad: 'comuna', direccion: 'direccion',
+      latitud: 'latitud', lat: 'latitud', longitud: 'longitud', lng: 'longitud', lon: 'longitud', long: 'longitud',
+      whatsapp: 'whatsapp', telefono: 'whatsapp', celular: 'whatsapp', horario: 'horario', descripcion: 'descripcion',
+      contacto_admin: 'contacto_admin', contacto: 'contacto_admin', contacto_dueno: 'contacto_admin',
+      necesidad_personal: 'necesidad_personal', busca_personal: 'necesidad_personal',
+      es_amigo_trail: 'es_amigo_trail', amigo_trail: 'es_amigo_trail', amiga_del_trail: 'es_amigo_trail', amigo_del_trail: 'es_amigo_trail',
+      destacado: 'destacado', destacada: 'destacado',
+    };
+    const CAT_ALIASES = {
+      talleres: 'talleres', taller: 'talleres', mecanica: 'talleres',
+      tiendas: 'tiendas', tienda: 'tiendas',
+      clases: 'clases', clase: 'clases', escuela: 'clases', escuelas: 'clases', clases_escuelas: 'clases',
+      senderos: 'senderos', sendero: 'senderos', bikepark: 'senderos', bikeparks: 'senderos', trail: 'senderos', bikepark_sendero: 'senderos', bikeparks_senderos: 'senderos',
+      tours: 'tours', tour: 'tours', shuttle: 'tours', shuttles: 'tours', shuttle_tour: 'tours', shuttles_tours: 'tours',
+    };
+    const REGION_ALIASES = (() => {
+      const m = {};
+      Object.entries(REGIONES).forEach(([k, label]) => { m[k] = k; m[keyOf(label)] = k; });
+      Object.assign(m, {
+        rm: 'metropolitana', santiago: 'metropolitana', metropolitana_de_santiago: 'metropolitana', santiago_rm: 'metropolitana',
+        o_higgins: 'ohiggins', libertador_general_bernardo_o_higgins: 'ohiggins', libertador_bernardo_o_higgins: 'ohiggins',
+        bio_bio: 'biobio', la_araucania: 'araucania', los_rios: 'losrios', los_lagos: 'loslagos',
+        aysen_del_general_carlos_ibanez_del_campo: 'aysen', magallanes_y_de_la_antartica_chilena: 'magallanes', magallanes_y_la_antartica_chilena: 'magallanes',
+        arica_y_parinacota: 'arica',
+      });
+      return m;
+    })();
+    const toRegion = (v) => { const k = keyOf(v).replace(/^region_(de|del)_/, ''); return REGION_ALIASES[k] || REGION_ALIASES[keyOf(v)] || null; };
+    const toBool = (v) => ['si', 's', 'true', '1', 'x', 'yes', 'y', 'verdadero'].includes(keyOf(v));
+    const toCoord = (v) => {
+      let t = String(v ?? '').trim().replace(/\s/g, '');
+      if (t.includes(',') && !t.includes('.')) t = t.replace(',', '.');
+      return t === '' ? NaN : Number(t);
+    };
+    const dupKey = (nombre, comuna) => `${norm(nombre).trim()}|${norm(comuna).trim()}`;
+
+    const imp = { rows: [], valid: [], dupes: [], issues: [], imported: new Set(), busy: false };
+
+    function openImport() { resetImport(); $('importModal').hidden = false; setTimeout(() => $('dropZone').focus?.(), 50); }
+    function closeImport() { if (imp.busy) return; $('importModal').hidden = true; }
+    function resetImport() {
+      Object.assign(imp, { rows: [], valid: [], dupes: [], issues: [], imported: new Set() });
+      $('csvFile').value = '';
+      $('importStep1').hidden = false; $('importStep2').hidden = true; $('importProgress').hidden = true;
+      $('importReset').hidden = true; $('importDupesWrap').hidden = true; $('importDupes').checked = false;
+      $('importConfirm').disabled = true; $('importConfirm').textContent = 'Importar';
+      $('importError').classList.add('hidden');
+    }
+    function importFail(msg) { $('importError').textContent = msg; $('importError').classList.remove('hidden'); }
+
+    // Excel en Windows suele guardar en Windows-1252: si el archivo no es UTF-8 válido, se decodifica así
+    async function readCsvText(file) {
+      const buf = await file.arrayBuffer();
+      let text;
+      try { text = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+      catch { text = new TextDecoder('windows-1252').decode(buf); }
+      return text.replace(/^\uFEFF/, '');
+    }
+
+    async function handleFile(file) {
+      resetImport();
+      if (!file) return;
+      if (/\.xlsx?$/i.test(file.name)) return importFail('Es un archivo de Excel. Ábrelo en Excel y usa Archivo → Guardar como → "CSV UTF-8 (delimitado por comas)".');
+      if (!/\.csv$/i.test(file.name) && file.type !== 'text/csv') return importFail('El archivo debe ser .csv');
+      if (file.size > IMPORT_MAX_BYTES) return importFail('El archivo supera 5 MB. Divídelo en partes más pequeñas.');
+      if (!window.Papa) return importFail('No se pudo cargar el lector de CSV. Recarga la página e inténtalo de nuevo.');
+
+      const text = await readCsvText(file);
+      // El separador se detecta en la línea de encabezados: en los datos, los decimales con coma
+      // (Excel en español: "-33,45" con ";" como separador) confunden la detección automática.
+      const headerLine = text.split(/\r?\n/, 1)[0];
+      const delimiter = [';', ',', '\t', '|'].reduce((best, d) => (headerLine.split(d).length > headerLine.split(best).length ? d : best), ',');
+      const parsed = Papa.parse(text, {
+        delimiter,
+        header: true,
+        skipEmptyLines: 'greedy',
+        transformHeader: (h) => HEADER_ALIASES[keyOf(h)] || keyOf(h),
+      });
+      const fields = parsed.meta.fields || [];
+      const missing = REQUIRED_COLS.filter((c) => !fields.includes(c));
+      if (missing.length) return importFail(`Faltan columnas obligatorias: ${missing.join(', ')}. Descarga la plantilla para ver el formato.`);
+      if (!parsed.data.length) return importFail('El archivo no tiene filas con datos.');
+      if (parsed.data.length > IMPORT_MAX_ROWS) return importFail(`El archivo tiene ${parsed.data.length} filas. El máximo por carga es ${IMPORT_MAX_ROWS}.`);
+
+      const parseErrors = {};
+      (parsed.errors || []).forEach((e) => { if (Number.isInteger(e.row)) parseErrors[e.row] = 'la fila no tiene la misma cantidad de columnas que el encabezado'; });
+      const existing = new Set(state.rows.map((r) => dupKey(r.nombre_comercio, r.comuna)));
+      const seen = new Set();
+
+      parsed.data.forEach((raw, i) => {
+        const line = i + 2; // línea 1 = encabezado
+        const errs = [];
+        const val = (k) => String(raw[k] ?? '').trim();
+        if (parseErrors[i]) errs.push(parseErrors[i]);
+
+        const nombre = val('nombre_comercio');
+        const categoria = CAT_ALIASES[keyOf(raw.categoria)] || null;
+        const region = toRegion(raw.region);
+        const lat = toCoord(raw.latitud), lng = toCoord(raw.longitud);
+        const phone = normalizePhone(raw.whatsapp);
+
+        if (nombre.length < 3) errs.push('nombre_comercio vacío o muy corto');
+        if (!categoria) errs.push(`categoría "${val('categoria')}" no reconocida`);
+        if (!region) errs.push(`región "${val('region')}" no reconocida`);
+        if (!(lat >= -56.8 && lat <= -17.2)) errs.push(`latitud "${val('latitud')}" fuera de Chile`);
+        if (!(lng >= -77.5 && lng <= -65.5)) errs.push(`longitud "${val('longitud')}" fuera de Chile`);
+        if (phone && (phone.length < 8 || phone.length > 15)) errs.push(`whatsapp "${val('whatsapp')}" inválido`);
+        Object.entries(LIMITS).forEach(([k, max]) => { if (val(k).length > max) errs.push(`${k} supera ${max} caracteres`); });
+
+        const record = {
+          nombre_comercio: nombre,
+          categoria,
+          region,
+          comuna: val('comuna') || null,
+          direccion: val('direccion') || null,
+          latitud: Number.isFinite(lat) ? +lat.toFixed(6) : null,
+          longitud: Number.isFinite(lng) ? +lng.toFixed(6) : null,
+          whatsapp: phone || null,
+          horario: val('horario') || null,
+          descripcion: val('descripcion') || null,
+          contacto_admin: val('contacto_admin') || null,
+          necesidad_personal: val('necesidad_personal') || null,
+          es_amigo_trail: toBool(raw.es_amigo_trail),
+          destacado: toBool(raw.destacado),
+          estado: 'aprobado', // todo lo que importa el admin se publica de inmediato
+        };
+        const item = { line, record, errs };
+        if (errs.length) return imp.issues.push(item);
+        const dk = dupKey(nombre, record.comuna);
+        if (existing.has(dk) || seen.has(dk)) { item.dupReason = existing.has(dk) ? 'ya existe en el mapa' : 'repetida en el archivo'; imp.dupes.push(item); }
+        else imp.valid.push(item);
+        seen.add(dk);
+      });
+
+      const ignored = fields.filter((f) => !Object.values(HEADER_ALIASES).includes(f));
+      renderImportReview(file.name, parsed.meta.delimiter, parsed.data.length, ignored);
+    }
+
+    function renderImportReview(fileName, delimiter, total, ignored) {
+      $('importStep1').hidden = true; $('importStep2').hidden = false; $('importReset').hidden = false;
+      $('importFileName').textContent = `${fileName} · ${total} filas · separador "${delimiter}"${ignored.length ? ` · columnas ignoradas: ${ignored.join(', ')}` : ''}`;
+      const stat = (n, label, cls) => `<span class="rounded-full px-3 py-1 text-sm font-semibold ring-1 ${cls}">${n} ${label}</span>`;
+      $('importStats').innerHTML = [
+        stat(imp.valid.length, 'listas para importar', 'bg-moss-500/15 text-moss-300 ring-moss-500/40'),
+        imp.dupes.length ? stat(imp.dupes.length, 'duplicadas (se omiten)', 'bg-ochre-400/15 text-ochre-300 ring-ochre-400/40') : '',
+        imp.issues.length ? stat(imp.issues.length, 'con errores (se omiten)', 'bg-clay-500/15 text-clay-300 ring-clay-500/40') : '',
+      ].join('');
+      $('importDupesWrap').hidden = !imp.dupes.length;
+
+      const sample = imp.valid.slice(0, 6);
+      $('importPreview').innerHTML = sample.length ? `
+        <p class="mb-2 font-mono text-[11px] uppercase tracking-wider text-sand-300/70">Vista previa${imp.valid.length > sample.length ? ` (primeras ${sample.length} de ${imp.valid.length})` : ''}</p>
+        <div class="overflow-x-auto rounded-lg ring-1 ring-soil-700">
+          <table class="w-full min-w-[520px] text-left text-xs">
+            <thead class="bg-soil-800 text-sand-300"><tr><th class="px-3 py-2">Nombre</th><th class="px-3 py-2">Categoría</th><th class="px-3 py-2">Región</th><th class="px-3 py-2">Comuna</th><th class="px-3 py-2">Coordenadas</th><th class="px-3 py-2">Sello</th></tr></thead>
+            <tbody class="divide-y divide-soil-700">${sample.map(({ record: r }) => `<tr class="bg-soil-950/60">
+              <td class="px-3 py-2 font-semibold text-sand-50">${esc(r.nombre_comercio)}</td>
+              <td class="px-3 py-2">${esc(CATEGORIES[r.categoria].label)}</td>
+              <td class="px-3 py-2">${esc(REGIONES[r.region])}</td>
+              <td class="px-3 py-2">${esc(r.comuna || '—')}</td>
+              <td class="px-3 py-2 font-mono">${r.latitud}, ${r.longitud}</td>
+              <td class="px-3 py-2">${r.es_amigo_trail ? '★' : ''}${r.destacado ? ' ◆' : ''}</td></tr>`).join('')}</tbody>
+          </table>
+        </div>` : '';
+
+      const problems = [...imp.issues.map((i) => ({ line: i.line, text: i.errs.join('; '), cls: 'text-clay-300' })),
+                        ...imp.dupes.map((d) => ({ line: d.line, text: `"${d.record.nombre_comercio}" ${d.dupReason}`, cls: 'text-ochre-300' }))]
+        .sort((a, b) => a.line - b.line);
+      $('importIssues').innerHTML = problems.length ? `
+        <p class="mb-2 font-mono text-[11px] uppercase tracking-wider text-sand-300/70">Filas omitidas</p>
+        <ul class="max-h-40 space-y-1 overflow-y-auto rounded-lg bg-soil-950/60 p-3 text-xs">${problems.slice(0, 100).map((p) => `<li class="${p.cls}"><span class="font-mono text-sand-300/70">Fila ${p.line}:</span> ${esc(p.text)}</li>`).join('')}
+        ${problems.length > 100 ? `<li class="text-sand-300">…y ${problems.length - 100} más</li>` : ''}</ul>` : '';
+      syncImportButton();
+    }
+
+    // Filas a enviar (sin las que ya se guardaron en un intento anterior)
+    const importTargets = () => [...imp.valid, ...($('importDupes').checked ? imp.dupes : [])].map((i) => i.record).filter((r) => !imp.imported.has(r));
+    const plural = (n) => `${n} ${n === 1 ? 'tienda' : 'tiendas'}`;
+    function syncImportButton() {
+      const n = importTargets().length;
+      $('importConfirm').disabled = n === 0;
+      $('importConfirm').textContent = n ? `Importar ${plural(n)}` : 'Nada que importar';
+    }
+
+    function setImportBusy(on) {
+      imp.busy = on;
+      ['importConfirm', 'importReset', 'importClose', 'importDupes'].forEach((id) => { $(id).disabled = on; });
+    }
+    function setProgress(done, total) {
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      $('importProgressText').textContent = done < total ? `Procesando ${done} de ${plural(total)}…` : `Listo: ${plural(total)} procesadas`;
+      $('importProgressPct').textContent = pct + '%';
+      $('importBar').style.width = pct + '%';
+    }
+
+    async function runImport() {
+      const registros = importTargets();
+      if (!registros.length || imp.busy) return;
+      $('importError').classList.add('hidden');
+      setImportBusy(true);
+      $('importProgress').hidden = false;
+      $('importConfirm').textContent = 'Importando…';
+      let ok = 0, failed = 0, firstError = null;
+      setProgress(0, registros.length);
+
+      // Lotes de 100: si un lote falla, los demás siguen
+      for (let i = 0; i < registros.length; i += IMPORT_BATCH) {
+        const lote = registros.slice(i, i + IMPORT_BATCH);
+        const { error } = await supabaseClient.from('comercios').insert(lote);
+        if (error) { failed += lote.length; firstError ||= error; console.error('[DESVIADOR] Lote falló:', error); }
+        else { ok += lote.length; lote.forEach((r) => imp.imported.add(r)); }
+        setProgress(Math.min(i + IMPORT_BATCH, registros.length), registros.length);
+      }
+
+      setImportBusy(false);
+      await loadRows(true);
+      state.tab = 'aprobado'; state.q = ''; $('search').value = '';
+      renderAll(); fitToTab();
+
+      if (!failed) {
+        closeImport();
+        return toast(`¡Éxito! Se cargaron ${plural(ok)} al mapa`);
+      }
+      const rls = firstError && (firstError.code === '42501' || /row-level security|permission denied/i.test(firstError.message));
+      importFail(
+        (ok ? `Se cargaron ${plural(ok)}, pero ${failed} no se pudieron guardar. ` : `No se pudo guardar ninguna fila. `) +
+        (rls ? 'Tu base de datos no permite aún la carga masiva: ejecuta la sección 4b de supabase/admin.sql en el SQL Editor.' : `Detalle: ${firstError?.message || 'error desconocido'}`)
+      );
+      syncImportButton();
+      $('importConfirm').textContent = `Reintentar ${plural(importTargets().length)}`;
+      if (ok) toast(`Se cargaron ${plural(ok)}; ${failed} fallaron`, true);
+    }
+
+    // Eventos
+    $('importBtn').addEventListener('click', openImport);
+    $('importClose').addEventListener('click', closeImport);
+    $('importModal').addEventListener('click', (e) => { if (e.target === $('importModal')) closeImport(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('importModal').hidden) closeImport(); });
+    $('csvFile').addEventListener('change', (e) => handleFile(e.target.files[0]));
+    $('importReset').addEventListener('click', resetImport);
+    $('importDupes').addEventListener('change', syncImportButton);
+    $('importConfirm').addEventListener('click', runImport);
+    const dz = $('dropZone');
+    ['dragenter', 'dragover'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('border-ochre-400', 'bg-soil-800'); }));
+    ['dragleave', 'drop'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('border-ochre-400', 'bg-soil-800'); }));
+    dz.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+    // Evita que soltar un archivo fuera de la zona abra el CSV en la pestaña
+    ['dragover', 'drop'].forEach((ev) => window.addEventListener(ev, (e) => { if (!$('importModal').hidden) e.preventDefault(); }));
 
     // ================= INICIO =================
     function enterDashboard(session) {

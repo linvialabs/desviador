@@ -52,6 +52,14 @@ grant update (nombre_comercio, categoria, region, comuna, direccion, latitud, lo
   on public.comercios to authenticated;
 grant delete on public.comercios to authenticated;
 
+-- 4b) Carga masiva (CSV) desde el panel: los admins pueden insertar filas ya aprobadas y con sellos.
+--     El público sigue limitado a solicitudes pendientes (las políticas de insert se suman con OR).
+drop policy if exists "Admins insertan comercios" on public.comercios;
+create policy "Admins insertan comercios"
+  on public.comercios for insert to authenticated
+  with check (public.is_admin());
+grant insert (estado, es_amigo_trail, destacado) on public.comercios to authenticated;
+
 -- 5) Darte acceso: crea tu usuario en Authentication → Users → "Add user" y luego
 --    reemplaza el correo y ejecuta esta línea.
 insert into public.admins (user_id)
