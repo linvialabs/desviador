@@ -46,11 +46,15 @@
     }
   </script>
 
+  <!-- Supabase (cliente JS, versión fijada) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+
   <style>
     html, body { background: #f6f1e7; color: #241f19; }
     /* Altura del mapa en CSS propio: no depende de que Tailwind cargue */
     #map { height: 62vh; min-height: 420px; width: 100%; }
     @media (min-width: 1024px) { #map { height: 100%; min-height: 0; } }
+    #pickMap { height: 14rem; width: 100%; }
 
     /* Curvas de nivel de fondo en el panel del hero */
     .topo-bg {
@@ -182,7 +186,7 @@
         <div id="map" role="region" aria-label="Mapa interactivo de lugares ciclistas en Chile"></div>
 
         <p class="pointer-events-none absolute bottom-3 left-3 z-[900] rounded-lg bg-soil-950/85 px-3 py-1.5 font-mono text-[11px] text-sand-100">
-          <span id="visibleCount">0</span> visibles
+          <span id="visibleCount">…</span> visibles<span id="dataSourceTag"></span>
         </p>
 
         <!-- Estado vacío -->
@@ -296,6 +300,11 @@
           </ul>
         </div>
 
+        <div>
+          <div id="formSuccess" class="mb-4 rounded-2xl border border-moss-600/40 bg-moss-600/10 p-5" role="status" tabindex="-1" hidden>
+            <p class="font-display text-xl font-extrabold uppercase text-moss-700">¡Registro recibido!</p>
+            <p class="mt-1 text-sm text-soil-700">Tu tienda/proyecto ha sido enviado a revisión por el equipo editorial de DESVIADOR y aparecerá en el mapa tras la verificación.</p>
+          </div>
         <form id="mainForm" class="space-y-4 rounded-2xl border border-sand-300 bg-white/60 p-5 shadow-sm sm:p-6" novalidate>
           <fieldset>
             <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué quieres hacer?</legend>
@@ -318,7 +327,7 @@
           <!-- Negocio -->
           <div data-kind="negocio" class="space-y-4">
             <div>
-              <label for="bizName" class="mb-1.5 block text-sm font-semibold text-soil-800">Nombre del negocio</label>
+              <label for="bizName" class="mb-1.5 block text-sm font-semibold text-soil-800">Nombre del negocio o proyecto</label>
               <input id="bizName" maxlength="80" placeholder="Ej: Taller Rueda Libre" class="field" />
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
@@ -327,23 +336,45 @@
                 <select id="bizCat" class="field"></select>
               </div>
               <div>
-                <label for="bizComuna" class="mb-1.5 block text-sm font-semibold text-soil-800">Comuna</label>
-                <input id="bizComuna" maxlength="60" placeholder="Ej: Ñuñoa" class="field" />
+                <label for="bizRegion" class="mb-1.5 block text-sm font-semibold text-soil-800">Región</label>
+                <select id="bizRegion" class="field"></select>
               </div>
-            </div>
-            <div>
-              <label for="bizAddress" class="mb-1.5 block text-sm font-semibold text-soil-800">Dirección</label>
-              <input id="bizAddress" maxlength="120" placeholder="Calle y número" class="field" />
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
-                <label for="bizPhone" class="mb-1.5 block text-sm font-semibold text-soil-800">WhatsApp</label>
+                <label for="bizComuna" class="mb-1.5 block text-sm font-semibold text-soil-800">Comuna</label>
+                <input id="bizComuna" maxlength="60" placeholder="Ej: Ñuñoa" class="field" />
+              </div>
+              <div>
+                <label for="bizAddress" class="mb-1.5 block text-sm font-semibold text-soil-800">Dirección <span class="font-normal text-soil-600">(opcional)</span></label>
+                <input id="bizAddress" maxlength="120" placeholder="Calle y número" class="field" />
+              </div>
+            </div>
+            <div>
+              <div class="mb-1.5 flex items-end justify-between gap-3">
+                <span id="pickLabel" class="block text-sm font-semibold text-soil-800">Ubicación en el mapa</span>
+                <button type="button" id="pickLocate" class="text-xs font-semibold text-moss-700 underline-offset-4 hover:underline">Usar mi ubicación</button>
+              </div>
+              <div id="pickMap" class="overflow-hidden rounded-lg ring-1 ring-sand-300" aria-labelledby="pickLabel"></div>
+              <p id="pickReadout" class="mt-1.5 font-mono text-[11px] text-soil-600">Toca el mapa para marcar dónde está tu negocio.</p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label for="bizPhone" class="mb-1.5 block text-sm font-semibold text-soil-800">WhatsApp del negocio <span class="font-normal text-soil-600">(se muestra en la ficha)</span></label>
                 <input id="bizPhone" type="tel" inputmode="tel" maxlength="20" placeholder="+56 9 1234 5678" class="field" />
               </div>
               <div>
-                <label for="bizEmail" class="mb-1.5 block text-sm font-semibold text-soil-800">Correo <span class="font-normal text-soil-600">(opcional)</span></label>
-                <input id="bizEmail" type="email" maxlength="80" placeholder="contacto@tunegocio.cl" class="field" />
+                <label for="bizHours" class="mb-1.5 block text-sm font-semibold text-soil-800">Horario <span class="font-normal text-soil-600">(opcional)</span></label>
+                <input id="bizHours" maxlength="80" placeholder="Ej: Lun a Vie 10:00–19:00" class="field" />
               </div>
+            </div>
+            <div>
+              <label for="bizOwner" class="mb-1.5 block text-sm font-semibold text-soil-800">Contacto del dueño <span class="font-normal text-soil-600">(privado, no se publica)</span></label>
+              <input id="bizOwner" maxlength="120" placeholder="Nombre y celular para verificar la ficha" class="field" />
+            </div>
+            <div>
+              <label for="bizStaff" class="mb-1.5 block text-sm font-semibold text-soil-800">¿Buscas personal? <span class="font-normal text-soil-600">(opcional)</span></label>
+              <input id="bizStaff" maxlength="200" placeholder="Ej: mecánico part-time, vendedor fin de semana" class="field" />
             </div>
             <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
               <input id="bizFeatured" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#56743a]" />
@@ -393,8 +424,9 @@
           <p id="formError" class="hidden rounded-lg bg-red-700/10 px-3 py-2 text-sm text-red-800 ring-1 ring-red-700/30" role="alert"></p>
 
           <button type="submit" id="submitBtn" class="w-full rounded-lg bg-moss-600 py-3 font-semibold text-sand-50 transition hover:bg-moss-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">Enviar solicitud</button>
-          <p class="text-center font-mono text-[11px] text-soil-600">Versión de prueba: los envíos todavía no se guardan en un servidor.</p>
+          <p id="formNote" class="text-center font-mono text-[11px] text-soil-600"></p>
         </form>
+        </div>
       </div>
     </section>
   </main>
@@ -420,6 +452,81 @@
   </style>
 
   <script>
+    // ================= SUPABASE: CONFIGURACIÓN =================
+    // Pega aquí los datos de Project Settings → API. La anon key es pública por diseño:
+    // la seguridad la dan las políticas RLS y los permisos por columna del script SQL de abajo.
+    const SUPABASE_URL = 'TU_SUPABASE_URL_AQUI';
+    const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI';
+
+    /* ================= SQL PARA EL SQL EDITOR DE SUPABASE (ejecutar una vez) =================
+
+    -- 1) TABLA PRINCIPAL DE COMERCIOS Y SENDEROS
+    create table if not exists public.comercios (
+      id                 uuid primary key default gen_random_uuid(),
+      nombre_comercio    text not null check (char_length(nombre_comercio) between 3 and 80),
+      categoria          text not null check (categoria in ('talleres','tiendas','clases','senderos','tours')),
+      region             text not null check (region in ('arica','tarapaca','antofagasta','atacama','coquimbo','valparaiso','metropolitana','ohiggins','maule','nuble','biobio','araucania','losrios','loslagos','aysen','magallanes')),
+      comuna             text check (char_length(comuna) <= 60),
+      direccion          text check (char_length(direccion) <= 120),
+      latitud            numeric not null check (latitud between -56.8 and -17.2),
+      longitud           numeric not null check (longitud between -77.5 and -65.5),
+      whatsapp           text check (whatsapp ~ '^[0-9]{8,15}$'),
+      horario            text check (char_length(horario) <= 80),
+      descripcion        text check (char_length(descripcion) <= 600),
+      contacto_admin     text check (char_length(contacto_admin) <= 120),     -- PRIVADO: nombre/celular del dueño
+      necesidad_personal text check (char_length(necesidad_personal) <= 200), -- PRIVADO: si busca mecánico/vendedor
+      solicita_destacado boolean not null default false,                      -- PRIVADO: pidió ficha destacada
+      es_amigo_trail     boolean not null default false,                      -- Sello "Amiga del Trail" (solo lo asigna el admin)
+      destacado          boolean not null default false,                      -- Ficha destacada pagada (solo lo asigna el admin)
+      estado             text not null default 'pendiente' check (estado in ('pendiente','aprobado','rechazado')),
+      created_at         timestamptz not null default now()
+    );
+    create index if not exists comercios_estado_idx on public.comercios (estado);
+
+    -- 2) POLÍTICAS DE SEGURIDAD (RLS)
+    alter table public.comercios enable row level security;
+
+    drop policy if exists "Lectura pública de comercios aprobados" on public.comercios;
+    create policy "Lectura pública de comercios aprobados"
+      on public.comercios for select to anon, authenticated
+      using (estado = 'aprobado');
+
+    drop policy if exists "Inserción pública de solicitudes" on public.comercios;
+    create policy "Inserción pública de solicitudes"
+      on public.comercios for insert to anon, authenticated
+      with check (estado = 'pendiente' and es_amigo_trail = false and destacado = false);
+
+    -- 3) PERMISOS POR COLUMNA
+    -- RLS filtra FILAS, no columnas: sin esto, contacto_admin sería legible por cualquiera.
+    -- El público solo puede leer las columnas de la ficha y solo puede escribir las del formulario
+    -- (estado, sellos, id y fecha quedan siempre con su valor por defecto).
+    revoke all on public.comercios from anon, authenticated;
+    grant select (id, nombre_comercio, categoria, region, comuna, direccion, latitud, longitud,
+                  whatsapp, horario, descripcion, es_amigo_trail, destacado, estado)
+      on public.comercios to anon, authenticated;
+    grant insert (nombre_comercio, categoria, region, comuna, direccion, latitud, longitud,
+                  whatsapp, horario, descripcion, contacto_admin, necesidad_personal, solicita_destacado)
+      on public.comercios to anon, authenticated;
+
+    -- 4) (Opcional) Cargar los 7 puntos iniciales ya aprobados. Ejecutar solo una vez.
+    insert into public.comercios (nombre_comercio, categoria, region, comuna, latitud, longitud, estado) values
+      ('Multibike / Specialized Concepción',   'tiendas',  'biobio',        'Concepción',            -36.8275, -73.0503, 'aprobado'),
+      ('Giant / Liv Vitacura',                 'tiendas',  'metropolitana', 'Vitacura',              -33.3881, -70.5678, 'aprobado'),
+      ('Laguna Off Road / Bici Taller Temuco', 'talleres', 'araucania',     'Temuco',                -38.7397, -72.5901, 'aprobado'),
+      ('Bikepark Nevados de Chillán',          'senderos', 'nuble',         'Pinto',                 -36.9061, -71.4111, 'aprobado'),
+      ('Parque Las Palmas',                    'senderos', 'valparaiso',    'Puchuncaví',            -32.7412, -71.4015, 'aprobado'),
+      ('Huilo Huilo Outdoor Experience',       'senderos', 'losrios',       'Panguipulli (Neltume)', -39.8667, -71.9167, 'aprobado'),
+      ('El Durazno',                           'senderos', 'metropolitana', 'Lo Barnechea',          -33.3486, -70.4958, 'aprobado');
+
+    -- APROBAR UNA SOLICITUD: Table Editor → comercios → cambia "estado" a 'aprobado'
+    -- (y marca es_amigo_trail / destacado si corresponde).
+    ============================================================================================ */
+
+    const SUPABASE_READY = !!window.supabase && /^https:\/\//.test(SUPABASE_URL) && !SUPABASE_ANON_KEY.startsWith('TU_');
+    // Se llama supabaseClient (no "supabase") porque el SDK ya define la variable global "supabase".
+    const supabaseClient = SUPABASE_READY ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    if (!SUPABASE_READY) console.info('[DESVIADOR] Supabase sin configurar: el mapa usa los puntos de respaldo y el registro de negocios está desactivado.');
+
     // ================= DATOS =================
     // Colores tierra por categoría e íconos SVG (trazos sobre 24x24)
     const CATEGORIES = {
@@ -432,18 +539,29 @@
     const svgIcon = (cat, cls = 'h-4 w-4', stroke = 'currentColor') =>
       `<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CATEGORIES[cat].icon}</svg>`;
 
-    // Zonas: bounding box aproximado [[sur, oeste], [norte, este]]
+    // Regiones de Chile (norte a sur) con bounding box aproximado [[sur, oeste], [norte, este]].
+    // Las claves son las mismas que acepta la columna "region" en Supabase.
     const REGIONES = {
-      valparaiso:    { label: 'Valparaíso',      bounds: [[-33.95, -72.00], [-32.00, -70.00]] },
-      metropolitana: { label: 'Santiago (RM)',   bounds: [[-34.30, -71.75], [-32.90, -69.75]] },
-      nuble:         { label: 'Chillán (Ñuble)', bounds: [[-37.25, -72.90], [-36.00, -71.00]] },
-      biobio:        { label: 'Biobío',          bounds: [[-38.50, -73.90], [-36.40, -71.00]] },
-      araucania:     { label: 'Araucanía',       bounds: [[-39.65, -73.60], [-37.60, -70.80]] },
-      losrios:       { label: 'Los Ríos',        bounds: [[-40.70, -73.80], [-39.30, -71.60]] },
+      arica:         { label: 'Arica y Parinacota', bounds: [[-19.30, -70.50], [-17.40, -69.00]] },
+      tarapaca:      { label: 'Tarapacá',           bounds: [[-21.70, -70.40], [-18.90, -68.40]] },
+      antofagasta:   { label: 'Antofagasta',        bounds: [[-26.10, -70.80], [-20.90, -67.00]] },
+      atacama:       { label: 'Atacama',            bounds: [[-29.60, -71.70], [-25.30, -68.30]] },
+      coquimbo:      { label: 'Coquimbo',           bounds: [[-32.30, -71.80], [-29.00, -69.80]] },
+      valparaiso:    { label: 'Valparaíso',         bounds: [[-33.95, -72.00], [-32.00, -70.00]] },
+      metropolitana: { label: 'Santiago (RM)',      bounds: [[-34.30, -71.75], [-32.90, -69.75]] },
+      ohiggins:      { label: "O'Higgins",          bounds: [[-34.95, -72.10], [-33.85, -70.00]] },
+      maule:         { label: 'Maule',              bounds: [[-36.55, -72.80], [-34.70, -70.30]] },
+      nuble:         { label: 'Chillán (Ñuble)',    bounds: [[-37.25, -72.90], [-36.00, -71.00]] },
+      biobio:        { label: 'Biobío',             bounds: [[-38.50, -73.90], [-36.40, -71.00]] },
+      araucania:     { label: 'Araucanía',          bounds: [[-39.65, -73.60], [-37.60, -70.80]] },
+      losrios:       { label: 'Los Ríos',           bounds: [[-40.70, -73.80], [-39.30, -71.60]] },
+      loslagos:      { label: 'Los Lagos',          bounds: [[-44.10, -74.90], [-40.20, -71.60]] },
+      aysen:         { label: 'Aysén',              bounds: [[-49.20, -75.80], [-43.60, -71.10]] },
+      magallanes:    { label: 'Magallanes',         bounds: [[-56.00, -75.80], [-48.60, -66.40]] },
     };
 
-    // Puntos del mapa. Opcionales: direccion, whatsapp (con código país, ej: '569XXXXXXXX'), horario, destacado.
-    // Deja en null lo que no esté confirmado: la ficha lo muestra como "Por confirmar".
+    // Puntos de RESPALDO: se usan solo si Supabase no está configurado o no responde.
+    // Con Supabase activo, los puntos vienen de la tabla "comercios" (estado = 'aprobado').
     const puntosIniciales = [
       { id: 'multibike-concepcion', nombre: 'Multibike / Specialized Concepción',   categoria: 'tiendas',  comuna: 'Concepción',            region: 'biobio',        coords: [-36.8275, -73.0503], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
       { id: 'giant-liv-vitacura',   nombre: 'Giant / Liv Vitacura',                 categoria: 'tiendas',  comuna: 'Vitacura',              region: 'metropolitana', coords: [-33.3881, -70.5678], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
@@ -570,12 +688,61 @@
       iconAnchor: [16, 32],
     });
 
-    const markers = puntosIniciales.map((p) => {
-      const m = L.marker(p.coords, { icon: makeIcon(p), title: p.nombre, riseOnHover: true, keyboard: true });
-      m.on('click', () => openDrawer(p));
-      return { place: p, marker: m };
+    // Puntos actuales (de Supabase o de respaldo) y sus marcadores
+    let puntos = [];
+    let markers = [];
+    let markerById = {};
+    function setPoints(list) {
+      markers.forEach((e) => map.removeLayer(e.marker));
+      puntos = list;
+      markers = list.map((p) => {
+        const m = L.marker(p.coords, { icon: makeIcon(p), title: p.nombre, riseOnHover: true, keyboard: true });
+        m.on('click', () => openDrawer(p));
+        return { place: p, marker: m };
+      });
+      markerById = Object.fromEntries(markers.map((e) => [e.place.id, e.marker]));
+      render(false);
+    }
+
+    // Fila de Supabase → punto del mapa
+    const PUBLIC_COLUMNS = 'id, nombre_comercio, categoria, region, comuna, direccion, latitud, longitud, whatsapp, horario, descripcion, es_amigo_trail, destacado';
+    const fromRow = (r) => ({
+      id: r.id,
+      nombre: r.nombre_comercio,
+      categoria: r.categoria,
+      region: r.region,
+      comuna: r.comuna || '',
+      direccion: r.direccion,
+      whatsapp: r.whatsapp,
+      horario: r.horario,
+      descripcion: r.descripcion,
+      coords: [Number(r.latitud), Number(r.longitud)],
+      verificado: true, // solo llegan filas aprobadas por el equipo
+      destacado: !!r.destacado,
+      amigoTrail: !!r.es_amigo_trail,
     });
-    const markerById = Object.fromEntries(markers.map((e) => [e.place.id, e.marker]));
+    const isValidPoint = (p) => CATEGORIES[p.categoria] && REGIONES[p.region] && p.coords.every(Number.isFinite);
+
+    async function loadPoints() {
+      const useFallback = (why) => {
+        if (why) console.warn('[DESVIADOR] Usando puntos de respaldo:', why);
+        document.getElementById('dataSourceTag').textContent = ' · datos de ejemplo';
+        setPoints(puntosIniciales);
+      };
+      if (!supabaseClient) return useFallback();
+      try {
+        const { data: filas, error } = await supabaseClient
+          .from('comercios')
+          .select(PUBLIC_COLUMNS)
+          .eq('estado', 'aprobado')
+          .order('destacado', { ascending: false });
+        if (error) return useFallback(error.message);
+        document.getElementById('dataSourceTag').textContent = '';
+        setPoints(filas.map(fromRow).filter(isValidPoint));
+      } catch (err) {
+        useFallback(err.message);
+      }
+    }
 
     // --- Drawer (ficha del lugar) ---
     const drawer = document.getElementById('drawer');
@@ -596,8 +763,10 @@
       const c = CATEGORIES[p.categoria];
       const status = [
         p.verificado ? '<span class="inline-flex items-center gap-1 rounded-full bg-moss-600/10 px-2.5 py-1 text-xs font-semibold text-moss-700 ring-1 ring-moss-600/30"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Verificado</span>' : '',
+        p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2.5 py-1 text-xs font-bold text-sand-50">Amiga del Trail</span>' : '',
         p.destacado ? '<span class="rounded-full bg-ochre-400 px-2.5 py-1 text-xs font-bold text-soil-950">Destacado</span>' : '',
       ].join('');
+      const place = [p.comuna, REGIONES[p.region].label].filter(Boolean).map(esc).join(' · ');
 
       const row = (label, value, missing) => `
         <div class="flex gap-3 py-2.5">
@@ -621,7 +790,8 @@
           ${status}
         </div>
         <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
-        <p class="mt-1.5 text-sm text-soil-600">${esc(p.comuna)} · ${REGIONES[p.region].label}</p>
+        <p class="mt-1.5 text-sm text-soil-600">${place}</p>
+        ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
 
         <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
           ${row('Dirección', p.direccion ? esc(p.direccion) : 'Por confirmar', !p.direccion)}
@@ -736,7 +906,7 @@
         li.innerHTML = `<button type="button" class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-sand-100">
             <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full" style="background:${c.color}">${svgIcon(place.categoria, 'h-3.5 w-3.5', '#f6f1e7')}</span>
             <span class="min-w-0"><span class="block truncate text-sm font-semibold text-soil-950">${esc(place.nombre)}</span>
-            <span class="block text-xs text-soil-600">${c.short} · ${esc(place.comuna)}</span></span></button>`;
+            <span class="block text-xs text-soil-600">${c.short} · ${esc(place.comuna || REGIONES[place.region].label)}</span></span></button>`;
         li.querySelector('button').addEventListener('click', () => openDrawer(place));
         listEl.appendChild(li);
       });
@@ -781,12 +951,12 @@
     function runSearch() {
       const q = norm(searchInput.value.trim());
       if (!q) { searchHits = []; return hideResults(); }
-      searchHits = puntosIniciales.filter((p) =>
+      searchHits = puntos.filter((p) =>
         norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q));
       resultsEl.innerHTML = searchHits.length
         ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-sand-100 focus:bg-sand-100 focus:outline-none">
             <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-3 w-3', '#f6f1e7')}</span>
-            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-soil-950">${esc(p.nombre)}</span><span class="block text-xs text-soil-600">${esc(p.comuna)} · ${REGIONES[p.region].label}</span></span></button></li>`).join('')
+            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-soil-950">${esc(p.nombre)}</span><span class="block text-xs text-soil-600">${[p.comuna, REGIONES[p.region].label].filter(Boolean).map(esc).join(' · ')}</span></span></button></li>`).join('')
         : `<li class="px-4 py-3 text-sm text-soil-600">Sin resultados para "${esc(searchInput.value.trim())}". <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 hover:underline">Sugiere un lugar</a></li>`;
       resultsEl.classList.remove('hidden');
       searchInput.setAttribute('aria-expanded', 'true');
@@ -811,7 +981,7 @@
     });
     document.addEventListener('click', (e) => { if (!e.target.closest('#searchWrap')) hideResults(); });
 
-    render(false); // vista inicial: Chile centro-sur, zoom 6
+    loadPoints(); // vista inicial: Chile centro-sur, zoom 6
   </script>
 
   <script>
@@ -892,6 +1062,47 @@
     const form = document.getElementById('mainForm');
     const $ = (id) => document.getElementById(id);
     $('bizCat').innerHTML = Object.entries(CATEGORIES).map(([k, c]) => `<option value="${k}">${c.short}</option>`).join('');
+    $('bizRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}">${r.label}</option>`).join('');
+    $('bizRegion').value = 'metropolitana';
+
+    // --- Mini mapa para marcar la ubicación del negocio ---
+    let pickMap = null, pickMarker = null, pickedLatLng = null;
+    const PICK_DEFAULT_TEXT = 'Toca el mapa para marcar dónde está tu negocio.';
+    function initPickMap() {
+      if (pickMap) return pickMap.invalidateSize();
+      if (!window.L) { $('pickMap').innerHTML = '<p style="padding:16px;font-size:13px;color:#54473a">No se pudo cargar el mapa. Recarga la página para marcar tu ubicación.</p>'; return; }
+      pickMap = L.map('pickMap', {
+        minZoom: 4, maxZoom: 18, zoomSnap: 0.25, scrollWheelZoom: false,
+        maxBounds: [[-56.8, -77.5], [-17.2, -65.5]], maxBoundsViscosity: 1.0,
+      }).fitBounds(REGIONES[$('bizRegion').value].bounds);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { attribution: '&copy; Esri', maxZoom: 18 }).addTo(pickMap);
+      pickMap.on('click', (e) => setPick(e.latlng));
+    }
+    function setPick(ll) {
+      pickedLatLng = L.latLng(ll);
+      if (!pickMarker) {
+        pickMarker = L.marker(pickedLatLng, {
+          draggable: true, title: 'Ubicación del negocio',
+          icon: L.divIcon({ className: '', html: '<div class="pin" style="background:#56743a"></div>', iconSize: [32, 32], iconAnchor: [16, 32] }),
+        }).addTo(pickMap);
+        pickMarker.on('dragend', () => setPick(pickMarker.getLatLng()));
+      } else pickMarker.setLatLng(pickedLatLng);
+      $('pickReadout').textContent = `${pickedLatLng.lat.toFixed(5)}, ${pickedLatLng.lng.toFixed(5)} · puedes arrastrar el pin para ajustar`;
+    }
+    function clearPick() {
+      if (pickMarker) { pickMap.removeLayer(pickMarker); pickMarker = null; }
+      pickedLatLng = null;
+      $('pickReadout').textContent = PICK_DEFAULT_TEXT;
+    }
+    $('bizRegion').addEventListener('change', () => { if (pickMap && !pickedLatLng) pickMap.flyToBounds(REGIONES[$('bizRegion').value].bounds, { duration: 0.6 }); });
+    $('pickLocate').addEventListener('click', () => {
+      if (!navigator.geolocation || !pickMap) return toast('Tu navegador no permite geolocalización');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => { const ll = L.latLng(pos.coords.latitude, pos.coords.longitude); setPick(ll); pickMap.setView(ll, 15); },
+        () => toast('No pudimos obtener tu ubicación. Marca el punto en el mapa.'),
+        { timeout: 8000 },
+      );
+    });
 
     const COPY = {
       negocio: { label: 'Cuéntanos sobre tu negocio', optional: true,  placeholder: 'Servicios, marcas con las que trabajas, horario…', submit: 'Enviar solicitud' },
@@ -909,6 +1120,12 @@
       $('submitBtn').textContent = c.submit;
       $('title').placeholder = kind === 'aviso' ? 'Ej: Se busca mecánico part-time en Ñuñoa' : 'Ej: Nuevo bikepark en Chillán';
       $('formError').classList.add('hidden');
+      $('formNote').textContent = kind !== 'negocio'
+        ? 'Versión de prueba: los avisos y datos todavía no se guardan en un servidor.'
+        : supabaseClient
+          ? 'Tu solicitud queda pendiente hasta que el equipo de DESVIADOR la revise.'
+          : 'Registro no disponible por ahora: falta conectar la base de datos.';
+      if (kind === 'negocio') requestAnimationFrame(initPickMap);
     }
     form.querySelectorAll('input[name="kind"]').forEach((r) => r.addEventListener('change', syncKind));
     $('message').addEventListener('input', () => ($('charCount').textContent = $('message').value.length));
@@ -929,27 +1146,77 @@
     });
 
     function showError(msg) { $('formError').textContent = msg; $('formError').classList.remove('hidden'); }
+    function setSubmitting(on) {
+      const btn = $('submitBtn');
+      btn.disabled = on;
+      btn.classList.toggle('opacity-60', on);
+      btn.classList.toggle('cursor-wait', on);
+      btn.textContent = on ? 'Guardando…' : COPY[currentKind()].submit;
+    }
+    // WhatsApp: solo dígitos; un celular chileno de 9 dígitos recibe el código 56
+    const normalizePhone = (v) => { const d = v.replace(/\D/g, ''); return d.length === 9 && d.startsWith('9') ? '56' + d : d; };
     function resetForm(kind) {
       form.reset();
+      $('bizRegion').value = 'metropolitana';
       $(`kind-${kind}`).checked = true;
       syncKind();
       $('charCount').textContent = '0';
     }
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('input', () => { $('formSuccess').hidden = true; });
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if ($('website').value) return; // bot
       const kind = currentKind();
       const body = $('message').value.trim();
 
       if (kind === 'negocio') {
-        const phone = $('bizPhone').value.replace(/\D/g, '');
-        if ($('bizName').value.trim().length < 3) return showError('Escribe el nombre de tu negocio.');
-        if ($('bizComuna').value.trim().length < 3) return showError('Indica la comuna donde está tu negocio.');
-        if (phone.length < 8) return showError('Agrega un WhatsApp válido para confirmar tus datos (ej: +56 9 1234 5678).');
-        const featured = $('bizFeatured').checked;
+        const nombre = $('bizName').value.trim();
+        const comuna = $('bizComuna').value.trim();
+        const phone = normalizePhone($('bizPhone').value);
+        const owner = $('bizOwner').value.trim();
+        if (nombre.length < 3) return showError('Escribe el nombre de tu negocio o proyecto.');
+        if (comuna.length < 3) return showError('Indica la comuna donde está tu negocio.');
+        if (!pickedLatLng) return showError('Marca la ubicación de tu negocio en el mapa del formulario.');
+        if (phone && (phone.length < 8 || phone.length > 15)) return showError('Revisa el WhatsApp: usa el formato +56 9 1234 5678.');
+        if (owner.length < 6) return showError('Deja un contacto (nombre y celular) para verificar tu ficha. No se publica.');
+        if (!supabaseClient) return showError('El registro de negocios no está disponible por ahora. Inténtalo más tarde.');
+
+        const nuevoRegistro = {
+          nombre_comercio: nombre,
+          categoria: $('bizCat').value,
+          region: $('bizRegion').value,
+          comuna,
+          direccion: $('bizAddress').value.trim() || null,
+          latitud: +pickedLatLng.lat.toFixed(6),
+          longitud: +pickedLatLng.lng.toFixed(6),
+          whatsapp: phone || null,
+          horario: $('bizHours').value.trim() || null,
+          descripcion: body || null,
+          contacto_admin: owner,
+          necesidad_personal: $('bizStaff').value.trim() || null,
+          solicita_destacado: $('bizFeatured').checked,
+          // estado, es_amigo_trail y destacado NO se envían: la base de datos los fija por defecto
+        };
+
+        setSubmitting(true);
+        try {
+          // Sin .select(): el público no puede leer filas pendientes, así que no se pide la fila de vuelta
+          const { error } = await supabaseClient.from('comercios').insert([nuevoRegistro]);
+          if (error) throw error;
+        } catch (err) {
+          console.error('[DESVIADOR] Error al registrar:', err);
+          setSubmitting(false);
+          return showError('No pudimos guardar tu registro. Revisa tu conexión e inténtalo de nuevo.');
+        }
+        setSubmitting(false);
         resetForm('negocio');
-        return toast(featured ? 'Solicitud de ficha destacada lista. Te contactaremos por WhatsApp.' : 'Solicitud lista. Revisaremos tu ficha antes de publicarla.');
+        clearPick();
+        $('formSuccess').hidden = false;
+        $('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        $('formSuccess').focus({ preventScroll: true });
+        return;
       }
 
       const title = $('title').value.trim();
