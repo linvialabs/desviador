@@ -48,9 +48,13 @@
 
   <!-- Supabase (cliente JS, versión fijada) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+  <!-- Credenciales compartidas con admin.html -->
+  <script src="supabase-config.js"></script>
 
   <style>
     html, body { background: #f6f1e7; color: #241f19; }
+    /* El atributo hidden siempre gana a clases como "grid" o "flex" */
+    [hidden] { display: none !important; }
     /* Altura del mapa en CSS propio: no depende de que Tailwind cargue */
     #map { height: 62vh; min-height: 420px; width: 100%; }
     @media (min-width: 1024px) { #map { height: 100%; min-height: 0; } }
@@ -453,12 +457,13 @@
 
   <script>
     // ================= SUPABASE: CONFIGURACIÓN =================
-    // Pega aquí los datos de Project Settings → API. La anon key es pública por diseño:
-    // la seguridad la dan las políticas RLS y los permisos por columna del script SQL de abajo.
-    const SUPABASE_URL = 'TU_SUPABASE_URL_AQUI';
-    const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY_AQUI';
+    // Las credenciales se pegan en supabase-config.js (compartido con admin.html).
+    // La anon key es pública por diseño: la seguridad la dan las políticas RLS y los permisos por columna del SQL de abajo.
+    const SUPABASE_URL = window.DESVIADOR_CONFIG?.SUPABASE_URL || 'TU_SUPABASE_URL_AQUI';
+    const SUPABASE_ANON_KEY = window.DESVIADOR_CONFIG?.SUPABASE_ANON_KEY || 'TU_SUPABASE_ANON_KEY_AQUI';
 
     /* ================= SQL PARA EL SQL EDITOR DE SUPABASE (ejecutar una vez) =================
+    -- (También está en supabase/schema.sql. Para el panel admin.html ejecuta después supabase/admin.sql)
 
     -- 1) TABLA PRINCIPAL DE COMERCIOS Y SENDEROS
     create table if not exists public.comercios (

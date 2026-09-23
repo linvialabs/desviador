@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>DESVIADOR · Panel de administración</title>
+  <meta name="theme-color" content="#15120e" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Misma paleta tierra del sitio, en versión oscura
+    if (window.tailwind) tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            soil:  { 950: '#15120e', 900: '#1f1a14', 800: '#2b241c', 700: '#3d3328', 600: '#54473a' },
+            sand:  { 50: '#f6f1e7', 100: '#ede5d6', 200: '#ddd2bf', 300: '#c9bba3' },
+            moss:  { 300: '#b5c99a', 400: '#8fae6a', 500: '#6e8f4c', 600: '#56743a', 700: '#435c2d' },
+            ochre: { 300: '#e8c27a', 400: '#d9a441', 500: '#c08a2c', 600: '#9c6f22' },
+            clay:  { 300: '#e0a184', 400: '#c9764f', 500: '#a4532f' },
+          },
+          fontFamily: {
+            sans: ['Barlow', 'system-ui', 'sans-serif'],
+            display: ['"Barlow Condensed"', 'Barlow', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    if (!window.L) {
+      document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"><\/script>');
+    }
+  </script>
+
+  <!-- Supabase + credenciales compartidas con el sitio -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+
+  <style>
+    html, body { background: #15120e; color: #ede5d6; }
+    /* El atributo hidden siempre gana a clases como "grid" o "flex" */
+    [hidden] { display: none !important; }
+    #adminMap { height: 42vh; min-height: 280px; width: 100%; }
+    @media (min-width: 1024px) { #adminMap { height: calc(100vh - 7.5rem); min-height: 480px; } }
+    .leaflet-container { background: #2b241c; font-family: Barlow, system-ui, sans-serif; }
+    .leaflet-control-zoom a { background: #1f1a14 !important; color: #ede5d6 !important; border-color: #3d3328 !important; }
+    .leaflet-control-attribution { background: rgba(21,18,14,.8) !important; color: #a89a84 !important; font-size: 10px !important; }
+    .leaflet-control-attribution a { color: #b5c99a !important; }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #1f1a14; color: #ede5d6; border: 1px solid #3d3328; }
+    .pin { width: 28px; height: 28px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #f6f1e7; box-shadow: 0 5px 14px rgba(0,0,0,.5); display: grid; place-items: center; }
+    .pin svg { transform: rotate(45deg); }
+    .pin.is-pending { box-shadow: 0 0 0 3px #d9a441, 0 5px 14px rgba(0,0,0,.5); }
+    .pin.is-rejected { opacity: .55; }
+    .pin.is-selected { transform: rotate(-45deg) scale(1.25); box-shadow: 0 0 0 3px #f6f1e7, 0 8px 20px rgba(0,0,0,.6); }
+    .pin.is-editing { box-shadow: 0 0 0 4px #8fae6a, 0 8px 20px rgba(0,0,0,.6); cursor: grab; }
+    .topo-bg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='none' stroke='%23c9bba3' stroke-opacity='.07' stroke-width='1.2'%3E%3Cpath d='M-20 60c60-30 110 20 170 0s90-50 150-30 70 40 90 30'/%3E%3Cpath d='M-20 95c55-25 105 25 170 5s95-45 150-25 70 35 90 25'/%3E%3Cpath d='M-20 130c50-20 100 30 170 10s100-40 150-20 70 30 90 20'/%3E%3Cpath d='M-20 200c70 30 120-20 180 5s80 45 140 25 50-30 80-20'/%3E%3Cpath d='M-20 235c65 25 115-15 180 10s85 40 140 20 50-25 80-15'/%3E%3Cellipse cx='250' cy='330' rx='60' ry='22'/%3E%3C/g%3E%3C/svg%3E"); }
+    input, select, textarea { color-scheme: dark; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+
+<body class="bg-soil-950 font-sans text-sand-100 antialiased selection:bg-ochre-400 selection:text-soil-950">
+
+  <!-- ============ LOGIN ============ -->
+  <main id="loginView" class="topo-bg grid min-h-screen place-items-center px-4 py-10" hidden>
+    <div class="w-full max-w-sm">
+      <p class="mb-6 flex items-center justify-center gap-2">
+        <span class="grid h-9 w-9 place-items-center rounded-md bg-ochre-400 text-soil-950">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
+        </span>
+        <span class="font-display text-2xl font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span>
+      </p>
+      <form id="loginForm" class="space-y-4 rounded-2xl border border-soil-700 bg-soil-900/95 p-6 shadow-2xl" novalidate>
+        <div>
+          <h1 class="font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50">Panel de administración</h1>
+          <p class="mt-1 text-sm text-sand-300">Acceso solo para el equipo editorial.</p>
+        </div>
+        <div>
+          <label for="loginEmail" class="mb-1.5 block text-sm font-semibold text-sand-200">Correo</label>
+          <input id="loginEmail" type="email" autocomplete="username" required class="w-full rounded-lg border-0 bg-soil-950 px-3.5 py-2.5 text-sand-50 ring-1 ring-soil-700 focus:outline-none focus:ring-2 focus:ring-ochre-400" />
+        </div>
+        <div>
+          <label for="loginPassword" class="mb-1.5 block text-sm font-semibold text-sand-200">Contraseña</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required class="w-full rounded-lg border-0 bg-soil-950 px-3.5 py-2.5 text-sand-50 ring-1 ring-soil-700 focus:outline-none focus:ring-2 focus:ring-ochre-400" />
+        </div>
+        <p id="loginError" class="hidden rounded-lg bg-clay-500/15 px-3 py-2 text-sm text-clay-300 ring-1 ring-clay-500/40" role="alert"></p>
+        <button id="loginBtn" type="submit" class="w-full rounded-lg bg-ochre-400 py-3 font-semibold text-soil-950 transition hover:bg-ochre-300 disabled:cursor-wait disabled:opacity-60">Entrar</button>
+      </form>
+      <p class="mt-4 text-center text-xs text-sand-300/70"><a href="./" class="hover:text-sand-100">← Volver al sitio</a></p>
+    </div>
+  </main>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div id="dashView" hidden>
+    <header class="sticky top-0 z-[1100] border-b border-soil-700 bg-soil-950/95 backdrop-blur">
+      <div class="flex h-14 items-center justify-between gap-3 px-4 sm:px-6">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="font-display text-xl font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span>
+          <span class="rounded bg-ochre-400/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-ochre-300 ring-1 ring-ochre-400/40">Admin</span>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span id="userEmail" class="hidden max-w-[220px] truncate text-sand-300 md:inline"></span>
+          <button id="refreshBtn" type="button" class="rounded-lg px-3 py-1.5 text-sand-200 ring-1 ring-soil-700 hover:bg-soil-800" title="Recargar datos">↻<span class="sr-only"> Recargar</span></button>
+          <a href="./" target="_blank" rel="noopener" class="hidden rounded-lg px-3 py-1.5 text-sand-200 ring-1 ring-soil-700 hover:bg-soil-800 sm:inline">Ver sitio</a>
+          <button id="logoutBtn" type="button" class="rounded-lg bg-soil-800 px-3 py-1.5 font-semibold text-sand-50 hover:bg-soil-700">Salir</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(360px,44%)]">
+      <!-- Mapa (arriba en móvil, a la derecha en escritorio) -->
+      <aside class="relative isolate z-0 order-1 border-b border-soil-700 lg:order-2 lg:border-b-0 lg:border-l">
+        <div class="lg:sticky lg:top-14">
+          <div id="adminMap" aria-label="Mapa de revisión de coordenadas"></div>
+          <div class="absolute right-3 top-3 z-[900] flex flex-col items-end gap-2">
+            <button id="layerToggle" type="button" class="rounded-lg bg-soil-950/95 px-3 py-2 text-xs font-semibold text-sand-50 shadow-lg ring-1 ring-soil-700 hover:bg-soil-800">Satélite</button>
+          </div>
+          <p id="mapHint" class="pointer-events-none absolute bottom-3 left-3 z-[900] max-w-[85%] rounded-lg bg-soil-950/90 px-3 py-1.5 text-xs text-sand-200 ring-1 ring-soil-700"></p>
+        </div>
+      </aside>
+
+      <!-- Columna de trabajo -->
+      <main class="order-2 min-w-0 px-4 py-5 sm:px-6 lg:order-1">
+        <!-- Vista de lista -->
+        <section id="listView">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div id="tabs" class="flex gap-1.5 overflow-x-auto" role="tablist" aria-label="Estado"></div>
+            <div class="relative sm:w-64">
+              <label for="search" class="sr-only">Buscar</label>
+              <input id="search" type="search" placeholder="Buscar nombre, comuna, región…" class="w-full rounded-lg border-0 bg-soil-900 px-3.5 py-2 text-sm text-sand-50 placeholder-sand-300/50 ring-1 ring-soil-700 focus:outline-none focus:ring-2 focus:ring-ochre-400" />
+            </div>
+          </div>
+          <p id="summary" class="mt-3 font-mono text-[11px] uppercase tracking-wider text-sand-300/70"></p>
+          <div id="listBody" class="mt-3"></div>
+        </section>
+
+        <!-- Vista de edición -->
+        <section id="editView" hidden>
+          <button id="editBack" type="button" class="mb-4 text-sm font-semibold text-sand-300 hover:text-sand-50">← Volver a la lista</button>
+          <form id="editForm" class="space-y-4 rounded-2xl border border-soil-700 bg-soil-900 p-5" novalidate>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 class="font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50">Editar ficha</h2>
+              <span id="editMeta" class="font-mono text-[11px] text-sand-300/70"></span>
+            </div>
+            <div>
+              <label for="e_nombre" class="lbl">Nombre</label>
+              <input id="e_nombre" maxlength="80" class="fld" />
+            </div>
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div><label for="e_categoria" class="lbl">Categoría</label><select id="e_categoria" class="fld"></select></div>
+              <div><label for="e_region" class="lbl">Región</label><select id="e_region" class="fld"></select></div>
+              <div><label for="e_estado" class="lbl">Estado</label>
+                <select id="e_estado" class="fld"><option value="pendiente">Pendiente</option><option value="aprobado">Aprobado</option><option value="rechazado">Rechazado</option></select></div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="e_comuna" class="lbl">Comuna</label><input id="e_comuna" maxlength="60" class="fld" /></div>
+              <div><label for="e_direccion" class="lbl">Dirección</label><input id="e_direccion" maxlength="120" class="fld" /></div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="e_lat" class="lbl">Latitud</label><input id="e_lat" inputmode="decimal" class="fld font-mono" /></div>
+              <div><label for="e_lng" class="lbl">Longitud</label><input id="e_lng" inputmode="decimal" class="fld font-mono" /></div>
+            </div>
+            <p class="-mt-2 text-xs text-sand-300/80">Arrastra el pin verde en el mapa para corregir la ubicación.</p>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div><label for="e_whatsapp" class="lbl">WhatsApp público</label><input id="e_whatsapp" inputmode="tel" maxlength="20" placeholder="56912345678" class="fld font-mono" /></div>
+              <div><label for="e_horario" class="lbl">Horario</label><input id="e_horario" maxlength="80" class="fld" /></div>
+            </div>
+            <div><label for="e_descripcion" class="lbl">Descripción pública</label><textarea id="e_descripcion" rows="3" maxlength="600" class="fld resize-y"></textarea></div>
+
+            <fieldset class="space-y-4 rounded-xl border border-dashed border-ochre-400/40 p-4">
+              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-ochre-300">Privado (no se publica)</legend>
+              <div><label for="e_contacto" class="lbl">Contacto del dueño</label><input id="e_contacto" maxlength="120" class="fld" /></div>
+              <div><label for="e_personal" class="lbl">Busca personal</label><input id="e_personal" maxlength="200" class="fld" /></div>
+              <label class="flex items-center gap-2 text-sm text-sand-200"><input id="e_solicita" type="checkbox" class="h-4 w-4 accent-[#d9a441]" /> Pidió ficha destacada</label>
+            </fieldset>
+
+            <div class="flex flex-wrap gap-4">
+              <label class="flex items-center gap-2 text-sm font-semibold text-sand-100"><input id="e_amigo" type="checkbox" class="h-4 w-4 accent-[#8fae6a]" /> Sello Amiga del Trail</label>
+              <label class="flex items-center gap-2 text-sm font-semibold text-sand-100"><input id="e_destacado" type="checkbox" class="h-4 w-4 accent-[#d9a441]" /> Ficha destacada</label>
+            </div>
+
+            <p id="editError" class="hidden rounded-lg bg-clay-500/15 px-3 py-2 text-sm text-clay-300 ring-1 ring-clay-500/40" role="alert"></p>
+            <div class="flex flex-wrap gap-2">
+              <button id="editSave" type="submit" class="rounded-lg bg-moss-600 px-5 py-2.5 font-semibold text-sand-50 hover:bg-moss-500 disabled:cursor-wait disabled:opacity-60">Guardar cambios</button>
+              <button id="editCancel" type="button" class="rounded-lg px-5 py-2.5 font-semibold text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800">Cancelar</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Aviso de configuración -->
+  <main id="configView" class="grid min-h-screen place-items-center px-4" hidden>
+    <div class="max-w-md rounded-2xl border border-soil-700 bg-soil-900 p-6 text-sm text-sand-200">
+      <h1 class="font-display text-2xl font-extrabold uppercase text-sand-50">Falta conectar Supabase</h1>
+      <p class="mt-2">Pega la <em>Project URL</em> y la <em>anon public key</em> en <code class="rounded bg-soil-800 px-1.5 py-0.5 font-mono text-xs text-ochre-300">supabase-config.js</code> y ejecuta <code class="rounded bg-soil-800 px-1.5 py-0.5 font-mono text-xs text-ochre-300">supabase/admin.sql</code> en el SQL Editor.</p>
+    </div>
+  </main>
+
+  <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-sand-50 px-4 py-3 text-sm font-semibold text-soil-950 opacity-0 shadow-2xl transition duration-300" role="status" aria-live="polite"></div>
+
+  <style type="text/tailwindcss">
+    .lbl { @apply mb-1.5 block text-sm font-semibold text-sand-200; }
+    .fld { @apply w-full rounded-lg border-0 bg-soil-950 px-3.5 py-2.5 text-sand-50 ring-1 ring-soil-700 focus:outline-none focus:ring-2 focus:ring-ochre-400; }
+    .btn { @apply inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition disabled:cursor-wait disabled:opacity-50; }
+  </style>
+
+  <script>
+    // ================= CONFIGURACIÓN =================
+    // Requiere haber ejecutado supabase/schema.sql y supabase/admin.sql en Supabase.
+    const SUPABASE_URL = window.DESVIADOR_CONFIG?.SUPABASE_URL || 'TU_SUPABASE_URL_AQUI';
+    const SUPABASE_ANON_KEY = window.DESVIADOR_CONFIG?.SUPABASE_ANON_KEY || 'TU_SUPABASE_ANON_KEY_AQUI';
+    const READY = !!window.supabase && /^https:\/\//.test(SUPABASE_URL) && !SUPABASE_ANON_KEY.startsWith('TU_');
+    const supabaseClient = READY ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    // ================= CATÁLOGOS (iguales al sitio) =================
+    const CATEGORIES = {
+      talleres: { label: 'Taller',           color: '#c08a2c', icon: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/>' },
+      clases:   { label: 'Escuela',          color: '#5b7a99', icon: '<path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' },
+      senderos: { label: 'Bikepark/Sendero', color: '#56743a', icon: '<path d="M3 20l6-10 4 6 3-4 5 8H3z"/>' },
+      tours:    { label: 'Shuttle/Tour',     color: '#a4532f', icon: '<path d="M3 7h11l4 4h3v6H3V7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
+      tiendas:  { label: 'Tienda',           color: '#3f7f7a', icon: '<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>' },
+    };
+    const REGIONES = {
+      arica: 'Arica y Parinacota', tarapaca: 'Tarapacá', antofagasta: 'Antofagasta', atacama: 'Atacama', coquimbo: 'Coquimbo',
+      valparaiso: 'Valparaíso', metropolitana: 'Santiago (RM)', ohiggins: "O'Higgins", maule: 'Maule', nuble: 'Ñuble',
+      biobio: 'Biobío', araucania: 'Araucanía', losrios: 'Los Ríos', loslagos: 'Los Lagos', aysen: 'Aysén', magallanes: 'Magallanes',
+    };
+    const ESTADOS = {
+      pendiente: { label: 'Pendientes', one: 'Pendiente', cls: 'bg-ochre-400/15 text-ochre-300 ring-ochre-400/40' },
+      aprobado:  { label: 'Aprobados',  one: 'Aprobado',  cls: 'bg-moss-500/15 text-moss-300 ring-moss-500/40' },
+      rechazado: { label: 'Rechazados', one: 'Rechazado', cls: 'bg-clay-500/15 text-clay-300 ring-clay-500/40' },
+    };
+    const CHILE_BOUNDS = [[-56.8, -77.5], [-17.2, -65.5]];
+
+    // ================= UTILIDADES =================
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const svgIcon = (cat, cls = 'h-3.5 w-3.5', stroke = '#f6f1e7') =>
+      `<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CATEGORIES[cat]?.icon || ''}</svg>`;
+    const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+    const normalizePhone = (v) => { const d = String(v || '').replace(/\D/g, ''); return d.length === 9 && d.startsWith('9') ? '56' + d : d; };
+
+    let toastTimer;
+    function toast(text, isError = false) {
+      const t = $('toast');
+      t.textContent = text;
+      t.className = t.className.replace(/\b(bg-sand-50|bg-clay-500|text-soil-950|text-sand-50)\b/g, '');
+      t.classList.add(isError ? 'bg-clay-500' : 'bg-sand-50', isError ? 'text-sand-50' : 'text-soil-950');
+      t.classList.remove('translate-y-24', 'opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3200);
+    }
+    function show(view) {
+      ['loginView', 'dashView', 'configView'].forEach((v) => { $(v).hidden = v !== view; });
+    }
+
+    // ================= ESTADO =================
+    const state = { rows: [], tab: 'pendiente', q: '', selectedId: null, editingId: null, busy: new Set() };
+    const byId = (id) => state.rows.find((r) => r.id === id);
+
+    // ================= AUTENTICACIÓN =================
+    async function checkAdmin() {
+      const { data, error } = await supabaseClient.rpc('is_admin');
+      return !error && data === true;
+    }
+
+    async function boot() {
+      if (!supabaseClient) return show('configView');
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session && await checkAdmin()) return enterDashboard(session);
+      if (session) await supabaseClient.auth.signOut();
+      show('loginView');
+      $('loginEmail').focus();
+    }
+
+    $('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = $('loginError');
+      err.classList.add('hidden');
+      const email = $('loginEmail').value.trim();
+      const password = $('loginPassword').value;
+      if (!email || !password) { err.textContent = 'Escribe tu correo y contraseña.'; return err.classList.remove('hidden'); }
+
+      $('loginBtn').disabled = true; $('loginBtn').textContent = 'Entrando…';
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      let message = null;
+      if (error) message = 'Correo o contraseña incorrectos.';
+      else if (!(await checkAdmin())) {
+        await supabaseClient.auth.signOut();
+        message = 'Esta cuenta no tiene permisos de administración.';
+      }
+      $('loginBtn').disabled = false; $('loginBtn').textContent = 'Entrar';
+      if (message) { err.textContent = message; return err.classList.remove('hidden'); }
+      $('loginPassword').value = '';
+      enterDashboard(data.session);
+    });
+
+    $('logoutBtn').addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      state.rows = [];
+      show('loginView');
+    });
+
+    // ================= DATOS =================
+    async function loadRows(silent = false) {
+      const { data, error } = await supabaseClient.rpc('admin_comercios');
+      if (error) {
+        if (error.code === '42501') { await supabaseClient.auth.signOut(); show('loginView'); return toast('Tu sesión no tiene permisos de administración.', true); }
+        return toast('No se pudieron cargar los datos: ' + error.message, true);
+      }
+      state.rows = data || [];
+      renderAll();
+      if (!silent) fitToTab();
+    }
+
+    // Cambia campos de una fila y confirma recargando desde la base de datos
+    async function mutate(id, changes, okText) {
+      if (state.busy.has(id)) return false;
+      state.busy.add(id); renderList();
+      const { error } = await supabaseClient.from('comercios').update(changes).eq('id', id);
+      state.busy.delete(id);
+      if (error) { renderList(); toast('No se guardó: ' + error.message, true); return false; }
+      await loadRows(true);
+      const row = byId(id);
+      const applied = row && Object.entries(changes).every(([k, v]) => String(row[k]) === String(v));
+      if (!applied) { toast('El cambio no se aplicó. Revisa que tu usuario esté en la tabla admins.', true); return false; }
+      if (okText) toast(okText);
+      return true;
+    }
+
+    async function removeRow(id) {
+      state.busy.add(id); renderList();
+      const { error } = await supabaseClient.from('comercios').delete().eq('id', id);
+      state.busy.delete(id);
+      if (error) { renderList(); return toast('No se eliminó: ' + error.message, true); }
+      await loadRows(true);
+      if (byId(id)) return toast('No se eliminó. Revisa que tu usuario esté en la tabla admins.', true);
+      if (state.selectedId === id) state.selectedId = null;
+      toast('Registro eliminado');
+    }
+
+    // ================= MAPA =================
+    let map, markers = {}, currentLayer = 'topo', editMarker = null;
+    const esriBase = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    const LAYERS = {};
+    function initMap() {
+      if (map || !window.L) return;
+      map = L.map('adminMap', { minZoom: 4, maxZoom: 19, zoomSnap: 0.25, maxBounds: CHILE_BOUNDS, maxBoundsViscosity: 1 }).setView([-36.8, -72.5], 5);
+      LAYERS.topo = L.tileLayer(esriBase + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { attribution: '&copy; Esri', maxZoom: 19 });
+      LAYERS.sat = L.layerGroup([
+        L.tileLayer(esriBase + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '&copy; Esri, Maxar', maxZoom: 19 }),
+        L.tileLayer(esriBase + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }),
+      ]);
+      LAYERS.topo.addTo(map);
+      $('layerToggle').addEventListener('click', () => {
+        map.removeLayer(LAYERS[currentLayer]);
+        currentLayer = currentLayer === 'topo' ? 'sat' : 'topo';
+        LAYERS[currentLayer].addTo(map);
+        $('layerToggle').textContent = currentLayer === 'topo' ? 'Satélite' : 'Terreno';
+      });
+    }
+    const pinIcon = (r, extra = '') => L.divIcon({
+      className: '',
+      html: `<div class="pin ${r.estado === 'pendiente' ? 'is-pending' : ''} ${r.estado === 'rechazado' ? 'is-rejected' : ''} ${extra}" style="background:${CATEGORIES[r.categoria]?.color || '#54473a'}">${svgIcon(r.categoria)}</div>`,
+      iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26],
+    });
+    function renderMarkers() {
+      if (!map) return;
+      Object.values(markers).forEach((m) => map.removeLayer(m));
+      markers = {};
+      filteredRows().forEach((r) => {
+        if (r.id === state.editingId) return;
+        const m = L.marker([+r.latitud, +r.longitud], { icon: pinIcon(r, r.id === state.selectedId ? 'is-selected' : ''), title: r.nombre_comercio })
+          .bindPopup(`<strong>${esc(r.nombre_comercio)}</strong><br><span style="font-size:12px;opacity:.8">${esc(r.comuna || '')} · ${esc(REGIONES[r.region] || r.region)}</span><br><span style="font:11px 'JetBrains Mono',monospace">${(+r.latitud).toFixed(5)}, ${(+r.longitud).toFixed(5)}</span>`)
+          .addTo(map);
+        m.on('click', () => { state.selectedId = r.id; renderList(); document.querySelector(`[data-row="${r.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+        markers[r.id] = m;
+      });
+      $('mapHint').textContent = state.editingId ? 'Editando: arrastra el pin verde para ajustar la ubicación.' : `${Object.keys(markers).length} ${ESTADOS[state.tab].label.toLowerCase()} en el mapa · anillo ocre = pendiente`;
+    }
+    function fitToTab() {
+      if (!map) return;
+      const pts = Object.values(markers).map((m) => m.getLatLng());
+      if (pts.length > 1) map.flyToBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 13, duration: 0.8 });
+      else if (pts.length === 1) map.flyTo(pts[0], 13, { duration: 0.8 });
+    }
+    function focusRow(id) {
+      const r = byId(id);
+      if (!r || !map) return;
+      state.selectedId = id;
+      renderAll();
+      map.flyTo([+r.latitud, +r.longitud], 16, { duration: 0.9 });
+      setTimeout(() => markers[id]?.openPopup(), 950);
+      if (window.innerWidth < 1024) $('adminMap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ================= LISTAS =================
+    function filteredRows() {
+      const q = norm(state.q);
+      return state.rows.filter((r) => r.estado === state.tab && (!q || norm(`${r.nombre_comercio} ${r.comuna} ${REGIONES[r.region]} ${r.direccion} ${CATEGORIES[r.categoria]?.label}`).includes(q)));
+    }
+    function renderTabs() {
+      $('tabs').innerHTML = Object.entries(ESTADOS).map(([k, e]) => {
+        const n = state.rows.filter((r) => r.estado === k).length;
+        const on = k === state.tab;
+        return `<button type="button" role="tab" data-tab="${k}" aria-selected="${on}" class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${on ? 'bg-sand-50 text-soil-950' : 'bg-soil-900 text-sand-200 ring-1 ring-soil-700 hover:ring-soil-600'}">${e.label} <span class="ml-1 font-mono text-[11px] ${on ? 'text-soil-600' : k === 'pendiente' && n ? 'text-ochre-300' : 'text-sand-300/60'}">${n}</span></button>`;
+      }).join('');
+      const amigas = state.rows.filter((r) => r.estado === 'aprobado' && r.es_amigo_trail).length;
+      const dest = state.rows.filter((r) => r.estado === 'aprobado' && r.destacado).length;
+      const pide = state.rows.filter((r) => r.solicita_destacado && !r.destacado).length;
+      $('summary').textContent = `${amigas} amigas del trail · ${dest} destacadas${pide ? ` · ${pide} piden ficha destacada` : ''}`;
+    }
+
+    const chip = (text, cls) => `<span class="rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ring-1 ${cls}">${text}</span>`;
+    const catChip = (r) => `<span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-sand-50" style="background:${CATEGORIES[r.categoria]?.color || '#54473a'}">${svgIcon(r.categoria, 'h-3 w-3')}${esc(CATEGORIES[r.categoria]?.label || r.categoria)}</span>`;
+    const badges = (r) => [
+      r.es_amigo_trail ? chip('Amiga del Trail', 'bg-moss-500/15 text-moss-300 ring-moss-500/40') : '',
+      r.destacado ? chip('Destacado', 'bg-ochre-400/15 text-ochre-300 ring-ochre-400/40') : '',
+      r.solicita_destacado && !r.destacado ? chip('Pide destacado', 'bg-transparent text-ochre-300 ring-ochre-400/40') : '',
+    ].join('');
+
+    // Botones: data-act = aprobar | rechazar | pendiente | amigo | destacar | mapa | editar | eliminar
+    function actions(r, compact = false) {
+      const busy = state.busy.has(r.id) ? 'disabled' : '';
+      const b = (act, label, cls, pressed) => `<button type="button" data-act="${act}" data-id="${r.id}" ${busy} ${pressed !== undefined ? `aria-pressed="${pressed}"` : ''} class="btn ${cls}">${label}</button>`;
+      const OFF = 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800';
+      const out = [];
+      out.push(b('mapa', 'Ver en mapa', 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800'));
+      if (r.estado !== 'aprobado') out.push(b('aprobar', '✓ Aprobar', 'bg-moss-600 text-sand-50 hover:bg-moss-500'));
+      if (r.estado === 'pendiente') out.push(b('rechazar', '✕ Rechazar', 'text-clay-300 ring-1 ring-clay-500/60 hover:bg-clay-500/15'));
+      if (r.estado === 'aprobado') out.push(b('pendiente', 'Despublicar', 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800'));
+      out.push(b('amigo', r.es_amigo_trail ? '★ Amiga del Trail' : '☆ Amiga del Trail', r.es_amigo_trail ? 'bg-moss-400 text-soil-950' : OFF, r.es_amigo_trail));
+      out.push(b('destacar', r.destacado ? '◆ Destacada' : '◇ Destacar', r.destacado ? 'bg-ochre-400 text-soil-950' : OFF, r.destacado));
+      out.push(b('editar', 'Editar', 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800'));
+      if (r.estado !== 'pendiente') out.push(b('eliminar', 'Eliminar', 'text-clay-300 hover:bg-clay-500/15'));
+      return `<div class="flex flex-wrap gap-1.5 ${compact ? '' : 'mt-4'}">${out.join('')}</div>`;
+    }
+
+    function pendingCard(r) {
+      const sel = r.id === state.selectedId ? 'ring-2 ring-ochre-400' : 'ring-1 ring-soil-700';
+      const priv = [
+        r.contacto_admin ? `<div><dt class="text-sand-300/70">Contacto</dt><dd class="text-sand-50">${esc(r.contacto_admin)}</dd></div>` : '',
+        r.necesidad_personal ? `<div><dt class="text-sand-300/70">Busca personal</dt><dd class="text-sand-50">${esc(r.necesidad_personal)}</dd></div>` : '',
+      ].join('');
+      return `<article data-row="${r.id}" class="rounded-xl bg-soil-900 p-4 ${sel}">
+        <div class="flex flex-wrap items-center gap-2">${catChip(r)}${chip(ESTADOS[r.estado].one, ESTADOS[r.estado].cls)}${badges(r)}<span class="ml-auto font-mono text-[11px] text-sand-300/60">${fmtDate(r.created_at)}</span></div>
+        <h3 class="mt-2 font-display text-xl font-bold uppercase leading-tight text-sand-50">${esc(r.nombre_comercio)}</h3>
+        <p class="text-sm text-sand-300">${[r.comuna, REGIONES[r.region], r.direccion].filter(Boolean).map(esc).join(' · ')}</p>
+        <dl class="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+          <div><dt class="text-sand-300/70">Coordenadas</dt><dd class="font-mono text-xs text-sand-50">${(+r.latitud).toFixed(5)}, ${(+r.longitud).toFixed(5)}</dd></div>
+          <div><dt class="text-sand-300/70">WhatsApp público</dt><dd class="font-mono text-xs text-sand-50">${r.whatsapp ? '+' + esc(r.whatsapp) : '—'}</dd></div>
+          ${r.horario ? `<div><dt class="text-sand-300/70">Horario</dt><dd class="text-sand-50">${esc(r.horario)}</dd></div>` : ''}
+        </dl>
+        ${r.descripcion ? `<p class="mt-3 rounded-lg bg-soil-950/60 p-3 text-sm text-sand-200">${esc(r.descripcion)}</p>` : ''}
+        ${priv ? `<dl class="mt-3 grid gap-x-6 gap-y-2 rounded-lg border border-dashed border-ochre-400/30 p-3 text-sm sm:grid-cols-2"><p class="font-mono text-[10px] font-bold uppercase tracking-wider text-ochre-300 sm:col-span-2">Privado</p>${priv}</dl>` : ''}
+        ${actions(r)}
+      </article>`;
+    }
+
+    function tableRows(rows) {
+      return `<div class="overflow-x-auto rounded-xl ring-1 ring-soil-700">
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <thead class="bg-soil-900 font-mono text-[10px] uppercase tracking-wider text-sand-300/70">
+            <tr><th class="px-4 py-2.5 font-semibold">Nombre</th><th class="px-3 py-2.5 font-semibold">Categoría</th><th class="px-3 py-2.5 font-semibold">Región</th><th class="px-3 py-2.5 font-semibold">Contacto privado</th></tr>
+          </thead>
+          <tbody class="divide-y divide-soil-700">
+            ${rows.map((r) => `
+              <tr data-row="${r.id}" class="${r.id === state.selectedId ? 'bg-soil-800' : 'bg-soil-950'} align-top">
+                <td class="px-4 py-3">
+                  <p class="font-semibold text-sand-50">${esc(r.nombre_comercio)}</p>
+                  <p class="text-xs text-sand-300/80">${[r.comuna, r.direccion].filter(Boolean).map(esc).join(' · ') || '—'}</p>
+                  <div class="mt-1.5 flex flex-wrap gap-1">${badges(r)}</div>
+                  ${actions(r, true).replace('flex flex-wrap gap-1.5', 'mt-2.5 flex flex-wrap gap-1.5')}
+                </td>
+                <td class="px-3 py-3">${catChip(r)}</td>
+                <td class="px-3 py-3 text-sand-200">${esc(REGIONES[r.region] || r.region)}</td>
+                <td class="px-3 py-3 text-xs text-sand-300">${esc(r.contacto_admin || '—')}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+    }
+
+    function renderList() {
+      renderTabs();
+      const rows = filteredRows();
+      const empty = {
+        pendiente: 'No hay solicitudes pendientes.',
+        aprobado: 'No hay registros aprobados con ese filtro.',
+        rechazado: 'No hay registros rechazados.',
+      }[state.tab];
+      $('listBody').innerHTML = !rows.length
+        ? `<p class="rounded-xl border border-dashed border-soil-700 p-8 text-center text-sm text-sand-300">${state.q ? 'Sin resultados para esa búsqueda.' : empty}</p>`
+        : state.tab === 'pendiente' ? `<div class="grid gap-3">${rows.map(pendingCard).join('')}</div>` : tableRows(rows);
+    }
+    function renderAll() { renderList(); renderMarkers(); }
+
+    // Delegación de clics en la lista
+    const confirmTimers = {};
+    $('listBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-act]');
+      if (!btn) return;
+      const id = btn.dataset.id, r = byId(id);
+      if (!r) return;
+      switch (btn.dataset.act) {
+        case 'mapa': return focusRow(id);
+        case 'aprobar': return mutate(id, { estado: 'aprobado' }, `Aprobado: ${r.nombre_comercio}. Ya aparece en el mapa.`);
+        case 'rechazar': return mutate(id, { estado: 'rechazado' }, `Rechazado: ${r.nombre_comercio}`);
+        case 'pendiente': return mutate(id, { estado: 'pendiente' }, `${r.nombre_comercio} volvió a pendientes (ya no se ve en el sitio)`);
+        case 'amigo': return mutate(id, { es_amigo_trail: !r.es_amigo_trail }, r.es_amigo_trail ? 'Sello Amiga del Trail quitado' : 'Sello Amiga del Trail asignado');
+        case 'destacar': return mutate(id, { destacado: !r.destacado }, r.destacado ? 'Ficha destacada quitada' : 'Ficha destacada activada');
+        case 'editar': return openEdit(id);
+        case 'eliminar':
+          // Confirmación en dos pasos, dentro del mismo botón
+          if (btn.dataset.confirm !== '1') {
+            btn.dataset.confirm = '1';
+            btn.textContent = '¿Eliminar definitivamente?';
+            btn.classList.add('bg-clay-500', 'text-sand-50');
+            clearTimeout(confirmTimers[id]);
+            confirmTimers[id] = setTimeout(() => renderList(), 4000);
+            return;
+          }
+          clearTimeout(confirmTimers[id]);
+          return removeRow(id);
+      }
+    });
+    $('tabs').addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-tab]');
+      if (!b) return;
+      state.tab = b.dataset.tab; state.selectedId = null;
+      renderAll(); fitToTab();
+    });
+    $('search').addEventListener('input', () => { state.q = $('search').value; renderAll(); });
+    $('refreshBtn').addEventListener('click', () => loadRows().then(() => toast('Datos actualizados')));
+
+    // ================= EDICIÓN =================
+    function fillSelect(el, entries) { el.innerHTML = entries.map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join(''); }
+    fillSelect($('e_categoria'), Object.entries(CATEGORIES).map(([k, c]) => [k, c.label]));
+    fillSelect($('e_region'), Object.entries(REGIONES));
+
+    function openEdit(id) {
+      const r = byId(id);
+      if (!r) return;
+      state.editingId = id; state.selectedId = id;
+      $('e_nombre').value = r.nombre_comercio || '';
+      $('e_categoria').value = r.categoria;
+      $('e_region').value = r.region;
+      $('e_estado').value = r.estado;
+      $('e_comuna').value = r.comuna || '';
+      $('e_direccion').value = r.direccion || '';
+      $('e_lat').value = (+r.latitud).toFixed(6);
+      $('e_lng').value = (+r.longitud).toFixed(6);
+      $('e_whatsapp').value = r.whatsapp || '';
+      $('e_horario').value = r.horario || '';
+      $('e_descripcion').value = r.descripcion || '';
+      $('e_contacto').value = r.contacto_admin || '';
+      $('e_personal').value = r.necesidad_personal || '';
+      $('e_solicita').checked = !!r.solicita_destacado;
+      $('e_amigo').checked = !!r.es_amigo_trail;
+      $('e_destacado').checked = !!r.destacado;
+      $('editMeta').textContent = `Creado ${fmtDate(r.created_at)}`;
+      $('editError').classList.add('hidden');
+      $('listView').hidden = true; $('editView').hidden = false;
+      renderMarkers();
+      if (map) {
+        editMarker && map.removeLayer(editMarker);
+        editMarker = L.marker([+r.latitud, +r.longitud], { draggable: true, icon: pinIcon(r, 'is-editing'), zIndexOffset: 1000 }).addTo(map);
+        editMarker.on('drag', () => { const ll = editMarker.getLatLng(); $('e_lat').value = ll.lat.toFixed(6); $('e_lng').value = ll.lng.toFixed(6); });
+        map.flyTo([+r.latitud, +r.longitud], 16, { duration: 0.8 });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function closeEdit() {
+      state.editingId = null;
+      if (editMarker) { map.removeLayer(editMarker); editMarker = null; }
+      $('editView').hidden = true; $('listView').hidden = false;
+      renderAll();
+    }
+    // Mover el pin si se escriben coordenadas a mano
+    ['e_lat', 'e_lng'].forEach((id) => $(id).addEventListener('change', () => {
+      const lat = parseFloat($('e_lat').value.replace(',', '.')), lng = parseFloat($('e_lng').value.replace(',', '.'));
+      if (editMarker && Number.isFinite(lat) && Number.isFinite(lng)) { editMarker.setLatLng([lat, lng]); map.panTo([lat, lng]); }
+    }));
+    $('editBack').addEventListener('click', closeEdit);
+    $('editCancel').addEventListener('click', closeEdit);
+
+    $('editForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fail = (m) => { $('editError').textContent = m; $('editError').classList.remove('hidden'); };
+      const txt = (id) => $(id).value.trim() || null;
+      const lat = parseFloat($('e_lat').value.replace(',', '.'));
+      const lng = parseFloat($('e_lng').value.replace(',', '.'));
+      const phone = normalizePhone($('e_whatsapp').value);
+      const nombre = $('e_nombre').value.trim();
+      if (nombre.length < 3) return fail('El nombre necesita al menos 3 caracteres.');
+      if (!(lat >= -56.8 && lat <= -17.2) || !(lng >= -77.5 && lng <= -65.5)) return fail('Las coordenadas deben estar dentro de Chile.');
+      if (phone && (phone.length < 8 || phone.length > 15)) return fail('El WhatsApp debe tener entre 8 y 15 dígitos (ej: 56912345678).');
+
+      const changes = {
+        nombre_comercio: nombre,
+        categoria: $('e_categoria').value,
+        region: $('e_region').value,
+        estado: $('e_estado').value,
+        comuna: txt('e_comuna'),
+        direccion: txt('e_direccion'),
+        latitud: +lat.toFixed(6),
+        longitud: +lng.toFixed(6),
+        whatsapp: phone || null,
+        horario: txt('e_horario'),
+        descripcion: txt('e_descripcion'),
+        contacto_admin: txt('e_contacto'),
+        necesidad_personal: txt('e_personal'),
+        solicita_destacado: $('e_solicita').checked,
+        es_amigo_trail: $('e_amigo').checked,
+        destacado: $('e_destacado').checked,
+      };
+      $('editSave').disabled = true; $('editSave').textContent = 'Guardando…';
+      const ok = await mutate(state.editingId, changes, 'Cambios guardados');
+      $('editSave').disabled = false; $('editSave').textContent = 'Guardar cambios';
+      if (ok) { state.tab = changes.estado; closeEdit(); }
+    });
+
+    // ================= INICIO =================
+    function enterDashboard(session) {
+      show('dashView');
+      $('userEmail').textContent = session?.user?.email || '';
+      initMap();
+      requestAnimationFrame(() => map?.invalidateSize());
+      loadRows();
+    }
+    supabaseClient?.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') show('loginView'); });
+    boot();
+  </script>
+</body>
+</html>

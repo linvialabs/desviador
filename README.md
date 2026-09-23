@@ -29,11 +29,19 @@ Regiones: `valparaiso`, `metropolitana`, `nuble`, `biobio`, `araucania`, `losrio
 ## Conectar Supabase
 
 1. Crea un proyecto en https://supabase.com y abre **SQL Editor**.
-2. Pega y ejecuta [`supabase/schema.sql`](supabase/schema.sql) (el mismo SQL está comentado al inicio del `<script>` de `index.html`).
-3. En **Project Settings → API** copia la *Project URL* y la *anon public key* y pégalas en `SUPABASE_URL` y `SUPABASE_ANON_KEY` dentro de `index.html`.
+2. Ejecuta [`supabase/schema.sql`](supabase/schema.sql): crea la tabla `comercios`, sus reglas de seguridad y carga los 7 puntos iniciales.
+3. En **Project Settings → API** copia la *Project URL* y la *anon public key* y pégalas en [`supabase-config.js`](supabase-config.js). Las usan el sitio y el panel. **Nunca** pegues la `service_role key`.
 
 Mientras no estén configuradas, el mapa muestra los puntos de respaldo ("datos de ejemplo") y el registro de negocios queda desactivado.
 
-**Aprobar una solicitud:** Table Editor → `comercios` → cambia `estado` a `aprobado` (y marca `es_amigo_trail` o `destacado` si corresponde).
-
 **Qué protege el esquema:** el público solo lee filas aprobadas y solo las columnas de la ficha (`contacto_admin`, `necesidad_personal` y `solicita_destacado` son privadas); solo puede insertar solicitudes pendientes y no puede asignarse sellos, aprobarse, editar ni borrar.
+
+## Panel de administración (`admin.html`)
+
+1. Ejecuta [`supabase/admin.sql`](supabase/admin.sql) en el SQL Editor (después de `schema.sql`).
+2. En **Authentication → Users → Add user** crea tu usuario (correo y contraseña, marcando *Auto Confirm User*).
+3. En la última sección de `admin.sql`, reemplaza `TU_CORREO_ADMIN@ejemplo.cl` por ese correo y ejecútala: eso te agrega a la tabla `admins`.
+4. Recomendado: en **Authentication → Sign In / Providers → Email** desactiva *Allow new users to sign up*.
+5. Entra a `https://linvialabs.github.io/desviador/admin.html`.
+
+Solo los usuarios de la tabla `admins` pueden ver datos privados, aprobar, editar o eliminar. Una cuenta creada por otra persona puede iniciar sesión, pero el panel la rechaza y la base de datos no le permite cambiar nada.
