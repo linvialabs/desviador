@@ -2,25 +2,21 @@
 <html lang="es-CL" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Desviador — Ciclismo independiente y técnico en Chile</title>
-  <meta name="description" content="Medio independiente de ciclismo en Chile: análisis técnico, mapa comunitario, bolsa de trabajo y envíos anónimos." />
-  <meta name="theme-color" content="#0a0b0d" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DESVIADOR — La plataforma técnica e interactiva del ciclismo en Chile</title>
+  <meta name="description" content="Mapa nacional de talleres, tiendas, escuelas, bikeparks y tours. Análisis técnico, bolsa de trabajo y comunidad ciclista en Chile." />
+  <meta name="theme-color" content="#0a0a0a" />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
+    if (window.tailwind) tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+            sans: ['Barlow', 'system-ui', 'sans-serif'],
+            display: ['"Barlow Condensed"', 'Barlow', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-          },
-          colors: {
-            ink: { 950: '#0a0b0d', 900: '#101216', 800: '#171a20', 700: '#222630', 600: '#2e3340' },
-            volt: { DEFAULT: '#d4ff3a', dim: '#a8cc2e' },
           },
         },
       },
@@ -30,13 +26,12 @@
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
 
-  <!-- Leaflet -->
+  <!-- Leaflet (con respaldo en jsDelivr) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    // Si unpkg falla, cargar Leaflet desde jsDelivr
     if (!window.L) {
       document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />');
       document.write('<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"><\/script>');
@@ -44,321 +39,388 @@
   </script>
 
   <style>
-    body { background: #0a0b0d; }
-    /* Altura fija del mapa en CSS propio: si Tailwind no carga, el mapa no colapsa a 0 px */
-    #map { height: 420px; width: 100%; }
-    @media (min-width: 640px) { #map { height: 520px; } }
-    .grain::before {
-      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .05;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
+    html, body { background: #0a0a0a; color: #e5e5e5; }
+    /* Altura del mapa en CSS propio: no depende de que Tailwind cargue */
+    #map { height: 62vh; min-height: 420px; width: 100%; }
+    @media (min-width: 1024px) { #map { height: 100%; min-height: 0; } }
+
     /* Leaflet en modo oscuro */
-    .leaflet-container { background: #101216; font-family: Inter, system-ui, sans-serif; }
-    .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #171a20; color: #e5e7eb; border: 1px solid #2e3340; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
-    .leaflet-popup-content { margin: 12px 14px; }
-    .leaflet-container a.leaflet-popup-close-button { color: #9ca3af; }
-    .leaflet-control-zoom a { background: #171a20 !important; color: #e5e7eb !important; border-color: #2e3340 !important; }
-    .leaflet-control-attribution { background: rgba(10,11,13,.75) !important; color: #6b7280 !important; }
-    .leaflet-control-attribution a { color: #9ca3af !important; }
-    .leaflet-control-zoom a { width: 36px !important; height: 36px !important; line-height: 34px !important; font-size: 20px !important; }
-    .leaflet-control-layers { background: #171a20 !important; color: #e5e7eb !important; border: 1px solid #2e3340 !important; border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,.45) !important; }
-    .leaflet-control-layers-toggle { width: 36px !important; height: 36px !important; filter: invert(1) brightness(.9); }
-    .leaflet-control-layers-expanded { padding: 8px 12px !important; font-size: 13px; }
-    .leaflet-control-layers-separator { border-top-color: #2e3340 !important; }
-    .leaflet-control-layers label { margin: 4px 0; cursor: pointer; }
-    .leaflet-control-layers input { accent-color: #d4ff3a; }
-    .region-btn[aria-pressed="true"] { background: #d4ff3a; color: #0a0b0d; box-shadow: none; }
-    .pin { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #0a0b0d; box-shadow: 0 0 0 2px rgba(255,255,255,.12), 0 6px 14px rgba(0,0,0,.5); display: grid; place-items: center; }
-    .pin span { transform: rotate(45deg); font-size: 12px; line-height: 1; }
-    .filter-btn[aria-pressed="false"] { opacity: .45; }
-    .filter-btn[aria-pressed="false"] .dot { background: transparent !important; }
+    .leaflet-container { background: #111; font-family: Barlow, system-ui, sans-serif; }
+    .leaflet-control-zoom { border: 0 !important; box-shadow: 0 8px 24px rgba(0,0,0,.5) !important; }
+    .leaflet-control-zoom a { width: 40px !important; height: 40px !important; line-height: 38px !important; font-size: 20px !important; background: #171717 !important; color: #e5e5e5 !important; border-color: #262626 !important; }
+    .leaflet-control-zoom a:hover { background: #262626 !important; }
+    .leaflet-control-attribution { background: rgba(10,10,10,.75) !important; color: #737373 !important; font-size: 10px !important; }
+    .leaflet-control-attribution a { color: #a3a3a3 !important; }
+    .leaflet-control-scale-line { background: rgba(10,10,10,.6); color: #a3a3a3; border-color: #525252; }
+
+    /* Pines */
+    .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #0a0a0a; box-shadow: 0 6px 16px rgba(0,0,0,.55); display: grid; place-items: center; transition: transform .15s ease, box-shadow .15s ease; }
+    .pin svg { transform: rotate(45deg); }
+    .pin.is-featured { box-shadow: 0 0 0 3px #a3e635, 0 6px 16px rgba(0,0,0,.55); }
+    .leaflet-marker-icon:hover .pin, .pin.is-selected { transform: rotate(-45deg) scale(1.2); box-shadow: 0 0 0 3px #fff, 0 8px 20px rgba(0,0,0,.6); }
+
+    /* Drawer: hoja inferior en móvil, panel lateral en escritorio */
+    .drawer { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+    .drawer.is-open { transform: none !important; }
+    /* En móvil la ficha tapa la parte baja; en escritorio los botones flotantes se corren a la izquierda de la ficha */
+    @media (min-width: 1024px) { .drawer.is-open ~ #mapFabs { right: 404px; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+    }
     input, select, textarea { color-scheme: dark; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
   </style>
 </head>
 
-<body class="bg-ink-950 text-gray-200 font-sans antialiased selection:bg-volt selection:text-ink-950">
+<body class="bg-neutral-950 font-sans text-neutral-200 antialiased selection:bg-lime-400 selection:text-neutral-950">
 
-  <!-- ============ 1. ENCABEZADO ============ -->
-  <header class="sticky top-0 z-[1000] border-b border-white/5 bg-ink-950/80 backdrop-blur-lg">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-      <a href="#inicio" class="flex items-center gap-2">
-        <span class="grid h-8 w-8 place-items-center rounded-md bg-volt text-ink-950">
-          <!-- Icono de piñón -->
+  <!-- ============ ENCABEZADO ============ -->
+  <header class="sticky top-0 z-[1100] border-b border-white/5 bg-neutral-950/85 backdrop-blur-lg">
+    <div class="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-4 sm:px-6">
+      <a href="#inicio" class="flex items-center gap-2" aria-label="DESVIADOR, inicio">
+        <span class="grid h-8 w-8 place-items-center rounded-md bg-lime-400 text-neutral-950">
           <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
         </span>
-        <span class="font-display text-lg font-bold tracking-tight text-white">DESVIADOR<span class="text-volt">.</span></span>
+        <span class="font-display text-xl font-extrabold uppercase tracking-wide text-white">Desviador<span class="text-lime-400">.</span></span>
       </a>
 
-      <nav class="hidden items-center gap-7 text-sm text-gray-400 md:flex" aria-label="Principal">
+      <nav class="hidden items-center gap-6 text-sm font-medium text-neutral-400 md:flex" aria-label="Principal">
+        <a href="#inicio" class="transition hover:text-white">Mapa</a>
         <a href="#noticias" class="transition hover:text-white">Tech</a>
-        <a href="#mapa" class="transition hover:text-white">Mapa</a>
         <a href="#comunidad" class="transition hover:text-white">Comunidad</a>
-        <a href="#enviar" class="rounded-full bg-white/5 px-4 py-1.5 text-white ring-1 ring-white/10 transition hover:bg-volt hover:text-ink-950">Enviar dato</a>
+        <a href="#anunciate" class="rounded-full bg-lime-400 px-4 py-1.5 font-semibold text-neutral-950 transition hover:bg-lime-300">Anúnciate / Destaca tu empresa</a>
       </nav>
 
-      <button id="menuBtn" class="rounded-md p-2 text-gray-300 ring-1 ring-white/10 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+      <button id="menuBtn" class="rounded-md p-2 text-neutral-300 ring-1 ring-white/10 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       </button>
     </div>
     <nav id="mobileMenu" class="hidden border-t border-white/5 px-4 pb-4 md:hidden" aria-label="Móvil">
-      <a href="#noticias" class="block border-b border-white/5 py-3 text-gray-300">Tech</a>
-      <a href="#mapa" class="block border-b border-white/5 py-3 text-gray-300">Mapa comunitario</a>
-      <a href="#comunidad" class="block border-b border-white/5 py-3 text-gray-300">Bolsa &amp; comunidad</a>
-      <a href="#enviar" class="mt-3 block rounded-lg bg-volt py-3 text-center font-semibold text-ink-950">Enviar dato anónimo</a>
+      <a href="#inicio" class="block border-b border-white/5 py-3 text-neutral-300">Mapa</a>
+      <a href="#noticias" class="block border-b border-white/5 py-3 text-neutral-300">Tech</a>
+      <a href="#comunidad" class="block border-b border-white/5 py-3 text-neutral-300">Comunidad</a>
+      <a href="#anunciate" class="mt-3 block rounded-lg bg-lime-400 py-3 text-center font-semibold text-neutral-950">Anúnciate / Destaca tu empresa</a>
     </nav>
   </header>
 
-  <!-- HERO -->
-  <section id="inicio" class="grain relative overflow-hidden border-b border-white/5">
-    <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-volt/10 blur-3xl"></div>
-    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-      <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-gray-400">
-        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-volt"></span> Sin marcas detrás · Hecho en Chile
-      </p>
-      <h1 class="max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">
-        Ciclismo independiente<br class="hidden sm:block" /> y <span class="text-volt">técnico</span> en Chile.
-      </h1>
-      <p class="mt-5 max-w-xl text-base text-gray-400 sm:text-lg">
-        Análisis de componentes sin publicidad encubierta, un mapa hecho por la comunidad y un espacio para quienes mantienen vivo el ciclismo: mecánicos, paleros, guías y talleres de barrio.
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#noticias" class="rounded-lg bg-volt px-5 py-3 text-sm font-semibold text-ink-950 transition hover:bg-volt-dim">Leer lo último</a>
-        <a href="#mapa" class="rounded-lg px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/5">Explorar el mapa</a>
-      </div>
-      <dl class="mt-12 grid max-w-lg grid-cols-3 gap-4 border-t border-white/5 pt-6 font-mono">
-        <div><dt class="text-[11px] uppercase tracking-wider text-gray-500">Puntos</dt><dd id="statPoints" class="text-2xl text-white">—</dd></div>
-        <div><dt class="text-[11px] uppercase tracking-wider text-gray-500">Avisos</dt><dd id="statJobs" class="text-2xl text-white">—</dd></div>
-        <div><dt class="text-[11px] uppercase tracking-wider text-gray-500">Regiones</dt><dd id="statRegions" class="text-2xl text-white">—</dd></div>
-      </dl>
-    </div>
-  </section>
-
   <main>
-    <!-- ============ 2. ÚLTIMAS NOTICIAS / TECH ============ -->
-    <section id="noticias" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
+    <!-- ============ HERO: MAPA PROTAGONISTA ============ -->
+    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-white/5 lg:grid lg:h-[calc(100vh-3.5rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
+
+      <!-- Panel izquierdo -->
+      <div class="contents lg:flex lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-white/5 lg:px-6 lg:py-8">
+       <div class="order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:p-0">
+        <div>
+          <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Mapa nacional · Chile</p>
+          <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-white [text-wrap:balance] sm:text-5xl lg:text-[2.75rem]">
+            La plataforma técnica e interactiva del ciclismo en Chile
+          </h1>
+          <p class="mt-3 hidden max-w-md text-[15px] leading-relaxed text-neutral-400 sm:block">
+            Encuentra talleres, tiendas, escuelas, bikeparks y tours en el mapa. Lee análisis técnicos y conecta con la comunidad.
+          </p>
+        </div>
+
+        <!-- Búsqueda -->
+        <div class="relative" id="searchWrap">
+          <label for="search" class="sr-only">Buscar en el mapa</label>
+          <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="search" type="search" autocomplete="off" placeholder="Busca un lugar, comuna o región…"
+            class="w-full rounded-xl border-0 bg-neutral-900 py-3.5 pl-11 pr-4 text-[15px] text-white placeholder-neutral-500 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-lime-400"
+            role="combobox" aria-expanded="false" aria-controls="searchResults" />
+          <ul id="searchResults" role="listbox" class="absolute inset-x-0 top-full z-20 mt-2 hidden max-h-72 overflow-y-auto rounded-xl bg-neutral-900 py-1 shadow-2xl ring-1 ring-white/10"></ul>
+        </div>
+
+        <!-- Accesos directos -->
+        <div>
+          <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-neutral-300">¿Qué buscas hoy?</p>
+          <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
+        </div>
+
+       </div>
+
+       <div class="order-3 flex flex-col gap-5 px-4 py-5 sm:px-6 lg:p-0">
+        <!-- Zona -->
+        <div class="flex items-center gap-3">
+          <label for="regionSelect" class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">Zona</label>
+          <select id="regionSelect" class="flex-1 rounded-lg border-0 bg-neutral-900 px-3 py-2 text-sm text-white ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-lime-400"></select>
+        </div>
+
+        <!-- Resultados (solo escritorio) -->
+        <div class="hidden lg:block">
+          <p class="mb-2 font-mono text-[11px] uppercase tracking-wider text-neutral-500"><span id="resultsCount">0</span> lugares en el mapa</p>
+          <ul id="placeList" class="divide-y divide-white/5 overflow-hidden rounded-xl ring-1 ring-white/5"></ul>
+        </div>
+
+        <!-- CTA comercial -->
+        <a href="#registrar" data-register="negocio" class="group flex items-center gap-3 rounded-xl border border-dashed border-lime-400/30 bg-lime-400/[.04] p-4 transition hover:border-lime-400/60 hover:bg-lime-400/[.08]">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-lime-400/15 text-lime-400">
+            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><path d="M12 7v5M9.5 9.5h5"/></svg>
+          </span>
+          <span class="text-sm leading-snug text-neutral-300">
+            <strong class="block font-semibold text-white">¿Tienes un taller, tienda o escuela?</strong>
+            Aparece en el mapa nacional de DESVIADOR <span class="text-lime-400">→</span>
+          </span>
+        </a>
+       </div>
+      </div>
+
+      <!-- Mapa -->
+      <div class="relative isolate z-0 order-2 lg:h-full">
+        <div id="map" role="region" aria-label="Mapa interactivo de lugares ciclistas en Chile"></div>
+
+        <p class="pointer-events-none absolute bottom-3 left-3 z-[900] rounded-lg bg-neutral-950/85 px-3 py-1.5 font-mono text-[11px] text-neutral-400 ring-1 ring-white/10">
+          <span id="visibleCount">0</span> visibles
+        </p>
+
+        <!-- Estado vacío -->
+        <div id="emptyState" class="absolute inset-x-4 top-1/2 z-[900] mx-auto hidden max-w-sm -translate-y-1/2 rounded-2xl bg-neutral-900/95 p-5 text-center shadow-2xl ring-1 ring-white/10 backdrop-blur">
+          <p id="emptyText" class="text-sm text-neutral-300"></p>
+          <a href="#registrar" data-register="negocio" class="mt-3 inline-block rounded-lg bg-lime-400 px-4 py-2 text-sm font-semibold text-neutral-950 hover:bg-lime-300">Registrar mi negocio</a>
+        </div>
+
+        <!-- Drawer / ficha del lugar -->
+        <aside id="drawer" class="drawer absolute inset-x-0 bottom-0 z-[1000] flex max-h-[78%] translate-y-[105%] flex-col rounded-t-2xl bg-neutral-900 shadow-[0_-12px_40px_rgba(0,0,0,.6)] ring-1 ring-white/10 lg:inset-y-3 lg:bottom-3 lg:left-auto lg:right-3 lg:max-h-none lg:w-[380px] lg:translate-x-[110%] lg:translate-y-0 lg:rounded-2xl"
+               role="dialog" aria-modal="false" aria-labelledby="drawerTitle" aria-hidden="true">
+          <div class="mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full bg-white/15 lg:hidden"></div>
+          <button id="drawerClose" type="button" class="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/5 text-neutral-300 hover:bg-white/10 hover:text-white" aria-label="Cerrar ficha">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+          <div id="drawerBody" class="overflow-y-auto px-5 pb-6 pt-3 lg:pt-5"></div>
+        </aside>
+
+        <!-- Botones flotantes -->
+        <div id="mapFabs" class="absolute right-3 top-3 z-[1001] flex flex-col items-end gap-2 transition-[right] duration-300">
+          <button id="layerToggle" type="button" class="flex items-center gap-2 rounded-xl bg-neutral-900/95 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 backdrop-blur transition hover:bg-neutral-800" aria-label="Cambiar a vista satelital">
+            <svg viewBox="0 0 24 24" class="h-4 w-4 text-lime-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
+            <span id="layerToggleLabel">Satélite</span>
+          </button>
+          <button id="locateBtn" type="button" class="grid h-10 w-10 place-items-center rounded-xl bg-neutral-900/95 text-white shadow-xl ring-1 ring-white/10 transition hover:bg-neutral-800" aria-label="Centrar en mi ubicación" title="Mi ubicación">
+            <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ ÚLTIMAS NOTICIAS / TECH ============ -->
+    <section id="noticias" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
       <div class="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-volt">01 — Tech</p>
-          <h2 class="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">Últimas noticias</h2>
+          <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Tech</p>
+          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Últimas noticias</h2>
         </div>
-        <a href="#" class="shrink-0 text-sm text-gray-400 hover:text-white">Ver archivo →</a>
+        <a href="#" class="shrink-0 text-sm text-neutral-400 hover:text-white">Ver archivo →</a>
       </div>
 
-      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- Tarjeta 1 -->
-        <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-ink-900 transition hover:-translate-y-1 hover:border-white/15">
-          <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-sky-500/30 via-ink-800 to-ink-900">
-            <svg viewBox="0 0 200 125" class="absolute inset-0 h-full w-full text-white/25 transition duration-500 group-hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="55" cy="80" r="30"/><circle cx="145" cy="80" r="30"/><path d="M55 80l30-40h40l20 40M85 40l15 40h-45M125 40l-5-12h-10"/>
-            </svg>
-            <span class="absolute left-3 top-3 rounded-md bg-sky-400/15 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-sky-300 ring-1 ring-sky-400/30">Lanzamiento</span>
-          </div>
-          <div class="flex flex-1 flex-col p-5">
-            <h3 class="font-display text-lg font-bold leading-snug text-white group-hover:text-volt">Gravel 2027: qué cambia de verdad (y qué es solo pintura nueva)</h3>
-            <p class="mt-2 flex-1 text-sm text-gray-400">Desmontamos las fichas técnicas de los cinco lanzamientos del año: geometría, paso de neumático y compatibilidad de estándares que importan en ripio chileno.</p>
-            <footer class="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-mono text-[11px] text-gray-500">
-              <span>Análisis · 9 min</span><time datetime="2026-09-20">20 SEP 2026</time>
-            </footer>
-          </div>
-        </article>
-
-        <!-- Tarjeta 2 -->
-        <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-ink-900 transition hover:-translate-y-1 hover:border-white/15">
-          <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-volt/25 via-ink-800 to-ink-900">
-            <svg viewBox="0 0 200 125" class="absolute inset-0 h-full w-full text-white/25 transition duration-500 group-hover:rotate-6" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="100" cy="62" r="40"/><circle cx="100" cy="62" r="12"/>
-              <g stroke-dasharray="4 5"><circle cx="100" cy="62" r="46"/></g>
-            </svg>
-            <span class="absolute left-3 top-3 rounded-md bg-volt/15 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-volt ring-1 ring-volt/30">Prueba larga</span>
-          </div>
-          <div class="flex flex-1 flex-col p-5">
-            <h3 class="font-display text-lg font-bold leading-snug text-white group-hover:text-volt">3.000 km con una transmisión 1x13: desgaste medido, no opinado</h3>
-            <p class="mt-2 flex-1 text-sm text-gray-400">Calibrador de cadena cada 250 km, polvo del Cajón del Maipo y barro de Valdivia. Los números, el costo por kilómetro y cuándo conviene cambiar.</p>
-            <footer class="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-mono text-[11px] text-gray-500">
-              <span>Test · 14 min</span><time datetime="2026-09-16">16 SEP 2026</time>
-            </footer>
-          </div>
-        </article>
-
-        <!-- Tarjeta 3 -->
-        <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-ink-900 transition hover:-translate-y-1 hover:border-white/15 sm:col-span-2 lg:col-span-1">
-          <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-orange-500/25 via-ink-800 to-ink-900">
-            <svg viewBox="0 0 200 125" class="absolute inset-0 h-full w-full text-white/25 transition duration-500 group-hover:translate-y-1" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M70 20v85M130 20v85M70 35h60M70 90h60"/><rect x="85" y="45" width="30" height="35" rx="4"/>
-            </svg>
-            <span class="absolute left-3 top-3 rounded-md bg-orange-400/15 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-orange-300 ring-1 ring-orange-400/30">Taller</span>
-          </div>
-          <div class="flex flex-1 flex-col p-5">
-            <h3 class="font-display text-lg font-bold leading-snug text-white group-hover:text-volt">Horquillas de 140 mm: servicio de 50 h hecho en casa, paso a paso</h3>
-            <p class="mt-2 flex-1 text-sm text-gray-400">Herramientas mínimas, aceites que se consiguen en Chile y los errores que vemos repetirse en los talleres. Con tabla de torques descargable.</p>
-            <footer class="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-mono text-[11px] text-gray-500">
-              <span>Guía · 11 min</span><time datetime="2026-09-11">11 SEP 2026</time>
-            </footer>
-          </div>
-        </article>
-      </div>
+      <div id="newsGrid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
     </section>
 
-    <!-- ============ 3. MAPA COMUNITARIO ============ -->
-    <section id="mapa" class="scroll-mt-20 border-y border-white/5 bg-ink-900/60">
+    <!-- ============ BOLSA DE EMPLEO & COMUNIDAD ============ -->
+    <section id="comunidad" class="scroll-mt-16 border-y border-white/5 bg-neutral-900/50">
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div class="mb-6">
-          <p class="font-mono text-xs uppercase tracking-widest text-volt">02 — Mapa</p>
-          <h2 class="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">Mapa comunitario</h2>
-          <p class="mt-2 max-w-2xl text-sm text-gray-400">Lugares reales de Chile. Filtra por categoría o zona y toca un pin para acercarte y ver cómo llegar. Cambia a vista satelital o topográfica desde el ícono de capas.</p>
-        </div>
-
-        <!-- Filtro por zona -->
-        <div id="regionFilters" class="-mx-4 mb-3 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar por zona">
-          <span class="shrink-0 font-mono text-[11px] uppercase tracking-wider text-gray-500">Zona</span>
-          <!-- Botones de zona generados con JS -->
-        </div>
-
-        <!-- Filtros por categoría -->
-        <div id="filters" class="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar categorías">
-          <button data-all class="shrink-0 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink-950 transition hover:bg-gray-200">Todos</button>
-          <!-- Los botones de categoría se generan con JS -->
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-[1fr_320px]">
-          <div class="relative overflow-hidden rounded-2xl border border-white/10">
-            <div id="map" class="h-[420px] w-full sm:h-[520px]" role="region" aria-label="Mapa interactivo de puntos ciclistas"></div>
-            <div class="pointer-events-none absolute bottom-3 left-3 z-[500] rounded-lg bg-ink-950/85 px-3 py-2 font-mono text-[11px] text-gray-400 ring-1 ring-white/10">
-              <span id="visibleCount">0</span> puntos visibles
-            </div>
+        <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Comunidad</p>
+            <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Bolsa de empleo &amp; paleros</h2>
+            <p class="mt-2 max-w-xl text-sm text-neutral-400">Ofertas para mecánicos, guías y vendedores, y convocatorias para mantener los senderos que usamos todos.</p>
           </div>
+          <div id="jobTabs" class="no-scrollbar -mx-4 flex shrink-0 gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
+        </div>
 
-          <!-- Lista lateral -->
-          <aside class="flex max-h-[520px] flex-col rounded-2xl border border-white/10 bg-ink-950">
-            <div class="flex items-center justify-between border-b border-white/5 px-4 py-3">
-              <h3 class="text-sm font-semibold text-white">Listado</h3>
-              <button id="locateBtn" class="rounded-md px-2 py-1 font-mono text-[11px] text-gray-400 ring-1 ring-white/10 hover:text-white">⌖ Cerca de mí</button>
-            </div>
-            <ul id="placeList" class="flex-1 divide-y divide-white/5 overflow-y-auto"></ul>
-          </aside>
+        <ul id="jobList" class="grid gap-3"></ul>
+
+        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-lime-400 hover:text-lime-300">+ Publicar un aviso o convocatoria</a>
+      </div>
+    </section>
+
+    <!-- ============ ANÚNCIATE ============ -->
+    <section id="anunciate" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
+      <div class="mb-8 max-w-2xl">
+        <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Para negocios</p>
+        <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Anúnciate / Destaca tu empresa</h2>
+        <p class="mt-2 text-neutral-400">Talleres, tiendas, escuelas, bikeparks y operadores de tours: aparece donde los ciclistas buscan dónde reparar, comprar o rodar.</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="flex flex-col rounded-2xl border border-white/10 bg-neutral-900 p-6">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-neutral-500">Ficha básica</p>
+          <p class="mt-1 font-display text-3xl font-extrabold uppercase text-white">Gratis</p>
+          <ul class="mt-5 flex-1 space-y-2.5 text-sm text-neutral-300">
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Pin en el mapa nacional con tu categoría</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Ficha con comuna, dirección y botón "Cómo llegar"</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Aparece en la búsqueda y en los filtros por zona</li>
+          </ul>
+          <a href="#registrar" data-register="negocio" class="mt-6 rounded-lg py-3 text-center text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/5">Registrar mi negocio</a>
+        </div>
+
+        <div class="relative flex flex-col rounded-2xl border border-lime-400/40 bg-gradient-to-b from-lime-400/[.07] to-neutral-900 p-6">
+          <span class="absolute right-5 top-5 rounded-full bg-lime-400 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-neutral-950">Recomendado</span>
+          <p class="font-mono text-[11px] uppercase tracking-wider text-lime-400">Ficha destacada</p>
+          <p class="mt-1 font-display text-3xl font-extrabold uppercase text-white">Plan comercial</p>
+          <ul class="mt-5 flex-1 space-y-2.5 text-sm text-neutral-300">
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Todo lo de la ficha básica</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Botón de WhatsApp directo y horario en tu ficha</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Pin destacado y prioridad en búsquedas de tu zona</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Sello "Verificado" tras revisión de DESVIADOR</li>
+          </ul>
+          <a href="#registrar" data-register="destacada" class="mt-6 rounded-lg bg-lime-400 py-3 text-center text-sm font-semibold text-neutral-950 transition hover:bg-lime-300">Quiero una ficha destacada</a>
         </div>
       </div>
     </section>
 
-    <!-- ============ 4. BOLSA DE TRABAJO & COMUNIDAD ============ -->
-    <section id="comunidad" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6">
-      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <!-- ============ FORMULARIO ============ -->
+    <section id="registrar" class="scroll-mt-16 border-t border-white/5 bg-gradient-to-b from-neutral-900/60 to-neutral-950">
+      <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.25fr]">
         <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-volt">03 — Comunidad</p>
-          <h2 class="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">Bolsa de trabajo &amp; comunidad</h2>
-        </div>
-        <div id="jobTabs" class="flex gap-1 rounded-lg bg-ink-900 p-1 ring-1 ring-white/5 text-sm" role="tablist">
-          <button data-type="all" class="rounded-md bg-ink-700 px-3 py-1.5 text-white" role="tab" aria-selected="true">Todo</button>
-          <button data-type="trabajo" class="rounded-md px-3 py-1.5 text-gray-400 hover:text-white" role="tab" aria-selected="false">Trabajo</button>
-          <button data-type="voluntariado" class="rounded-md px-3 py-1.5 text-gray-400 hover:text-white" role="tab" aria-selected="false">Voluntariado</button>
-          <button data-type="comunidad" class="rounded-md px-3 py-1.5 text-gray-400 hover:text-white" role="tab" aria-selected="false">Comunidad</button>
-        </div>
-      </div>
-
-      <ul id="jobList" class="grid gap-3"></ul>
-    </section>
-
-    <!-- ============ 5. FORMULARIO ANÓNIMO ============ -->
-    <section id="enviar" class="scroll-mt-20 border-t border-white/5 bg-gradient-to-b from-ink-900/60 to-ink-950">
-      <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.2fr]">
-        <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-volt">04 — Enviar</p>
-          <h2 class="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">Envío anónimo</h2>
-          <p class="mt-3 text-gray-400">Manda un dato, publica un aviso o registra tu taller. No pedimos nombre ni correo; si quieres respuesta, deja un contacto opcional.</p>
-          <ul class="mt-6 space-y-3 text-sm text-gray-400">
-            <li class="flex gap-3"><span class="text-volt">✓</span> No guardamos IP ni metadatos del envío.</li>
-            <li class="flex gap-3"><span class="text-volt">✓</span> Todo se revisa a mano antes de publicarse.</li>
-            <li class="flex gap-3"><span class="text-volt">✓</span> Los datos de marcas o tiendas se contrastan con dos fuentes.</li>
+          <p class="font-mono text-[11px] uppercase tracking-[.2em] text-lime-400">Participa</p>
+          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-white sm:text-4xl">Registra tu negocio o envía un dato</h2>
+          <p class="mt-3 text-neutral-400">Suma tu taller, tienda o escuela al mapa, publica un aviso para la comunidad o avísanos de un sendero cerrado o un dato que corregir.</p>
+          <ul class="mt-6 space-y-3 text-sm text-neutral-400">
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Revisamos cada ficha antes de publicarla en el mapa.</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Te contactamos para confirmar ubicación y datos.</li>
+            <li class="flex gap-3"><span class="text-lime-400">✓</span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
           </ul>
         </div>
 
-        <form id="anonForm" class="space-y-4 rounded-2xl border border-white/10 bg-ink-900 p-5 sm:p-6" novalidate>
+        <form id="mainForm" class="space-y-4 rounded-2xl border border-white/10 bg-neutral-900 p-5 sm:p-6" novalidate>
           <fieldset>
-            <legend class="mb-2 text-sm font-medium text-gray-300">¿Qué quieres enviar?</legend>
-            <div class="grid grid-cols-3 gap-2 text-sm">
+            <legend class="mb-2 text-sm font-medium text-neutral-300">¿Qué quieres hacer?</legend>
+            <div class="grid gap-2 text-sm sm:grid-cols-3">
               <label class="cursor-pointer">
-                <input type="radio" name="kind" value="dato" class="peer sr-only" checked />
-                <span class="block rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-volt peer-checked:font-semibold peer-checked:text-ink-950 peer-focus-visible:ring-2 peer-focus-visible:ring-volt">Dato</span>
+                <input type="radio" id="kind-negocio" name="kind" value="negocio" class="peer sr-only" checked />
+                <span class="flex h-full items-center justify-center rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-lime-400 peer-checked:font-semibold peer-checked:text-neutral-950 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-400">Registrar mi negocio / Ficha destacada</span>
               </label>
               <label class="cursor-pointer">
-                <input type="radio" name="kind" value="aviso" class="peer sr-only" />
-                <span class="block rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-volt peer-checked:font-semibold peer-checked:text-ink-950 peer-focus-visible:ring-2 peer-focus-visible:ring-volt">Aviso</span>
+                <input type="radio" id="kind-aviso" name="kind" value="aviso" class="peer sr-only" />
+                <span class="flex h-full items-center justify-center rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-lime-400 peer-checked:font-semibold peer-checked:text-neutral-950 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-400">Publicar aviso</span>
               </label>
               <label class="cursor-pointer">
-                <input type="radio" name="kind" value="taller" class="peer sr-only" />
-                <span class="block rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-volt peer-checked:font-semibold peer-checked:text-ink-950 peer-focus-visible:ring-2 peer-focus-visible:ring-volt">Taller</span>
+                <input type="radio" id="kind-dato" name="kind" value="dato" class="peer sr-only" />
+                <span class="flex h-full items-center justify-center rounded-lg px-3 py-2.5 text-center ring-1 ring-white/10 transition peer-checked:bg-lime-400 peer-checked:font-semibold peer-checked:text-neutral-950 peer-focus-visible:ring-2 peer-focus-visible:ring-lime-400">Enviar dato</span>
               </label>
             </div>
           </fieldset>
 
-          <div>
-            <label for="title" class="mb-1.5 block text-sm font-medium text-gray-300">Título</label>
-            <input id="title" name="title" required maxlength="90" placeholder="Ej: Se busca mecánico part-time en Ñuñoa"
-              class="w-full rounded-lg border-0 bg-ink-950 px-3.5 py-2.5 text-white placeholder-gray-600 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-volt" />
-          </div>
-
-          <div class="grid gap-4 sm:grid-cols-2">
+          <!-- Negocio -->
+          <div data-kind="negocio" class="space-y-4">
             <div>
-              <label for="region" class="mb-1.5 block text-sm font-medium text-gray-300">Región</label>
-              <select id="region" name="region" class="w-full rounded-lg border-0 bg-ink-950 px-3.5 py-2.5 text-white ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-volt">
-                <option>Metropolitana</option><option>Valparaíso</option><option>O'Higgins</option><option>Biobío</option><option>Los Ríos</option><option>Otra</option>
-              </select>
+              <label for="bizName" class="mb-1.5 block text-sm font-medium text-neutral-300">Nombre del negocio</label>
+              <input id="bizName" maxlength="80" placeholder="Ej: Taller Rueda Libre" class="field" />
             </div>
-            <div id="categoryWrap">
-              <label for="category" class="mb-1.5 block text-sm font-medium text-gray-300">Tipo de aviso</label>
-              <select id="category" name="category" class="w-full rounded-lg border-0 bg-ink-950 px-3.5 py-2.5 text-white ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-volt">
-                <option value="trabajo">Trabajo</option><option value="voluntariado">Voluntariado</option><option value="comunidad">Comunidad</option>
-              </select>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label for="bizCat" class="mb-1.5 block text-sm font-medium text-neutral-300">Categoría</label>
+                <select id="bizCat" class="field"></select>
+              </div>
+              <div>
+                <label for="bizComuna" class="mb-1.5 block text-sm font-medium text-neutral-300">Comuna</label>
+                <input id="bizComuna" maxlength="60" placeholder="Ej: Ñuñoa" class="field" />
+              </div>
+            </div>
+            <div>
+              <label for="bizAddress" class="mb-1.5 block text-sm font-medium text-neutral-300">Dirección</label>
+              <input id="bizAddress" maxlength="120" placeholder="Calle y número" class="field" />
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label for="bizPhone" class="mb-1.5 block text-sm font-medium text-neutral-300">WhatsApp</label>
+                <input id="bizPhone" type="tel" inputmode="tel" maxlength="20" placeholder="+56 9 1234 5678" class="field" />
+              </div>
+              <div>
+                <label for="bizEmail" class="mb-1.5 block text-sm font-medium text-neutral-300">Correo <span class="font-normal text-neutral-500">(opcional)</span></label>
+                <input id="bizEmail" type="email" maxlength="80" placeholder="contacto@tunegocio.cl" class="field" />
+              </div>
+            </div>
+            <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-lime-400/[.06] p-3 ring-1 ring-lime-400/25">
+              <input id="bizFeatured" type="checkbox" class="mt-0.5 h-4 w-4 accent-lime-400" />
+              <span class="text-sm text-neutral-300"><strong class="font-semibold text-white">Quiero una ficha destacada.</strong> Te enviamos la propuesta comercial con WhatsApp directo, pin destacado y prioridad en búsquedas.</span>
+            </label>
+          </div>
+
+          <!-- Aviso -->
+          <div data-kind="aviso" class="space-y-4" hidden>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label for="jobType" class="mb-1.5 block text-sm font-medium text-neutral-300">Tipo de aviso</label>
+                <select id="jobType" class="field">
+                  <option value="trabajo">Oferta laboral</option>
+                  <option value="voluntariado">Voluntariado / paleros</option>
+                  <option value="comunidad">Comunidad</option>
+                </select>
+              </div>
+              <div>
+                <label for="jobPlace" class="mb-1.5 block text-sm font-medium text-neutral-300">Lugar</label>
+                <input id="jobPlace" maxlength="60" placeholder="Ej: San José de Maipo" class="field" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Comunes a aviso y dato -->
+          <div data-kind="aviso dato" class="space-y-4" hidden>
+            <div>
+              <label for="title" class="mb-1.5 block text-sm font-medium text-neutral-300">Título</label>
+              <input id="title" maxlength="90" placeholder="Ej: Se busca mecánico part-time en Ñuñoa" class="field" />
+            </div>
+            <div>
+              <label for="contact" class="mb-1.5 block text-sm font-medium text-neutral-300">Contacto <span class="font-normal text-neutral-500">(opcional)</span></label>
+              <input id="contact" maxlength="80" placeholder="Instagram, correo o teléfono" class="field" />
             </div>
           </div>
 
           <div>
-            <label for="message" class="mb-1.5 block text-sm font-medium text-gray-300">Detalle</label>
-            <textarea id="message" name="message" rows="4" required maxlength="600" placeholder="Cuéntanos lo necesario. Evita datos personales de terceros."
-              class="w-full resize-y rounded-lg border-0 bg-ink-950 px-3.5 py-2.5 text-white placeholder-gray-600 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-volt"></textarea>
-            <p class="mt-1 text-right font-mono text-[11px] text-gray-500"><span id="charCount">0</span>/600</p>
+            <label for="message" class="mb-1.5 block text-sm font-medium text-neutral-300"><span id="messageLabel">Cuéntanos sobre tu negocio</span> <span id="messageOptional" class="font-normal text-neutral-500">(opcional)</span></label>
+            <textarea id="message" rows="4" maxlength="600" placeholder="Servicios, marcas con las que trabajas, horario…" class="field resize-y"></textarea>
+            <p class="mt-1 text-right font-mono text-[11px] text-neutral-500"><span id="charCount">0</span>/600</p>
           </div>
 
-          <div>
-            <label for="contact" class="mb-1.5 block text-sm font-medium text-gray-300">Contacto <span class="font-normal text-gray-500">(opcional)</span></label>
-            <input id="contact" name="contact" maxlength="80" placeholder="Instagram, correo o teléfono — solo si quieres respuesta"
-              class="w-full rounded-lg border-0 bg-ink-950 px-3.5 py-2.5 text-white placeholder-gray-600 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-volt" />
-          </div>
-
-          <!-- Honeypot anti-spam -->
-          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+          <!-- Anti-spam -->
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
 
           <p id="formError" class="hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300 ring-1 ring-red-500/30" role="alert"></p>
 
-          <button type="submit" class="w-full rounded-lg bg-volt py-3 font-semibold text-ink-950 transition hover:bg-volt-dim focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
-            Enviar de forma anónima
-          </button>
+          <button type="submit" id="submitBtn" class="w-full rounded-lg bg-lime-400 py-3 font-semibold text-neutral-950 transition hover:bg-lime-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">Enviar solicitud</button>
+          <p class="text-center font-mono text-[11px] text-neutral-500">Versión de prueba: los envíos todavía no se guardan en un servidor.</p>
         </form>
       </div>
     </section>
   </main>
 
   <footer class="border-t border-white/5">
-    <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-      <p><span class="font-display font-bold text-gray-300">DESVIADOR.</span> Medio independiente. Sin contenido pagado.</p>
-      <p class="font-mono text-xs">© 2026 · Santiago, Chile</p>
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <p><span class="font-display text-base font-extrabold uppercase tracking-wide text-neutral-200">Desviador.</span> La plataforma técnica e interactiva del ciclismo en Chile.</p>
+      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Pie de página">
+        <a href="#inicio" class="hover:text-white">Mapa</a>
+        <a href="#noticias" class="hover:text-white">Tech</a>
+        <a href="#comunidad" class="hover:text-white">Comunidad</a>
+        <a href="#anunciate" class="font-semibold text-lime-400 hover:text-lime-300">Anúnciate / Destaca tu empresa</a>
+      </nav>
     </div>
   </footer>
 
   <!-- Toast -->
-  <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-volt px-4 py-3 text-sm font-semibold text-ink-950 opacity-0 shadow-2xl transition duration-300" role="status" aria-live="polite"></div>
+  <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-lime-400 px-4 py-3 text-sm font-semibold text-neutral-950 opacity-0 shadow-2xl transition duration-300" role="status" aria-live="polite"></div>
+
+  <!-- Clase utilitaria de campos de formulario -->
+  <style type="text/tailwindcss">
+    .field { @apply w-full rounded-lg border-0 bg-neutral-950 px-3.5 py-2.5 text-white placeholder-neutral-600 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-lime-400; }
+  </style>
 
   <script>
-    // ---------- Categorías del mapa (color e ícono por tipo) ----------
+    // ================= DATOS =================
+    // Íconos SVG por categoría (trazos sobre 24x24)
     const CATEGORIES = {
-      tiendas:   { label: 'Tiendas',   color: '#38bdf8', icon: '🛒' },
-      talleres:  { label: 'Talleres',  color: '#fb923c', icon: '🔧' },
-      clases:    { label: 'Clases',    color: '#a78bfa', icon: '🎓' },
-      senderos:  { label: 'Senderos',  color: '#4ade80', icon: '⛰️' },
-      tours:     { label: 'Tours',     color: '#f472b6', icon: '🧭' },
+      talleres: { label: 'Talleres',             short: 'Taller',           color: '#fb923c', icon: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/>' },
+      clases:   { label: 'Clases / Escuelas',    short: 'Escuela',          color: '#a78bfa', icon: '<path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>' },
+      senderos: { label: 'Bikeparks & Senderos', short: 'Bikepark/Sendero', color: '#34d399', icon: '<path d="M3 20l6-10 4 6 3-4 5 8H3z"/>' },
+      tours:    { label: 'Shuttles & Tours',     short: 'Shuttle/Tour',     color: '#f472b6', icon: '<path d="M3 7h11l4 4h3v6H3V7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
+      tiendas:  { label: 'Tiendas',              short: 'Tienda',           color: '#38bdf8', icon: '<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>' },
     };
+    const svgIcon = (cat, cls = 'h-4 w-4', stroke = 'currentColor') =>
+      `<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CATEGORIES[cat].icon}</svg>`;
 
-    // ---------- Zonas: bounding box aproximado de cada región [[sur, oeste], [norte, este]] ----------
+    // Zonas: bounding box aproximado [[sur, oeste], [norte, este]]
     const REGIONES = {
       valparaiso:    { label: 'Valparaíso',      bounds: [[-33.95, -72.00], [-32.00, -70.00]] },
       metropolitana: { label: 'Santiago (RM)',   bounds: [[-34.30, -71.75], [-32.90, -69.75]] },
@@ -368,331 +430,529 @@
       losrios:       { label: 'Los Ríos',        bounds: [[-40.70, -73.80], [-39.30, -71.60]] },
     };
 
-    // ---------- Puntos verificados (coordenadas [lat, lng]) ----------
+    // Puntos del mapa. Opcionales: direccion, whatsapp (con código país, ej: '56912345678'), horario, destacado.
+    // Deja en null lo que no esté confirmado: la ficha lo muestra como "Por confirmar".
     const puntosIniciales = [
-      // Tiendas / Talleres
-      { id: 'multibike-concepcion', nombre: 'Multibike / Specialized Concepción',   categoria: 'tiendas',  ciudad: 'Concepción',            region: 'biobio',        coords: [-36.8275, -73.0503] },
-      { id: 'giant-liv-vitacura',   nombre: 'Giant / Liv Vitacura',                 categoria: 'tiendas',  ciudad: 'Vitacura, Santiago',    region: 'metropolitana', coords: [-33.3881, -70.5678] },
-      { id: 'laguna-temuco',        nombre: 'Laguna Off Road / Bici Taller Temuco', categoria: 'talleres', ciudad: 'Temuco',                region: 'araucania',     coords: [-38.7397, -72.5901] },
-      // Bikeparks & Senderos
-      { id: 'nevados-chillan',      nombre: 'Bikepark Nevados de Chillán',          categoria: 'senderos', ciudad: 'Pinto, Chillán',        region: 'nuble',         coords: [-36.9061, -71.4111] },
-      { id: 'parque-las-palmas',    nombre: 'Parque Las Palmas',                    categoria: 'senderos', ciudad: 'Puchuncaví',            region: 'valparaiso',    coords: [-32.7412, -71.4015] },
-      { id: 'huilo-huilo',          nombre: 'Huilo Huilo Outdoor Experience',       categoria: 'senderos', ciudad: 'Neltume, Panguipulli',  region: 'losrios',       coords: [-39.8667, -71.9167] },
-      { id: 'el-durazno',           nombre: 'El Durazno',                           categoria: 'senderos', ciudad: 'Lo Barnechea, Santiago', region: 'metropolitana', coords: [-33.3486, -70.4958] },
+      { id: 'multibike-concepcion', nombre: 'Multibike / Specialized Concepción',   categoria: 'tiendas',  comuna: 'Concepción',            region: 'biobio',        coords: [-36.8275, -73.0503], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'giant-liv-vitacura',   nombre: 'Giant / Liv Vitacura',                 categoria: 'tiendas',  comuna: 'Vitacura',              region: 'metropolitana', coords: [-33.3881, -70.5678], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'laguna-temuco',        nombre: 'Laguna Off Road / Bici Taller Temuco', categoria: 'talleres', comuna: 'Temuco',                region: 'araucania',     coords: [-38.7397, -72.5901], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'nevados-chillan',      nombre: 'Bikepark Nevados de Chillán',          categoria: 'senderos', comuna: 'Pinto',                 region: 'nuble',         coords: [-36.9061, -71.4111], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'parque-las-palmas',    nombre: 'Parque Las Palmas',                    categoria: 'senderos', comuna: 'Puchuncaví',            region: 'valparaiso',    coords: [-32.7412, -71.4015], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'huilo-huilo',          nombre: 'Huilo Huilo Outdoor Experience',       categoria: 'senderos', comuna: 'Panguipulli (Neltume)', region: 'losrios',       coords: [-39.8667, -71.9167], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'el-durazno',           nombre: 'El Durazno',                           categoria: 'senderos', comuna: 'Lo Barnechea',          region: 'metropolitana', coords: [-33.3486, -70.4958], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+    ];
+
+    const NEWS = [
+      { tag: 'Lanzamientos',        lime: true,  min: 4, date: '2026-09-20', title: 'Gravel 2027: qué cambia de verdad y qué es solo pintura nueva', body: 'Revisamos las fichas técnicas de los cinco lanzamientos del año: geometría, paso de neumático y estándares que importan en el ripio chileno.', grad: 'from-lime-400/25' },
+      { tag: 'Test de Durabilidad', lime: false, min: 7, date: '2026-09-16', title: '3.000 km con una transmisión 1x13: desgaste medido', body: 'Calibrador de cadena cada 250 km, polvo del Cajón del Maipo y barro de Valdivia. Costo por kilómetro y cuándo conviene cambiar.', grad: 'from-neutral-400/20' },
+      { tag: 'Guía Taller',         lime: false, min: 5, date: '2026-09-11', title: 'Horquillas de 140 mm: el servicio de 50 horas en casa', body: 'Herramientas mínimas, aceites que se consiguen en Chile y los errores que más vemos en los talleres. Con tabla de torques.', grad: 'from-orange-400/20' },
     ];
 
     const JOBS = [
-      { type: 'trabajo',      title: 'Mecánico buscando taller',                       place: 'Santiago · Zona oriente', when: 'Hace 2 h',  body: '8 años de experiencia en suspensiones Fox/RockShox y frenos hidráulicos. Disponible jornada completa o part-time.', tags: ['Suspensión', 'Full-time'] },
-      { type: 'voluntariado', title: 'Convocatoria de paleros para mantener trail',    place: 'San José de Maipo',      when: 'Hace 5 h',  body: 'Jornada de mantención este sábado 8:00. Llevamos herramientas y colación. Trae guantes y agua.', tags: ['Sábado', 'Sin experiencia'] },
-      { type: 'trabajo',      title: 'Taller busca ayudante de mecánica',              place: 'Valparaíso',             when: 'Ayer',      body: 'Buscamos persona con ganas de aprender. Te formamos en ruedas y transmisiones. Sueldo + comisión.', tags: ['Aprendiz', 'Part-time'] },
-      { type: 'comunidad',    title: 'Grupo de salida gravel mixta (ritmo social)',    place: 'Rancagua',               when: 'Hace 2 días', body: 'Domingos 9:00 desde la plaza. 50–70 km, nadie queda atrás. Especialmente invitadas quienes recién empiezan.', tags: ['Domingo', 'Social'] },
-      { type: 'trabajo',      title: 'Guía bilingüe para tours de temporada',         place: 'Puerto Varas',           when: 'Hace 3 días', body: 'Temporada nov–mar. Inglés conversacional y primeros auxilios. Alojamiento incluido.', tags: ['Temporada', 'Inglés'] },
-      { type: 'voluntariado', title: 'Censo de ciclovías: necesitamos contadores',     place: 'Concepción',             when: 'Hace 4 días', body: 'Dos horas por turno contando ciclistas en puntos clave. Los datos serán abiertos.', tags: ['Datos abiertos'] },
+      { type: 'trabajo',      title: 'Mecánico buscando taller',                    place: 'Santiago · Zona oriente', when: 'Hace 2 h',    body: '8 años de experiencia en suspensiones Fox/RockShox y frenos hidráulicos. Disponible jornada completa o part-time.', tags: ['Suspensión', 'Full-time'] },
+      { type: 'voluntariado', title: 'Convocatoria de paleros para mantener trail', place: 'San José de Maipo',       when: 'Hace 5 h',    body: 'Jornada de mantención este sábado a las 8:00. Llevamos herramientas y colación. Trae guantes y agua.', tags: ['Sábado', 'Sin experiencia'] },
+      { type: 'trabajo',      title: 'Taller busca ayudante de mecánica',           place: 'Valparaíso',              when: 'Ayer',        body: 'Buscamos a alguien con ganas de aprender. Te formamos en ruedas y transmisiones. Sueldo más comisión.', tags: ['Aprendiz', 'Part-time'] },
+      { type: 'voluntariado', title: 'Censo de ciclovías: se buscan contadores',    place: 'Concepción',              when: 'Hace 2 días', body: 'Turnos de dos horas contando ciclistas en puntos clave. Los datos serán abiertos.', tags: ['Datos abiertos'] },
+      { type: 'trabajo',      title: 'Guía bilingüe para tours de temporada',       place: 'Puerto Varas',            when: 'Hace 3 días', body: 'Temporada de noviembre a marzo. Inglés conversacional y primeros auxilios. Alojamiento incluido.', tags: ['Temporada', 'Inglés'] },
+      { type: 'voluntariado', title: 'Jornada de drenajes en sendero de enduro',    place: 'Lo Barnechea',            when: 'Hace 4 días', body: 'Antes de las lluvias: cortes de agua y reparación de curvas. Punto de encuentro a las 9:00.', tags: ['Domingo', 'Herramientas incluidas'] },
     ];
-
-    const JOB_STYLES = {
-      trabajo:      { label: 'Trabajo',      cls: 'bg-sky-400/10 text-sky-300 ring-sky-400/30' },
-      voluntariado: { label: 'Voluntariado', cls: 'bg-green-400/10 text-green-300 ring-green-400/30' },
-      comunidad:    { label: 'Comunidad',    cls: 'bg-fuchsia-400/10 text-fuchsia-300 ring-fuchsia-400/30' },
+    const JOB_TYPES = {
+      trabajo:      { label: 'Oferta laboral', tab: 'Ofertas laborales', cls: 'bg-lime-400/10 text-lime-300 ring-lime-400/30' },
+      voluntariado: { label: 'Voluntariado',   tab: 'Voluntariado',      cls: 'bg-neutral-400/10 text-neutral-300 ring-neutral-400/30' },
+      comunidad:    { label: 'Comunidad',      tab: 'Comunidad',         cls: 'bg-sky-400/10 text-sky-300 ring-sky-400/30' },
     };
 
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
+    // Estado del filtro del mapa (compartido con el formulario)
+    const mapState = { cat: null, region: 'all' };
 
-    // ---------- Menú móvil ----------
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('hidden') === false;
-      menuBtn.setAttribute('aria-expanded', open);
-    });
-    mobileMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      menuBtn.setAttribute('aria-expanded', 'false');
-    }));
-
-  </script>
-
-  <script>
-    // ---------- Mapa ----------
-    if (!window.L) {
-      document.getElementById('map').innerHTML = '<div style="display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#9ca3af;font-size:14px">No se pudo cargar el mapa (Leaflet). Revisa tu conexión o si un bloqueador impide cargar scripts externos.</div>';
-      throw new Error('Leaflet no está disponible');
-    }
-    // Territorio continental de Chile con un margen para no cortar costa ni cordillera.
-    const CHILE_BOUNDS = L.latLngBounds([-56.8, -77.5], [-17.2, -65.5]);
-
-    const map = L.map('map', {
-      center: [-36.82, -73.05],
-      zoom: 6,
-      minZoom: 4,
-      maxZoom: 18,
-      maxBounds: CHILE_BOUNDS,
-      maxBoundsViscosity: 1.0,   // el arrastre "choca" con el borde en vez de salirse
-      zoomControl: false,
-      zoomSnap: 0.25,            // zoom fraccional = gestos de pinza y rueda más fluidos
-      zoomDelta: 0.5,
-      wheelPxPerZoomLevel: 80,
-      wheelDebounceTime: 20,
-      scrollWheelZoom: true,
-      doubleClickZoom: true,
-      touchZoom: true,
-      bounceAtZoomLimits: false,
-    });
-    L.control.zoom({ position: 'topleft', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(map);
-    L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
-
-    // Capas base
-    const esriAttr = 'Imágenes &copy; Esri, Maxar, Earthstar Geographics y la comunidad GIS';
-    const esriImagery = () => L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: esriAttr, maxNativeZoom: 19, maxZoom: 18 });
-    const baseLayers = {
-      'Oscuro': L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 18,
-      }),
-      'Satélite': esriImagery(),
-      'Híbrido': L.layerGroup([
-        esriImagery(),
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, opacity: 0.8 }),
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }),
-      ]),
-      'Topográfico': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap, SRTM | &copy; OpenTopoMap (CC-BY-SA)', subdomains: 'abc', maxNativeZoom: 17, maxZoom: 18,
-      }),
-      'OpenStreetMap': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap', maxZoom: 18,
-      }),
-    };
-    // Recordar la capa elegida (solo comodidad local; si falla, usa "Oscuro")
-    let savedLayer = 'Oscuro';
-    try { savedLayer = localStorage.getItem('desviador-capa') || 'Oscuro'; } catch (e) {}
-    (baseLayers[savedLayer] || baseLayers['Oscuro']).addTo(map);
-    L.control.layers(baseLayers, null, { position: 'topright', collapsed: true }).addTo(map);
-    map.on('baselayerchange', (e) => { try { localStorage.setItem('desviador-capa', e.name); } catch (err) {} });
-
-    const makeIcon = (cat) => L.divIcon({
-      className: '',
-      html: `<div class="pin" style="background:${CATEGORIES[cat].color}"><span>${CATEGORIES[cat].icon}</span></div>`,
-      iconSize: [26, 26],
-      iconAnchor: [13, 26],
-      popupAnchor: [0, -26],
-    });
-
-    const directionsUrl = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.coords[0]},${p.coords[1]}`;
-    const popupHtml = (p) => {
-      const c = CATEGORIES[p.categoria];
-      return `
-        <p style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:${c.color};margin:0 0 4px">${c.icon} ${c.label}</p>
-        <p style="font-weight:700;font-size:15px;line-height:1.25;color:#fff;margin:0">${esc(p.nombre)}</p>
-        <p style="font-size:12px;color:#9ca3af;margin:3px 0 10px">${esc(p.ciudad)} · ${REGIONES[p.region].label}</p>
-        <a href="${directionsUrl(p)}" target="_blank" rel="noopener"
-           style="display:inline-block;background:#d4ff3a;color:#0a0b0d;font-weight:600;font-size:13px;padding:7px 12px;border-radius:8px;text-decoration:none">Cómo llegar ↗</a>`;
-    };
-
-    // Zoom suave hacia el punto y abrir su popup
-    function focusPoint(marker) {
-      marker.openPopup();
-      map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 14), { duration: 1.1, easeLinearity: 0.2 });
-    }
-
-    const markers = puntosIniciales.map((p) => {
-      const m = L.marker(p.coords, { icon: makeIcon(p.categoria), title: p.nombre, riseOnHover: true });
-      m.bindPopup(popupHtml(p), { autoPan: false, maxWidth: 260 });
-      m.on('click', () => focusPoint(m));
-      return { place: p, marker: m };
-    });
-
-    // ---------- Filtros: categoría + zona ----------
-    const active = new Set(Object.keys(CATEGORIES));
-    let activeRegion = 'all';
-
-    const filtersEl = document.getElementById('filters');
-    Object.entries(CATEGORIES).forEach(([key, c]) => {
-      const b = document.createElement('button');
-      b.className = 'filter-btn shrink-0 inline-flex items-center gap-2 rounded-full bg-ink-800 px-4 py-2 text-sm font-medium text-gray-200 ring-1 ring-white/10 transition hover:ring-white/30';
-      b.dataset.cat = key;
-      b.setAttribute('aria-pressed', 'true');
-      b.innerHTML = `<span class="dot h-2.5 w-2.5 rounded-full ring-2" style="background:${c.color};--tw-ring-color:${c.color}"></span>${c.label}
-        <span class="font-mono text-[11px] text-gray-500">${puntosIniciales.filter((p) => p.categoria === key).length}</span>`;
-      b.addEventListener('click', () => {
-        // Primer clic desde "todos activos": aislar la categoría. Luego: alternar.
-        if (active.size === Object.keys(CATEGORIES).length) { active.clear(); active.add(key); }
-        else if (active.has(key)) { active.delete(key); if (active.size === 0) Object.keys(CATEGORIES).forEach((k) => active.add(k)); }
-        else active.add(key);
-        render(true);
-      });
-      filtersEl.appendChild(b);
-    });
-    filtersEl.querySelector('[data-all]').addEventListener('click', () => {
-      Object.keys(CATEGORIES).forEach((k) => active.add(k));
-      render(true);
-    });
-
-    const regionEl = document.getElementById('regionFilters');
-    [['all', 'Todo Chile'], ...Object.entries(REGIONES).map(([k, r]) => [k, r.label])].forEach(([key, label]) => {
-      const b = document.createElement('button');
-      b.className = 'region-btn shrink-0 rounded-full bg-ink-800 px-3 py-1.5 text-sm text-gray-300 ring-1 ring-white/10 transition hover:ring-white/30';
-      b.dataset.region = key;
-      b.textContent = label;
-      b.addEventListener('click', () => { activeRegion = key; render(true); });
-      regionEl.appendChild(b);
-    });
-
-    // Encadrar la vista: la región elegida manda; si no, los puntos visibles.
-    function fitView(visible) {
-      map.closePopup();
-      const opts = { padding: [30, 30], duration: 0.9 };
-      if (activeRegion !== 'all') return map.flyToBounds(REGIONES[activeRegion].bounds, opts);
-      if (!visible.length) return;
-      if (visible.length === 1) return map.flyTo(visible[0].marker.getLatLng(), 12, { duration: 0.9 });
-      map.flyToBounds(L.latLngBounds(visible.map((v) => v.marker.getLatLng())), { ...opts, maxZoom: 12 });
-    }
-
-    const listEl = document.getElementById('placeList');
-    function render(fit = false) {
-      filtersEl.querySelectorAll('.filter-btn').forEach((b) => b.setAttribute('aria-pressed', active.has(b.dataset.cat)));
-      regionEl.querySelectorAll('.region-btn').forEach((b) => b.setAttribute('aria-pressed', b.dataset.region === activeRegion));
-
-      const visible = [];
-      markers.forEach((entry) => {
-        const { place, marker } = entry;
-        if (active.has(place.categoria) && (activeRegion === 'all' || place.region === activeRegion)) { marker.addTo(map); visible.push(entry); }
-        else map.removeLayer(marker);
-      });
-      document.getElementById('visibleCount').textContent = visible.length;
-
-      listEl.innerHTML = visible.length ? '' : `<li class="px-4 py-6 text-sm text-gray-500">Aún no hay puntos verificados para este filtro.
-        <a href="#enviar" class="mt-1 block text-volt hover:underline">¿Conoces uno? Envíalo →</a></li>`;
-      visible.forEach(({ place, marker }) => {
-        const c = CATEGORIES[place.categoria];
-        const li = document.createElement('li');
-        li.innerHTML = `<button class="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-white/5">
-            <span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full" style="background:${c.color}"></span>
-            <span class="min-w-0"><span class="block truncate text-sm font-medium text-white">${esc(place.nombre)}</span>
-            <span class="block text-xs text-gray-500">${c.label} · ${esc(place.ciudad)}</span></span></button>`;
-        li.querySelector('button').addEventListener('click', () => {
-          focusPoint(marker);
-          if (window.innerWidth < 1024) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-        listEl.appendChild(li);
-      });
-
-      if (fit) fitView(visible);
-    }
-    render(); // vista inicial fija: Chile centro-sur, zoom 6
-
-    // Cerca de mí
-    let youAreHere;
-    document.getElementById('locateBtn').addEventListener('click', () => {
-      if (!navigator.geolocation) return toast('Tu navegador no permite geolocalización');
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const ll = L.latLng(pos.coords.latitude, pos.coords.longitude);
-          if (!CHILE_BOUNDS.contains(ll)) return toast('Tu ubicación está fuera del mapa de Chile');
-          if (youAreHere) youAreHere.setLatLng(ll);
-          else youAreHere = L.circleMarker(ll, { radius: 8, color: '#d4ff3a', fillColor: '#d4ff3a', fillOpacity: 0.6 }).addTo(map).bindPopup('Estás aquí');
-          youAreHere.openPopup();
-          map.flyTo(ll, 12);
-        },
-        () => toast('No pudimos obtener tu ubicación'),
-      );
-    });
-
-  </script>
-
-  <script>
-    // ---------- Bolsa de trabajo ----------
-    const jobListEl = document.getElementById('jobList');
-    let jobFilter = 'all';
-    function renderJobs() {
-      const items = JOBS.filter((j) => jobFilter === 'all' || j.type === jobFilter);
-      jobListEl.innerHTML = items.length ? '' : '<li class="rounded-xl border border-dashed border-white/10 p-6 text-center text-sm text-gray-500">No hay avisos en esta categoría todavía.</li>';
-      items.forEach((j) => {
-        const s = JOB_STYLES[j.type];
-        const li = document.createElement('li');
-        li.className = 'group rounded-xl border border-white/5 bg-ink-900 p-4 transition hover:border-white/15 sm:p-5';
-        li.innerHTML = `
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div class="min-w-0">
-              <div class="mb-2 flex flex-wrap items-center gap-2">
-                <span class="rounded-md px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider ring-1 ${s.cls}">${s.label}</span>
-                ${j.isNew ? '<span class="rounded-md bg-volt px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-ink-950">Nuevo</span>' : ''}
-                <span class="text-xs text-gray-500">${esc(j.place)} · ${esc(j.when)}</span>
-              </div>
-              <h3 class="font-display text-base font-bold text-white sm:text-lg">${esc(j.title)}</h3>
-              <p class="mt-1 text-sm text-gray-400">${esc(j.body)}</p>
-              <div class="mt-3 flex flex-wrap gap-1.5">${(j.tags || []).map((t) => `<span class="rounded bg-white/5 px-2 py-0.5 text-[11px] text-gray-400">${esc(t)}</span>`).join('')}</div>
-            </div>
-            <button class="shrink-0 self-start rounded-lg px-4 py-2 text-sm font-medium text-white ring-1 ring-white/15 transition hover:bg-volt hover:text-ink-950 hover:ring-volt" onclick="toast('Contacto enviado al autor del aviso ✉️')">Responder</button>
-          </div>`;
-        jobListEl.appendChild(li);
-      });
-      document.getElementById('statJobs').textContent = JOBS.length;
-    }
-    document.querySelectorAll('#jobTabs button').forEach((b) => b.addEventListener('click', () => {
-      jobFilter = b.dataset.type;
-      document.querySelectorAll('#jobTabs button').forEach((x) => {
-        const on = x === b;
-        x.setAttribute('aria-selected', on);
-        x.className = `rounded-md px-3 py-1.5 ${on ? 'bg-ink-700 text-white' : 'text-gray-400 hover:text-white'}`;
-      });
-      renderJobs();
-    }));
-    renderJobs();
-    document.getElementById('statPoints').textContent = puntosIniciales.length;
-    document.getElementById('statRegions').textContent = new Set(puntosIniciales.map((p) => p.region)).size;
-
-    // ---------- Formulario ----------
-    const form = document.getElementById('anonForm');
-    const msg = document.getElementById('message');
-    const errEl = document.getElementById('formError');
-    const categoryWrap = document.getElementById('categoryWrap');
-    msg.addEventListener('input', () => (document.getElementById('charCount').textContent = msg.value.length));
-
-    const syncKind = () => {
-      const kind = form.kind.value;
-      categoryWrap.classList.toggle('invisible', kind !== 'aviso');
-      form.title.placeholder = {
-        dato: 'Ej: El sendero X está cerrado por derrumbe',
-        aviso: 'Ej: Se busca mecánico part-time en Ñuñoa',
-        taller: 'Ej: Taller Rueda Libre — Maipú',
-      }[kind];
-    };
-    form.querySelectorAll('input[name="kind"]').forEach((r) => r.addEventListener('change', syncKind));
-    syncKind();
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (form.website.value) return; // bot
-      const title = form.title.value.trim();
-      const body = msg.value.trim();
-      if (title.length < 5 || body.length < 10) {
-        errEl.textContent = 'Agrega un título (mín. 5 caracteres) y un detalle (mín. 10).';
-        errEl.classList.remove('hidden');
-        return;
-      }
-      errEl.classList.add('hidden');
-
-      const kind = form.kind.value;
-      if (kind === 'aviso') {
-        // Simulación: el aviso aparece al instante en la bolsa (en producción pasaría por moderación)
-        JOBS.unshift({ type: form.category.value, title, place: form.region.value, when: 'Ahora', body, tags: ['Anónimo'], isNew: true });
-        renderJobs();
-      }
-      form.reset();
-      document.getElementById('charCount').textContent = '0';
-      syncKind();
-      toast({ dato: 'Dato recibido. Gracias por aportar 🙌', aviso: 'Aviso publicado en la bolsa (demo) ✅', taller: 'Taller en revisión. Aparecerá en el mapa pronto 🔧' }[kind]);
-    });
-
-    // ---------- Toast ----------
+    // ================= TOAST =================
     let toastTimer;
     function toast(text) {
       const t = document.getElementById('toast');
       t.textContent = text;
       t.classList.remove('translate-y-24', 'opacity-0');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 2800);
+      toastTimer = setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 3000);
     }
-    window.toast = toast;
+
+    // ================= MENÚ MÓVIL =================
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      const open = !mobileMenu.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+    mobileMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }));
+  </script>
+
+  <script>
+    // ================= MAPA =================
+    if (!window.L) {
+      document.getElementById('map').innerHTML = '<div style="display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#a3a3a3;font-size:14px">No se pudo cargar el mapa. Revisa tu conexión o si un bloqueador impide cargar scripts externos.</div>';
+      throw new Error('Leaflet no está disponible');
+    }
+
+    const CHILE_BOUNDS = L.latLngBounds([-56.8, -77.5], [-17.2, -65.5]);
+    const INITIAL_VIEW = { center: [-36.82, -73.05], zoom: 6 };
+
+    const map = L.map('map', {
+      center: INITIAL_VIEW.center,
+      zoom: INITIAL_VIEW.zoom,
+      minZoom: 4,
+      maxZoom: 18,
+      maxBounds: CHILE_BOUNDS,
+      maxBoundsViscosity: 1.0,
+      zoomControl: false,
+      zoomSnap: 0.25,
+      zoomDelta: 0.5,
+      wheelPxPerZoomLevel: 80,
+      wheelDebounceTime: 20,
+      bounceAtZoomLimits: false,
+    });
+    L.control.zoom({ position: 'topleft', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(map);
+    L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
+
+    // --- Capas: oscura (CARTO) e híbrida (Esri imagen + calles + nombres) ---
+    const esriBase = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    const LAYERS = {
+      dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 18,
+      }),
+      sat: L.layerGroup([
+        L.tileLayer(esriBase + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Imágenes &copy; Esri, Maxar, Earthstar Geographics', maxZoom: 18 }),
+        L.tileLayer(esriBase + 'Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, opacity: 0.75 }),
+        L.tileLayer(esriBase + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }),
+      ]),
+    };
+    let currentLayer = 'dark';
+    try { if (localStorage.getItem('desviador-capa') === 'sat') currentLayer = 'sat'; } catch (e) {}
+    LAYERS[currentLayer].addTo(map);
+
+    const layerBtn = document.getElementById('layerToggle');
+    const layerLabel = document.getElementById('layerToggleLabel');
+    function syncLayerBtn() {
+      const next = currentLayer === 'dark' ? 'Satélite' : 'Oscuro';
+      layerLabel.textContent = next;
+      layerBtn.setAttribute('aria-label', `Cambiar a vista ${next.toLowerCase()}`);
+    }
+    layerBtn.addEventListener('click', () => {
+      map.removeLayer(LAYERS[currentLayer]);
+      currentLayer = currentLayer === 'dark' ? 'sat' : 'dark';
+      LAYERS[currentLayer].addTo(map);
+      try { localStorage.setItem('desviador-capa', currentLayer); } catch (e) {}
+      syncLayerBtn();
+    });
+    syncLayerBtn();
+
+    // --- Marcadores ---
+    const makeIcon = (p) => L.divIcon({
+      className: '',
+      html: `<div class="pin${p.destacado ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#0a0a0a')}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    });
+
+    const markers = puntosIniciales.map((p) => {
+      const m = L.marker(p.coords, { icon: makeIcon(p), title: p.nombre, riseOnHover: true, keyboard: true });
+      m.on('click', () => openDrawer(p));
+      return { place: p, marker: m };
+    });
+    const markerById = Object.fromEntries(markers.map((e) => [e.place.id, e.marker]));
+
+    // --- Drawer (ficha del lugar) ---
+    const drawer = document.getElementById('drawer');
+    const drawerBody = document.getElementById('drawerBody');
+    let selectedId = null;
+
+    const directionsUrl = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.coords[0]},${p.coords[1]}`;
+    const searchUrl = (p) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.nombre} ${p.comuna}`)}`;
+    const waUrl = (p) => `https://wa.me/${String(p.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(`Hola, los encontré en el mapa de DESVIADOR. Quería consultar por ${p.nombre}.`)}`;
+
+    function setSelected(id) {
+      if (selectedId && markerById[selectedId]) markerById[selectedId].getElement()?.querySelector('.pin')?.classList.remove('is-selected');
+      selectedId = id;
+      if (id && markerById[id]) markerById[id].getElement()?.querySelector('.pin')?.classList.add('is-selected');
+    }
+
+    function openDrawer(p) {
+      const c = CATEGORIES[p.categoria];
+      const status = [
+        p.verificado ? '<span class="inline-flex items-center gap-1 rounded-full bg-lime-400/15 px-2.5 py-1 text-xs font-semibold text-lime-300 ring-1 ring-lime-400/30"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Verificado</span>' : '',
+        p.destacado ? '<span class="rounded-full bg-lime-400 px-2.5 py-1 text-xs font-bold text-neutral-950">Destacado</span>' : '',
+      ].join('');
+
+      const row = (label, value, missing) => `
+        <div class="flex gap-3 py-2.5">
+          <dt class="w-24 shrink-0 font-mono text-[11px] uppercase tracking-wider text-neutral-500">${label}</dt>
+          <dd class="text-sm ${missing ? 'text-neutral-500' : 'text-neutral-200'}">${value}</dd>
+        </div>`;
+
+      const contactBlock = p.whatsapp
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-lime-400 py-3.5 font-semibold text-neutral-950 transition hover:bg-lime-300">
+             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+             WhatsApp directo
+           </a>`
+        : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-lime-400/40 p-3.5 text-sm text-neutral-300 transition hover:border-lime-400/70">
+             <strong class="block text-white">¿Es tu negocio?</strong>
+             Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-lime-400">→</span>
+           </a>`;
+
+      drawerBody.innerHTML = `
+        <div class="flex flex-wrap items-center gap-2 pr-10">
+          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-neutral-950" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
+          ${status}
+        </div>
+        <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-white [text-wrap:balance]">${esc(p.nombre)}</h3>
+        <p class="mt-1.5 text-sm text-neutral-400">${esc(p.comuna)} · ${REGIONES[p.region].label}</p>
+
+        <dl class="mt-4 divide-y divide-white/5 border-y border-white/5">
+          ${row('Dirección', p.direccion ? esc(p.direccion) : 'Por confirmar', !p.direccion)}
+          ${row('Horario', p.horario ? esc(p.horario) : 'Por confirmar', !p.horario)}
+          ${row('Coordenadas', `<span class="font-mono text-xs tabular-nums">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</span>`)}
+        </dl>
+
+        <div class="mt-5 grid gap-2.5">
+          ${contactBlock}
+          <div class="grid grid-cols-2 gap-2.5">
+            <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-white/5 text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-lime-400 text-neutral-950 hover:bg-lime-300'}">
+              <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>
+              Cómo llegar
+            </a>
+            <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-white/5 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-white/10">Ver en Google</a>
+          </div>
+        </div>`;
+
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      setSelected(p.id);
+
+      // Volar al punto dejándolo visible junto al drawer (a la izquierda en escritorio, arriba en móvil)
+      const z = Math.max(map.getZoom(), 13);
+      const pt = map.project(p.coords, z);
+      if (isDesktop()) pt.x += (drawer.offsetWidth + 12) / 2;
+      else pt.y += Math.min(drawer.offsetHeight || 320, map.getSize().y * 0.78) / 2;
+      map.flyTo(map.unproject(pt, z), z, { duration: 1, easeLinearity: 0.2 });
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      setSelected(null);
+    }
+    document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+    map.on('click', closeDrawer);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeDrawer(); hideResults(); } });
+
+    // --- Accesos directos (categoría) + zona ---
+    const SHORTCUTS = [
+      { cat: 'talleres', label: 'Taller cercano', near: true },
+      { cat: 'clases',   label: 'Clases / Escuelas' },
+      { cat: 'senderos', label: 'Bikeparks & Senderos' },
+      { cat: 'tours',    label: 'Shuttles & Tours' },
+      { cat: 'tiendas',  label: 'Tiendas' },
+    ];
+    const scrollToMapOnMobile = () => { if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+
+    const shortcutsEl = document.getElementById('shortcuts');
+    SHORTCUTS.forEach((s) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.cat = s.cat;
+      b.className = 'shortcut inline-flex items-center gap-2 rounded-full bg-neutral-900 px-3.5 py-2 text-sm font-medium text-neutral-200 ring-1 ring-white/10 transition hover:ring-white/30 aria-pressed:bg-lime-400 aria-pressed:text-neutral-950 aria-pressed:ring-lime-400';
+      b.innerHTML = `<span class="grid h-5 w-5 place-items-center rounded-full" style="background:${CATEGORIES[s.cat].color}">${svgIcon(s.cat, 'h-3 w-3', '#0a0a0a')}</span>${s.label}`;
+      b.addEventListener('click', () => {
+        if (mapState.cat === s.cat && !s.near) { mapState.cat = null; render(true); return; }
+        mapState.cat = s.cat;
+        scrollToMapOnMobile();
+        if (s.near) return nearestTaller();
+        render(true);
+      });
+      shortcutsEl.appendChild(b);
+    });
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'rounded-full px-3 py-2 text-sm text-neutral-400 underline-offset-4 hover:text-white hover:underline';
+    resetBtn.textContent = 'Ver todo';
+    resetBtn.addEventListener('click', () => { mapState.cat = null; mapState.region = 'all'; regionSelect.value = 'all'; render(true); });
+    shortcutsEl.appendChild(resetBtn);
+
+    const regionSelect = document.getElementById('regionSelect');
+    regionSelect.innerHTML = '<option value="all">Todo Chile</option>' + Object.entries(REGIONES).map(([k, r]) => `<option value="${k}">${r.label}</option>`).join('');
+    regionSelect.addEventListener('change', () => { mapState.region = regionSelect.value; render(true); });
+
+    const visiblePoints = () => markers.filter(({ place }) =>
+      (!mapState.cat || place.categoria === mapState.cat) && (mapState.region === 'all' || place.region === mapState.region));
+
+    function fitView(visible) {
+      const opts = { padding: [40, 40], duration: 0.9 };
+      if (mapState.region !== 'all') return map.flyToBounds(REGIONES[mapState.region].bounds, opts);
+      if (!visible.length) return map.flyTo(INITIAL_VIEW.center, INITIAL_VIEW.zoom, { duration: 0.9 });
+      if (visible.length === 1) return map.flyTo(visible[0].marker.getLatLng(), 12, { duration: 0.9 });
+      map.flyToBounds(L.latLngBounds(visible.map((v) => v.marker.getLatLng())), { ...opts, maxZoom: 12 });
+    }
+
+    const listEl = document.getElementById('placeList');
+    const emptyEl = document.getElementById('emptyState');
+    function render(fit = false) {
+      shortcutsEl.querySelectorAll('.shortcut').forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === mapState.cat));
+      closeDrawer();
+
+      const visible = visiblePoints();
+      markers.forEach((e) => (visible.includes(e) ? e.marker.addTo(map) : map.removeLayer(e.marker)));
+      document.getElementById('visibleCount').textContent = visible.length;
+      document.getElementById('resultsCount').textContent = visible.length;
+
+      // Estado vacío
+      emptyEl.classList.toggle('hidden', visible.length > 0);
+      if (!visible.length) {
+        const what = mapState.cat ? CATEGORIES[mapState.cat].label.toLowerCase() : 'lugares';
+        const where = mapState.region !== 'all' ? ` en ${REGIONES[mapState.region].label}` : '';
+        document.getElementById('emptyText').innerHTML = `Todavía no hay <strong class="text-white">${what}</strong> verificados${where}.<br>¿Tienes uno? Aparece en el mapa nacional.`;
+      }
+
+      // Listado (escritorio)
+      listEl.innerHTML = visible.length ? '' : '<li class="px-4 py-5 text-sm text-neutral-500">Sin resultados con estos filtros.</li>';
+      visible.forEach(({ place }) => {
+        const c = CATEGORIES[place.categoria];
+        const li = document.createElement('li');
+        li.innerHTML = `<button type="button" class="flex w-full items-center gap-3 bg-neutral-900/40 px-4 py-3 text-left transition hover:bg-white/5">
+            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full" style="background:${c.color}">${svgIcon(place.categoria, 'h-3.5 w-3.5', '#0a0a0a')}</span>
+            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-white">${esc(place.nombre)}</span>
+            <span class="block text-xs text-neutral-500">${c.short} · ${esc(place.comuna)}</span></span></button>`;
+        li.querySelector('button').addEventListener('click', () => openDrawer(place));
+        listEl.appendChild(li);
+      });
+
+      if (fit) fitView(visible);
+    }
+
+    // --- Taller cercano / mi ubicación ---
+    let youAreHere;
+    function locate(onFound) {
+      if (!navigator.geolocation) { toast('Tu navegador no permite geolocalización'); return onFound(null); }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const ll = L.latLng(pos.coords.latitude, pos.coords.longitude);
+          if (!CHILE_BOUNDS.contains(ll)) { toast('Tu ubicación está fuera del mapa de Chile'); return onFound(null); }
+          if (youAreHere) youAreHere.setLatLng(ll);
+          else youAreHere = L.circleMarker(ll, { radius: 8, color: '#a3e635', weight: 3, fillColor: '#a3e635', fillOpacity: 0.35 }).addTo(map);
+          onFound(ll);
+        },
+        () => { toast('No pudimos obtener tu ubicación. Te mostramos todos los talleres.'); onFound(null); },
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
+      );
+    }
+    function nearestTaller() {
+      render(false);
+      locate((ll) => {
+        const talleres = visiblePoints();
+        if (!ll || !talleres.length) return fitView(talleres);
+        const nearest = talleres.reduce((a, b) => (ll.distanceTo(a.marker.getLatLng()) <= ll.distanceTo(b.marker.getLatLng()) ? a : b));
+        const km = Math.round(ll.distanceTo(nearest.marker.getLatLng()) / 1000);
+        openDrawer(nearest.place);
+        toast(`Taller más cercano: ${nearest.place.nombre} (${km} km)`);
+      });
+    }
+    document.getElementById('locateBtn').addEventListener('click', () => locate((ll) => ll && map.flyTo(ll, 13, { duration: 1 })));
+
+    // --- Búsqueda ---
+    const searchInput = document.getElementById('search');
+    const resultsEl = document.getElementById('searchResults');
+    let searchHits = [];
+    function hideResults() { resultsEl.classList.add('hidden'); searchInput.setAttribute('aria-expanded', 'false'); }
+    function runSearch() {
+      const q = norm(searchInput.value.trim());
+      if (!q) { searchHits = []; return hideResults(); }
+      searchHits = puntosIniciales.filter((p) =>
+        norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q));
+      resultsEl.innerHTML = searchHits.length
+        ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-white/5 focus:bg-white/5 focus:outline-none">
+            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-3 w-3', '#0a0a0a')}</span>
+            <span class="min-w-0"><span class="block truncate text-sm text-white">${esc(p.nombre)}</span><span class="block text-xs text-neutral-500">${esc(p.comuna)} · ${REGIONES[p.region].label}</span></span></button></li>`).join('')
+        : `<li class="px-4 py-3 text-sm text-neutral-500">Sin resultados para "${esc(searchInput.value.trim())}". <a href="#registrar" data-register="dato" class="text-lime-400 hover:underline">Sugiere un lugar</a></li>`;
+      resultsEl.classList.remove('hidden');
+      searchInput.setAttribute('aria-expanded', 'true');
+    }
+    function pickResult(p) {
+      hideResults();
+      searchInput.value = p.nombre;
+      mapState.cat = null; mapState.region = 'all'; regionSelect.value = 'all';
+      render(false);
+      scrollToMapOnMobile();
+      openDrawer(p);
+    }
+    searchInput.addEventListener('input', runSearch);
+    searchInput.addEventListener('focus', runSearch);
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (searchHits[0]) pickResult(searchHits[0]); }
+      if (e.key === 'ArrowDown') { e.preventDefault(); resultsEl.querySelector('button')?.focus(); }
+    });
+    resultsEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-i]');
+      if (b) pickResult(searchHits[+b.dataset.i]);
+    });
+    document.addEventListener('click', (e) => { if (!e.target.closest('#searchWrap')) hideResults(); });
+
+    render(false); // vista inicial: Chile centro-sur, zoom 6
+  </script>
+
+  <script>
+    // ================= NOTICIAS =================
+    const NEWS_ART = [
+      '<circle cx="55" cy="72" r="28"/><circle cx="145" cy="72" r="28"/><path d="M55 72l30-38h40l20 38M85 34l15 38H55M125 34l-5-12h-10"/>',
+      '<circle cx="100" cy="56" r="36"/><circle cx="100" cy="56" r="11"/><circle cx="100" cy="56" r="44" stroke-dasharray="4 5"/>',
+      '<path d="M78 14v84M122 14v84M78 30h44M78 82h44"/><rect x="88" y="42" width="24" height="28" rx="4"/>',
+    ];
+    const fmtDate = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }).replace('.', '');
+    document.getElementById('newsGrid').innerHTML = NEWS.map((n, i) => `
+      <article class="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-neutral-900 transition hover:-translate-y-1 hover:border-white/15 ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}">
+        <div class="relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${n.grad} via-neutral-900 to-neutral-950">
+          <svg viewBox="0 0 200 112" class="absolute inset-0 h-full w-full text-white/20 transition duration-500 group-hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">${NEWS_ART[i % NEWS_ART.length]}</svg>
+          <div class="absolute left-3 top-3 flex gap-1.5">
+            <span class="rounded-md px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider ${n.lime ? 'bg-lime-400 text-neutral-950' : 'bg-neutral-700 text-neutral-100'}">${n.tag}</span>
+            <span class="rounded-md bg-neutral-950/70 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-neutral-300 ring-1 ring-white/10">${n.min} min lect.</span>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col p-5">
+          <h3 class="font-display text-xl font-bold uppercase leading-tight tracking-tight text-white [text-wrap:balance] group-hover:text-lime-400">${n.title}</h3>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-neutral-400">${n.body}</p>
+          <footer class="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-mono text-[11px] uppercase text-neutral-500">
+            <span>${n.min} min lect.</span><time datetime="${n.date}">${fmtDate(n.date)}</time>
+          </footer>
+        </div>
+      </article>`).join('');
+
+    // ================= BOLSA DE EMPLEO =================
+    const jobListEl = document.getElementById('jobList');
+    const jobTabsEl = document.getElementById('jobTabs');
+    let jobFilter = 'all';
+
+    function renderJobTabs() {
+      const tabs = [['all', 'Todos', JOBS.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, JOBS.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter)];
+      jobTabsEl.innerHTML = tabs.map(([k, label, n]) => `
+        <button type="button" role="tab" data-type="${k}" aria-selected="${k === jobFilter}"
+          class="shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${k === jobFilter ? 'bg-lime-400 text-neutral-950' : 'bg-neutral-900 text-neutral-300 ring-1 ring-white/10 hover:ring-white/30'}">
+          ${label} <span class="ml-1 font-mono text-[11px] ${k === jobFilter ? 'text-neutral-800' : 'text-neutral-500'}">${n}</span>
+        </button>`).join('');
+    }
+    jobTabsEl.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-type]');
+      if (!b) return;
+      jobFilter = b.dataset.type;
+      renderJobs();
+    });
+
+    function renderJobs() {
+      renderJobTabs();
+      const items = JOBS.filter((j) => jobFilter === 'all' || j.type === jobFilter);
+      jobListEl.innerHTML = items.length ? '' : '<li class="rounded-xl border border-dashed border-white/10 p-6 text-center text-sm text-neutral-500">No hay avisos en esta categoría todavía.</li>';
+      items.forEach((j) => {
+        const t = JOB_TYPES[j.type];
+        const li = document.createElement('li');
+        li.className = 'rounded-xl border border-white/5 bg-neutral-900 p-4 transition hover:border-white/15 sm:p-5';
+        li.innerHTML = `
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div class="min-w-0">
+              <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="rounded-md px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider ring-1 ${t.cls}">${t.label}</span>
+                ${j.isNew ? '<span class="rounded-md bg-lime-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-neutral-950">Nuevo</span>' : ''}
+                <span class="text-xs text-neutral-500">${esc(j.place)} · ${esc(j.when)}</span>
+              </div>
+              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-white">${esc(j.title)}</h3>
+              <p class="mt-1 text-sm text-neutral-400">${esc(j.body)}</p>
+              ${j.tags.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-white/5 px-2 py-0.5 text-[11px] text-neutral-400">${esc(tag)}</span>`).join('')}</div>` : ''}
+            </div>
+            <button type="button" class="reply-btn shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/15 transition hover:bg-lime-400 hover:text-neutral-950 hover:ring-lime-400">${j.type === 'voluntariado' ? 'Sumarme' : 'Postular'}</button>
+          </div>`;
+        li.querySelector('.reply-btn').addEventListener('click', () => toast('Pronto podrás responder avisos desde DESVIADOR'));
+        jobListEl.appendChild(li);
+      });
+    }
+    renderJobs();
+
+    // ================= FORMULARIO =================
+    const form = document.getElementById('mainForm');
+    const $ = (id) => document.getElementById(id);
+    $('bizCat').innerHTML = Object.entries(CATEGORIES).map(([k, c]) => `<option value="${k}">${c.short}</option>`).join('');
+
+    const COPY = {
+      negocio: { label: 'Cuéntanos sobre tu negocio', optional: true,  placeholder: 'Servicios, marcas con las que trabajas, horario…', submit: 'Enviar solicitud' },
+      aviso:   { label: 'Detalle del aviso',          optional: false, placeholder: 'Requisitos, fechas, cómo postular o sumarse…',   submit: 'Publicar aviso' },
+      dato:    { label: 'Detalle',                    optional: false, placeholder: 'Ej: el sendero X está cerrado por derrumbe desde el lunes', submit: 'Enviar dato' },
+    };
+    const currentKind = () => form.querySelector('input[name="kind"]:checked').value;
+    function syncKind() {
+      const kind = currentKind();
+      form.querySelectorAll('[data-kind]').forEach((el) => { el.hidden = !el.dataset.kind.split(' ').includes(kind); });
+      const c = COPY[kind];
+      $('messageLabel').textContent = c.label;
+      $('messageOptional').hidden = !c.optional;
+      $('message').placeholder = c.placeholder;
+      $('submitBtn').textContent = c.submit;
+      $('title').placeholder = kind === 'aviso' ? 'Ej: Se busca mecánico part-time en Ñuñoa' : 'Ej: Nuevo bikepark en Chillán';
+      $('formError').classList.add('hidden');
+    }
+    form.querySelectorAll('input[name="kind"]').forEach((r) => r.addEventListener('change', syncKind));
+    $('message').addEventListener('input', () => ($('charCount').textContent = $('message').value.length));
+    syncKind();
+
+    // Enlaces que preseleccionan el formulario: data-register="negocio" | "destacada" | "aviso" | "dato"
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-register]');
+      if (!a) return;
+      const mode = a.dataset.register;
+      const kind = mode === 'destacada' ? 'negocio' : mode;
+      $(`kind-${kind}`).checked = true;
+      if (kind === 'negocio') {
+        if (mode === 'destacada') $('bizFeatured').checked = true;
+        if (mapState.cat) $('bizCat').value = mapState.cat;
+      }
+      syncKind();
+    });
+
+    function showError(msg) { $('formError').textContent = msg; $('formError').classList.remove('hidden'); }
+    function resetForm(kind) {
+      form.reset();
+      $(`kind-${kind}`).checked = true;
+      syncKind();
+      $('charCount').textContent = '0';
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if ($('website').value) return; // bot
+      const kind = currentKind();
+      const body = $('message').value.trim();
+
+      if (kind === 'negocio') {
+        const phone = $('bizPhone').value.replace(/\D/g, '');
+        if ($('bizName').value.trim().length < 3) return showError('Escribe el nombre de tu negocio.');
+        if ($('bizComuna').value.trim().length < 3) return showError('Indica la comuna donde está tu negocio.');
+        if (phone.length < 8) return showError('Agrega un WhatsApp válido para confirmar tus datos (ej: +56 9 1234 5678).');
+        const featured = $('bizFeatured').checked;
+        resetForm('negocio');
+        return toast(featured ? 'Solicitud de ficha destacada lista. Te contactaremos por WhatsApp.' : 'Solicitud lista. Revisaremos tu ficha antes de publicarla.');
+      }
+
+      const title = $('title').value.trim();
+      if (title.length < 5) return showError('El título necesita al menos 5 caracteres.');
+      if (body.length < 10) return showError('El detalle necesita al menos 10 caracteres.');
+
+      if (kind === 'aviso') {
+        JOBS.unshift({ type: $('jobType').value, title, place: $('jobPlace').value.trim() || 'Chile', when: 'Ahora', body, tags: [], isNew: true });
+        jobFilter = 'all';
+        renderJobs();
+      }
+      resetForm(kind);
+      toast(kind === 'aviso' ? 'Aviso publicado en la bolsa (vista de prueba).' : 'Dato recibido. Gracias por aportar.');
+      if (kind === 'aviso') document.getElementById('comunidad').scrollIntoView({ behavior: 'smooth' });
+    });
   </script>
 </body>
 </html>
