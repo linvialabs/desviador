@@ -465,6 +465,9 @@
     /* ================= SQL PARA EL SQL EDITOR DE SUPABASE (ejecutar una vez) =================
     -- (También está en supabase/schema.sql. Para el panel admin.html ejecuta después supabase/admin.sql)
 
+    -- 0) Acceso básico al esquema (necesario si desmarcaste "Automatically expose new tables")
+    grant usage on schema public to anon, authenticated;
+
     -- 1) TABLA PRINCIPAL DE COMERCIOS Y SENDEROS
     create table if not exists public.comercios (
       id                 uuid primary key default gen_random_uuid(),

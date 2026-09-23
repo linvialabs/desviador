@@ -2,6 +2,9 @@
 -- Ejecutar una vez en Supabase → SQL Editor.
 
 
+-- 0) Acceso básico al esquema (necesario si desmarcaste "Automatically expose new tables")
+grant usage on schema public to anon, authenticated;
+
 -- 1) TABLA PRINCIPAL DE COMERCIOS Y SENDEROS
 create table if not exists public.comercios (
   id                 uuid primary key default gen_random_uuid(),
