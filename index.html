@@ -155,16 +155,11 @@
             <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
           </div>
         </div>
-
-        <!-- Resultados (solo escritorio) -->
-        <div class="hidden lg:block">
-          <p class="mb-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"><span id="resultsCount">0</span> lugares en el mapa</p>
-          <ul id="placeList" class="divide-y divide-sand-200 overflow-hidden rounded-xl bg-sand-50 ring-1 ring-sand-300"></ul>
-        </div>
       </div>
 
       <!-- Mapa -->
-      <div class="relative isolate z-0 order-2 lg:h-full">
+      <!-- overflow-hidden: la ficha cerrada queda fuera del mapa y no debe tapar contenido ni crear scroll lateral -->
+      <div class="relative isolate z-0 order-2 overflow-hidden lg:h-full">
         <div id="map" role="region" aria-label="Mapa interactivo de lugares ciclistas en Chile"></div>
 
         <!-- Región: flota sobre el mapa -->
@@ -206,6 +201,32 @@
           <button id="locateBtn" type="button" class="grid h-10 w-10 place-items-center rounded-xl bg-sand-50 text-soil-950 shadow-xl ring-1 ring-sand-300 transition hover:bg-sand-100" aria-label="Centrar en mi ubicación" title="Mi ubicación">
             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
           </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIRECTORIO (compacto, bajo el mapa) ============ -->
+    <section id="directorio" class="scroll-mt-16 bg-soil-900 text-sand-100" aria-labelledby="dirTitle" hidden>
+      <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Directorio</p>
+            <h2 id="dirTitle" class="mt-1 font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-3xl">Destacados en el mapa</h2>
+          </div>
+          <!-- Métricas -->
+          <div id="dirStats" class="flex flex-wrap gap-2" aria-label="Resumen del directorio"></div>
+        </div>
+
+        <!-- Siempre visibles: 3 primeros -->
+        <ul id="dirTop" class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3"></ul>
+
+        <!-- Resto, colapsable -->
+        <div id="dirMore" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out" inert>
+          <ul id="dirRest" class="grid grid-cols-2 gap-3 pt-3 lg:grid-cols-3"></ul>
+        </div>
+
+        <div class="mt-6 flex justify-center">
+          <button id="dirToggle" type="button" aria-expanded="false" aria-controls="dirMore" class="rounded-full bg-soil-800 px-5 py-2.5 text-sm font-semibold text-sand-50 ring-1 ring-soil-700 transition hover:bg-soil-700 hover:ring-ochre-400/60"></button>
         </div>
       </div>
     </section>
@@ -731,6 +752,7 @@
       });
       markerById = Object.fromEntries(markers.map((e) => [e.place.id, e.marker]));
       render(false);
+      renderDirectory();
       if (typeof renderJobs === 'function') renderJobs(); // Bici Jobs se alimenta del mapa
     }
 
@@ -922,7 +944,6 @@
       map.flyToBounds(L.latLngBounds(visible.map((v) => v.marker.getLatLng())), { ...opts, maxZoom: 12 });
     }
 
-    const listEl = document.getElementById('placeList');
     const emptyEl = document.getElementById('emptyState');
     function render(fit = false) {
       shortcutsEl.querySelectorAll('.shortcut').forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === mapState.cat));
@@ -931,7 +952,6 @@
       const visible = visiblePoints();
       markers.forEach((e) => (visible.includes(e) ? e.marker.addTo(map) : map.removeLayer(e.marker)));
       document.getElementById('visibleCount').textContent = visible.length;
-      document.getElementById('resultsCount').textContent = visible.length;
 
       // Estado vacío
       emptyEl.classList.toggle('hidden', visible.length > 0);
@@ -941,21 +961,103 @@
         document.getElementById('emptyText').innerHTML = `Todavía no hay <strong class="text-soil-950">${what}</strong> verificados${where}.<br>¿Tienes uno? Aparece en el mapa nacional.`;
       }
 
-      // Listado (escritorio)
-      listEl.innerHTML = visible.length ? '' : '<li class="px-4 py-5 text-sm text-soil-600">Sin resultados con estos filtros.</li>';
-      visible.forEach(({ place }) => {
-        const c = CATEGORIES[place.categoria];
-        const li = document.createElement('li');
-        li.innerHTML = `<button type="button" class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-sand-100">
-            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full" style="background:${c.color}">${svgIcon(place.categoria, 'h-3.5 w-3.5', '#f6f1e7')}</span>
-            <span class="min-w-0"><span class="block truncate text-sm font-semibold text-soil-950">${esc(place.nombre)}</span>
-            <span class="block text-xs text-soil-600">${c.short} · ${esc(place.comuna || REGIONES[place.region].label)}</span></span></button>`;
-        li.querySelector('button').addEventListener('click', () => openDrawer(place));
-        listEl.appendChild(li);
-      });
-
       if (fit) fitView(visible);
     }
+
+    // --- Directorio bajo el mapa ---
+    const dirEl = {
+      section: document.getElementById('directorio'), stats: document.getElementById('dirStats'),
+      top: document.getElementById('dirTop'), more: document.getElementById('dirMore'),
+      rest: document.getElementById('dirRest'), toggle: document.getElementById('dirToggle'),
+    };
+    let dirOpen = false;
+    const DIR_TOP = 3;
+
+    // Destacados primero, luego Amigas del Trail, luego alfabético
+    const dirSort = (a, b) => (b.destacado - a.destacado) || (b.amigoTrail - a.amigoTrail) || a.nombre.localeCompare(b.nombre, 'es');
+
+    const miniCard = (p) => {
+      const c = CATEGORIES[p.categoria];
+      return `<li>
+        <article class="flex h-full flex-col justify-between gap-3 rounded-xl bg-soil-800 p-3 ring-1 ring-soil-700 transition hover:ring-ochre-400/50 sm:p-4">
+          <div class="min-w-0">
+            <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
+            <h3 class="mt-2 line-clamp-2 text-sm font-bold leading-snug text-sand-50">${esc(p.nombre)}</h3>
+            <p class="mt-0.5 truncate text-xs text-sand-300">${esc(p.comuna || REGIONES[p.region].label)}</p>
+          </div>
+          <button type="button" data-locate="${esc(p.id)}" class="rounded-lg bg-ochre-400 py-2 text-xs font-bold text-soil-950 transition hover:bg-ochre-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sand-50">📍 Ubicar</button>
+        </article>
+      </li>`;
+    };
+
+    function setDirOpen(open) {
+      dirOpen = open;
+      const el = dirEl.more;
+      el.inert = !open;
+      dirEl.toggle.setAttribute('aria-expanded', open);
+      if (open) {
+        el.style.maxHeight = el.scrollHeight + 'px';
+        el.addEventListener('transitionend', () => { if (dirOpen) el.style.maxHeight = 'none'; }, { once: true });
+      } else {
+        el.style.maxHeight = el.scrollHeight + 'px'; // desde "none" a un alto fijo para poder animar
+        el.offsetHeight; // forzar reflow
+        el.style.maxHeight = '0px';
+      }
+      syncDirToggle();
+    }
+    function syncDirToggle() {
+      const n = puntos.length;
+      dirEl.toggle.hidden = n <= DIR_TOP;
+      dirEl.toggle.textContent = dirOpen ? '🔼 Ocultar listado' : `🔽 Mostrar directorio completo (${n} ${n === 1 ? 'punto' : 'puntos'} en Chile)`;
+    }
+
+    function renderDirectory() {
+      const list = [...puntos].sort(dirSort);
+      dirEl.section.hidden = !list.length;
+      const count = (fn) => list.filter(fn).length;
+      const pill = (icon, n, label, action) => `<button type="button" data-stat="${action}" class="inline-flex items-center gap-1.5 rounded-full bg-soil-800 px-3.5 py-1.5 text-sm text-sand-200 ring-1 ring-soil-700 transition hover:ring-ochre-400/60"><span aria-hidden="true">${icon}</span><strong class="font-mono text-ochre-300 tabular-nums">${n}</strong> ${label}</button>`;
+      dirEl.stats.innerHTML = [
+        pill('📍', list.length, list.length === 1 ? 'Punto' : 'Puntos', 'all'),
+        pill('🛠️', count((p) => p.categoria === 'talleres'), 'Talleres', 'talleres'),
+        pill('🚵', count((p) => p.categoria === 'senderos'), 'Bikeparks', 'senderos'),
+        pill('💼', count((p) => p.necesidad), 'Bici Jobs', 'jobs'),
+      ].join('');
+      dirEl.top.innerHTML = list.slice(0, DIR_TOP).map(miniCard).join('');
+      dirEl.rest.innerHTML = list.slice(DIR_TOP).map(miniCard).join('');
+      if (dirOpen) dirEl.more.style.maxHeight = 'none';
+      syncDirToggle();
+    }
+
+    dirEl.toggle.addEventListener('click', () => {
+      setDirOpen(!dirOpen);
+      if (!dirOpen) dirEl.section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Ubicar: subir al mapa, quitar filtros que lo oculten, volar al punto y abrir la ficha
+    function locatePoint(id) {
+      const p = puntos.find((x) => String(x.id) === id);
+      if (!p) return;
+      if ((mapState.cat && mapState.cat !== p.categoria) || (mapState.region !== 'all' && mapState.region !== p.region)) {
+        mapState.cat = null; mapState.region = 'all'; regionSelect.value = 'all';
+        render(false);
+      }
+      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: isDesktop() ? 'center' : 'start' });
+      setTimeout(() => openDrawer(p), 500);
+    }
+    dirEl.section.addEventListener('click', (e) => {
+      const loc = e.target.closest('[data-locate]');
+      if (loc) return locatePoint(loc.dataset.locate);
+      const stat = e.target.closest('[data-stat]');
+      if (!stat) return;
+      const k = stat.dataset.stat;
+      if (k === 'jobs') {
+        document.getElementById('comunidad').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return document.querySelector('#jobTabs [data-type="trabajo"]')?.click();
+      }
+      mapState.cat = k === 'all' ? null : k; mapState.region = 'all'; regionSelect.value = 'all';
+      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: isDesktop() ? 'center' : 'start' });
+      render(true);
+    });
 
     // --- Taller cercano / mi ubicación ---
     let youAreHere;
