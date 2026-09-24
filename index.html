@@ -471,6 +471,8 @@
         </div>
         <label for="dirSearch" class="sr-only">Filtrar el directorio</label>
         <input id="dirSearch" type="search" autocomplete="off" placeholder="Filtrar por nombre, comuna o categoría…" class="mt-3 w-full rounded-xl border-0 bg-white/70 px-4 py-2.5 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
+        <!-- Filtros rápidos por categoría: scroll horizontal en móvil, en filas en pantallas grandes -->
+        <div id="dirChips" class="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" role="group" aria-label="Filtrar por categoría"></div>
       </div>
       <div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <ul id="dirAll" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4"></ul>
@@ -977,7 +979,7 @@
       top: document.getElementById('dirTop'), open: document.getElementById('dirOpen'),
       dialog: document.getElementById('dirDialog'), all: document.getElementById('dirAll'),
       search: document.getElementById('dirSearch'), count: document.getElementById('dirDialogCount'),
-      empty: document.getElementById('dirEmpty'),
+      empty: document.getElementById('dirEmpty'), chips: document.getElementById('dirChips'),
     };
     const DIR_TOP = 2;
 
@@ -1014,16 +1016,50 @@
       if (dirEl.dialog.open) renderDirectoryDialog();
     }
 
+    // Filtros rápidos del directorio. "Comunidad / Paleros" = negocios con sello Amiga del Trail
+    const DIR_CHIPS = [
+      { id: 'all',      label: 'Todos',                     one: 'punto',                 many: 'puntos',                     test: () => true },
+      { id: 'talleres', label: '🛠️ Talleres',               one: 'taller',                many: 'talleres',                   test: (p) => p.categoria === 'talleres' },
+      { id: 'tiendas',  label: '🏪 Tiendas',                one: 'tienda',                many: 'tiendas',                    test: (p) => p.categoria === 'tiendas' },
+      { id: 'senderos', label: '🚵 Bikeparks / Senderos',   one: 'bikepark o sendero',    many: 'bikeparks y senderos',       test: (p) => p.categoria === 'senderos' },
+      { id: 'tours',    label: '🚐 Shuttles / Tours',       one: 'shuttle o tour',        many: 'shuttles y tours',           test: (p) => p.categoria === 'tours' },
+      { id: 'clases',   label: '🎓 Escuelas / Clases',      one: 'escuela',               many: 'escuelas',                   test: (p) => p.categoria === 'clases' },
+      { id: 'trail',    label: '⛏️ Comunidad / Paleros',    one: 'Amiga del Trail',       many: 'Amigas del Trail',           test: (p) => p.amigoTrail },
+    ];
+    let dirChip = 'all';
+
     function renderDirectoryDialog() {
-      const q = norm(dirEl.search.value.trim());
-      const list = sortedPoints().filter((p) => !q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q));
+      const chip = DIR_CHIPS.find((c) => c.id === dirChip);
+      const raw = dirEl.search.value.trim();
+      const q = norm(raw);
+      const all = sortedPoints();
+      const list = all.filter((p) => chip.test(p) && (!q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q)));
+
+      // Píldoras con su total (sin contar el texto, para que el número no "salte" al escribir)
+      dirEl.chips.innerHTML = DIR_CHIPS.map((c) => {
+        const n = all.filter(c.test).length;
+        const on = c.id === dirChip;
+        return `<button type="button" data-chip="${c.id}" aria-pressed="${on}" class="shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${on ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">${c.label} <span class="ml-0.5 font-mono text-[11px] ${on ? 'text-ochre-300' : 'text-soil-600'}">${n}</span></button>`;
+      }).join('');
+
       dirEl.all.innerHTML = list.map(miniCard).join('');
       dirEl.empty.hidden = list.length > 0;
-      dirEl.count.textContent = q ? `${list.length} de ${puntos.length} puntos` : `${puntos.length} puntos en Chile`;
+      dirEl.empty.textContent = `No hay ${chip.many} ${raw ? `que coincidan con "${raw}"` : 'por ahora'}.`;
+      dirEl.count.textContent = `Mostrando ${list.length} ${list.length === 1 ? chip.one : chip.many}${raw ? ` para "${raw}"` : ''} en Chile`;
     }
+    dirEl.chips.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-chip]');
+      if (!b) return;
+      dirChip = b.dataset.chip;
+      if (dirChip === 'all') dirEl.search.value = ''; // "Todos" = estado limpio
+      renderDirectoryDialog();
+      dirEl.dialog.querySelector('.overflow-y-auto').scrollTop = 0;
+      document.querySelector(`#dirChips [data-chip="${dirChip}"]`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
 
     dirEl.open.addEventListener('click', () => {
       dirEl.search.value = '';
+      dirChip = 'all';
       renderDirectoryDialog();
       dirEl.dialog.showModal();
       dirEl.dialog.querySelector('.overflow-y-auto').scrollTop = 0;
