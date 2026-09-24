@@ -34,7 +34,7 @@ Regiones: `valparaiso`, `metropolitana`, `nuble`, `biobio`, `araucania`, `losrio
 
 Mientras no estén configuradas, el mapa muestra los puntos de respaldo ("datos de ejemplo") y el registro de negocios queda desactivado.
 
-**Qué protege el esquema:** el público solo lee filas aprobadas y solo las columnas de la ficha (`contacto_admin`, `necesidad_personal` y `solicita_destacado` son privadas); solo puede insertar solicitudes pendientes y no puede asignarse sellos, aprobarse, editar ni borrar.
+**Qué protege el esquema:** el público solo lee filas aprobadas y solo las columnas de la ficha (`contacto_admin` y `solicita_destacado` son privadas; `necesidad_personal` es pública y alimenta Bici Jobs); solo puede insertar solicitudes pendientes y no puede asignarse sellos, aprobarse, editar ni borrar.
 
 ## Panel de administración (`admin.html`)
 

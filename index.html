@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>DESVIADOR — La plataforma técnica e interactiva del ciclismo en Chile</title>
+  <title>DESVIADOR — El mapa técnico y directorio operativo del ciclismo en Chile</title>
   <meta name="description" content="Mapa nacional de talleres, tiendas, escuelas, bikeparks y tours. Análisis técnico, bolsa de trabajo y comunidad ciclista en Chile." />
   <meta name="theme-color" content="#15120e" />
 
@@ -133,13 +133,10 @@
       <div class="topo-bg contents lg:flex lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:py-8">
         <div class="topo-bg order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:bg-none lg:p-0">
           <div>
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Mapa nacional · Chile</p>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Desviador · Chile</p>
             <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.75rem]">
-              La plataforma técnica e interactiva del ciclismo en Chile
+              El mapa técnico y directorio operativo del ciclismo en Chile
             </h1>
-            <p class="mt-3 hidden max-w-md text-[15px] leading-relaxed text-soil-600 sm:block">
-              Encuentra talleres, tiendas, escuelas, bikeparks y tours en el mapa. Lee análisis técnicos y conecta con la comunidad.
-            </p>
           </div>
 
           <!-- Búsqueda -->
@@ -159,35 +156,26 @@
           </div>
         </div>
 
-        <div class="order-3 flex flex-col gap-5 bg-sand-100 px-4 py-5 sm:px-6 lg:bg-transparent lg:p-0">
-          <!-- Zona -->
-          <div class="flex items-center gap-3">
-            <label for="regionSelect" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">Zona</label>
-            <select id="regionSelect" class="flex-1 rounded-lg border-0 bg-sand-50 px-3 py-2 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600"></select>
-          </div>
-
-          <!-- Resultados (solo escritorio) -->
-          <div class="hidden lg:block">
-            <p class="mb-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"><span id="resultsCount">0</span> lugares en el mapa</p>
-            <ul id="placeList" class="divide-y divide-sand-200 overflow-hidden rounded-xl bg-sand-50 ring-1 ring-sand-300"></ul>
-          </div>
-
-          <!-- CTA comercial -->
-          <a href="#registrar" data-register="negocio" class="group flex items-center gap-3 rounded-xl border border-dashed border-moss-600/50 bg-sand-50/70 p-4 transition hover:border-moss-600 hover:bg-sand-50">
-            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-moss-600 text-sand-50">
-              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><path d="M12 7v5M9.5 9.5h5"/></svg>
-            </span>
-            <span class="text-sm leading-snug text-soil-700">
-              <strong class="block font-semibold text-soil-950">¿Tienes un taller, tienda o escuela?</strong>
-              Aparece en el mapa nacional de DESVIADOR <span class="text-moss-600">→</span>
-            </span>
-          </a>
+        <!-- Resultados (solo escritorio) -->
+        <div class="hidden lg:block">
+          <p class="mb-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"><span id="resultsCount">0</span> lugares en el mapa</p>
+          <ul id="placeList" class="divide-y divide-sand-200 overflow-hidden rounded-xl bg-sand-50 ring-1 ring-sand-300"></ul>
         </div>
       </div>
 
       <!-- Mapa -->
       <div class="relative isolate z-0 order-2 lg:h-full">
         <div id="map" role="region" aria-label="Mapa interactivo de lugares ciclistas en Chile"></div>
+
+        <!-- Región: flota sobre el mapa -->
+        <div class="absolute left-[62px] top-3 z-[1001] max-w-[calc(100%-200px)] sm:max-w-[240px]">
+          <label for="regionSelect" class="sr-only">Ir a una región</label>
+          <div class="relative">
+            <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ochre-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+            <select id="regionSelect" class="w-full appearance-none truncate rounded-xl border-0 bg-soil-950/95 py-2.5 pl-9 pr-8 text-sm font-semibold text-sand-50 shadow-xl ring-1 ring-soil-700 backdrop-blur focus:outline-none focus:ring-2 focus:ring-ochre-400"></select>
+            <svg class="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-sand-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
 
         <p class="pointer-events-none absolute bottom-3 left-3 z-[900] rounded-lg bg-soil-950/85 px-3 py-1.5 font-mono text-[11px] text-sand-100">
           <span id="visibleCount">…</span> visibles<span id="dataSourceTag"></span>
@@ -222,6 +210,20 @@
       </div>
     </section>
 
+    <!-- ============ CAPTACIÓN B2B: RECLAMA TU TIENDA ============ -->
+    <section aria-labelledby="b2bTitle" class="border-b border-sand-300 bg-sand-100">
+      <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div class="relative flex flex-col gap-5 overflow-hidden rounded-2xl bg-soil-900 p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
+          <div class="max-w-2xl">
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para negocios</p>
+            <h2 id="b2bTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl">¿Eres dueño o administrador de una tienda, taller o bikepark?</h2>
+            <p class="mt-2 text-sand-300">Aparece gratis en el directorio nacional de DESVIADOR, publica tus ofertas de trabajo y conecta con la comunidad de tu zona.</p>
+          </div>
+          <a href="#registrar" data-register="negocio" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300">+ Registrar o Reclamar mi Negocio</a>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ ÚLTIMAS NOTICIAS / TECH ============ -->
     <section id="noticias" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
       <div class="mb-8 flex items-end justify-between gap-4 border-b-2 border-soil-950 pb-3">
@@ -241,8 +243,8 @@
         <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Comunidad</p>
-            <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Bolsa de empleo &amp; paleros</h2>
-            <p class="mt-2 max-w-xl text-sm text-soil-600">Ofertas para mecánicos, guías y vendedores, y convocatorias para mantener los senderos que usamos todos.</p>
+            <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Bici Jobs &amp; Paleros</h2>
+            <p class="mt-2 max-w-xl text-sm text-soil-600">Talleres y tiendas que buscan mecánicos o vendedores, y jornadas para mantener los senderos que usamos todos.</p>
           </div>
           <div id="jobTabs" class="no-scrollbar -mx-4 flex shrink-0 gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
         </div>
@@ -301,6 +303,7 @@
             <li class="flex gap-3"><span class="text-moss-600">✓</span> Revisamos cada ficha antes de publicarla en el mapa.</li>
             <li class="flex gap-3"><span class="text-moss-600">✓</span> Te contactamos para confirmar ubicación y datos.</li>
             <li class="flex gap-3"><span class="text-moss-600">✓</span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
+            <li class="flex gap-3"><span class="text-ochre-500">★</span> <span><strong class="text-soil-950">¿Tu negocio ya aparece en el mapa?</strong> Regístralo con el mismo nombre: verificamos que eres el dueño y te damos el control de la ficha.</span></li>
           </ul>
         </div>
 
@@ -377,7 +380,7 @@
               <input id="bizOwner" maxlength="120" placeholder="Nombre y celular para verificar la ficha" class="field" />
             </div>
             <div>
-              <label for="bizStaff" class="mb-1.5 block text-sm font-semibold text-soil-800">¿Buscas personal? <span class="font-normal text-soil-600">(opcional)</span></label>
+              <label for="bizStaff" class="mb-1.5 block text-sm font-semibold text-soil-800">¿Buscas personal? <span class="font-normal text-soil-600">(opcional · se publica en tu ficha y en Bici Jobs)</span></label>
               <input id="bizStaff" maxlength="200" placeholder="Ej: mecánico part-time, vendedor fin de semana" class="field" />
             </div>
             <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
@@ -392,8 +395,8 @@
               <div>
                 <label for="jobType" class="mb-1.5 block text-sm font-semibold text-soil-800">Tipo de aviso</label>
                 <select id="jobType" class="field">
-                  <option value="trabajo">Oferta laboral</option>
-                  <option value="voluntariado">Voluntariado / paleros</option>
+                  <option value="trabajo">Oferta laboral (Bici Jobs)</option>
+                  <option value="voluntariado">Jornada de pala (Digger Day)</option>
                   <option value="comunidad">Comunidad</option>
                 </select>
               </div>
@@ -437,15 +440,33 @@
 
   <footer class="bg-soil-950 text-sand-300">
     <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
-      <p><span class="font-display text-base font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span> La plataforma técnica e interactiva del ciclismo en Chile.</p>
+      <p><span class="font-display text-base font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span> El mapa técnico y directorio operativo del ciclismo en Chile.</p>
       <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Pie de página">
         <a href="#inicio" class="hover:text-sand-50">Mapa</a>
         <a href="#noticias" class="hover:text-sand-50">Tech</a>
         <a href="#comunidad" class="hover:text-sand-50">Comunidad</a>
         <a href="#anunciate" class="font-semibold text-ochre-400 hover:text-ochre-300">Anúnciate / Destaca tu empresa</a>
+        <button type="button" id="privacyLink" class="text-xs text-sand-300/70 underline-offset-4 hover:text-sand-50 hover:underline">Privacidad &amp; Seguridad</button>
       </nav>
     </div>
   </footer>
+
+  <!-- Privacidad & Seguridad -->
+  <dialog id="privacyDialog" class="w-[min(92vw,34rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="privacyTitle">
+    <div class="max-h-[80vh] overflow-y-auto p-6">
+      <div class="flex items-start justify-between gap-4">
+        <h2 id="privacyTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950">Privacidad &amp; Seguridad</h2>
+        <button type="button" id="privacyClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="mt-4 space-y-4 text-sm leading-relaxed text-soil-700">
+        <p><strong class="text-soil-950">Qué publicamos de cada negocio:</strong> nombre, categoría, ubicación, comuna, dirección, WhatsApp, horario, descripción y, si lo indica, qué personal busca.</p>
+        <p><strong class="text-soil-950">Qué no publicamos:</strong> el contacto del dueño que se deja en el registro. Solo lo ve el equipo editorial para verificar la ficha.</p>
+        <p><strong class="text-soil-950">Cómo lo protegemos:</strong> las fichas se guardan en una base de datos con reglas de acceso. Cualquiera puede enviar una solicitud, pero solo el equipo editorial puede aprobar, editar o eliminar fichas.</p>
+        <p><strong class="text-soil-950">En tu navegador:</strong> no usamos cookies de seguimiento; solo recordamos la capa de mapa que elegiste. El mapa y las tipografías se cargan desde servicios externos (Esri, Google Fonts).</p>
+        <p><strong class="text-soil-950">Corregir o eliminar una ficha:</strong> <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 underline" id="privacyContact">envíanos un dato</a> con el nombre del negocio y lo revisamos.</p>
+      </div>
+    </div>
+  </dialog>
 
   <!-- Toast -->
   <div id="toast" class="pointer-events-none fixed inset-x-4 bottom-4 z-[2000] mx-auto max-w-sm translate-y-24 rounded-xl bg-soil-950 px-4 py-3 text-sm font-semibold text-sand-50 opacity-0 shadow-2xl ring-1 ring-ochre-400/50 transition duration-300" role="status" aria-live="polite"></div>
@@ -482,7 +503,7 @@
       horario            text check (char_length(horario) <= 80),
       descripcion        text check (char_length(descripcion) <= 600),
       contacto_admin     text check (char_length(contacto_admin) <= 120),     -- PRIVADO: nombre/celular del dueño
-      necesidad_personal text check (char_length(necesidad_personal) <= 200), -- PRIVADO: si busca mecánico/vendedor
+      necesidad_personal text check (char_length(necesidad_personal) <= 200), -- PÚBLICO: "Buscando personal" (Bici Jobs)
       solicita_destacado boolean not null default false,                      -- PRIVADO: pidió ficha destacada
       es_amigo_trail     boolean not null default false,                      -- Sello "Amiga del Trail" (solo lo asigna el admin)
       destacado          boolean not null default false,                      -- Ficha destacada pagada (solo lo asigna el admin)
@@ -510,7 +531,7 @@
     -- (estado, sellos, id y fecha quedan siempre con su valor por defecto).
     revoke all on public.comercios from anon, authenticated;
     grant select (id, nombre_comercio, categoria, region, comuna, direccion, latitud, longitud,
-                  whatsapp, horario, descripcion, es_amigo_trail, destacado, estado)
+                  whatsapp, horario, descripcion, necesidad_personal, es_amigo_trail, destacado, estado)
       on public.comercios to anon, authenticated;
     grant insert (nombre_comercio, categoria, region, comuna, direccion, latitud, longitud,
                   whatsapp, horario, descripcion, contacto_admin, necesidad_personal, solicita_destacado)
@@ -590,13 +611,13 @@
       { type: 'trabajo',      title: 'Mecánico buscando taller',                    place: 'Santiago · Zona oriente', when: 'Hace 2 h',    body: '8 años de experiencia en suspensiones Fox/RockShox y frenos hidráulicos. Disponible jornada completa o part-time.', tags: ['Suspensión', 'Full-time'] },
       { type: 'voluntariado', title: 'Convocatoria de paleros para mantener trail', place: 'San José de Maipo',       when: 'Hace 5 h',    body: 'Jornada de mantención este sábado a las 8:00. Llevamos herramientas y colación. Trae guantes y agua.', tags: ['Sábado', 'Sin experiencia'] },
       { type: 'trabajo',      title: 'Taller busca ayudante de mecánica',           place: 'Valparaíso',              when: 'Ayer',        body: 'Buscamos a alguien con ganas de aprender. Te formamos en ruedas y transmisiones. Sueldo más comisión.', tags: ['Aprendiz', 'Part-time'] },
-      { type: 'voluntariado', title: 'Censo de ciclovías: se buscan contadores',    place: 'Concepción',              when: 'Hace 2 días', body: 'Turnos de dos horas contando ciclistas en puntos clave. Los datos serán abiertos.', tags: ['Datos abiertos'] },
+      { type: 'voluntariado', title: 'Digger Day: reconstrucción de peraltes',       place: 'Concepción',              when: 'Hace 2 días', body: 'Rehacemos curvas y saltos erosionados por la lluvia. Palas, rastrillos y colación incluidos.', tags: ['Sábado', 'Herramientas incluidas'] },
       { type: 'trabajo',      title: 'Guía bilingüe para tours de temporada',       place: 'Puerto Varas',            when: 'Hace 3 días', body: 'Temporada de noviembre a marzo. Inglés conversacional y primeros auxilios. Alojamiento incluido.', tags: ['Temporada', 'Inglés'] },
       { type: 'voluntariado', title: 'Jornada de drenajes en sendero de enduro',    place: 'Lo Barnechea',            when: 'Hace 4 días', body: 'Antes de las lluvias: cortes de agua y reparación de curvas. Punto de encuentro a las 9:00.', tags: ['Domingo', 'Herramientas incluidas'] },
     ];
     const JOB_TYPES = {
-      trabajo:      { label: 'Oferta laboral', tab: 'Ofertas laborales', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
-      voluntariado: { label: 'Voluntariado',   tab: 'Voluntariado',      cls: 'bg-ochre-400/20 text-ochre-600 ring-ochre-500/40' },
+      trabajo:      { label: 'Bici Job',       tab: '💼 Ofertas Laborales / Bici Jobs', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
+      voluntariado: { label: 'Digger Day',     tab: '⛏️ Jornadas de Pala / Digger Days', cls: 'bg-ochre-400/20 text-ochre-600 ring-ochre-500/40' },
       comunidad:    { label: 'Comunidad',      tab: 'Comunidad',         cls: 'bg-soil-700/10 text-soil-700 ring-soil-700/25' },
     };
 
@@ -710,10 +731,12 @@
       });
       markerById = Object.fromEntries(markers.map((e) => [e.place.id, e.marker]));
       render(false);
+      if (typeof renderJobs === 'function') renderJobs(); // Bici Jobs se alimenta del mapa
     }
 
     // Fila de Supabase → punto del mapa
     const PUBLIC_COLUMNS = 'id, nombre_comercio, categoria, region, comuna, direccion, latitud, longitud, whatsapp, horario, descripcion, es_amigo_trail, destacado';
+    const JOBS_COLUMN = 'necesidad_personal'; // pública desde el lanzamiento (ver SQL); si aún no hay permiso, se omite
     const fromRow = (r) => ({
       id: r.id,
       nombre: r.nombre_comercio,
@@ -728,6 +751,7 @@
       verificado: true, // solo llegan filas aprobadas por el equipo
       destacado: !!r.destacado,
       amigoTrail: !!r.es_amigo_trail,
+      necesidad: r.necesidad_personal || null,
     });
     const isValidPoint = (p) => CATEGORIES[p.categoria] && REGIONES[p.region] && p.coords.every(Number.isFinite);
 
@@ -739,11 +763,12 @@
       };
       if (!supabaseClient) return useFallback();
       try {
-        const { data: filas, error } = await supabaseClient
-          .from('comercios')
-          .select(PUBLIC_COLUMNS)
-          .eq('estado', 'aprobado')
-          .order('destacado', { ascending: false });
+        const query = (cols) => supabaseClient.from('comercios').select(cols).eq('estado', 'aprobado').order('destacado', { ascending: false });
+        let { data: filas, error } = await query(`${PUBLIC_COLUMNS}, ${JOBS_COLUMN}`);
+        if (error && (error.code === '42501' || /permission denied/i.test(error.message))) {
+          console.info('[DESVIADOR] "necesidad_personal" aún no es pública: ejecuta el grant del SQL. El mapa carga sin Bici Jobs.');
+          ({ data: filas, error } = await query(PUBLIC_COLUMNS));
+        }
         if (error) return useFallback(error.message);
         document.getElementById('dataSourceTag').textContent = '';
         setPoints(filas.map(fromRow).filter(isValidPoint));
@@ -759,7 +784,8 @@
 
     const directionsUrl = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.coords[0]},${p.coords[1]}`;
     const searchUrl = (p) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.nombre} ${p.comuna}`)}`;
-    const waUrl = (p) => `https://wa.me/${String(p.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(`Hola, los encontré en el mapa de DESVIADOR. Quería consultar por ${p.nombre}.`)}`;
+    const waUrl = (p, text = 'Hola, los vi en el mapa de DESVIADOR y quería consultar por ') => `https://wa.me/${String(p.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
+    const WA_ICON = '<svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
 
     function setSelected(id) {
       if (selectedId && markerById[selectedId]) markerById[selectedId].getElement()?.querySelector('.pin')?.classList.remove('is-selected');
@@ -783,14 +809,18 @@
         </div>`;
 
       const contactBlock = p.whatsapp
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-moss-600 py-3.5 font-semibold text-sand-50 transition hover:bg-moss-700">
-             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
-             WhatsApp directo
-           </a>`
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
         : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
              <strong class="block text-soil-950">¿Es tu negocio?</strong>
              Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-ochre-600">→</span>
            </a>`;
+
+      // Alerta Bici Jobs: el negocio busca personal
+      const jobBlock = p.necesidad ? `
+        <div class="mt-4 rounded-xl bg-ochre-300/30 p-3.5 ring-1 ring-ochre-500/50">
+          <p class="text-sm font-bold text-soil-950">💼 Buscando personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
+          ${p.whatsapp ? `<a href="${waUrl(p, `Hola, vi en DESVIADOR que buscan personal (${p.necesidad}) y me interesa postular.`)}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">Postular por WhatsApp →</a>` : ''}
+        </div>` : '';
 
       drawerBody.innerHTML = `
         <div class="flex flex-wrap items-center gap-2 pr-10">
@@ -799,6 +829,7 @@
         </div>
         <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
         <p class="mt-1.5 text-sm text-soil-600">${place}</p>
+        ${jobBlock}
         ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
 
         <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
@@ -811,8 +842,7 @@
           ${contactBlock}
           <div class="grid grid-cols-2 gap-2.5">
             <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'}">
-              <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>
-              Cómo llegar
+              <span aria-hidden="true">📍</span> Cómo llegar
             </a>
             <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
           </div>
@@ -873,7 +903,12 @@
     shortcutsEl.appendChild(resetBtn);
 
     const regionSelect = document.getElementById('regionSelect');
-    regionSelect.innerHTML = '<option value="all">Todo Chile</option>' + Object.entries(REGIONES).map(([k, r]) => `<option value="${k}">${r.label}</option>`).join('');
+    // Regiones clave primero, el resto después
+    const KEY_REGIONS = ['metropolitana', 'valparaiso', 'biobio', 'araucania', 'nuble', 'losrios', 'loslagos'];
+    const regionOption = (k) => `<option value="${k}">${REGIONES[k].label}</option>`;
+    regionSelect.innerHTML = '<option value="all">Todo Chile</option>'
+      + `<optgroup label="Regiones clave">${KEY_REGIONS.map(regionOption).join('')}</optgroup>`
+      + `<optgroup label="Resto de Chile">${Object.keys(REGIONES).filter((k) => !KEY_REGIONS.includes(k)).map(regionOption).join('')}</optgroup>`;
     regionSelect.addEventListener('change', () => { mapState.region = regionSelect.value; render(true); });
 
     const visiblePoints = () => markers.filter(({ place }) =>
@@ -1023,8 +1058,20 @@
     const jobTabsEl = document.getElementById('jobTabs');
     let jobFilter = 'all';
 
+    // Bici Jobs reales: fichas aprobadas del mapa con "necesidad_personal" (vienen de Supabase)
+    function mapJobs() {
+      try {
+        return puntos.filter((p) => p.necesidad).map((p) => ({
+          type: 'trabajo', title: `${p.nombre} busca personal`, body: p.necesidad, when: 'Ficha verificada',
+          place: [p.comuna, REGIONES[p.region].label].filter(Boolean).join(' · '), tags: [CATEGORIES[p.categoria].short], point: p,
+        }));
+      } catch { return []; } // el mapa no cargó
+    }
+    const allJobs = () => [...JOBS.filter((j) => j.isNew), ...mapJobs(), ...JOBS.filter((j) => !j.isNew)];
+
     function renderJobTabs() {
-      const tabs = [['all', 'Todos', JOBS.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, JOBS.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter)];
+      const list = allJobs();
+      const tabs = [['all', 'Todos', list.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, list.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter || k !== 'comunidad')];
       jobTabsEl.innerHTML = tabs.map(([k, label, n]) => `
         <button type="button" role="tab" data-type="${k}" aria-selected="${k === jobFilter}"
           class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${k === jobFilter ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">
@@ -1040,7 +1087,7 @@
 
     function renderJobs() {
       renderJobTabs();
-      const items = JOBS.filter((j) => jobFilter === 'all' || j.type === jobFilter);
+      const items = allJobs().filter((j) => jobFilter === 'all' || j.type === jobFilter);
       jobListEl.innerHTML = items.length ? '' : '<li class="rounded-xl border border-dashed border-sand-300 p-6 text-center text-sm text-soil-600">No hay avisos en esta categoría todavía.</li>';
       items.forEach((j) => {
         const t = JOB_TYPES[j.type];
@@ -1054,13 +1101,17 @@
                 ${j.isNew ? '<span class="rounded bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
                 <span class="text-xs text-soil-600">${esc(j.place)} · ${esc(j.when)}</span>
               </div>
-              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${esc(j.title)}</h3>
+              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${j.point ? '💼 ' : j.type === 'voluntariado' ? '⛏️ ' : ''}${esc(j.title)}</h3>
               <p class="mt-1 text-sm text-soil-600">${esc(j.body)}</p>
               ${j.tags.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-sand-200/70 px-2 py-0.5 text-[11px] font-medium text-soil-700">${esc(tag)}</span>`).join('')}</div>` : ''}
             </div>
-            <button type="button" class="reply-btn shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-soil-950 ring-1 ring-soil-600/40 transition hover:bg-moss-600 hover:text-sand-50 hover:ring-moss-600">${j.type === 'voluntariado' ? 'Sumarme' : 'Postular'}</button>
+            <button type="button" class="reply-btn shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-soil-950 ring-1 ring-soil-600/40 transition hover:bg-moss-600 hover:text-sand-50 hover:ring-moss-600">${j.point ? 'Ver ficha y postular' : j.type === 'voluntariado' ? 'Sumarme' : 'Postular'}</button>
           </div>`;
-        li.querySelector('.reply-btn').addEventListener('click', () => toast('Pronto podrás responder avisos desde DESVIADOR'));
+        li.querySelector('.reply-btn').addEventListener('click', () => {
+          if (!j.point) return toast('Pronto podrás responder avisos desde DESVIADOR');
+          document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => openDrawer(j.point), 450);
+        });
         jobListEl.appendChild(li);
       });
     }
@@ -1170,6 +1221,13 @@
       syncKind();
       $('charCount').textContent = '0';
     }
+
+    // Privacidad & Seguridad
+    const privacyDialog = $('privacyDialog');
+    $('privacyLink').addEventListener('click', () => privacyDialog.showModal?.() ?? privacyDialog.setAttribute('open', ''));
+    $('privacyClose').addEventListener('click', () => privacyDialog.close());
+    $('privacyContact').addEventListener('click', () => privacyDialog.close());
+    privacyDialog.addEventListener('click', (e) => { if (e.target === privacyDialog) privacyDialog.close(); });
 
     form.addEventListener('input', () => { $('formSuccess').hidden = true; });
 

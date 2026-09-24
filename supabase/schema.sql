@@ -19,7 +19,7 @@ create table if not exists public.comercios (
   horario            text check (char_length(horario) <= 80),
   descripcion        text check (char_length(descripcion) <= 600),
   contacto_admin     text check (char_length(contacto_admin) <= 120),     -- PRIVADO: nombre/celular del dueño
-  necesidad_personal text check (char_length(necesidad_personal) <= 200), -- PRIVADO: si busca mecánico/vendedor
+  necesidad_personal text check (char_length(necesidad_personal) <= 200), -- PÚBLICO: "Buscando personal" (Bici Jobs)
   solicita_destacado boolean not null default false,                      -- PRIVADO: pidió ficha destacada
   es_amigo_trail     boolean not null default false,                      -- Sello "Amiga del Trail" (solo lo asigna el admin)
   destacado          boolean not null default false,                      -- Ficha destacada pagada (solo lo asigna el admin)
@@ -47,7 +47,7 @@ create policy "Inserción pública de solicitudes"
 -- (estado, sellos, id y fecha quedan siempre con su valor por defecto).
 revoke all on public.comercios from anon, authenticated;
 grant select (id, nombre_comercio, categoria, region, comuna, direccion, latitud, longitud,
-              whatsapp, horario, descripcion, es_amigo_trail, destacado, estado)
+              whatsapp, horario, descripcion, necesidad_personal, es_amigo_trail, destacado, estado)
   on public.comercios to anon, authenticated;
 grant insert (nombre_comercio, categoria, region, comuna, direccion, latitud, longitud,
               whatsapp, horario, descripcion, contacto_admin, necesidad_personal, solicita_destacado)

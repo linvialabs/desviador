@@ -182,12 +182,12 @@
               <div><label for="e_whatsapp" class="lbl">WhatsApp público</label><input id="e_whatsapp" inputmode="tel" maxlength="20" placeholder="56912345678" class="fld font-mono" /></div>
               <div><label for="e_horario" class="lbl">Horario</label><input id="e_horario" maxlength="80" class="fld" /></div>
             </div>
+            <div><label for="e_personal" class="lbl">Busca personal <span class="font-normal text-sand-300/70">(público · Bici Jobs)</span></label><input id="e_personal" maxlength="200" placeholder="Ej: mecánico part-time" class="fld" /></div>
             <div><label for="e_descripcion" class="lbl">Descripción pública</label><textarea id="e_descripcion" rows="3" maxlength="600" class="fld resize-y"></textarea></div>
 
             <fieldset class="space-y-4 rounded-xl border border-dashed border-ochre-400/40 p-4">
               <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-ochre-300">Privado (no se publica)</legend>
               <div><label for="e_contacto" class="lbl">Contacto del dueño</label><input id="e_contacto" maxlength="120" class="fld" /></div>
-              <div><label for="e_personal" class="lbl">Busca personal</label><input id="e_personal" maxlength="200" class="fld" /></div>
               <label class="flex items-center gap-2 text-sm text-sand-200"><input id="e_solicita" type="checkbox" class="h-4 w-4 accent-[#d9a441]" /> Pidió ficha destacada</label>
             </fieldset>
 
@@ -525,7 +525,6 @@
       const sel = r.id === state.selectedId ? 'ring-2 ring-ochre-400' : 'ring-1 ring-soil-700';
       const priv = [
         r.contacto_admin ? `<div><dt class="text-sand-300/70">Contacto</dt><dd class="text-sand-50">${esc(r.contacto_admin)}</dd></div>` : '',
-        r.necesidad_personal ? `<div><dt class="text-sand-300/70">Busca personal</dt><dd class="text-sand-50">${esc(r.necesidad_personal)}</dd></div>` : '',
       ].join('');
       return `<article data-row="${r.id}" class="rounded-xl bg-soil-900 p-4 ${sel}">
         <div class="flex flex-wrap items-center gap-2">${catChip(r)}${chip(ESTADOS[r.estado].one, ESTADOS[r.estado].cls)}${badges(r)}<span class="ml-auto font-mono text-[11px] text-sand-300/60">${fmtDate(r.created_at)}</span></div>
@@ -535,6 +534,7 @@
           <div><dt class="text-sand-300/70">Coordenadas</dt><dd class="font-mono text-xs text-sand-50">${(+r.latitud).toFixed(5)}, ${(+r.longitud).toFixed(5)}</dd></div>
           <div><dt class="text-sand-300/70">WhatsApp público</dt><dd class="font-mono text-xs text-sand-50">${r.whatsapp ? '+' + esc(r.whatsapp) : '—'}</dd></div>
           ${r.horario ? `<div><dt class="text-sand-300/70">Horario</dt><dd class="text-sand-50">${esc(r.horario)}</dd></div>` : ''}
+          ${r.necesidad_personal ? `<div><dt class="text-sand-300/70">💼 Busca personal (público)</dt><dd class="text-ochre-300">${esc(r.necesidad_personal)}</dd></div>` : ''}
         </dl>
         ${r.descripcion ? `<p class="mt-3 rounded-lg bg-soil-950/60 p-3 text-sm text-sand-200">${esc(r.descripcion)}</p>` : ''}
         ${priv ? `<dl class="mt-3 grid gap-x-6 gap-y-2 rounded-lg border border-dashed border-ochre-400/30 p-3 text-sm sm:grid-cols-2"><p class="font-mono text-[10px] font-bold uppercase tracking-wider text-ochre-300 sm:col-span-2">Privado</p>${priv}</dl>` : ''}
