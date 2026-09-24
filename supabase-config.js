@@ -10,4 +10,6 @@ window.DESVIADOR_CONFIG = {
   LEADS_WEBHOOK_URL: '',
   // WhatsApp comercial de DESVIADOR para "Activa tu Ficha Pro" (solo dígitos, con 56). Vacío = se usa el formulario.
   SALES_WHATSAPP: '',
+  // Opcional: webhook (Make / n8n / Apps Script) que recibe cada plan de "Arma tu Salida / Viaje" como JSON.
+  TRIP_WEBHOOK_URL: '',
 };

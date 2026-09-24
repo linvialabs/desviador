@@ -111,6 +111,28 @@
     .drawer.is-open { transform: none !important; }
     @media (min-width: 1024px) { .drawer.is-open ~ #mapFabs { right: 404px; } }
 
+    /* Configurador de salidas / viajes */
+    .trip-opt { position: relative; display: flex; align-items: center; gap: .6rem; border-radius: .85rem; background: #fffdf8; padding: .7rem .85rem; box-shadow: inset 0 0 0 1px #c9bba3; cursor: pointer; font-weight: 600; color: #2b241c; transition: box-shadow .15s ease, background-color .15s ease, transform .15s ease; -webkit-tap-highlight-color: transparent; }
+    .trip-opt:hover { box-shadow: inset 0 0 0 1px #54473a; }
+    .trip-opt:active { transform: scale(.985); }
+    .trip-opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .trip-opt .ico { font-size: 1.35rem; line-height: 1; }
+    .trip-opt .tick { margin-left: auto; display: grid; place-items: center; width: 1.25rem; height: 1.25rem; flex-shrink: 0; border-radius: 9999px; box-shadow: inset 0 0 0 1.5px #c9bba3; color: transparent; font-size: .7rem; font-weight: 800; }
+    .trip-opt input[type=checkbox] ~ .tick { border-radius: .35rem; }
+    .trip-opt:has(input:checked) { background: #15120e; color: #f6f1e7; box-shadow: inset 0 0 0 2px #15120e; }
+    .trip-opt:has(input:checked) .tick { background: #d9a441; color: #15120e; box-shadow: none; }
+    .trip-opt:has(input:focus-visible) { outline: 2px solid #56743a; outline-offset: 2px; }
+    .trip-opt.is-card { flex-direction: column; align-items: flex-start; gap: .35rem; padding: .85rem; min-height: 5.5rem; }
+    .trip-opt.is-card .tick { position: absolute; right: .6rem; top: .6rem; }
+    .trip-step { animation: tripIn .28s cubic-bezier(.2,.8,.2,1); }
+    .trip-step.from-prev { animation-name: tripInPrev; }
+    @keyframes tripIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    @keyframes tripInPrev { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+    #tripDialog[open] { animation: tripPop .22s ease-out; }
+    @keyframes tripPop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+    #tripFab { transition: transform .25s ease, opacity .25s ease; }
+    #tripFab.is-hidden { transform: translateY(140%); opacity: 0; pointer-events: none; }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
     }
@@ -135,7 +157,8 @@
         <a href="#inicio" class="transition hover:text-sand-50">Mapa</a>
         <a href="#noticias" class="transition hover:text-sand-50">Tech</a>
         <a href="#comunidad" class="transition hover:text-sand-50">Comunidad</a>
-        <a href="#anunciate" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 transition hover:bg-ochre-300">Anúnciate / Destaca tu empresa</a>
+        <a href="#anunciate" class="font-semibold text-ochre-400 transition hover:text-ochre-300">Anúnciate</a>
+        <button type="button" data-trip="header" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 shadow-[0_0_0_3px_rgba(217,164,65,.25)] transition hover:bg-ochre-300">🗺️ Arma tu Salida / Viaje</button>
       </nav>
 
       <button id="menuBtn" class="rounded-md p-2 text-sand-100 ring-1 ring-soil-600 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
@@ -146,7 +169,8 @@
       <a href="#inicio" class="block border-b border-soil-800 py-3 text-sand-100">Mapa</a>
       <a href="#noticias" class="block border-b border-soil-800 py-3 text-sand-100">Tech</a>
       <a href="#comunidad" class="block border-b border-soil-800 py-3 text-sand-100">Comunidad</a>
-      <a href="#anunciate" class="mt-3 block rounded-lg bg-ochre-400 py-3 text-center font-semibold text-soil-950">Anúnciate / Destaca tu empresa</a>
+      <button type="button" data-trip="menu" class="mt-3 block w-full rounded-lg bg-ochre-400 py-3 text-center font-semibold text-soil-950">🗺️ Arma tu Salida / Viaje</button>
+      <a href="#anunciate" class="mt-2 block rounded-lg py-3 text-center font-semibold text-ochre-400 ring-1 ring-ochre-400/50">Anúnciate / Destaca tu empresa</a>
     </nav>
   </header>
 
@@ -589,6 +613,160 @@
         <p><strong class="text-soil-950">Corregir o eliminar una ficha:</strong> <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 underline" id="privacyContact">envíanos un dato</a> con el nombre del negocio y lo revisamos.</p>
       </div>
     </div>
+  </dialog>
+
+  <!-- Flotante móvil del configurador -->
+  <button type="button" id="tripFab" data-trip="fab" class="fixed bottom-4 right-4 z-[1500] inline-flex items-center gap-1.5 rounded-full bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-xl ring-2 ring-ochre-400/80 md:hidden" style="margin-bottom:env(safe-area-inset-bottom)">🗺️ Arma tu Salida / Viaje</button>
+
+  <!-- Configurador por pasos: arma tu salida / viaje -->
+  <dialog id="tripDialog" class="w-[min(94vw,38rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70 backdrop:backdrop-blur-[2px]" aria-labelledby="tripTitle">
+    <form id="tripForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Planificador DESVIADOR</p>
+            <h2 id="tripTitle" class="font-display text-xl sm:text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">Arma tu salida / viaje</h2>
+          </div>
+          <button type="button" id="tripClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        </div>
+        <div id="tripProgressWrap" class="mt-3">
+          <div class="flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">
+            <span id="tripStepLabel" aria-live="polite">Paso 1 de 4</span><span id="tripStepName">Disciplina</span>
+          </div>
+          <div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-sand-200" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-labelledby="tripStepLabel">
+            <div id="tripBar" class="h-full w-1/4 rounded-full bg-ochre-400 transition-[width] duration-500 ease-out"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tripBody" class="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
+        <!-- Paso 1 -->
+        <fieldset class="trip-step" data-step="1">
+          <legend class="text-base font-bold text-soil-950">¿Qué disciplina quieres rodar?</legend>
+          <div class="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="enduro_dh" /><span class="ico">🚵</span><span>MTB Enduro/DH</span><span class="tick">✓</span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="emtb" /><span class="ico">⚡</span><span>E-MTB</span><span class="tick">✓</span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="gravel" /><span class="ico">🚲</span><span>Gravel</span><span class="tick">✓</span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="ruta" /><span class="ico">🛣️</span><span>Ruta / Carretera</span><span class="tick">✓</span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="trail_xc" /><span class="ico">🏞️</span><span>Trail / XC</span><span class="tick">✓</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Paso 2 -->
+        <div class="trip-step space-y-5" data-step="2" hidden>
+          <fieldset>
+            <legend class="text-base font-bold text-soil-950">Tu nivel</legend>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2">
+              <label class="trip-opt"><input type="radio" name="nivel" value="principiante" /><span class="ico">🟢</span><span>Principiante</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="intermedio" /><span class="ico">🔵</span><span>Intermedio</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="avanzado" /><span class="ico">🔴</span><span>Avanzado / Black Diamond</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="experto" /><span class="ico">⚫⚫</span><span>Experto / Pro</span><span class="tick">✓</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend class="text-base font-bold text-soil-950">Terreno que prefieres</legend>
+            <div class="mt-3 grid grid-cols-2 gap-2">
+              <label class="trip-opt"><input type="radio" name="terreno" value="seco" /><span class="ico">☀️</span><span>Seco / Grip</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="bosque" /><span class="ico">🌲</span><span>Bosque / Suelto</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="barro" /><span class="ico">🌧️</span><span>Barro / Lluvia</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="rocoso" /><span class="ico">🪨</span><span>Rocoso / Técnico</span><span class="tick">✓</span></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="trip-step space-y-5" data-step="3" hidden>
+          <fieldset>
+            <legend class="text-base font-bold text-soil-950">Duración</legend>
+            <div class="mt-3 grid gap-2 sm:grid-cols-3">
+              <label class="trip-opt"><input type="radio" name="duracion" value="1_dia" /><span>1 Día <span class="block text-xs font-medium opacity-70">Express</span></span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="duracion" value="fin_de_semana" /><span>Fin de Semana <span class="block text-xs font-medium opacity-70">2-3 días</span></span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="duracion" value="expedicion" /><span>Expedición <span class="block text-xs font-medium opacity-70">4+ días</span></span><span class="tick">✓</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend class="text-base font-bold text-soil-950">Servicios que necesitas <span class="text-sm font-normal text-soil-600">(opcional, elige varios)</span></legend>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2">
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="shuttle" /><span class="ico">🚐</span><span>Shuttle / Traslado</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="guia" /><span class="ico">🧭</span><span>Guía Local Verificado</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="arriendo" /><span class="ico">🚵</span><span>Arriendo de Bici / E-MTB</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="alojamiento" /><span class="ico">🏕️</span><span>Alojamiento recomendado</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="soporte" /><span class="ico">🔧</span><span>Soporte Técnico / Mecánico</span><span class="tick">✓</span></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Paso 4 -->
+        <div class="trip-step space-y-5" data-step="4" hidden>
+          <fieldset>
+            <legend class="text-base font-bold text-soil-950">Destino</legend>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2">
+              <label class="trip-opt"><input type="radio" name="zona" value="santiago" /><span class="ico">🏙️</span><span>Santiago / Zona Central</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="pucon" /><span class="ico">🌋</span><span>Pucón / Araucanía</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="chillan" /><span class="ico">🏔️</span><span>Nevados de Chillán</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="patagonia" /><span class="ico">🧊</span><span>Patagonia / Sur</span><span class="tick">✓</span></label>
+              <label class="trip-opt sm:col-span-2"><input type="radio" name="zona" value="abierto" /><span class="ico">✨</span><span>Acepto recomendaciones</span><span class="tick">✓</span></label>
+            </div>
+          </fieldset>
+          <div class="grid grid-cols-[1fr_auto] gap-3">
+            <div>
+              <label for="tripMes" class="block text-sm font-semibold text-soil-800">Mes tentativo</label>
+              <select id="tripMes" class="field mt-1.5"></select>
+            </div>
+            <div>
+              <span id="tripPaxLabel" class="block text-sm font-semibold text-soil-800">Personas</span>
+              <div class="mt-1.5 flex items-center rounded-lg bg-sand-50 ring-1 ring-sand-300" role="group" aria-labelledby="tripPaxLabel">
+                <button type="button" data-pax="-1" class="grid h-11 w-10 place-items-center text-lg font-bold text-soil-700 hover:text-soil-950" aria-label="Una persona menos">−</button>
+                <input id="tripPax" type="number" inputmode="numeric" min="1" max="30" value="2" class="h-11 w-11 border-0 bg-transparent p-0 text-center font-mono font-bold text-soil-950 [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none" aria-label="Número de personas" />
+                <button type="button" data-pax="1" class="grid h-11 w-10 place-items-center text-lg font-bold text-soil-700 hover:text-soil-950" aria-label="Una persona más">+</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label for="tripFecha" class="block text-sm font-semibold text-soil-800">Fecha exacta <span class="font-normal text-soil-600">(opcional)</span></label>
+            <input id="tripFecha" type="date" class="field mt-1.5" />
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+              <label for="tripNombre" class="block text-sm font-semibold text-soil-800">Nombre</label>
+              <input id="tripNombre" autocomplete="name" maxlength="80" class="field mt-1.5" placeholder="Tu nombre" />
+            </div>
+            <div>
+              <label for="tripTel" class="block text-sm font-semibold text-soil-800">Teléfono / WhatsApp</label>
+              <input id="tripTel" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" class="field mt-1.5" placeholder="+56 9 1234 5678" />
+            </div>
+            <div>
+              <label for="tripEmail" class="block text-sm font-semibold text-soil-800">Email</label>
+              <input id="tripEmail" type="email" autocomplete="email" inputmode="email" maxlength="254" class="field mt-1.5" placeholder="tu@correo.cl" />
+            </div>
+          </div>
+          <fieldset>
+            <legend class="text-sm font-semibold text-soil-800">Idioma de atención</legend>
+            <div class="mt-1.5 grid grid-cols-2 gap-2">
+              <label class="trip-opt py-2.5"><input type="radio" name="idioma" value="es" checked /><span>🇨🇱 Español</span><span class="tick">✓</span></label>
+              <label class="trip-opt py-2.5"><input type="radio" name="idioma" value="en" /><span>🇬🇧 English</span><span class="tick">✓</span></label>
+            </div>
+          </fieldset>
+          <div class="hidden" aria-hidden="true"><label>Web <input id="tripWebsite" tabindex="-1" autocomplete="off" /></label></div>
+          <p class="text-xs leading-relaxed text-soil-600">Usamos tus datos solo para responder a este plan. No los publicamos ni los vendemos.</p>
+        </div>
+
+        <!-- Éxito -->
+        <div id="tripDone" class="trip-step py-4 text-center" hidden>
+          <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-moss-600 text-3xl text-sand-50 shadow-lg">✓</div>
+          <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Recibimos tu plan!</h3>
+          <p class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700">Te responderemos con la mejor propuesta en menos de 2 horas.</p>
+          <dl id="tripSummary" class="mx-auto mt-5 max-w-sm divide-y divide-sand-200 rounded-xl bg-white/70 px-4 text-left text-sm ring-1 ring-sand-300"></dl>
+          <a id="tripWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+        </div>
+      </div>
+
+      <p id="tripError" class="mx-5 mb-0 mt-0 hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30 sm:mx-6" role="alert"></p>
+      <div id="tripNav" class="flex items-center gap-3 border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="button" id="tripBack" class="rounded-xl px-4 py-3 text-sm font-semibold text-soil-700 ring-1 ring-sand-300 transition hover:bg-sand-100" hidden>← Atrás</button>
+        <button type="submit" id="tripNext" class="ml-auto flex-1 rounded-xl bg-soil-950 px-5 py-3 text-sm font-bold text-sand-50 transition hover:bg-soil-800 sm:flex-none sm:min-w-[11rem]">Siguiente →</button>
+      </div>
+    </form>
   </dialog>
 
   <!-- Toast -->
@@ -1581,6 +1759,260 @@
     });
     document.getElementById('claimClose').addEventListener('click', () => claim.dialog.close());
     claim.dialog.addEventListener('click', (e) => { if (e.target === claim.dialog) claim.dialog.close(); });
+  </script>
+
+  <script>
+    // ================= CONFIGURADOR: ARMA TU SALIDA / VIAJE =================
+    // Número que recibe los planes por WhatsApp (solo dígitos, con código de país). Editable aquí o en supabase-config.js (SALES_WHATSAPP).
+    const WHATSAPP_ADMIN = '569XXXXXXXX';
+    // Webhook opcional (Make / n8n / Apps Script) que recibe cada plan como JSON: supabase-config.js → TRIP_WEBHOOK_URL
+    const TRIP_WEBHOOK_URL = window.DESVIADOR_CONFIG?.TRIP_WEBHOOK_URL || '';
+    const TRIP_QUEUE_KEY = 'desviador-planes-pendientes';
+    const tripAdminNumber = () => [WHATSAPP_ADMIN, window.DESVIADOR_CONFIG?.SALES_WHATSAPP].map((n) => String(n || '').replace(/\D/g, '')).find((n) => /^\d{8,15}$/.test(n)) || '';
+
+    const TRIP_LABELS = {
+      disciplina: { enduro_dh: 'MTB Enduro/DH', emtb: 'E-MTB', gravel: 'Gravel', ruta: 'Ruta / Carretera', trail_xc: 'Trail / XC' },
+      nivel: { principiante: 'Principiante', intermedio: 'Intermedio', avanzado: 'Avanzado / Black Diamond', experto: 'Experto / Pro' },
+      terreno: { seco: 'Seco / Grip', bosque: 'Bosque / Suelto', barro: 'Barro / Lluvia', rocoso: 'Rocoso / Técnico' },
+      duracion: { '1_dia': '1 día (Express)', fin_de_semana: 'Fin de semana (2-3 días)', expedicion: 'Expedición (4+ días)' },
+      servicios: { shuttle: 'Shuttle', guia: 'Guía local', arriendo: 'Arriendo de bici', alojamiento: 'Alojamiento', soporte: 'Soporte mecánico' },
+      zona: { santiago: 'Santiago / Zona Central', pucon: 'Pucón / Araucanía', chillan: 'Nevados de Chillán', patagonia: 'Patagonia / Sur', abierto: 'Acepto recomendaciones' },
+      idioma: { es: 'Español', en: 'English' },
+    };
+    const TRIP_STEPS = ['Disciplina', 'Nivel y terreno', 'Logística', 'Destino y contacto'];
+    // Disciplina → intereses del gate de contacto (así quien arma un plan no vuelve a ver el gate)
+    const TRIP_TO_INTEREST = { enduro_dh: ['mtb_enduro', 'dh_bikepark'], emtb: ['ebike'], gravel: ['ruta_gravel'], ruta: ['ruta_gravel'], trail_xc: ['mtb_enduro'] };
+
+    const trip = {
+      dialog: document.getElementById('tripDialog'), form: document.getElementById('tripForm'), body: document.getElementById('tripBody'),
+      bar: document.getElementById('tripBar'), label: document.getElementById('tripStepLabel'), name: document.getElementById('tripStepName'),
+      back: document.getElementById('tripBack'), next: document.getElementById('tripNext'), error: document.getElementById('tripError'),
+      done: document.getElementById('tripDone'), nav: document.getElementById('tripNav'), fab: document.getElementById('tripFab'),
+    };
+    const $t = (id) => document.getElementById(id);
+    let tripStep = 1, tripSent = false;
+
+    // Mes tentativo: los próximos 12 meses + "flexible"
+    (function fillMonths() {
+      const now = new Date();
+      const opts = ['<option value="flexible">Fecha flexible</option>'];
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        const label = d.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+        opts.push(`<option value="${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}"${i === 1 ? ' selected' : ''}>${label[0].toUpperCase() + label.slice(1)}</option>`);
+      }
+      $t('tripMes').innerHTML = opts.join('');
+      $t('tripFecha').min = now.toISOString().slice(0, 10);
+    })();
+    // Elegir una fecha exacta ajusta el mes
+    $t('tripFecha').addEventListener('change', () => { const v = $t('tripFecha').value; if (v && $t('tripMes').querySelector(`option[value="${v.slice(0, 7)}"]`)) $t('tripMes').value = v.slice(0, 7); });
+    trip.form.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-pax]');
+      if (!b) return;
+      const pax = $t('tripPax');
+      pax.value = Math.min(30, Math.max(1, (parseInt(pax.value, 10) || 1) + Number(b.dataset.pax)));
+    });
+
+    const radio = (name) => trip.form.querySelector(`input[name="${name}"]:checked`)?.value || '';
+    // Teléfono con código de país: un celular chileno de 9 dígitos (9XXXXXXXX) recibe el 56
+    const tripPhone = (v) => { const d = String(v).replace(/\D/g, ''); return d.length === 9 && d.startsWith('9') ? '56' + d : d; };
+
+    function tripData() {
+      const mes = $t('tripMes').value;
+      return {
+        disciplina: radio('disciplina'), nivel: radio('nivel'), terreno: radio('terreno'), duracion: radio('duracion'),
+        servicios: [...trip.form.querySelectorAll('input[name="servicios"]:checked')].map((i) => i.value),
+        zona: radio('zona'), mes: mes === 'flexible' ? null : mes, fecha: $t('tripFecha').value || null,
+        personas: Math.min(30, Math.max(1, parseInt($t('tripPax').value, 10) || 1)),
+        nombre: $t('tripNombre').value.trim(), telefono: tripPhone($t('tripTel').value), email: $t('tripEmail').value.trim().toLowerCase(),
+        idioma: radio('idioma') || 'es',
+      };
+    }
+    const mesLabel = (d) => d.fecha
+      ? new Date(d.fecha + 'T12:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })
+      : d.mes ? $t('tripMes').selectedOptions[0].textContent : 'Flexible';
+
+    function validateStep(n) {
+      const d = tripData();
+      if (n === 1 && !d.disciplina) return 'Elige una disciplina para seguir.';
+      if (n === 2 && !d.nivel) return 'Elige tu nivel.';
+      if (n === 2 && !d.terreno) return 'Elige el terreno que prefieres.';
+      if (n === 3 && !d.duracion) return 'Elige la duración de la salida.';
+      if (n === 4) {
+        if (!d.zona) return 'Elige un destino (o "Acepto recomendaciones").';
+        if (d.nombre.length < 2) return ['tripNombre', 'Escribe tu nombre.'];
+        if (!/^\d{8,15}$/.test(d.telefono)) return ['tripTel', 'Revisa el teléfono: incluye el código de país, ej. +56 9 1234 5678.'];
+        if (!EMAIL_RE.test(d.email)) return ['tripEmail', 'Revisa el correo: debe tener el formato nombre@dominio.cl'];
+      }
+      return '';
+    }
+    function showTripError(err) {
+      const [field, msg] = Array.isArray(err) ? err : [null, err];
+      trip.error.textContent = msg || '';
+      trip.error.classList.toggle('hidden', !msg);
+      ['tripNombre', 'tripTel', 'tripEmail'].forEach((id) => $t(id).setAttribute('aria-invalid', id === field));
+      if (field) $t(field).focus();
+    }
+
+    function goTo(n, dir = 1, silent = false) {
+      tripStep = n;
+      trip.form.querySelectorAll('[data-step]').forEach((el) => { el.hidden = Number(el.dataset.step) !== n; });
+      const cur = trip.form.querySelector(`[data-step="${n}"]`);
+      cur.classList.remove('from-prev'); void cur.offsetWidth; // reiniciar la animación
+      cur.classList.toggle('from-prev', dir < 0);
+      trip.label.textContent = `Paso ${n} de 4`;
+      trip.name.textContent = TRIP_STEPS[n - 1];
+      trip.bar.style.width = `${n * 25}%`;
+      trip.bar.parentElement.setAttribute('aria-valuenow', n);
+      trip.back.hidden = n === 1;
+      trip.next.textContent = n === 4 ? 'Enviar mi Plan de Viaje' : 'Siguiente →';
+      trip.next.classList.toggle('bg-moss-600', n === 4); trip.next.classList.toggle('hover:bg-moss-700', n === 4);
+      trip.body.scrollTop = 0;
+      showTripError('');
+      if (!silent) track('trip_step', { paso: n });
+    }
+
+    // Avanzar solo al elegir en pasos de una sola pregunta
+    trip.form.addEventListener('change', (e) => {
+      if (e.target.name === 'disciplina' && tripStep === 1) setTimeout(() => { if (tripStep === 1) goTo(2); }, 220);
+      else if (trip.error.textContent && !validateStep(tripStep)) showTripError('');
+    });
+    trip.back.addEventListener('click', () => goTo(Math.max(1, tripStep - 1), -1));
+
+    function buildTripMessage(d) {
+      const L = TRIP_LABELS;
+      const lines = [
+        '¡Hola! Quiero planificar un viaje:',
+        `• Disciplina: ${L.disciplina[d.disciplina]}`,
+        `• Nivel: ${L.nivel[d.nivel]}`,
+        `• Terreno: ${L.terreno[d.terreno]}`,
+        `• Duración: ${L.duracion[d.duracion]}`,
+        `• Zona: ${L.zona[d.zona]}`,
+        `• Servicios: ${d.servicios.length ? d.servicios.map((k) => L.servicios[k]).join(' + ') : 'Ninguno por ahora'}`,
+        `• Fecha: ${mesLabel(d)}`,
+        `• Cantidad: ${d.personas} ${d.personas === 1 ? 'persona' : 'personas'}`,
+        `• Idioma: ${L.idioma[d.idioma]}`,
+        '',
+        `Mi nombre es ${d.nombre}. WhatsApp: +${d.telefono} · Email: ${d.email}`,
+      ];
+      return lines.join('\n');
+    }
+
+    // Envío en segundo plano: cola local → Supabase (tabla planes_viaje) + webhook opcional. Nada se pierde si falla la red.
+    let tripFlushing = false;
+    async function sendPlan(plan) {
+      let ok = false;
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('planes_viaje').insert([plan]);
+        if (!error) ok = true; else console.warn('[DESVIADOR] Plan no guardado en Supabase:', error.message);
+      }
+      if (TRIP_WEBHOOK_URL) {
+        try {
+          const res = await fetch(TRIP_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'plan_viaje', ...plan, enviado: new Date().toISOString() }), keepalive: true });
+          ok = ok || res.ok;
+        } catch (e) { console.warn('[DESVIADOR] Webhook de planes falló:', e.message); }
+      }
+      return ok || (!supabaseClient && !TRIP_WEBHOOK_URL); // sin backend configurado: queda solo el WhatsApp
+    }
+    async function flushPlans() {
+      if (tripFlushing) return;
+      tripFlushing = true;
+      try {
+        const left = [];
+        for (const plan of readJSON(TRIP_QUEUE_KEY, [])) if (!(await sendPlan(plan))) left.push(plan);
+        writeJSON(TRIP_QUEUE_KEY, left);
+      } finally { tripFlushing = false; }
+    }
+
+    trip.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (tripSent) return trip.dialog.close();
+      const err = validateStep(tripStep);
+      if (err) return showTripError(err);
+      if (tripStep < 4) return goTo(tripStep + 1);
+      if ($t('tripWebsite').value) return; // bot
+
+      const d = tripData();
+      const plan = { ...d, version: 1 };
+      writeJSON(TRIP_QUEUE_KEY, [...readJSON(TRIP_QUEUE_KEY, []), plan]);
+      flushPlans(); // en segundo plano: no se espera para no perder el gesto del usuario al abrir WhatsApp
+
+      // Quien deja su correo aquí ya no ve el gate de contacto
+      if (!isUnlocked()) {
+        const unlock = { email: d.email, intereses: TRIP_TO_INTEREST[d.disciplina] || [], unlockedAt: new Date().toISOString(), version: GATE_VERSION };
+        if (!writeJSON(GATE_KEY, unlock)) gateMemory = unlock;
+      }
+      track('trip_submitted', { disciplina: d.disciplina, nivel: d.nivel, zona: d.zona, duracion: d.duracion, servicios: d.servicios, personas: d.personas, idioma: d.idioma });
+
+      const admin = tripAdminNumber();
+      const waLink = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(buildTripMessage(d))}` : '';
+      if (waLink) openWhatsApp(waLink);
+      else console.warn('[DESVIADOR] Configura WHATSAPP_ADMIN (o SALES_WHATSAPP) para recibir los planes por WhatsApp.');
+      showTripDone(d, waLink);
+    });
+
+    function showTripDone(d, waLink) {
+      tripSent = true;
+      const L = TRIP_LABELS;
+      const row = (k, v) => `<div class="flex gap-3 py-2"><dt class="w-24 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600 pt-0.5">${k}</dt><dd class="text-soil-900">${esc(v)}</dd></div>`;
+      $t('tripSummary').innerHTML = [
+        row('Disciplina', L.disciplina[d.disciplina]), row('Nivel', `${L.nivel[d.nivel]} · ${L.terreno[d.terreno]}`),
+        row('Zona', L.zona[d.zona]), row('Fecha', `${mesLabel(d)} · ${L.duracion[d.duracion]}`),
+        row('Grupo', `${d.personas} ${d.personas === 1 ? 'persona' : 'personas'}`),
+        d.servicios.length ? row('Servicios', d.servicios.map((k) => L.servicios[k]).join(', ')) : '',
+      ].join('');
+      $t('tripWaAgain').hidden = !waLink;
+      if (waLink) $t('tripWaAgain').href = waLink;
+      trip.form.querySelectorAll('[data-step]').forEach((el) => { el.hidden = true; });
+      trip.done.hidden = false;
+      trip.done.classList.remove('from-prev'); void trip.done.offsetWidth;
+      $t('tripProgressWrap').hidden = true;
+      trip.back.hidden = true;
+      trip.next.textContent = 'Listo';
+      trip.next.classList.remove('bg-moss-600', 'hover:bg-moss-700');
+      trip.body.scrollTop = 0;
+    }
+
+    function resetTrip() {
+      trip.form.reset();
+      $t('tripPax').value = 2;
+      trip.done.hidden = true;
+      $t('tripProgressWrap').hidden = false;
+      tripSent = false;
+      goTo(1, 1, true);
+    }
+
+    function openTrip(via) {
+      if (tripSent) resetTrip();
+      if (document.getElementById('dirDialog').open) document.getElementById('dirDialog').close();
+      document.getElementById('mobileMenu')?.classList.add('hidden');
+      document.getElementById('menuBtn')?.setAttribute('aria-expanded', 'false');
+      const prev = readJSON(GATE_KEY, null);
+      if (prev?.email && !$t('tripEmail').value) $t('tripEmail').value = prev.email;
+      trip.dialog.showModal();
+      track('trip_opened', { via, paso: tripStep });
+    }
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-trip]');
+      if (b) { e.preventDefault(); openTrip(b.dataset.trip); }
+    });
+    $t('tripClose').addEventListener('click', () => trip.dialog.close());
+    trip.dialog.addEventListener('click', (e) => { if (e.target === trip.dialog) trip.dialog.close(); });
+    trip.dialog.addEventListener('close', () => { if (!tripSent) track('trip_closed', { paso: tripStep }); });
+
+    // Flotante móvil: se esconde con la ficha del mapa abierta o sobre el formulario de registro, para no tapar botones
+    (function tripFabVisibility() {
+      const drawerEl = document.getElementById('drawer');
+      let overForm = false;
+      const sync = () => trip.fab.classList.toggle('is-hidden', drawerEl.classList.contains('is-open') || overForm);
+      new MutationObserver(sync).observe(drawerEl, { attributes: true, attributeFilter: ['class'] });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([en]) => { overForm = en.isIntersecting; sync(); }, { threshold: 0.05 }).observe(document.getElementById('registrar'));
+      }
+    })();
+
+    goTo(1, 1, true);
+    flushPlans(); // reintentar planes que quedaron en cola
   </script>
 
   <script>

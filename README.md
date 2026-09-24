@@ -66,3 +66,11 @@ El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular
 - Una ficha es **Pro** cuando el equipo le activa **Destacar** en el panel (o si algún día existe la columna `is_pro`). Se ve con borde dorado, sello `✔ Verificado`, botón `💬 Contactar por WhatsApp` y aparece primero en el directorio.
 - Las fichas que no son Pro muestran `⚙️ ¿Eres el dueño? Activa tu Ficha Pro`, y el directorio completo tiene un banner para registrar o destacar negocios.
 - Para que esos botones abran WhatsApp con el mensaje ya escrito, completa `SALES_WHATSAPP` en [`supabase-config.js`](supabase-config.js) (solo dígitos, con 56; ej. `56912345678`). Si queda vacío, se abre el formulario de registro con el nombre, la comuna y el pin ya cargados, y la solicitud llega al panel como “Pide destacado”.
+
+## Arma tu Salida / Viaje (configurador de 4 pasos)
+
+- Botón `🗺️ Arma tu Salida / Viaje` en el encabezado (y flotante en móviles). Pide disciplina, nivel y terreno, logística y servicios, destino, fecha, grupo y contacto.
+- **WhatsApp:** edita `const WHATSAPP_ADMIN = '569XXXXXXXX'` en `index.html`, o completa `SALES_WHATSAPP` en `supabase-config.js`. Se usa el primero que sea un número válido. Al enviar, se abre WhatsApp con el plan ya redactado.
+- **Guardar los planes:** ejecuta [`supabase/viajes.sql`](supabase/viajes.sql) en Supabase → SQL Editor. Crea la tabla `planes_viaje`, donde el público solo puede insertar y solo los admins leen y cambian `estado` (nuevo → contactado → propuesta → cerrado/descartado).
+- **Webhook opcional:** completa `TRIP_WEBHOOK_URL` en `supabase-config.js` (Make, n8n, Apps Script) para recibir cada plan como JSON y avisarte al instante.
+- Si la red falla, el plan queda en cola en el navegador y se reintenta en la próxima visita.
