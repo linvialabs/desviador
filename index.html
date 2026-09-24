@@ -87,7 +87,15 @@
     /* Sombra corta y transición solo de transform: más barato de pintar durante zoom y arrastre */
     .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #f6f1e7; box-shadow: 0 3px 6px rgba(21,18,14,.4); display: grid; place-items: center; transition: transform .15s ease; }
     .pin svg { transform: rotate(45deg); }
-    .pin.is-featured { box-shadow: 0 0 0 3px #d9a441, 0 3px 6px rgba(21,18,14,.4); }
+    .pin.is-featured { box-shadow: 0 0 0 3px #d4af37, 0 3px 6px rgba(21,18,14,.4); }
+
+    /* Fichas Pro (is_pro / destacado): borde dorado tierra, sello Verificado y WhatsApp destacado */
+    .ficha-pro { border: 2px solid #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,.16), 0 1px 2px rgba(21,18,14,.08); background: linear-gradient(180deg, #fbf6e8 0%, #f6f1e7 55%); }
+    .badge-pro { display: inline-flex; align-items: center; gap: .2rem; border-radius: 9999px; background: #d4af37; color: #15120e; font-weight: 800; letter-spacing: .01em; }
+    .btn-wa-pro { display: flex; align-items: center; justify-content: center; gap: .4rem; border-radius: .6rem; background: #1f8a4c; color: #fff; font-weight: 700; box-shadow: 0 0 0 2px #d4af37; transition: background-color .15s ease; }
+    .btn-wa-pro:hover { background: #18733f; }
+    .btn-wa-pro:focus-visible { outline: none; box-shadow: 0 0 0 2px #d4af37, 0 0 0 4px #15120e; }
+    .drawer-pro { border-top: 4px solid #d4af37; }
     .leaflet-marker-icon:hover .pin, .pin.is-selected { transform: rotate(-45deg) scale(1.2); box-shadow: 0 0 0 3px #15120e, 0 8px 20px rgba(21,18,14,.5); }
 
     /* Grupos de pines (clusters) en tonos tierra */
@@ -495,6 +503,39 @@
         <ul id="dirAll" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4"></ul>
         <p id="dirEmpty" class="py-10 text-center text-sm text-soil-600" hidden>Sin resultados para esa búsqueda.</p>
       </div>
+      <!-- CTA comercial: siempre visible al pie del directorio -->
+      <div class="border-t border-ochre-500/40 bg-soil-950 px-4 py-2.5 sm:px-6" style="padding-bottom:max(.625rem, env(safe-area-inset-bottom))">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-[13px] leading-snug text-sand-100">¿Tienes una tienda, taller o servicio de shuttles?</p>
+          <button type="button" data-claim-general class="shrink-0 rounded-lg bg-ochre-400 px-3.5 py-2 text-[13px] font-bold text-soil-950 transition hover:bg-ochre-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sand-50">Registra o destaca tu negocio aquí →</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Ficha Pro: reclamar / destacar un negocio (contacto comercial) -->
+  <dialog id="claimDialog" class="w-[min(92vw,27rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="claimTitle">
+    <div class="drawer-pro rounded-2xl p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Plan Pro · para negocios</p>
+          <h2 id="claimTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">Activa tu Ficha Pro</h2>
+          <p id="claimPlace" class="mt-1.5 truncate text-sm text-soil-600"></p>
+        </div>
+        <button type="button" id="claimClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+      </div>
+      <ul class="mt-4 space-y-2 text-sm text-soil-800">
+        <li class="flex gap-2"><span class="badge-pro h-5 shrink-0 px-1.5 text-[10px]">✔</span><span>Sello <strong class="font-semibold">Verificado</strong> y borde dorado en tu ficha</span></li>
+        <li class="flex gap-2"><span aria-hidden="true">💬</span> Botón de WhatsApp destacado: los ciclistas te escriben directo</li>
+        <li class="flex gap-2"><span aria-hidden="true">⬆️</span> Apareces primero en el directorio y con pin dorado en el mapa</li>
+      </ul>
+      <p class="mt-4 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600">Mensaje que nos enviarás</p>
+      <blockquote id="claimMessage" class="mt-1 rounded-xl bg-sand-100 p-3 text-sm italic leading-relaxed text-soil-800 ring-1 ring-sand-300"></blockquote>
+      <div class="mt-5 grid gap-2">
+        <a id="claimWhatsApp" href="#" target="_blank" rel="noopener" class="btn-wa-pro py-3.5 text-[15px]" hidden><span aria-hidden="true">💬</span> Escribir por WhatsApp</a>
+        <a id="claimForm" href="#registrar" class="rounded-xl bg-soil-950 py-3 text-center text-sm font-semibold text-sand-50 transition hover:bg-soil-800">Enviar solicitud por formulario</a>
+      </div>
+      <p class="mt-3 text-center text-xs text-soil-600">Para ciclistas, DESVIADOR es gratis.</p>
     </div>
   </dialog>
 
@@ -812,7 +853,7 @@
     // --- Marcadores ---
     const makeIcon = (p) => L.divIcon({
       className: '',
-      html: `<div class="pin${p.destacado ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#f6f1e7')}</div>`,
+      html: `<div class="pin${isPro(p) ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#f6f1e7')}</div>`,
       iconSize: [32, 32],
       iconAnchor: [16, 32],
     });
@@ -858,6 +899,9 @@
       if (typeof renderJobs === 'function') renderJobs(); // Bici Jobs se alimenta del mapa
     }
 
+    // Plan Pro: columna is_pro si existe; si no, el sello "destacado" que asigna el equipo en el panel
+    const isPro = (p) => !!(p.is_pro ?? p.destacado);
+
     // Fila de Supabase → punto del mapa
     // El listado trae solo lo que necesitan el mapa, los filtros y el directorio.
     // Dirección, WhatsApp, horario y descripción se piden al abrir la ficha (loadDetails).
@@ -872,8 +916,8 @@
       comuna: r.comuna || '',
       detailsLoaded: false, // dirección, WhatsApp, horario y descripción llegan con loadDetails()
       coords: [Number(r.latitud), Number(r.longitud)],
-      verificado: true, // solo llegan filas aprobadas por el equipo
       destacado: !!r.destacado,
+      is_pro: !!(r.is_pro ?? r.destacado), // Plan Pro = ficha destacada (verificada por el equipo)
       amigoTrail: !!r.es_amigo_trail,
       necesidad: r.necesidad_personal || null,
     });
@@ -896,9 +940,24 @@
         if (error) return useFallback(error.message);
         document.getElementById('dataSourceTag').textContent = '';
         setPoints(filas.map(fromRow).filter(isValidPoint));
+        loadProDetails();
       } catch (err) {
         useFallback(err.message);
       }
+    }
+
+    // Las fichas Pro muestran su WhatsApp en el directorio: sus detalles se piden juntos, en una sola consulta
+    async function loadProDetails() {
+      const pending = puntos.filter((p) => isPro(p) && p.detailsLoaded === false);
+      if (!pending.length || !supabaseClient) return;
+      const { data, error } = await supabaseClient.from('comercios').select(`id, ${DETAIL_COLUMNS}`).in('id', pending.map((p) => p.id));
+      if (error || !data) return console.warn('[DESVIADOR] No se pudo precargar las fichas Pro:', error?.message);
+      const byId = new Map(pending.map((p) => [String(p.id), p]));
+      data.forEach((d) => {
+        const p = byId.get(String(d.id));
+        if (p && p.detailsLoaded === false) Object.assign(p, { direccion: d.direccion, whatsapp: d.whatsapp, horario: d.horario, descripcion: d.descripcion, detailsLoaded: true, detailsError: false });
+      });
+      renderDirectory();
     }
 
     // --- Detalle de la ficha bajo demanda (una consulta por lugar, con caché) ---
@@ -940,9 +999,8 @@
       const skel = (w) => `<span class="inline-block h-3.5 ${w} animate-pulse rounded bg-sand-200 align-middle" aria-hidden="true"></span>`;
       const c = CATEGORIES[p.categoria];
       const status = [
-        p.verificado ? '<span class="inline-flex items-center gap-1 rounded-full bg-moss-600/10 px-2.5 py-1 text-xs font-semibold text-moss-700 ring-1 ring-moss-600/30"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Verificado</span>' : '',
+        isPro(p) ? '<span class="badge-pro px-2.5 py-1 text-xs">✔ Verificado</span>' : '',
         p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2.5 py-1 text-xs font-bold text-sand-50">Amiga del Trail</span>' : '',
-        p.destacado ? '<span class="rounded-full bg-ochre-400 px-2.5 py-1 text-xs font-bold text-soil-950">Destacado</span>' : '',
       ].join('');
       const place = [p.comuna, REGIONES[p.region].label].filter(Boolean).map(esc).join(' · ');
 
@@ -956,6 +1014,8 @@
         ? `<div class="h-[52px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
         : failed
         ? `<p class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el contacto. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
+        : p.whatsapp && isPro(p)
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro py-3.5 text-[15px]"><span aria-hidden="true">💬</span> Contactar por WhatsApp</a>`
         : p.whatsapp
         ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
         : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
@@ -995,12 +1055,14 @@
             </a>
             <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
           </div>
-        </div>`;
+        </div>
+        ${isPro(p) ? '' : `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 transition hover:text-soil-950">⚙️ ¿Eres el dueño? Activa tu Ficha Pro</button>`}`;
     }
 
     function openDrawer(p) {
       drawerPoint = p;
       drawerBody.innerHTML = drawerHtml(p);
+      drawer.classList.toggle('drawer-pro', isPro(p));
       if (p.detailsLoaded === false) {
         loadDetails(p).then(() => { if (drawerPoint === p && drawer.classList.contains('is-open')) drawerBody.innerHTML = drawerHtml(p); });
       }
@@ -1121,19 +1183,31 @@
     const DIR_TOP = 2;
 
     // Destacados primero, luego Amigas del Trail, luego alfabético
-    const dirSort = (a, b) => (b.destacado - a.destacado) || (b.amigoTrail - a.amigoTrail) || a.nombre.localeCompare(b.nombre, 'es');
+    const dirSort = (a, b) => (isPro(b) - isPro(a)) || (b.amigoTrail - a.amigoTrail) || a.nombre.localeCompare(b.nombre, 'es');
     const sortedPoints = () => [...puntos].sort(dirSort);
 
     const miniCard = (p) => {
       const c = CATEGORIES[p.categoria];
+      const pro = isPro(p);
+      // Pro: WhatsApp destacado (sus detalles llegan con loadProDetails); si aún no llega, abre la ficha
+      const proCta = !pro ? '' : p.whatsapp
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro px-1 py-1.5 text-xs leading-tight"><span aria-hidden="true">💬</span> Contactar por WhatsApp</a>`
+        : '';
       return `<li>
-        <article class="flex h-full flex-col justify-between gap-2.5 rounded-xl bg-sand-50 p-3 shadow-sm ring-1 ring-sand-300 transition hover:ring-soil-600/50">
+        <article class="${pro ? 'ficha-pro' : 'ring-1 ring-sand-300 hover:ring-soil-600/50 bg-sand-50'} flex h-full flex-col justify-between gap-2.5 rounded-xl p-3 shadow-sm transition">
           <div class="min-w-0">
-            <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
+            <div class="flex flex-wrap items-center gap-1">
+              <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
+              ${pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
+            </div>
             <h3 class="mt-1.5 line-clamp-2 text-[13px] font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
             <p class="truncate text-xs text-soil-600">${esc(p.comuna || REGIONES[p.region].label)}</p>
           </div>
-          <button type="button" data-locate="${esc(p.id)}" class="rounded-lg bg-moss-600 py-1.5 text-xs font-bold text-sand-50 transition hover:bg-moss-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">📍 Ubicar</button>
+          <div class="grid gap-1.5">
+            ${proCta}
+            <button type="button" data-locate="${esc(p.id)}" class="rounded-lg ${pro && p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'} py-1.5 text-xs font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">📍 Ubicar</button>
+            ${pro ? '' : `<button type="button" data-claim="${esc(p.id)}" class="text-left text-[10.5px] font-medium leading-tight text-soil-600 underline decoration-sand-300 underline-offset-2 transition hover:text-soil-950 hover:decoration-ochre-500">⚙️ ¿Eres el dueño? Activa tu Ficha Pro</button>`}
+          </div>
         </article>
       </li>`;
     };
@@ -1462,6 +1536,51 @@
     });
 
     flushLeads(); // reintentar leads que quedaron en cola en visitas anteriores
+
+    // ================= FICHA PRO: reclamar / destacar un negocio =================
+    // Número comercial de DESVIADOR (supabase-config.js → SALES_WHATSAPP). Sin número, se usa el formulario.
+    const SALES_WHATSAPP = String(window.DESVIADOR_CONFIG?.SALES_WHATSAPP || '').replace(/\D/g, '');
+    const claim = {
+      dialog: document.getElementById('claimDialog'), place: document.getElementById('claimPlace'),
+      message: document.getElementById('claimMessage'), wa: document.getElementById('claimWhatsApp'), form: document.getElementById('claimForm'),
+    };
+    let claimPoint = null;
+    const claimText = (p) => p
+      ? `Hola, soy el dueño de ${p.nombre} en ${p.comuna || REGIONES[p.region].label} y me gustaría verificar mi tienda y activar el Plan Pro.`
+      : 'Hola, tengo una tienda, taller o servicio de shuttles y me gustaría registrar o destacar mi negocio en DESVIADOR.';
+
+    function openClaim(p) {
+      claimPoint = p || null;
+      const text = claimText(claimPoint);
+      document.getElementById('claimTitle').textContent = claimPoint ? 'Activa tu Ficha Pro' : 'Registra o destaca tu negocio';
+      claim.place.textContent = claimPoint ? `${claimPoint.nombre} · ${claimPoint.comuna || REGIONES[claimPoint.region].label}` : 'Tiendas, talleres, shuttles, escuelas y bikeparks';
+      claim.message.textContent = `“${text}”`;
+      claim.wa.hidden = !SALES_WHATSAPP;
+      if (SALES_WHATSAPP) claim.wa.href = `https://wa.me/${SALES_WHATSAPP}?text=${encodeURIComponent(text)}`;
+      claim.form.textContent = SALES_WHATSAPP ? 'Prefiero el formulario' : 'Enviar solicitud';
+      claim.form.className = SALES_WHATSAPP
+        ? 'py-2 text-center text-sm font-semibold text-soil-700 underline underline-offset-4 hover:text-soil-950'
+        : 'btn-wa-pro !bg-soil-950 py-3.5 text-[15px] hover:!bg-soil-800';
+      claim.dialog.showModal();
+      track('claim_opened', { ref: claimPoint?.id ?? null, via: claimPoint ? 'ficha' : 'directorio' });
+    }
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-claim], [data-claim-general]');
+      if (!el) return;
+      e.preventDefault();
+      const p = el.hasAttribute('data-claim') ? puntos.find((x) => String(x.id) === el.dataset.claim) : null;
+      if (dirEl.dialog.open) dirEl.dialog.close();
+      openClaim(p);
+    });
+    claim.wa.addEventListener('click', () => { track('claim_whatsapp', { ref: claimPoint?.id ?? null }); claim.dialog.close(); });
+    claim.form.addEventListener('click', () => {
+      track('claim_form', { ref: claimPoint?.id ?? null });
+      claim.dialog.close();
+      closeDrawer();
+      if (typeof prefillBusinessForm === 'function') prefillBusinessForm(claimPoint, claimText(claimPoint));
+    });
+    document.getElementById('claimClose').addEventListener('click', () => claim.dialog.close());
+    claim.dialog.addEventListener('click', (e) => { if (e.target === claim.dialog) claim.dialog.close(); });
   </script>
 
   <script>
@@ -1640,6 +1759,24 @@
       }
       syncKind();
     });
+
+    // Desde "Activa tu Ficha Pro": formulario de negocio con los datos de la ficha y el sello destacado pedido
+    function prefillBusinessForm(p, text) {
+      $('kind-negocio').checked = true;
+      $('bizFeatured').checked = true;
+      if (p) {
+        $('bizName').value = p.nombre;
+        $('bizCat').value = p.categoria;
+        $('bizRegion').value = p.region;
+        $('bizComuna').value = p.comuna || '';
+      }
+      $('message').value = p ? `${text} (ficha existente: ${p.id})`.slice(0, 600) : text;
+      $('charCount').textContent = $('message').value.length;
+      syncKind();
+      if (p) requestAnimationFrame(() => { if (pickMap) { setPick(p.coords); pickMap.setView(p.coords, 15); } });
+      $('registrar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => $('bizOwner').focus({ preventScroll: true }), 600);
+    }
 
     function showError(msg) { $('formError').textContent = msg; $('formError').classList.remove('hidden'); }
     function setSubmitting(on) {

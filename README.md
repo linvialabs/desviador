@@ -60,3 +60,9 @@ El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular
 **Eventos (analytics mínimos):** `gate_opened`, `gate_submitted`, `gate_dismissed`, `whatsapp_clicked_after_unlock`. Se ven en la consola del navegador (`[DESVIADOR analytics]`), en `window.desviadorEvents` y se envían a `window.dataLayer` si agregas Google Tag Manager.
 
 **Para probar de nuevo el modal:** en la consola del navegador, `localStorage.removeItem('desviador-gate')` y recarga.
+
+## Ficha Pro (monetización B2B)
+
+- Una ficha es **Pro** cuando el equipo le activa **Destacar** en el panel (o si algún día existe la columna `is_pro`). Se ve con borde dorado, sello `✔ Verificado`, botón `💬 Contactar por WhatsApp` y aparece primero en el directorio.
+- Las fichas que no son Pro muestran `⚙️ ¿Eres el dueño? Activa tu Ficha Pro`, y el directorio completo tiene un banner para registrar o destacar negocios.
+- Para que esos botones abran WhatsApp con el mensaje ya escrito, completa `SALES_WHATSAPP` en [`supabase-config.js`](supabase-config.js) (solo dígitos, con 56; ej. `56912345678`). Si queda vacío, se abre el formulario de registro con el nombre, la comuna y el pin ya cargados, y la solicitud llega al panel como “Pide destacado”.

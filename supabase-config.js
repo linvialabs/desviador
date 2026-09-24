@@ -8,4 +8,6 @@ window.DESVIADOR_CONFIG = {
   // Opcional: respaldo para los leads del gate (correo + qué pedalea) si Supabase falla.
   // Ej: endpoint de Formspree (https://formspree.io/f/xxxx) o Google Apps Script. Vacío = solo Supabase.
   LEADS_WEBHOOK_URL: '',
+  // WhatsApp comercial de DESVIADOR para "Activa tu Ficha Pro" (solo dígitos, con 56). Vacío = se usa el formulario.
+  SALES_WHATSAPP: '',
 };
