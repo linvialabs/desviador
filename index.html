@@ -46,6 +46,14 @@
     }
   </script>
 
+  <!-- Agrupamiento de pines (clustering): solo se dibujan en el DOM los grupos y pines visibles -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script>
+    if (window.L && !L.markerClusterGroup) document.write('<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"><\/script>');
+  </script>
+  <!-- Conexión anticipada a los servidores de tiles -->
+  <link rel="preconnect" href="https://server.arcgisonline.com" crossorigin />
+
   <!-- Supabase (cliente JS, versión fijada) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
   <!-- Credenciales compartidas con admin.html -->
@@ -76,10 +84,19 @@
     .leaflet-control-scale-line { background: rgba(246,241,231,.8); color: #3d3328; border-color: #54473a; }
 
     /* Pines */
-    .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #f6f1e7; box-shadow: 0 5px 14px rgba(21,18,14,.45); display: grid; place-items: center; transition: transform .15s ease, box-shadow .15s ease; }
+    /* Sombra corta y transición solo de transform: más barato de pintar durante zoom y arrastre */
+    .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #f6f1e7; box-shadow: 0 3px 6px rgba(21,18,14,.4); display: grid; place-items: center; transition: transform .15s ease; }
     .pin svg { transform: rotate(45deg); }
-    .pin.is-featured { box-shadow: 0 0 0 3px #d9a441, 0 5px 14px rgba(21,18,14,.45); }
+    .pin.is-featured { box-shadow: 0 0 0 3px #d9a441, 0 3px 6px rgba(21,18,14,.4); }
     .leaflet-marker-icon:hover .pin, .pin.is-selected { transform: rotate(-45deg) scale(1.2); box-shadow: 0 0 0 3px #15120e, 0 8px 20px rgba(21,18,14,.5); }
+
+    /* Grupos de pines (clusters) en tonos tierra */
+    .cluster { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 9999px; background: #15120e; color: #f6f1e7; border: 3px solid #d9a441; box-shadow: 0 0 0 4px rgba(217,164,65,.28); font: 700 13px/1 "JetBrains Mono", ui-monospace, monospace; transition: transform .15s ease; }
+    .cluster.is-md { font-size: 14px; background: #2b241c; }
+    .cluster.is-lg { font-size: 15px; background: #3d3328; border-color: #e8c27a; }
+    .leaflet-marker-icon:hover .cluster { transform: scale(1.08); }
+    .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow { transition: transform .3s ease-out, opacity .3s ease-in; }
+    @media (prefers-reduced-motion: reduce) { .leaflet-cluster-anim .leaflet-marker-icon { transition: none; } }
 
     /* Drawer: hoja inferior en móvil, panel lateral en escritorio */
     .drawer { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
@@ -97,7 +114,7 @@
 <body class="bg-sand-50 font-sans text-ink antialiased selection:bg-ochre-300 selection:text-soil-950">
 
   <!-- ============ ENCABEZADO ============ -->
-  <header class="sticky top-0 z-[1100] border-b border-soil-700 bg-soil-950/95 backdrop-blur-lg">
+  <header class="sticky top-0 z-[1100] border-b border-soil-700 bg-soil-950">
     <div class="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-4 sm:px-6">
       <a href="#inicio" class="flex items-center gap-2" aria-label="DESVIADOR, inicio">
         <span class="grid h-8 w-8 place-items-center rounded-md bg-ochre-400 text-soil-950">
@@ -179,7 +196,7 @@
           <label for="regionSelect" class="sr-only">Ir a una región</label>
           <div class="relative">
             <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ochre-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-            <select id="regionSelect" class="w-full appearance-none truncate rounded-xl border-0 bg-soil-950/95 py-2.5 pl-9 pr-8 text-sm font-semibold text-sand-50 shadow-xl ring-1 ring-soil-700 backdrop-blur focus:outline-none focus:ring-2 focus:ring-ochre-400"></select>
+            <select id="regionSelect" class="w-full appearance-none truncate rounded-xl border-0 bg-soil-950 py-2.5 pl-9 pr-8 text-sm font-semibold text-sand-50 shadow-xl ring-1 ring-soil-700 focus:outline-none focus:ring-2 focus:ring-ochre-400"></select>
             <svg class="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-sand-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </div>
         </div>
@@ -205,8 +222,8 @@
         </aside>
 
         <!-- Botones flotantes (después del drawer para poder desplazarse cuando está abierto) -->
-        <div id="mapFabs" class="absolute right-3 top-3 z-[1001] flex flex-col items-end gap-2 transition-[right] duration-300">
-          <button id="layerToggle" type="button" class="flex items-center gap-2 rounded-xl bg-soil-950/95 px-3.5 py-2.5 text-sm font-semibold text-sand-50 shadow-xl backdrop-blur transition hover:bg-soil-800" aria-label="Cambiar a vista satelital">
+        <div id="mapFabs" class="pointer-events-none absolute right-3 top-3 z-[1001] flex flex-col items-end gap-2 transition-[right] duration-300 [&>*]:pointer-events-auto">
+          <button id="layerToggle" type="button" class="flex items-center gap-2 rounded-xl bg-soil-950 px-3.5 py-2.5 text-sm font-semibold text-sand-50 shadow-xl transition hover:bg-soil-800" aria-label="Cambiar a vista satelital">
             <svg viewBox="0 0 24 24" class="h-4 w-4 text-ochre-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
             <span id="layerToggleLabel">Satélite</span>
           </button>
@@ -693,6 +710,9 @@
     // Estado del filtro del mapa (compartido con el formulario)
     const mapState = { cat: null, region: 'all' };
 
+    // Espera a que el usuario deje de tipear antes de recalcular (búsquedas)
+    const debounce = (fn, ms = 160) => { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; };
+
     // ================= SPOTS GUARDADOS (solo en este navegador) =================
     const SAVED_KEY = 'desviador-guardados';
     const savedSet = new Set((() => { try { return JSON.parse(localStorage.getItem(SAVED_KEY)) || []; } catch (e) { return []; } })());
@@ -750,20 +770,23 @@
       wheelPxPerZoomLevel: 80,
       wheelDebounceTime: 20,
       bounceAtZoomLimits: false,
+      preferCanvas: true, // el círculo de "mi ubicación" se dibuja en canvas, no en SVG
     });
     L.control.zoom({ position: 'topleft', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(map);
     L.control.scale({ position: 'bottomright', imperial: false }).addTo(map);
 
     // --- Capas: terreno (Esri World Topo) e híbrida (Esri imagen + calles + nombres) ---
     const esriBase = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    // Tiles: solo los visibles (+2 filas de margen), sin pedir tiles a mitad de una animación de zoom.
+    // En pantallas chicas la vista satelital omite la capa de calles: 1/3 menos de descargas.
+    const TILE_OPTS = { maxZoom: 18, updateWhenZooming: false, keepBuffer: 2 };
+    const smallScreen = window.matchMedia('(max-width: 1023px)').matches;
     const LAYERS = {
-      topo: L.tileLayer(esriBase + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Mapa &copy; Esri, HERE, Garmin, USGS, NGA', maxZoom: 18,
-      }),
+      topo: L.tileLayer(esriBase + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { ...TILE_OPTS, attribution: 'Mapa &copy; Esri, HERE, Garmin, USGS, NGA' }),
       sat: L.layerGroup([
-        L.tileLayer(esriBase + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Imágenes &copy; Esri, Maxar, Earthstar Geographics', maxZoom: 18 }),
-        L.tileLayer(esriBase + 'Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, opacity: 0.75 }),
-        L.tileLayer(esriBase + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }),
+        L.tileLayer(esriBase + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { ...TILE_OPTS, attribution: 'Imágenes &copy; Esri, Maxar, Earthstar Geographics' }),
+        ...(smallScreen ? [] : [L.tileLayer(esriBase + 'Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { ...TILE_OPTS, opacity: 0.75 })]),
+        L.tileLayer(esriBase + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', TILE_OPTS),
       ]),
     };
     let currentLayer = 'topo';
@@ -794,16 +817,39 @@
       iconAnchor: [16, 32],
     });
 
+    // Capa de pines con agrupamiento. Grupos hasta zoom 12; desde 13 (el zoom de la ficha) se ven los pines sueltos.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pinLayer = (L.markerClusterGroup ? L.markerClusterGroup({
+      maxClusterRadius: 50,
+      disableClusteringAtZoom: 13,
+      showCoverageOnHover: false,
+      spiderfyOnMaxZoom: false,
+      chunkedLoading: true,             // agrega miles de pines sin congelar la página
+      removeOutsideVisibleBounds: true, // fuera de pantalla no hay DOM
+      animate: !reduceMotion,
+      iconCreateFunction: (cluster) => {
+        const n = cluster.getChildCount();
+        const [size, cls] = n < 10 ? [36, ''] : n < 50 ? [42, ' is-md'] : [50, ' is-lg'];
+        return L.divIcon({ className: '', html: `<div class="cluster${cls}" aria-label="${n} lugares">${n}</div>`, iconSize: [size, size] });
+      },
+    }) : L.layerGroup()).addTo(map);
+    if (!L.markerClusterGroup) console.warn('[DESVIADOR] Plugin de clustering no disponible: pines sin agrupar.');
+
     // Puntos actuales (de Supabase o de respaldo) y sus marcadores
     let puntos = [];
     let markers = [];
     let markerById = {};
+    let lastVisibleKey = null;
     function setPoints(list) {
-      markers.forEach((e) => map.removeLayer(e.marker));
+      pinLayer.clearLayers();
+      lastVisibleKey = null;
       puntos = list;
       markers = list.map((p) => {
         const m = L.marker(p.coords, { icon: makeIcon(p), title: p.nombre, riseOnHover: true, keyboard: true });
         m.on('click', () => openDrawer(p));
+        // El cluster agrega/quita el pin del DOM al hacer zoom: reaplicar la selección cuando reaparece
+        m.on('add', () => { if (String(p.id) === String(selectedId)) m.getElement()?.querySelector('.pin')?.classList.add('is-selected'); });
+        m.on('mouseover', () => loadDetails(p)); // precarga la ficha al pasar el mouse (escritorio)
         return { place: p, marker: m };
       });
       markerById = Object.fromEntries(markers.map((e) => [e.place.id, e.marker]));
@@ -813,7 +859,10 @@
     }
 
     // Fila de Supabase → punto del mapa
-    const PUBLIC_COLUMNS = 'id, nombre_comercio, categoria, region, comuna, direccion, latitud, longitud, whatsapp, horario, descripcion, es_amigo_trail, destacado';
+    // El listado trae solo lo que necesitan el mapa, los filtros y el directorio.
+    // Dirección, WhatsApp, horario y descripción se piden al abrir la ficha (loadDetails).
+    const PUBLIC_COLUMNS = 'id, nombre_comercio, categoria, region, comuna, latitud, longitud, es_amigo_trail, destacado';
+    const DETAIL_COLUMNS = 'direccion, whatsapp, horario, descripcion';
     const JOBS_COLUMN = 'necesidad_personal'; // pública desde el lanzamiento (ver SQL); si aún no hay permiso, se omite
     const fromRow = (r) => ({
       id: r.id,
@@ -821,10 +870,7 @@
       categoria: r.categoria,
       region: r.region,
       comuna: r.comuna || '',
-      direccion: r.direccion,
-      whatsapp: r.whatsapp,
-      horario: r.horario,
-      descripcion: r.descripcion,
+      detailsLoaded: false, // dirección, WhatsApp, horario y descripción llegan con loadDetails()
       coords: [Number(r.latitud), Number(r.longitud)],
       verificado: true, // solo llegan filas aprobadas por el equipo
       destacado: !!r.destacado,
@@ -855,6 +901,22 @@
       }
     }
 
+    // --- Detalle de la ficha bajo demanda (una consulta por lugar, con caché) ---
+    const detailRequests = new Map();
+    function loadDetails(p) {
+      if (p.detailsLoaded !== false || !supabaseClient) return Promise.resolve(true);
+      if (!detailRequests.has(p.id)) {
+        detailRequests.set(p.id, supabaseClient.from('comercios').select(DETAIL_COLUMNS).eq('id', p.id).maybeSingle()
+          .then(({ data, error }) => {
+            if (error || !data) throw error || new Error('ficha no encontrada');
+            Object.assign(p, { direccion: data.direccion, whatsapp: data.whatsapp, horario: data.horario, descripcion: data.descripcion, detailsLoaded: true, detailsError: false });
+            return true;
+          })
+          .catch((err) => { console.warn('[DESVIADOR] No se pudo cargar la ficha:', err?.message); p.detailsError = true; detailRequests.delete(p.id); return false; }));
+      }
+      return detailRequests.get(p.id);
+    }
+
     // --- Drawer (ficha del lugar) ---
     const drawer = document.getElementById('drawer');
     const drawerBody = document.getElementById('drawerBody');
@@ -871,7 +933,11 @@
       if (id && markerById[id]) markerById[id].getElement()?.querySelector('.pin')?.classList.add('is-selected');
     }
 
-    function openDrawer(p) {
+    let drawerPoint = null;
+    function drawerHtml(p) {
+      const loading = p.detailsLoaded === false && !p.detailsError;
+      const failed = p.detailsLoaded === false && p.detailsError;
+      const skel = (w) => `<span class="inline-block h-3.5 ${w} animate-pulse rounded bg-sand-200 align-middle" aria-hidden="true"></span>`;
       const c = CATEGORIES[p.categoria];
       const status = [
         p.verificado ? '<span class="inline-flex items-center gap-1 rounded-full bg-moss-600/10 px-2.5 py-1 text-xs font-semibold text-moss-700 ring-1 ring-moss-600/30"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Verificado</span>' : '',
@@ -886,7 +952,11 @@
           <dd class="text-sm ${missing ? 'text-soil-600/80 italic' : 'text-ink'}">${value}</dd>
         </div>`;
 
-      const contactBlock = p.whatsapp
+      const contactBlock = loading
+        ? `<div class="h-[52px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
+        : failed
+        ? `<p class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el contacto. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
+        : p.whatsapp
         ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
         : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
              <strong class="block text-soil-950">¿Es tu negocio?</strong>
@@ -900,7 +970,7 @@
           ${p.whatsapp ? `<a href="${waUrl(p, `Hola, vi en DESVIADOR que buscan personal (${p.necesidad}) y me interesa postular.`)}" target="_blank" rel="noopener" data-gate="postular" data-ref="${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">Postular por WhatsApp →</a>` : ''}
         </div>` : '';
 
-      drawerBody.innerHTML = `
+      return `
         <div class="flex flex-wrap items-center gap-2 pr-10">
           <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
           ${status}
@@ -912,8 +982,8 @@
         ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
 
         <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
-          ${row('Dirección', p.direccion ? esc(p.direccion) : 'Por confirmar', !p.direccion)}
-          ${row('Horario', p.horario ? esc(p.horario) : 'Por confirmar', !p.horario)}
+          ${row('Dirección', loading ? skel('w-40') : p.direccion ? esc(p.direccion) : 'Por confirmar', !loading && !p.direccion)}
+          ${row('Horario', loading ? skel('w-28') : p.horario ? esc(p.horario) : 'Por confirmar', !loading && !p.horario)}
           ${row('Coordenadas', `<span class="font-mono text-xs tabular-nums">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</span>`)}
         </dl>
 
@@ -926,6 +996,14 @@
             <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
           </div>
         </div>`;
+    }
+
+    function openDrawer(p) {
+      drawerPoint = p;
+      drawerBody.innerHTML = drawerHtml(p);
+      if (p.detailsLoaded === false) {
+        loadDetails(p).then(() => { if (drawerPoint === p && drawer.classList.contains('is-open')) drawerBody.innerHTML = drawerHtml(p); });
+      }
 
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
@@ -945,6 +1023,11 @@
       setSelected(null);
     }
     document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+    drawerBody.addEventListener('click', (e) => {
+      if (!e.target.closest('[data-retry-details]') || !drawerPoint) return;
+      const p = drawerPoint; p.detailsError = false; drawerBody.innerHTML = drawerHtml(p);
+      loadDetails(p).then(() => { if (drawerPoint === p) drawerBody.innerHTML = drawerHtml(p); });
+    });
     map.on('click', closeDrawer);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeDrawer(); hideResults(); } });
 
@@ -1007,7 +1090,13 @@
       closeDrawer();
 
       const visible = visiblePoints();
-      markers.forEach((e) => (visible.includes(e) ? e.marker.addTo(map) : map.removeLayer(e.marker)));
+      const key = visible.map((e) => e.place.id).join('|');
+      if (key !== lastVisibleKey) {
+        lastVisibleKey = key;
+        pinLayer.clearLayers();
+        if (pinLayer.addLayers) pinLayer.addLayers(visible.map((e) => e.marker));
+        else visible.forEach((e) => pinLayer.addLayer(e.marker));
+      }
       document.getElementById('visibleCount').textContent = visible.length;
 
       // Estado vacío
@@ -1115,7 +1204,7 @@
     });
     document.getElementById('dirClose').addEventListener('click', () => dirEl.dialog.close());
     dirEl.dialog.addEventListener('click', (e) => { if (e.target === dirEl.dialog) dirEl.dialog.close(); });
-    dirEl.search.addEventListener('input', renderDirectoryDialog);
+    dirEl.search.addEventListener('input', debounce(renderDirectoryDialog, 160));
 
     // Ubicar: quitar filtros que oculten el punto, volar a él y abrir su ficha
     function locatePoint(id) {
@@ -1202,10 +1291,10 @@
       scrollToMapOnMobile();
       openDrawer(p);
     }
-    searchInput.addEventListener('input', runSearch);
+    searchInput.addEventListener('input', debounce(runSearch, 160));
     searchInput.addEventListener('focus', runSearch);
     searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); if (searchHits[0]) pickResult(searchHits[0]); }
+      if (e.key === 'Enter') { e.preventDefault(); runSearch(); if (searchHits[0]) pickResult(searchHits[0]); } // sin esperar el debounce
       if (e.key === 'ArrowDown') { e.preventDefault(); resultsEl.querySelector('button')?.focus(); }
     });
     resultsEl.addEventListener('click', (e) => {
