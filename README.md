@@ -45,3 +45,18 @@ Mientras no estén configuradas, el mapa muestra los puntos de respaldo ("datos 
 5. Entra a `https://linvialabs.github.io/desviador/admin.html`.
 
 Solo los usuarios de la tabla `admins` pueden ver datos privados, aprobar, editar o eliminar. Una cuenta creada por otra persona puede iniciar sesión, pero el panel la rechaza y la base de datos no le permite cambiar nada.
+
+## Leads del gate de contacto (correo + qué pedalea)
+
+El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular** y **Guardar spot** piden una vez correo + "¿Qué pedaleás?". Tras completarlo, el navegador queda desbloqueado (`localStorage` → `desviador-gate`) y la acción se ejecuta.
+
+**Destino de los leads (configurar una vez):**
+
+1. **Supabase (principal):** ejecuta [`supabase/leads.sql`](supabase/leads.sql) en el SQL Editor (después de `schema.sql` y `admin.sql`). Crea la tabla `leads`: el público solo puede insertar; solo admins pueden leer. Los ves en **Table Editor → leads** (o *Export to CSV*).
+2. **Respaldo opcional:** en [`supabase-config.js`](supabase-config.js) completa `LEADS_WEBHOOK_URL` con un endpoint que acepte `POST` JSON (por ejemplo, un formulario de [Formspree](https://formspree.io) o un Google Apps Script). Se usa solo si falla Supabase.
+
+**No se pierden leads:** cada lead se guarda primero en `localStorage` (`desviador-leads-pendientes`) y se borra de ahí solo cuando llega a su destino; si falla, se reintenta en la próxima visita.
+
+**Eventos (analytics mínimos):** `gate_opened`, `gate_submitted`, `gate_dismissed`, `whatsapp_clicked_after_unlock`. Se ven en la consola del navegador (`[DESVIADOR analytics]`), en `window.desviadorEvents` y se envían a `window.dataLayer` si agregas Google Tag Manager.
+
+**Para probar de nuevo el modal:** en la consola del navegador, `localStorage.removeItem('desviador-gate')` y recarga.

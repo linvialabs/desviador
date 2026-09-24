@@ -481,6 +481,40 @@
     </div>
   </dialog>
 
+  <!-- Gate liviano: correo + qué pedalea, solo al contactar o guardar -->
+  <dialog id="gateDialog" class="w-[min(92vw,26rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="gateTitle" aria-describedby="gateSubtitle">
+    <form id="gateForm" class="space-y-4 p-6" novalidate>
+      <div>
+        <h2 id="gateTitle" class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-soil-950">Desbloqueá el contacto</h2>
+        <p id="gateSubtitle" class="mt-1 text-sm leading-relaxed text-soil-700">El mapa es gratis. Dejá tu correo para ver WhatsApp y guardar spots.</p>
+      </div>
+      <div>
+        <label for="gateEmail" class="mb-1.5 block text-sm font-semibold text-soil-800">Email</label>
+        <input id="gateEmail" type="email" inputmode="email" autocomplete="email" required placeholder="tu@correo.cl" aria-describedby="gateEmailError"
+          class="w-full rounded-lg border-0 bg-white/80 px-3.5 py-2.5 text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-red-700" />
+        <p id="gateEmailError" class="mt-1.5 text-sm font-medium text-red-800" hidden></p>
+      </div>
+      <fieldset aria-describedby="gateChipsError">
+        <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué pedaleás?</legend>
+        <div id="gateChips" class="flex flex-wrap gap-2">
+          <button type="button" data-interest="mtb_enduro" aria-pressed="false" class="gate-chip">MTB / Enduro</button>
+          <button type="button" data-interest="ebike" aria-pressed="false" class="gate-chip">e-bike</button>
+          <button type="button" data-interest="ruta_gravel" aria-pressed="false" class="gate-chip">Ruta / Gravel</button>
+          <button type="button" data-interest="kids_familia" aria-pressed="false" class="gate-chip">Kids / familia</button>
+          <button type="button" data-interest="dh_bikepark" aria-pressed="false" class="gate-chip">Downhill / bikepark</button>
+        </div>
+        <p id="gateChipsError" class="mt-1.5 text-sm font-medium text-red-800" hidden></p>
+      </fieldset>
+      <!-- Anti-spam -->
+      <input type="text" id="gateWebsite" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+      <button type="submit" class="w-full rounded-xl bg-moss-600 py-3 font-semibold text-sand-50 transition hover:bg-moss-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">Continuar</button>
+      <div class="text-center">
+        <button type="button" id="gateDismiss" class="text-sm font-semibold text-soil-700 underline-offset-4 hover:text-soil-950 hover:underline">Seguir explorando el mapa</button>
+      </div>
+      <p class="text-center font-mono text-[11px] text-soil-600">No spam. Solo novedades y spots útiles.</p>
+    </form>
+  </dialog>
+
   <!-- Privacidad & Seguridad -->
   <dialog id="privacyDialog" class="w-[min(92vw,34rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="privacyTitle">
     <div class="max-h-[80vh] overflow-y-auto p-6">
@@ -492,7 +526,8 @@
         <p><strong class="text-soil-950">Qué publicamos de cada negocio:</strong> nombre, categoría, ubicación, comuna, dirección, WhatsApp, horario, descripción y, si lo indica, qué personal busca.</p>
         <p><strong class="text-soil-950">Qué no publicamos:</strong> el contacto del dueño que se deja en el registro. Solo lo ve el equipo editorial para verificar la ficha.</p>
         <p><strong class="text-soil-950">Cómo lo protegemos:</strong> las fichas se guardan en una base de datos con reglas de acceso. Cualquiera puede enviar una solicitud, pero solo el equipo editorial puede aprobar, editar o eliminar fichas.</p>
-        <p><strong class="text-soil-950">En tu navegador:</strong> no usamos cookies de seguimiento; solo recordamos la capa de mapa que elegiste. El mapa y las tipografías se cargan desde servicios externos (Esri, Google Fonts).</p>
+        <p><strong class="text-soil-950">Tu correo:</strong> si desbloqueás el contacto, guardamos tu correo y lo que pedaleás para enviarte novedades y spots útiles. No lo publicamos ni lo vendemos, y podés pedir que lo borremos.</p>
+        <p><strong class="text-soil-950">En tu navegador:</strong> no usamos cookies de seguimiento; recordamos la capa de mapa, tus spots guardados y si ya desbloqueaste el contacto. El mapa y las tipografías se cargan desde servicios externos (Esri, Google Fonts).</p>
         <p><strong class="text-soil-950">Corregir o eliminar una ficha:</strong> <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 underline" id="privacyContact">envíanos un dato</a> con el nombre del negocio y lo revisamos.</p>
       </div>
     </div>
@@ -503,6 +538,7 @@
 
   <!-- Clase utilitaria de campos de formulario -->
   <style type="text/tailwindcss">
+    .gate-chip { @apply rounded-full bg-white/80 px-3.5 py-2 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 transition hover:ring-soil-600 aria-pressed:bg-soil-950 aria-pressed:text-sand-50 aria-pressed:ring-soil-950; }
     .field { @apply w-full rounded-lg border-0 bg-sand-50 px-3.5 py-2.5 text-ink placeholder-soil-600/60 ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600; }
   </style>
 
@@ -656,6 +692,17 @@
     const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
     // Estado del filtro del mapa (compartido con el formulario)
     const mapState = { cat: null, region: 'all' };
+
+    // ================= SPOTS GUARDADOS (solo en este navegador) =================
+    const SAVED_KEY = 'desviador-guardados';
+    const savedSet = new Set((() => { try { return JSON.parse(localStorage.getItem(SAVED_KEY)) || []; } catch (e) { return []; } })());
+    const isSaved = (id) => savedSet.has(String(id));
+    function toggleSaved(id) {
+      id = String(id);
+      savedSet.has(id) ? savedSet.delete(id) : savedSet.add(id);
+      try { localStorage.setItem(SAVED_KEY, JSON.stringify([...savedSet])); } catch (e) {}
+      return savedSet.has(id);
+    }
 
     // ================= TOAST =================
     let toastTimer;
@@ -840,7 +887,7 @@
         </div>`;
 
       const contactBlock = p.whatsapp
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
         : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
              <strong class="block text-soil-950">¿Es tu negocio?</strong>
              Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-ochre-600">→</span>
@@ -850,7 +897,7 @@
       const jobBlock = p.necesidad ? `
         <div class="mt-4 rounded-xl bg-ochre-300/30 p-3.5 ring-1 ring-ochre-500/50">
           <p class="text-sm font-bold text-soil-950">💼 Buscando personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
-          ${p.whatsapp ? `<a href="${waUrl(p, `Hola, vi en DESVIADOR que buscan personal (${p.necesidad}) y me interesa postular.`)}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">Postular por WhatsApp →</a>` : ''}
+          ${p.whatsapp ? `<a href="${waUrl(p, `Hola, vi en DESVIADOR que buscan personal (${p.necesidad}) y me interesa postular.`)}" target="_blank" rel="noopener" data-gate="postular" data-ref="${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">Postular por WhatsApp →</a>` : ''}
         </div>` : '';
 
       drawerBody.innerHTML = `
@@ -858,6 +905,7 @@
           <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
           ${status}
         </div>
+        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '★ Guardado' : '☆ Guardar spot'}</button>
         <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
         <p class="mt-1.5 text-sm text-soil-600">${place}</p>
         ${jobBlock}
@@ -1024,6 +1072,7 @@
       { id: 'senderos', label: '🚵 Bikeparks / Senderos',   one: 'bikepark o sendero',    many: 'bikeparks y senderos',       test: (p) => p.categoria === 'senderos' },
       { id: 'tours',    label: '🚐 Shuttles / Tours',       one: 'shuttle o tour',        many: 'shuttles y tours',           test: (p) => p.categoria === 'tours' },
       { id: 'clases',   label: '🎓 Escuelas / Clases',      one: 'escuela',               many: 'escuelas',                   test: (p) => p.categoria === 'clases' },
+      { id: 'saved',    label: '★ Guardados',               one: 'spot guardado',         many: 'spots guardados',            test: (p) => isSaved(p.id), onlyIfAny: true },
       { id: 'trail',    label: '⛏️ Comunidad / Paleros',    one: 'Amiga del Trail',       many: 'Amigas del Trail',           test: (p) => p.amigoTrail },
     ];
     let dirChip = 'all';
@@ -1036,7 +1085,7 @@
       const list = all.filter((p) => chip.test(p) && (!q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q)));
 
       // Píldoras con su total (sin contar el texto, para que el número no "salte" al escribir)
-      dirEl.chips.innerHTML = DIR_CHIPS.map((c) => {
+      dirEl.chips.innerHTML = DIR_CHIPS.filter((c) => !c.onlyIfAny || c.id === dirChip || all.some(c.test)).map((c) => {
         const n = all.filter(c.test).length;
         const on = c.id === dirChip;
         return `<button type="button" data-chip="${c.id}" aria-pressed="${on}" class="shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${on ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">${c.label} <span class="ml-0.5 font-mono text-[11px] ${on ? 'text-ochre-300' : 'text-soil-600'}">${n}</span></button>`;
@@ -1166,6 +1215,164 @@
     document.addEventListener('click', (e) => { if (!e.target.closest('#searchWrap')) hideResults(); });
 
     loadPoints(); // vista inicial: Chile centro-sur, zoom 6
+  </script>
+
+  <script>
+    // ================= GATE LIVIANO (contactar / guardar) =================
+    // El mapa y las fichas son libres. Solo WhatsApp, Postular y Guardar piden correo + intereses una vez por navegador.
+    const GATE_VERSION = 1;
+    const GATE_KEY = 'desviador-gate';            // { email, intereses[], unlockedAt, version }
+    const LEADS_QUEUE_KEY = 'desviador-leads-pendientes';
+    const LEADS_WEBHOOK_URL = window.DESVIADOR_CONFIG?.LEADS_WEBHOOK_URL || ''; // opcional (Formspree / Apps Script)
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    let gateMemory = null;  // si localStorage está bloqueado, el desbloqueo dura la sesión
+    let pendingAction = null;
+
+    // Analytics mínimos: consola + dataLayer (si algún día se agrega GTM) + evento del DOM
+    window.desviadorEvents = window.desviadorEvents || [];
+    function track(name, props = {}) {
+      const ev = { event: name, ...props, ts: new Date().toISOString() };
+      window.desviadorEvents.push(ev);
+      console.info('[DESVIADOR analytics]', name, props);
+      window.dataLayer?.push(ev);
+      window.dispatchEvent(new CustomEvent('desviador:analytics', { detail: ev }));
+    }
+
+    const readJSON = (k, fallback) => { try { return JSON.parse(localStorage.getItem(k)) ?? fallback; } catch (e) { return fallback; } };
+    const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+    const isUnlocked = () => !!gateMemory || readJSON(GATE_KEY, null)?.version === GATE_VERSION;
+
+    // --- Envío de leads: Supabase (tabla leads) → webhook opcional; si todo falla, queda en cola y se reintenta ---
+    let flushing = false;
+    async function sendLead(lead) {
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('leads').insert([lead]);
+        if (!error) return true;
+        console.warn('[DESVIADOR] Lead no guardado en Supabase:', error.message);
+      }
+      if (LEADS_WEBHOOK_URL) {
+        try {
+          const res = await fetch(LEADS_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(lead) });
+          if (res.ok) return true;
+        } catch (e) { console.warn('[DESVIADOR] Webhook de leads falló:', e.message); }
+      }
+      return false;
+    }
+    async function flushLeads() {
+      if (flushing) return;
+      flushing = true;
+      try {
+        const queue = readJSON(LEADS_QUEUE_KEY, []);
+        const left = [];
+        for (const lead of queue) if (!(await sendLead(lead))) left.push(lead);
+        writeJSON(LEADS_QUEUE_KEY, left);
+        if (left.length) console.info(`[DESVIADOR] ${left.length} lead(s) en cola; se reintentará en la próxima visita.`);
+      } finally { flushing = false; }
+    }
+
+    // --- Acciones protegidas ---
+    function openWhatsApp(url) {
+      // Sin 'noopener' en las opciones: con él, window.open siempre devuelve null y no se puede detectar un bloqueo
+      const w = window.open(url, '_blank');
+      if (w) w.opener = null;
+      else window.location.href = url; // el navegador bloqueó la pestaña nueva
+    }
+    function runSave(ref, btn) {
+      const on = toggleSaved(ref);
+      document.querySelectorAll(`.save-btn[data-ref="${CSS.escape(ref)}"]`).forEach((b) => {
+        b.setAttribute('aria-pressed', on);
+        b.textContent = on ? '★ Guardado' : '☆ Guardar spot';
+        b.classList.toggle('bg-ochre-400', on); b.classList.toggle('text-soil-950', on); b.classList.toggle('ring-ochre-500', on);
+        b.classList.toggle('bg-sand-50', !on); b.classList.toggle('text-soil-800', !on); b.classList.toggle('ring-sand-300', !on);
+      });
+      return on;
+    }
+
+    // Todos los CTAs con data-gate pasan por aquí (captura: antes de que el enlace se abra)
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-gate]');
+      if (!el) return;
+      const action = { type: el.dataset.gate, url: el.getAttribute('href'), ref: el.dataset.ref || null };
+      if (isUnlocked()) {
+        if (action.type === 'guardar') { toast(runSave(action.ref) ? 'Spot guardado ★' : 'Spot quitado de guardados'); }
+        else track('whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref }); // el enlace se abre normal
+        return;
+      }
+      e.preventDefault();
+      openGate(action);
+    }, true);
+
+    // --- Modal ---
+    const gate = {
+      dialog: document.getElementById('gateDialog'), form: document.getElementById('gateForm'),
+      email: document.getElementById('gateEmail'), emailErr: document.getElementById('gateEmailError'),
+      chips: document.getElementById('gateChips'), chipsErr: document.getElementById('gateChipsError'),
+    };
+    const selectedInterests = () => [...gate.chips.querySelectorAll('[aria-pressed="true"]')].map((b) => b.dataset.interest);
+    function showErr(el, input, msg) { el.textContent = msg; el.hidden = !msg; if (input) input.setAttribute('aria-invalid', !!msg); }
+
+    function openGate(action) {
+      pendingAction = action;
+      showErr(gate.emailErr, gate.email, ''); showErr(gate.chipsErr, null, '');
+      const prev = readJSON(GATE_KEY, null);
+      if (prev?.email && !gate.email.value) gate.email.value = prev.email; // versión vieja: sugerir su correo
+      gate.dialog.showModal ? gate.dialog.showModal() : gate.dialog.setAttribute('open', '');
+      setTimeout(() => gate.email.focus(), 30);
+      track('gate_opened', { accion: action.type, ref: action.ref });
+    }
+    function dismissGate(via) {
+      if (!pendingAction) return;
+      track('gate_dismissed', { accion: pendingAction.type, ref: pendingAction.ref, via });
+      pendingAction = null;
+      if (gate.dialog.open) gate.dialog.close();
+    }
+
+    gate.chips.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-interest]');
+      if (!b) return;
+      b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true');
+      if (selectedInterests().length) showErr(gate.chipsErr, null, '');
+    });
+    gate.email.addEventListener('input', () => { if (EMAIL_RE.test(gate.email.value.trim())) showErr(gate.emailErr, gate.email, ''); });
+    document.getElementById('gateDismiss').addEventListener('click', () => dismissGate('seguir_explorando'));
+    gate.dialog.addEventListener('cancel', (e) => { e.preventDefault(); dismissGate('esc'); });          // Esc
+    gate.dialog.addEventListener('click', (e) => { if (e.target === gate.dialog) dismissGate('fuera'); }); // clic en el fondo
+
+    gate.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = gate.email.value.trim().toLowerCase();
+      const intereses = selectedInterests();
+      let ok = true;
+      if (!EMAIL_RE.test(email) || email.length > 254) { showErr(gate.emailErr, gate.email, 'Revisá el correo: debe tener el formato nombre@dominio.cl'); ok = false; }
+      if (!intereses.length) { showErr(gate.chipsErr, null, 'Elegí al menos una opción.'); ok = false; }
+      if (!ok) return (gate.email.getAttribute('aria-invalid') === 'true' ? gate.email : gate.chips.querySelector('button')).focus();
+      if (document.getElementById('gateWebsite').value) return; // bot
+
+      const action = pendingAction || { type: null, ref: null };
+      pendingAction = null;
+      const unlock = { email, intereses, unlockedAt: new Date().toISOString(), version: GATE_VERSION };
+      if (!writeJSON(GATE_KEY, unlock)) gateMemory = unlock;
+
+      // El lead se guarda primero en la cola local y luego se envía: nunca se pierde
+      const lead = { email, intereses, accion: action.type, comercio_ref: action.ref ? String(action.ref).slice(0, 80) : null, version: GATE_VERSION };
+      writeJSON(LEADS_QUEUE_KEY, [...readJSON(LEADS_QUEUE_KEY, []), lead]);
+      flushLeads();
+
+      track('gate_submitted', { accion: action.type, ref: action.ref, intereses });
+      gate.dialog.close();
+      toast('Listo');
+
+      // Ejecutar la acción que se había pedido (dentro del mismo gesto del usuario, para que el navegador permita abrir WhatsApp)
+      if (action.type === 'whatsapp' || action.type === 'postular') {
+        track('whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref, justUnlocked: true });
+        openWhatsApp(action.url);
+      } else if (action.type === 'guardar') {
+        runSave(action.ref);
+        setTimeout(() => toast('Listo · spot guardado ★'), 400);
+      }
+    });
+
+    flushLeads(); // reintentar leads que quedaron en cola en visitas anteriores
   </script>
 
   <script>

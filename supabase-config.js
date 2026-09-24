@@ -5,4 +5,7 @@
 window.DESVIADOR_CONFIG = {
   SUPABASE_URL: 'https://ynlrlqtxhueznrrrnlda.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_5ytCZP2agnKihBXxK8Ipuw_4JWHajPd',
+  // Opcional: respaldo para los leads del gate (correo + qué pedalea) si Supabase falla.
+  // Ej: endpoint de Formspree (https://formspree.io/f/xxxx) o Google Apps Script. Vacío = solo Supabase.
+  LEADS_WEBHOOK_URL: '',
 };
