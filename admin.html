@@ -918,6 +918,7 @@
       $('importError').classList.add('hidden');
       setImportBusy(true);
       $('importProgress').hidden = false;
+      $('importBar').classList.remove('bg-clay-500'); $('importBar').classList.add('bg-moss-400');
       $('importConfirm').textContent = 'Importando…';
       let ok = 0, failed = 0, firstError = null;
       setProgress(0, registros.length);
@@ -940,6 +941,9 @@
         closeImport();
         return toast(asPending ? `Se cargaron ${plural(ok)} a Pendientes para revisión` : `¡Éxito! Se cargaron ${plural(ok)} al mapa`);
       }
+      // La barra refleja el resultado real: en rojo y con el conteo de lo guardado
+      $('importBar').classList.replace('bg-moss-400', 'bg-clay-500');
+      $('importProgressText').textContent = ok ? `Guardadas ${ok} de ${registros.length} · ${failed} con error` : `No se guardó ninguna de las ${plural(registros.length)}`;
       const rls = firstError && (firstError.code === '42501' || /row-level security|permission denied/i.test(firstError.message));
       importFail(
         (ok ? `Se cargaron ${plural(ok)}, pero ${failed} no se pudieron guardar. ` : `No se pudo guardar ninguna fila. `) +
