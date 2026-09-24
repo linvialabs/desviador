@@ -221,7 +221,7 @@
       <div class="flex items-start justify-between gap-4 border-b border-soil-700 px-5 py-4">
         <div>
           <h2 id="importTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50">Importar CSV masivo</h2>
-          <p class="mt-0.5 text-sm text-sand-300">Las filas válidas se publican directo en el mapa como <strong class="text-sand-50">aprobadas</strong>.</p>
+          <p class="mt-0.5 text-sm text-sand-300">Las filas válidas se publican directo en el mapa, o quedan en <strong class="text-sand-50">Pendientes</strong> si prefieres revisarlas.</p>
         </div>
         <button id="importClose" type="button" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-soil-800 text-sand-200 hover:bg-soil-700 disabled:opacity-40" aria-label="Cerrar">✕</button>
       </div>
@@ -258,6 +258,7 @@
         <div id="importStep2" hidden>
           <p id="importFileName" class="font-mono text-xs text-sand-300"></p>
           <div id="importStats" class="mt-3 flex flex-wrap gap-2"></div>
+          <label class="mt-3 flex items-start gap-2 text-sm text-sand-200"><input id="importPending" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#d9a441]" /> <span>Importar como <strong class="text-ochre-300">pendientes</strong> para revisar cada ubicación antes de publicarla</span></label>
           <label id="importDupesWrap" class="mt-3 flex items-center gap-2 text-sm text-sand-200" hidden><input id="importDupes" type="checkbox" class="h-4 w-4 accent-[#d9a441]" /> Importar también las filas duplicadas</label>
           <div id="importPreview" class="mt-4"></div>
           <div id="importIssues" class="mt-4"></div>
@@ -736,11 +737,11 @@
         o_higgins: 'ohiggins', libertador_general_bernardo_o_higgins: 'ohiggins', libertador_bernardo_o_higgins: 'ohiggins',
         bio_bio: 'biobio', la_araucania: 'araucania', los_rios: 'losrios', los_lagos: 'loslagos',
         aysen_del_general_carlos_ibanez_del_campo: 'aysen', magallanes_y_de_la_antartica_chilena: 'magallanes', magallanes_y_la_antartica_chilena: 'magallanes',
-        arica_y_parinacota: 'arica',
+        arica_y_parinacota: 'arica', arica_parinacota: 'arica',
       });
       return m;
     })();
-    const toRegion = (v) => { const k = keyOf(v).replace(/^region_(de|del)_/, ''); return REGION_ALIASES[k] || REGION_ALIASES[keyOf(v)] || null; };
+    const toRegion = (v) => { const k = keyOf(v).replace(/^region_(de|del)_/, ''); return REGION_ALIASES[k] || REGION_ALIASES[k.replace(/_y_/g, '_')] || REGION_ALIASES[keyOf(v)] || null; };
     const toBool = (v) => ['si', 's', 'true', '1', 'x', 'yes', 'y', 'verdadero'].includes(keyOf(v));
     const toCoord = (v) => {
       let t = String(v ?? '').trim().replace(/\s/g, '');
@@ -757,7 +758,7 @@
       Object.assign(imp, { rows: [], valid: [], dupes: [], issues: [], imported: new Set() });
       $('csvFile').value = '';
       $('importStep1').hidden = false; $('importStep2').hidden = true; $('importProgress').hidden = true;
-      $('importReset').hidden = true; $('importDupesWrap').hidden = true; $('importDupes').checked = false;
+      $('importReset').hidden = true; $('importDupesWrap').hidden = true; $('importDupes').checked = false; $('importPending').checked = false;
       $('importConfirm').disabled = true; $('importConfirm').textContent = 'Importar';
       $('importError').classList.add('hidden');
     }
@@ -805,14 +806,15 @@
       parsed.data.forEach((raw, i) => {
         const line = i + 2; // línea 1 = encabezado
         const errs = [];
-        const val = (k) => String(raw[k] ?? '').trim();
+        // "-", "—", "n/a", "s/i", "null"… son celdas vacías, no datos
+        const val = (k) => { const t = String(raw[k] ?? '').trim(); return /^(-+|—|–|n\/?a|s\/?i|null|none|sin dato)$/i.test(t) ? '' : t; };
         if (parseErrors[i]) errs.push(parseErrors[i]);
 
         const nombre = val('nombre_comercio');
         const categoria = CAT_ALIASES[keyOf(raw.categoria)] || null;
         const region = toRegion(raw.region);
         const lat = toCoord(raw.latitud), lng = toCoord(raw.longitud);
-        const phone = normalizePhone(raw.whatsapp);
+        const phone = normalizePhone(val('whatsapp'));
 
         if (nombre.length < 3) errs.push('nombre_comercio vacío o muy corto');
         if (!categoria) errs.push(`categoría "${val('categoria')}" no reconocida`);
@@ -837,7 +839,7 @@
           necesidad_personal: val('necesidad_personal') || null,
           es_amigo_trail: toBool(raw.es_amigo_trail),
           destacado: toBool(raw.destacado),
-          estado: 'aprobado', // todo lo que importa el admin se publica de inmediato
+          estado: 'aprobado', // se publica de inmediato, salvo que se marque "Importar como pendientes"
         };
         const item = { line, record, errs };
         if (errs.length) return imp.issues.push(item);
@@ -899,7 +901,7 @@
 
     function setImportBusy(on) {
       imp.busy = on;
-      ['importConfirm', 'importReset', 'importClose', 'importDupes'].forEach((id) => { $(id).disabled = on; });
+      ['importConfirm', 'importReset', 'importClose', 'importDupes', 'importPending'].forEach((id) => { $(id).disabled = on; });
     }
     function setProgress(done, total) {
       const pct = total ? Math.round((done / total) * 100) : 0;
@@ -911,6 +913,8 @@
     async function runImport() {
       const registros = importTargets();
       if (!registros.length || imp.busy) return;
+      const asPending = $('importPending').checked;
+      const estado = asPending ? 'pendiente' : 'aprobado';
       $('importError').classList.add('hidden');
       setImportBusy(true);
       $('importProgress').hidden = false;
@@ -921,7 +925,7 @@
       // Lotes de 100: si un lote falla, los demás siguen
       for (let i = 0; i < registros.length; i += IMPORT_BATCH) {
         const lote = registros.slice(i, i + IMPORT_BATCH);
-        const { error } = await supabaseClient.from('comercios').insert(lote);
+        const { error } = await supabaseClient.from('comercios').insert(lote.map((r) => ({ ...r, estado })));
         if (error) { failed += lote.length; firstError ||= error; console.error('[DESVIADOR] Lote falló:', error); }
         else { ok += lote.length; lote.forEach((r) => imp.imported.add(r)); }
         setProgress(Math.min(i + IMPORT_BATCH, registros.length), registros.length);
@@ -929,12 +933,12 @@
 
       setImportBusy(false);
       await loadRows(true);
-      state.tab = 'aprobado'; state.q = ''; $('search').value = '';
+      state.tab = estado; state.q = ''; $('search').value = '';
       renderAll(); fitToTab();
 
       if (!failed) {
         closeImport();
-        return toast(`¡Éxito! Se cargaron ${plural(ok)} al mapa`);
+        return toast(asPending ? `Se cargaron ${plural(ok)} a Pendientes para revisión` : `¡Éxito! Se cargaron ${plural(ok)} al mapa`);
       }
       const rls = firstError && (firstError.code === '42501' || /row-level security|permission denied/i.test(firstError.message));
       importFail(
