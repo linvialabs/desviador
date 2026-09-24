@@ -130,11 +130,11 @@
     <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-sand-300 lg:grid lg:h-[calc(100vh-3.5rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
 
       <!-- Panel izquierdo (en móvil se parte: arriba y abajo del mapa) -->
-      <div class="topo-bg contents lg:flex lg:flex-col lg:gap-5 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:py-8">
-        <div class="topo-bg order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:bg-none lg:p-0">
+      <div class="topo-bg contents lg:flex lg:flex-col lg:gap-4 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:pb-0 lg:pt-6">
+        <div class="topo-bg order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:gap-4 lg:bg-none lg:p-0">
           <div>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Desviador · Chile</p>
-            <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.75rem]">
+            <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.35rem]">
               El mapa técnico y directorio operativo del ciclismo en Chile
             </h1>
           </div>
@@ -153,6 +153,18 @@
           <div>
             <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">¿Qué buscas hoy?</p>
             <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
+          </div>
+
+        </div>
+
+        <!-- Destacados + métricas: en escritorio bajo "¿Qué buscas hoy?"; en móvil, debajo del mapa -->
+        <div id="featured" class="order-3 bg-sand-100 px-4 pb-6 pt-5 sm:px-6 lg:border-t lg:border-sand-300 lg:bg-transparent lg:p-0 lg:pt-4" hidden>
+          <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">Destacados</p>
+          <div id="dirStats" class="mb-3 flex flex-wrap gap-1.5" aria-label="Resumen del directorio"></div>
+          <ul id="dirTop" class="grid grid-cols-2 gap-2.5"></ul>
+          <!-- En escritorio queda fijo al pie de la columna aunque haya scroll -->
+          <div class="mt-4 lg:sticky lg:bottom-0 lg:-mx-6 lg:bg-gradient-to-t lg:from-sand-100 lg:from-70% lg:to-transparent lg:px-6 lg:pb-3 lg:pt-3">
+            <button id="dirOpen" type="button" class="w-full rounded-xl bg-soil-950 px-4 py-3 text-sm font-semibold text-sand-50 transition hover:bg-soil-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400" aria-haspopup="dialog" aria-controls="dirDialog"></button>
           </div>
         </div>
       </div>
@@ -201,32 +213,6 @@
           <button id="locateBtn" type="button" class="grid h-10 w-10 place-items-center rounded-xl bg-sand-50 text-soil-950 shadow-xl ring-1 ring-sand-300 transition hover:bg-sand-100" aria-label="Centrar en mi ubicación" title="Mi ubicación">
             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
           </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ DIRECTORIO (compacto, bajo el mapa) ============ -->
-    <section id="directorio" class="scroll-mt-16 bg-soil-900 text-sand-100" aria-labelledby="dirTitle" hidden>
-      <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Directorio</p>
-            <h2 id="dirTitle" class="mt-1 font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-3xl">Destacados en el mapa</h2>
-          </div>
-          <!-- Métricas -->
-          <div id="dirStats" class="flex flex-wrap gap-2" aria-label="Resumen del directorio"></div>
-        </div>
-
-        <!-- Siempre visibles: 3 primeros -->
-        <ul id="dirTop" class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3"></ul>
-
-        <!-- Resto, colapsable -->
-        <div id="dirMore" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out" inert>
-          <ul id="dirRest" class="grid grid-cols-2 gap-3 pt-3 lg:grid-cols-3"></ul>
-        </div>
-
-        <div class="mt-6 flex justify-center">
-          <button id="dirToggle" type="button" aria-expanded="false" aria-controls="dirMore" class="rounded-full bg-soil-800 px-5 py-2.5 text-sm font-semibold text-sand-50 ring-1 ring-soil-700 transition hover:bg-soil-700 hover:ring-ochre-400/60"></button>
         </div>
       </div>
     </section>
@@ -471,6 +457,27 @@
       </nav>
     </div>
   </footer>
+
+  <!-- Directorio completo -->
+  <dialog id="dirDialog" class="m-0 h-[100dvh] max-h-none w-full max-w-none bg-sand-50 p-0 text-ink backdrop:bg-soil-950/70 sm:m-auto sm:h-[85vh] sm:w-[min(94vw,60rem)] sm:rounded-2xl sm:shadow-2xl" aria-labelledby="dirDialogTitle">
+    <div class="flex h-full flex-col">
+      <div class="border-b border-sand-300 px-4 pb-3 pt-4 sm:px-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 id="dirDialogTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950">Directorio completo</h2>
+            <p id="dirDialogCount" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"></p>
+          </div>
+          <button type="button" id="dirClose" class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar directorio">✕</button>
+        </div>
+        <label for="dirSearch" class="sr-only">Filtrar el directorio</label>
+        <input id="dirSearch" type="search" autocomplete="off" placeholder="Filtrar por nombre, comuna o categoría…" class="mt-3 w-full rounded-xl border-0 bg-white/70 px-4 py-2.5 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
+      </div>
+      <div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+        <ul id="dirAll" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4"></ul>
+        <p id="dirEmpty" class="py-10 text-center text-sm text-soil-600" hidden>Sin resultados para esa búsqueda.</p>
+      </div>
+    </div>
+  </dialog>
 
   <!-- Privacidad & Seguridad -->
   <dialog id="privacyDialog" class="w-[min(92vw,34rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="privacyTitle">
@@ -964,76 +971,68 @@
       if (fit) fitView(visible);
     }
 
-    // --- Directorio bajo el mapa ---
+    // --- Destacados (columna izquierda) y directorio completo (modal) ---
     const dirEl = {
-      section: document.getElementById('directorio'), stats: document.getElementById('dirStats'),
-      top: document.getElementById('dirTop'), more: document.getElementById('dirMore'),
-      rest: document.getElementById('dirRest'), toggle: document.getElementById('dirToggle'),
+      box: document.getElementById('featured'), stats: document.getElementById('dirStats'),
+      top: document.getElementById('dirTop'), open: document.getElementById('dirOpen'),
+      dialog: document.getElementById('dirDialog'), all: document.getElementById('dirAll'),
+      search: document.getElementById('dirSearch'), count: document.getElementById('dirDialogCount'),
+      empty: document.getElementById('dirEmpty'),
     };
-    let dirOpen = false;
-    const DIR_TOP = 3;
+    const DIR_TOP = 2;
 
     // Destacados primero, luego Amigas del Trail, luego alfabético
     const dirSort = (a, b) => (b.destacado - a.destacado) || (b.amigoTrail - a.amigoTrail) || a.nombre.localeCompare(b.nombre, 'es');
+    const sortedPoints = () => [...puntos].sort(dirSort);
 
     const miniCard = (p) => {
       const c = CATEGORIES[p.categoria];
       return `<li>
-        <article class="flex h-full flex-col justify-between gap-3 rounded-xl bg-soil-800 p-3 ring-1 ring-soil-700 transition hover:ring-ochre-400/50 sm:p-4">
+        <article class="flex h-full flex-col justify-between gap-2.5 rounded-xl bg-sand-50 p-3 shadow-sm ring-1 ring-sand-300 transition hover:ring-soil-600/50">
           <div class="min-w-0">
-            <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
-            <h3 class="mt-2 line-clamp-2 text-sm font-bold leading-snug text-sand-50">${esc(p.nombre)}</h3>
-            <p class="mt-0.5 truncate text-xs text-sand-300">${esc(p.comuna || REGIONES[p.region].label)}</p>
+            <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
+            <h3 class="mt-1.5 line-clamp-2 text-[13px] font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
+            <p class="truncate text-xs text-soil-600">${esc(p.comuna || REGIONES[p.region].label)}</p>
           </div>
-          <button type="button" data-locate="${esc(p.id)}" class="rounded-lg bg-ochre-400 py-2 text-xs font-bold text-soil-950 transition hover:bg-ochre-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-sand-50">📍 Ubicar</button>
+          <button type="button" data-locate="${esc(p.id)}" class="rounded-lg bg-moss-600 py-1.5 text-xs font-bold text-sand-50 transition hover:bg-moss-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">📍 Ubicar</button>
         </article>
       </li>`;
     };
 
-    function setDirOpen(open) {
-      dirOpen = open;
-      const el = dirEl.more;
-      el.inert = !open;
-      dirEl.toggle.setAttribute('aria-expanded', open);
-      if (open) {
-        el.style.maxHeight = el.scrollHeight + 'px';
-        el.addEventListener('transitionend', () => { if (dirOpen) el.style.maxHeight = 'none'; }, { once: true });
-      } else {
-        el.style.maxHeight = el.scrollHeight + 'px'; // desde "none" a un alto fijo para poder animar
-        el.offsetHeight; // forzar reflow
-        el.style.maxHeight = '0px';
-      }
-      syncDirToggle();
-    }
-    function syncDirToggle() {
-      const n = puntos.length;
-      dirEl.toggle.hidden = n <= DIR_TOP;
-      dirEl.toggle.textContent = dirOpen ? '🔼 Ocultar listado' : `🔽 Mostrar directorio completo (${n} ${n === 1 ? 'punto' : 'puntos'} en Chile)`;
-    }
-
     function renderDirectory() {
-      const list = [...puntos].sort(dirSort);
-      dirEl.section.hidden = !list.length;
+      const list = sortedPoints();
+      dirEl.box.hidden = !list.length;
       const count = (fn) => list.filter(fn).length;
-      const pill = (icon, n, label, action) => `<button type="button" data-stat="${action}" class="inline-flex items-center gap-1.5 rounded-full bg-soil-800 px-3.5 py-1.5 text-sm text-sand-200 ring-1 ring-soil-700 transition hover:ring-ochre-400/60"><span aria-hidden="true">${icon}</span><strong class="font-mono text-ochre-300 tabular-nums">${n}</strong> ${label}</button>`;
+      const pill = (icon, n, label, action) => `<button type="button" data-stat="${action}" class="inline-flex items-center gap-1 rounded-full bg-sand-50 px-2.5 py-1 text-xs text-soil-700 ring-1 ring-sand-300 transition hover:ring-soil-600"><span aria-hidden="true">${icon}</span><strong class="font-mono tabular-nums text-soil-950">${n}</strong> ${label}</button>`;
       dirEl.stats.innerHTML = [
         pill('📍', list.length, list.length === 1 ? 'Punto' : 'Puntos', 'all'),
         pill('🛠️', count((p) => p.categoria === 'talleres'), 'Talleres', 'talleres'),
         pill('🚵', count((p) => p.categoria === 'senderos'), 'Bikeparks', 'senderos'),
-        pill('💼', count((p) => p.necesidad), 'Bici Jobs', 'jobs'),
       ].join('');
       dirEl.top.innerHTML = list.slice(0, DIR_TOP).map(miniCard).join('');
-      dirEl.rest.innerHTML = list.slice(DIR_TOP).map(miniCard).join('');
-      if (dirOpen) dirEl.more.style.maxHeight = 'none';
-      syncDirToggle();
+      dirEl.open.textContent = `🔽 Ver directorio completo (${list.length})`;
+      if (dirEl.dialog.open) renderDirectoryDialog();
     }
 
-    dirEl.toggle.addEventListener('click', () => {
-      setDirOpen(!dirOpen);
-      if (!dirOpen) dirEl.section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    function renderDirectoryDialog() {
+      const q = norm(dirEl.search.value.trim());
+      const list = sortedPoints().filter((p) => !q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q));
+      dirEl.all.innerHTML = list.map(miniCard).join('');
+      dirEl.empty.hidden = list.length > 0;
+      dirEl.count.textContent = q ? `${list.length} de ${puntos.length} puntos` : `${puntos.length} puntos en Chile`;
+    }
 
-    // Ubicar: subir al mapa, quitar filtros que lo oculten, volar al punto y abrir la ficha
+    dirEl.open.addEventListener('click', () => {
+      dirEl.search.value = '';
+      renderDirectoryDialog();
+      dirEl.dialog.showModal();
+      dirEl.dialog.querySelector('.overflow-y-auto').scrollTop = 0;
+    });
+    document.getElementById('dirClose').addEventListener('click', () => dirEl.dialog.close());
+    dirEl.dialog.addEventListener('click', (e) => { if (e.target === dirEl.dialog) dirEl.dialog.close(); });
+    dirEl.search.addEventListener('input', renderDirectoryDialog);
+
+    // Ubicar: quitar filtros que oculten el punto, volar a él y abrir su ficha
     function locatePoint(id) {
       const p = puntos.find((x) => String(x.id) === id);
       if (!p) return;
@@ -1041,23 +1040,27 @@
         mapState.cat = null; mapState.region = 'all'; regionSelect.value = 'all';
         render(false);
       }
-      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: isDesktop() ? 'center' : 'start' });
-      setTimeout(() => openDrawer(p), 500);
+      // En escritorio el mapa está al lado; en móvil hay que bajar hasta él
+      const mapBox = document.getElementById('map').getBoundingClientRect();
+      const needsScroll = mapBox.top < 0 || mapBox.top > window.innerHeight * 0.5;
+      if (needsScroll) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => openDrawer(p), needsScroll ? 500 : 0);
     }
-    dirEl.section.addEventListener('click', (e) => {
+    const onDirClick = (e) => {
       const loc = e.target.closest('[data-locate]');
-      if (loc) return locatePoint(loc.dataset.locate);
+      if (loc) {
+        if (dirEl.dialog.open) dirEl.dialog.close();
+        return locatePoint(loc.dataset.locate);
+      }
       const stat = e.target.closest('[data-stat]');
       if (!stat) return;
-      const k = stat.dataset.stat;
-      if (k === 'jobs') {
-        document.getElementById('comunidad').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return document.querySelector('#jobTabs [data-type="trabajo"]')?.click();
-      }
-      mapState.cat = k === 'all' ? null : k; mapState.region = 'all'; regionSelect.value = 'all';
-      document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: isDesktop() ? 'center' : 'start' });
+      mapState.cat = stat.dataset.stat === 'all' ? null : stat.dataset.stat;
+      mapState.region = 'all'; regionSelect.value = 'all';
+      if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'start' });
       render(true);
-    });
+    };
+    dirEl.box.addEventListener('click', onDirClick);
+    dirEl.dialog.addEventListener('click', onDirClick);
 
     // --- Taller cercano / mi ubicación ---
     let youAreHere;
