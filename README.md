@@ -74,3 +74,22 @@ El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular
 - **Guardar los planes:** ejecuta [`supabase/viajes.sql`](supabase/viajes.sql) en Supabase → SQL Editor. Crea la tabla `planes_viaje`, donde el público solo puede insertar y solo los admins leen y cambian `estado` (nuevo → contactado → propuesta → cerrado/descartado).
 - **Webhook opcional:** completa `TRIP_WEBHOOK_URL` en `supabase-config.js` (Make, n8n, Apps Script) para recibir cada plan como JSON y avisarte al instante.
 - Si la red falla, el plan queda en cola en el navegador y se reintenta en la próxima visita.
+
+## Utilidades del día (semáforo, cupos shuttle, urgencia)
+
+Ejecuta [`supabase/utilidades.sql`](supabase/utilidades.sql) en Supabase → SQL Editor. Crea dos tablas.
+
+### 🚦 Estado de cerros y pistas
+- Los bikeparks y senderos muestran `🟢 ABIERTO / SECO`, `🟡 PRECAUCIÓN / BARRO` o `🔴 CERRADO / MANTENIMIENTO`: un punto de color en el pin, una etiqueta en la tarjeta y el detalle en la ficha.
+- Cualquiera puede reportar desde la ficha con `📢 Reportar Estado`: estado más un comentario breve. Cada reporte se muestra 72 horas y manda el más reciente. Un mismo navegador puede reportar un spot una vez cada 30 minutos.
+- Tabla `reportes_pista`: el público inserta (solo sobre fichas aprobadas) y ve las últimas 72 h. Borra reportes falsos desde Table Editor.
+- Opcional: `REPORTS_WEBHOOK_URL` en `supabase-config.js` avisa cada reporte a Make o n8n. Sin base ni webhook, el reporte se envía por WhatsApp a `SALES_WHATSAPP`.
+
+### 🚐 Cupos Shuttle
+- Tabla `salidas_shuttle`. Por ahora, las salidas las publicas tú en Table Editor, con destino, región, punto de encuentro, fecha y hora (`sale_at`), cupos, precio, WhatsApp del operador y notas.
+- Cuando un operador te avisa que vendió cupos, baja `cupos_disponibles`. Para ocultar una salida, marca `publicado = false`.
+- Cada salida tiene un botón `💬 Reservar Cupo por WhatsApp` con el mensaje ya armado hacia el operador.
+
+### 🚨 Repuesto / Taller de urgencia
+- Usa el GPS (o la comuna elegida a mano si no hay permiso) para mostrar talleres y tiendas a 5, 10 o 20 km. Primero aparecen los que hacen mantención o venden repuestos, luego el resto por distancia.
+- Cada resultado tiene `🧭 Cómo llegar` (Google Maps o Waze) y `💬 Consultar Stock WhatsApp`. Este botón no pasa por el gate de correo: en una emergencia no se piden datos.

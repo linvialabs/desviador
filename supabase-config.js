@@ -12,4 +12,6 @@ window.DESVIADOR_CONFIG = {
   SALES_WHATSAPP: '',
   // Opcional: webhook (Make / n8n / Apps Script) que recibe cada plan de "Arma tu Salida / Viaje" como JSON.
   TRIP_WEBHOOK_URL: '',
+  // Opcional: webhook que recibe cada reporte de estado de cerros (🚦) como JSON.
+  REPORTS_WEBHOOK_URL: '',
 };

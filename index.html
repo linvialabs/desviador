@@ -130,6 +130,21 @@
     @keyframes tripInPrev { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
     #tripDialog[open] { animation: tripPop .22s ease-out; }
     @keyframes tripPop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+    /* Semáforo de senderos (estado de cerros y pistas) */
+    .trail-badge { display: inline-flex; align-items: center; gap: .3rem; border-radius: 9999px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; line-height: 1.15; }
+    .st-abierto   { background: #e4efd9; color: #35561c; box-shadow: inset 0 0 0 1px #a9c78c; }
+    .st-precaucion{ background: #f8ecc4; color: #6f5210; box-shadow: inset 0 0 0 1px #e2c566; }
+    .st-cerrado   { background: #f7dcd3; color: #8c2f1c; box-shadow: inset 0 0 0 1px #e3a08c; }
+    .st-none      { background: #ede5d6; color: #54473a; box-shadow: inset 0 0 0 1px #c9bba3; }
+    .pin-dot { position: absolute; right: -5px; top: -6px; width: 14px; height: 14px; border-radius: 9999px; border: 2px solid #f6f1e7; box-shadow: 0 1px 3px rgba(21,18,14,.45); pointer-events: none; }
+    .pin-dot.s-abierto { background: #4f9a2a; } .pin-dot.s-precaucion { background: #e5a50a; } .pin-dot.s-cerrado { background: #c0392b; }
+    #trailDialog .trip-opt:has(input:checked) { box-shadow: inset 0 0 0 2.5px currentColor !important; }
+    #trailDialog .trip-opt.st-abierto:has(input:checked) { background: #d5e8c4; color: #2c4a15; }
+    #trailDialog .trip-opt.st-precaucion:has(input:checked) { background: #f3e0a3; color: #5e450a; }
+    #trailDialog .trip-opt.st-cerrado:has(input:checked) { background: #f1c7b9; color: #7a2716; }
+    .util-chip { display: inline-flex; align-items: center; gap: .3rem; border-radius: 9999px; padding: .45rem .7rem; font-size: .78rem; font-weight: 700; transition: box-shadow .15s ease, background-color .15s ease; }
+    .sos-btn { background: #b3432b; color: #fbf6ec; }
+    .sos-btn:hover { background: #9a3822; }
     #tripFab { transition: transform .25s ease, opacity .25s ease; }
     #tripFab.is-hidden { transform: translateY(140%); opacity: 0; pointer-events: none; }
 
@@ -153,22 +168,29 @@
         <span class="font-display text-xl font-extrabold uppercase tracking-wide text-sand-50">Desviador<span class="text-ochre-400">.</span></span>
       </a>
 
-      <nav class="hidden items-center gap-6 text-sm font-medium text-sand-300 md:flex" aria-label="Principal">
-        <a href="#inicio" class="transition hover:text-sand-50">Mapa</a>
-        <a href="#noticias" class="transition hover:text-sand-50">Tech</a>
-        <a href="#comunidad" class="transition hover:text-sand-50">Comunidad</a>
-        <a href="#anunciate" class="font-semibold text-ochre-400 transition hover:text-ochre-300">Anúnciate</a>
-        <button type="button" data-trip="header" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 shadow-[0_0_0_3px_rgba(217,164,65,.25)] transition hover:bg-ochre-300">🗺️ Arma tu Salida / Viaje</button>
+      <nav class="hidden items-center gap-4 text-sm font-medium text-sand-300 md:flex xl:gap-5" aria-label="Principal">
+        <a href="#inicio" class="hidden transition hover:text-sand-50 xl:inline">Mapa</a>
+        <a href="#noticias" class="hidden transition hover:text-sand-50 xl:inline">Tech</a>
+        <a href="#comunidad" class="hidden transition hover:text-sand-50 lg:inline">Comunidad</a>
+        <a href="#anunciate" class="hidden font-semibold text-ochre-400 transition hover:text-ochre-300 lg:inline">Anúnciate</a>
+        <button type="button" data-shuttle="header" class="font-semibold text-sand-100 transition hover:text-sand-50">🚐 Cupos Shuttle</button>
+        <button type="button" data-sos="header" class="sos-btn rounded-full px-3.5 py-1.5 font-semibold">🚨 <span class="2xl:hidden">Urgencia</span><span class="hidden 2xl:inline">Repuesto / Taller de Urgencia</span></button>
+        <button type="button" data-trip="header" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 shadow-[0_0_0_3px_rgba(217,164,65,.25)] transition hover:bg-ochre-300">🗺️ Arma tu <span class="hidden lg:inline">Salida / Viaje</span><span class="lg:hidden">salida</span></button>
       </nav>
 
+      <div class="flex items-center gap-2 md:hidden">
+      <button type="button" data-sos="header-movil" class="sos-btn whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-bold" aria-label="Repuesto o taller de urgencia">🚨 Urgencia</button>
       <button id="menuBtn" class="rounded-md p-2 text-sand-100 ring-1 ring-soil-600 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       </button>
+      </div>
     </div>
     <nav id="mobileMenu" class="hidden border-t border-soil-700 px-4 pb-4 md:hidden" aria-label="Móvil">
       <a href="#inicio" class="block border-b border-soil-800 py-3 text-sand-100">Mapa</a>
       <a href="#noticias" class="block border-b border-soil-800 py-3 text-sand-100">Tech</a>
       <a href="#comunidad" class="block border-b border-soil-800 py-3 text-sand-100">Comunidad</a>
+      <button type="button" data-shuttle="menu" class="block w-full border-b border-soil-800 py-3 text-left text-sand-100">🚐 Cupos Shuttle del finde</button>
+      <button type="button" data-sos="menu" class="block w-full border-b border-soil-800 py-3 text-left font-semibold text-[#f0a48f]">🚨 Repuesto / Taller de Urgencia</button>
       <button type="button" data-trip="menu" class="mt-3 block w-full rounded-lg bg-ochre-400 py-3 text-center font-semibold text-soil-950">🗺️ Arma tu Salida / Viaje</button>
       <a href="#anunciate" class="mt-2 block rounded-lg py-3 text-center font-semibold text-ochre-400 ring-1 ring-ochre-400/50">Anúnciate / Destaca tu empresa</a>
     </nav>
@@ -202,6 +224,11 @@
           <div>
             <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">¿Qué buscas hoy?</p>
             <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
+            <!-- En escritorio estos dos accesos viven en el encabezado -->
+            <div id="utilRow" class="mt-2.5 grid grid-cols-[1.35fr_1fr] gap-2 sm:flex sm:flex-wrap lg:hidden" role="group" aria-label="Utilidades del día">
+              <button type="button" data-sos="hero" class="util-chip sos-btn justify-center text-center leading-tight shadow-sm">🚨 Repuesto / Taller de Urgencia</button>
+              <button type="button" data-shuttle="hero" class="util-chip justify-center bg-soil-950 text-sand-50 shadow-sm hover:bg-soil-800">🚐 Cupos Shuttle</button>
+            </div>
           </div>
 
         </div>
@@ -612,6 +639,83 @@
         <p><strong class="text-soil-950">En tu navegador:</strong> no usamos cookies de seguimiento; recordamos la capa de mapa, tus spots guardados y si ya desbloqueaste el contacto. El mapa y las tipografías se cargan desde servicios externos (Esri, Google Fonts).</p>
         <p><strong class="text-soil-950">Corregir o eliminar una ficha:</strong> <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 underline" id="privacyContact">envíanos un dato</a> con el nombre del negocio y lo revisamos.</p>
       </div>
+    </div>
+  </dialog>
+
+  <!-- ============ UTILIDADES DEL DÍA ============ -->
+  <!-- 🚦 Reportar estado de un cerro / bikepark -->
+  <dialog id="trailDialog" class="w-[min(94vw,26rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="trailTitle">
+    <form id="trailForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4">
+        <div class="min-w-0">
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Estado de cerros y pistas</p>
+          <h2 id="trailTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">📢 Reportar estado</h2>
+          <p id="trailPlace" class="mt-1 truncate text-sm text-soil-600"></p>
+        </div>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="flex-1 space-y-4 overflow-y-auto px-5 py-4">
+        <fieldset>
+          <legend class="text-sm font-bold text-soil-950">¿Cómo está hoy?</legend>
+          <div class="mt-2 grid gap-2">
+            <label class="trip-opt st-abierto !shadow-none ring-1 ring-[#a9c78c]"><input type="radio" name="trailEstado" value="abierto" /><span>🟢 ABIERTO / SECO</span><span class="tick">✓</span></label>
+            <label class="trip-opt st-precaucion !shadow-none ring-1 ring-[#e2c566]"><input type="radio" name="trailEstado" value="precaucion" /><span>🟡 PRECAUCIÓN / BARRO</span><span class="tick">✓</span></label>
+            <label class="trip-opt st-cerrado !shadow-none ring-1 ring-[#e3a08c]"><input type="radio" name="trailEstado" value="cerrado" /><span>🔴 CERRADO / MANTENIMIENTO</span><span class="tick">✓</span></label>
+          </div>
+        </fieldset>
+        <div>
+          <label for="trailComment" class="flex justify-between text-sm font-semibold text-soil-800">Comentario breve <span class="font-mono text-xs font-normal text-soil-600"><span id="trailCount">0</span>/140</span></label>
+          <textarea id="trailComment" rows="2" maxlength="140" class="field mt-1.5 resize-none" placeholder="Ej: Sombra con barro en la bajada 2"></textarea>
+        </div>
+        <div class="hidden" aria-hidden="true"><label>Web <input id="trailWebsite" tabindex="-1" autocomplete="off" /></label></div>
+        <p class="text-xs leading-relaxed text-soil-600">Tu reporte es anónimo y se muestra durante 72 horas. Si ves algo que no corresponde, avísanos y lo sacamos.</p>
+        <div id="trailError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></div>
+      </div>
+      <div class="border-t border-sand-300 px-5 py-3" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="submit" id="trailSubmit" class="w-full rounded-xl bg-soil-950 py-3 text-sm font-bold text-sand-50 transition hover:bg-soil-800">Enviar reporte</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 🚐 Bolsa de shuttles & cupos del finde -->
+  <dialog id="shuttleDialog" class="m-0 h-[100dvh] max-h-none w-full max-w-none bg-sand-50 p-0 text-ink backdrop:bg-soil-950/70 sm:m-auto sm:h-[85vh] sm:w-[min(94vw,46rem)] sm:rounded-2xl sm:shadow-2xl" aria-labelledby="shuttleTitle">
+    <div class="flex h-full flex-col">
+      <div class="border-b border-sand-300 px-4 pb-3 pt-4 sm:px-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 id="shuttleTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950">🚐 Cupos Shuttle</h2>
+            <p id="shuttleCount" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">Salidas programadas por operadores</p>
+          </div>
+          <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        </div>
+        <div id="shuttleChips" class="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar salidas"></div>
+      </div>
+      <div id="shuttleBody" class="flex-1 overflow-y-auto px-4 py-4 sm:px-6"></div>
+      <div class="border-t border-ochre-500/40 bg-soil-950 px-4 py-2.5 sm:px-6" style="padding-bottom:max(.625rem, env(safe-area-inset-bottom))">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-[13px] leading-snug text-sand-100">¿Tienes un servicio de shuttle? Publica tus salidas y llena los cupos.</p>
+          <button type="button" data-claim-general class="shrink-0 rounded-lg bg-ochre-400 px-3.5 py-2 text-[13px] font-bold text-soil-950 hover:bg-ochre-300">Publicar mis salidas →</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 🚨 Repuesto / taller de urgencia -->
+  <dialog id="sosDialog" class="m-0 h-[100dvh] max-h-none w-full max-w-none bg-sand-50 p-0 text-ink backdrop:bg-soil-950/70 sm:m-auto sm:h-[88vh] sm:w-[min(94vw,40rem)] sm:rounded-2xl sm:shadow-2xl" aria-labelledby="sosTitle">
+    <div class="flex h-full flex-col">
+      <div class="border-b border-sand-300 px-4 pb-3 pt-4 sm:px-6">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <h2 id="sosTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">🚨 Repuesto / Taller de urgencia</h2>
+            <p id="sosWhere" class="mt-1 truncate text-sm text-soil-600" aria-live="polite">Buscando tu ubicación…</p>
+          </div>
+          <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        </div>
+        <label for="sosNeed" class="sr-only">¿Qué necesitas?</label>
+        <input id="sosNeed" maxlength="100" autocomplete="off" class="field mt-3 !bg-white/80" placeholder="¿Qué necesitas? Ej: cámara 29, pata de cambio, purgar frenos" />
+        <div id="sosRadius" class="mt-3 flex items-center gap-2" role="group" aria-label="Radio de búsqueda" hidden></div>
+      </div>
+      <div id="sosBody" class="flex-1 overflow-y-auto px-4 py-4 sm:px-6"></div>
     </div>
   </dialog>
 
@@ -1031,7 +1135,7 @@
     // --- Marcadores ---
     const makeIcon = (p) => L.divIcon({
       className: '',
-      html: `<div class="pin${isPro(p) ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#f6f1e7')}</div>`,
+      html: `<div class="pin${isPro(p) ? ' is-featured' : ''}" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-4 w-4', '#f6f1e7')}</div>${typeof trailPinDot === 'function' ? trailPinDot(p) : ''}`,
       iconSize: [32, 32],
       iconAnchor: [16, 32],
     });
@@ -1075,6 +1179,7 @@
       render(false);
       renderDirectory();
       if (typeof renderJobs === 'function') renderJobs(); // Bici Jobs se alimenta del mapa
+      window.dispatchEvent(new CustomEvent('desviador:puntos')); // módulos de utilidad (semáforo, urgencia)
     }
 
     // Plan Pro: columna is_pro si existe; si no, el sello "destacado" que asigna el equipo en el panel
@@ -1216,6 +1321,7 @@
         <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '★ Guardado' : '☆ Guardar spot'}</button>
         <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
         <p class="mt-1.5 text-sm text-soil-600">${place}</p>
+        ${typeof trailDrawerBlock === 'function' ? trailDrawerBlock(p) : ''}
         ${jobBlock}
         ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
 
@@ -1377,6 +1483,7 @@
             <div class="flex flex-wrap items-center gap-1">
               <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
               ${pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
+              ${typeof trailBadge === 'function' ? trailBadge(p, 'sm') : ''}
             </div>
             <h3 class="mt-1.5 line-clamp-2 text-[13px] font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
             <p class="truncate text-xs text-soil-600">${esc(p.comuna || REGIONES[p.region].label)}</p>
@@ -2013,6 +2120,555 @@
 
     goTo(1, 1, true);
     flushPlans(); // reintentar planes que quedaron en cola
+  </script>
+
+  <script>
+    // =====================================================================
+    // UTILIDADES DEL DÍA — módulos independientes (no modifican el código previo;
+    // se enganchan con 4 llamadas opcionales: trailPinDot, trailBadge, trailDrawerBlock y el evento 'desviador:puntos')
+    //   1. 🚦 Semáforo de senderos + reporte de la comunidad
+    //   2. 🚐 Bolsa de shuttles & cupos del finde
+    //   3. 🚨 Repuesto / taller de urgencia por cercanía GPS
+    // =====================================================================
+    const UTIL_WEBHOOK_URL = window.DESVIADOR_CONFIG?.REPORTS_WEBHOOK_URL || ''; // opcional: Make / n8n para reportes de estado
+    const CL_TZ = 'America/Santiago';
+    const utilDialog = (id) => {
+      const d = document.getElementById(id);
+      d.addEventListener('click', (e) => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
+      return d;
+    };
+    const closeMobileMenu = () => { document.getElementById('mobileMenu')?.classList.add('hidden'); document.getElementById('menuBtn')?.setAttribute('aria-expanded', 'false'); };
+    const agoLabel = (iso) => {
+      const min = Math.max(1, Math.round((Date.now() - new Date(iso)) / 60000));
+      return min < 60 ? `hace ${min} min` : min < 1440 ? `hace ${Math.round(min / 60)} h` : `hace ${Math.round(min / 1440)} ${Math.round(min / 1440) === 1 ? 'día' : 'días'}`;
+    };
+    const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
+
+    // ---------------------------------------------------------------------
+    // 1. 🚦 SEMÁFORO DE SENDEROS
+    // ---------------------------------------------------------------------
+    const TRAIL_STATES = {
+      abierto:    { label: '🟢 ABIERTO / SECO',          short: '🟢 Abierto' },
+      precaucion: { label: '🟡 PRECAUCIÓN / BARRO',      short: '🟡 Precaución' },
+      cerrado:    { label: '🔴 CERRADO / MANTENIMIENTO', short: '🔴 Cerrado' },
+    };
+    const TRAIL_WINDOW_H = 72;            // un reporte vale 72 h
+    const TRAIL_COOLDOWN_MIN = 30;        // un reporte por spot cada 30 min por navegador
+    const TRAIL_SENT_KEY = 'desviador-reportes-enviados';
+    const trailStatus = new Map();        // id → { estado, comentario, at, n, demo }
+    const isTrailSpot = (p) => p.categoria === 'senderos';
+
+    // Ganchos que usan makeIcon, miniCard y drawerHtml (si este módulo no cargó, simplemente no aparecen)
+    function trailPinDot(p) {
+      const st = isTrailSpot(p) && trailStatus.get(String(p.id));
+      return st ? `<span class="pin-dot s-${st.estado}" aria-hidden="true"></span>` : '';
+    }
+    function trailBadge(p, size) {
+      const st = isTrailSpot(p) && trailStatus.get(String(p.id));
+      if (!st) return '';
+      return size === 'sm'
+        ? `<span class="trail-badge st-${st.estado} px-1.5 py-0.5 text-[9.5px]" title="${esc(TRAIL_STATES[st.estado].label)} · ${agoLabel(st.at)}">${TRAIL_STATES[st.estado].label}</span>`
+        : `<span class="trail-badge st-${st.estado} px-2.5 py-1 text-xs">${TRAIL_STATES[st.estado].label}</span>`;
+    }
+    function trailDrawerBlock(p) {
+      if (!isTrailSpot(p)) return '';
+      const st = trailStatus.get(String(p.id));
+      const btn = `<button type="button" data-trail-report="${esc(p.id)}" class="inline-flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-soil-800 ring-1 ring-soil-950/15 transition hover:bg-white">📢 Reportar Estado</button>`;
+      if (!st) return `
+        <div class="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl st-none p-3">
+          <p class="text-xs font-semibold">⚪ Sin reportes en las últimas ${TRAIL_WINDOW_H} h. ¿Rodaste hoy?</p>${btn}
+        </div>`;
+      return `
+        <div class="mt-3 rounded-xl st-${st.estado} p-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <p class="text-sm font-extrabold uppercase tracking-wide">${TRAIL_STATES[st.estado].label}</p>
+            <p class="font-mono text-[10.5px] font-semibold opacity-80">${agoLabel(st.at)} · ${st.demo ? 'ejemplo' : `${st.n} ${st.n === 1 ? 'reporte' : 'reportes'}`}</p>
+          </div>
+          ${st.comentario ? `<p class="mt-1 text-sm italic">“${esc(st.comentario)}”</p>` : ''}
+          <div class="mt-2">${btn}</div>
+        </div>`;
+    }
+
+    // Repintar pines, directorio y ficha abierta con el estado nuevo
+    function refreshTrailUi(ids) {
+      (ids || [...trailStatus.keys()]).forEach((id) => {
+        const p = puntos.find((x) => String(x.id) === String(id));
+        const m = p && markerById[p.id];
+        if (!m) return;
+        m.setIcon(makeIcon(p));
+        if (String(p.id) === String(selectedId)) m.getElement()?.querySelector('.pin')?.classList.add('is-selected');
+      });
+      renderDirectory();
+      if (drawerPoint && drawer.classList.contains('is-open') && isTrailSpot(drawerPoint)) drawerBody.innerHTML = drawerHtml(drawerPoint);
+    }
+
+    let trailLoaded = false;
+    async function loadTrailStatus() {
+      if (trailLoaded || !puntos.length) return;
+      trailLoaded = true;
+      if (!supabaseClient) {
+        // Sin base de datos: estados de ejemplo para ver el semáforo (igual que los puntos de respaldo)
+        const demo = { 'nevados-chillan': ['abierto', 'Pista 3 con grip perfecto', 2], 'parque-las-palmas': ['precaucion', 'Sombra con barro en la bajada 2', 5], 'el-durazno': ['cerrado', 'Mantención de saltos hasta el sábado', 20] };
+        Object.entries(demo).forEach(([id, [estado, comentario, h]]) => trailStatus.set(id, { estado, comentario, at: hoursAgo(h), n: 1, demo: true }));
+        return refreshTrailUi();
+      }
+      const { data, error } = await supabaseClient.from('reportes_pista').select('comercio_id, estado, comentario, created_at')
+        .gte('created_at', hoursAgo(TRAIL_WINDOW_H)).order('created_at', { ascending: false }).limit(500);
+      if (error) return console.info('[DESVIADOR] Semáforo de senderos sin datos (¿ejecutaste supabase/utilidades.sql?):', error.message);
+      data.forEach((r) => {
+        const id = String(r.comercio_id), cur = trailStatus.get(id);
+        if (cur) cur.n++; // el más reciente manda; los demás solo suman
+        else trailStatus.set(id, { estado: r.estado, comentario: r.comentario, at: r.created_at, n: 1 });
+      });
+      if (trailStatus.size) refreshTrailUi();
+    }
+    window.addEventListener('desviador:puntos', () => { trailLoaded = false; loadTrailStatus(); });
+    loadTrailStatus(); // por si los puntos ya estaban cargados (modo respaldo)
+
+    // --- Modal de reporte ---
+    const trailDlg = utilDialog('trailDialog');
+    const trailForm = document.getElementById('trailForm');
+    const trailErr = document.getElementById('trailError');
+    let trailPoint = null;
+    const trailMsg = (html) => { trailErr.innerHTML = html; trailErr.classList.toggle('hidden', !html); };
+    const trailWaText = (p, estado, comentario) => `Reporte de estado DESVIADOR · ${p.nombre} (${p.comuna || REGIONES[p.region].label}): ${TRAIL_STATES[estado].label}${comentario ? ` — "${comentario}"` : ''}`;
+
+    function openTrailReport(p) {
+      trailPoint = p;
+      trailForm.reset();
+      document.getElementById('trailCount').textContent = '0';
+      document.getElementById('trailPlace').textContent = `${p.nombre} · ${p.comuna || REGIONES[p.region].label}`;
+      trailMsg('');
+      trailDlg.showModal();
+      track('trail_report_opened', { ref: p.id });
+    }
+    document.getElementById('trailComment').addEventListener('input', (e) => { document.getElementById('trailCount').textContent = e.target.value.length; });
+    trailForm.addEventListener('change', () => trailMsg(''));
+
+    trailForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const p = trailPoint;
+      const estado = trailForm.querySelector('input[name="trailEstado"]:checked')?.value;
+      const comentario = document.getElementById('trailComment').value.trim().slice(0, 140);
+      if (!estado) return trailMsg('Elige cómo está el cerro hoy.');
+      if (document.getElementById('trailWebsite').value) return; // bot
+      const sent = readJSON(TRAIL_SENT_KEY, {});
+      if (sent[p.id] && Date.now() - sent[p.id] < TRAIL_COOLDOWN_MIN * 60e3) return trailMsg(`Ya reportaste este spot hace poco. Podrás volver a hacerlo en ${Math.ceil((TRAIL_COOLDOWN_MIN * 60e3 - (Date.now() - sent[p.id])) / 60e3)} min.`);
+
+      const admin = typeof tripAdminNumber === 'function' ? tripAdminNumber() : '';
+      const waLink = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(trailWaText(p, estado, comentario))}` : '';
+      // Sin base de datos ni webhook: el reporte va directo por WhatsApp (dentro del mismo clic)
+      if (!supabaseClient && !UTIL_WEBHOOK_URL) {
+        if (!waLink) return trailMsg('Los reportes aún no están habilitados. Vuelve pronto.');
+        openWhatsApp(waLink);
+        return finishTrailReport(p, estado, comentario, false);
+      }
+      const btn = document.getElementById('trailSubmit');
+      btn.disabled = true; btn.textContent = 'Enviando…';
+      let ok = false;
+      const fromDb = 'detailsLoaded' in p; // las fichas de respaldo no existen en la base
+      if (supabaseClient && fromDb) {
+        const { error } = await supabaseClient.from('reportes_pista').insert([{ comercio_id: p.id, estado, comentario: comentario || null }]);
+        if (!error) ok = true; else console.warn('[DESVIADOR] Reporte no guardado:', error.message);
+      }
+      if (UTIL_WEBHOOK_URL) {
+        try {
+          const res = await fetch(UTIL_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'reporte_pista', comercio_id: p.id, nombre: p.nombre, comuna: p.comuna, estado, comentario, enviado: new Date().toISOString() }) });
+          ok = ok || res.ok;
+        } catch (err) { console.warn('[DESVIADOR] Webhook de reportes falló:', err.message); }
+      }
+      btn.disabled = false; btn.textContent = 'Enviar reporte';
+      if (!ok) {
+        return trailMsg(waLink
+          ? `No pudimos guardar el reporte. <a href="${waLink}" target="_blank" rel="noopener" data-trail-wa class="font-bold underline">Envíalo por WhatsApp</a>.`
+          : 'No pudimos guardar el reporte. Intenta de nuevo en un rato.');
+      }
+      finishTrailReport(p, estado, comentario, true);
+    });
+    trailErr.addEventListener('click', (e) => {
+      if (!e.target.closest('[data-trail-wa]')) return;
+      const estado = trailForm.querySelector('input[name="trailEstado"]:checked')?.value;
+      setTimeout(() => finishTrailReport(trailPoint, estado, document.getElementById('trailComment').value.trim(), false), 0);
+    });
+
+    function finishTrailReport(p, estado, comentario, published) {
+      const sent = readJSON(TRAIL_SENT_KEY, {});
+      sent[p.id] = Date.now();
+      writeJSON(TRAIL_SENT_KEY, sent);
+      if (published) {
+        const cur = trailStatus.get(String(p.id));
+        trailStatus.set(String(p.id), { estado, comentario, at: new Date().toISOString(), n: (cur && !cur.demo ? cur.n : 0) + 1 });
+        refreshTrailUi([p.id]);
+      }
+      trailDlg.close();
+      toast(published ? '¡Gracias! Tu reporte ya está en el mapa 🚦' : '¡Gracias! Recibimos tu reporte 🚦');
+      track('trail_report_sent', { ref: p.id, estado, published });
+    }
+
+    // Acceso "🚦 Estado de cerros" junto a los accesos directos del mapa (antes de "Ver todo")
+    (function addTrailShortcut() {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.dataset.trailView = '';
+      chip.className = 'inline-flex items-center gap-2 rounded-full bg-sand-50 px-3.5 py-2 text-sm font-semibold text-soil-800 shadow-sm ring-1 ring-sand-300 transition hover:ring-soil-600';
+      chip.textContent = '🚦 Estado de cerros';
+      shortcutsEl.insertBefore(chip, resetBtn);
+    })();
+
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-trail-report]');
+      if (b) {
+        const p = puntos.find((x) => String(x.id) === b.dataset.trailReport);
+        if (p) openTrailReport(p);
+        return;
+      }
+      if (e.target.closest('[data-trail-view]')) {
+        // Ver el semáforo: mapa filtrado a bikeparks y senderos
+        mapState.cat = 'senderos'; mapState.region = 'all'; regionSelect.value = 'all';
+        if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        render(true);
+        const n = puntos.filter((p) => isTrailSpot(p) && trailStatus.has(String(p.id))).length;
+        toast(n ? `🚦 ${n} ${n === 1 ? 'cerro con reporte' : 'cerros con reporte'} en las últimas ${TRAIL_WINDOW_H} h` : '🚦 Sin reportes recientes: abre un bikepark y reporta su estado');
+        track('trail_view_opened', { conReporte: n });
+      }
+    });
+
+    // ---------------------------------------------------------------------
+    // 2. 🚐 BOLSA DE SHUTTLES & CUPOS DEL FINDE
+    // ---------------------------------------------------------------------
+    const shuttleDlg = utilDialog('shuttleDialog');
+    const shuttleBody = document.getElementById('shuttleBody');
+    const shuttleChipsEl = document.getElementById('shuttleChips');
+    let shuttles = [], shuttleLoadedAt = 0, shuttleFilter = 'all', shuttleDemo = false, shuttleError = null;
+
+    const clDate = (iso, opts) => new Date(iso).toLocaleString('es-CL', { timeZone: CL_TZ, ...opts });
+    const dayKey = (iso) => clDate(iso, { year: 'numeric', month: '2-digit', day: '2-digit' });
+    const clWeekday = (iso) => clDate(iso, { weekday: 'short' }).replace('.', '').toLowerCase(); // "sáb", "dom"…
+    const isWeekendSoon = (iso) => (new Date(iso) - Date.now()) < 7 * 86400e3 && ['vie', 'sáb', 'dom'].includes(clWeekday(iso).slice(0, 3));
+    const money = (n) => `$${Number(n).toLocaleString('es-CL')}`;
+
+    function demoShuttles() {
+      // Salidas de ejemplo para el próximo fin de semana (solo sin base de datos)
+      const d = new Date(); const toSat = (6 - d.getDay() + 7) % 7 || 7;
+      const at = (plusDays, h, m) => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + toSat + plusDays, h, m); return x.toISOString(); };
+      return [
+        { id: 'demo-1', operador: 'Operador de ejemplo', destino: 'Farellones', region: 'metropolitana', punto_encuentro: 'Metro Manquehue', sale_at: at(0, 9, 0), cupos_total: 12, cupos_disponibles: 3, precio: 18000, whatsapp: null, notas: 'Incluye 4 subidas', demo: true },
+        { id: 'demo-2', operador: 'Operador de ejemplo', destino: 'El Durazno', region: 'metropolitana', punto_encuentro: 'Plaza San Enrique', sale_at: at(0, 8, 30), cupos_total: 8, cupos_disponibles: 5, precio: 15000, whatsapp: null, demo: true },
+        { id: 'demo-3', operador: 'Operador de ejemplo', destino: 'Pucón', region: 'araucania', punto_encuentro: 'Plaza de Armas de Pucón', sale_at: at(1, 10, 0), cupos_total: 10, cupos_disponibles: 2, precio: 25000, whatsapp: null, demo: true },
+        { id: 'demo-4', operador: 'Operador de ejemplo', destino: 'Nevados de Chillán', region: 'nuble', punto_encuentro: 'Las Trancas', sale_at: at(0, 9, 30), cupos_total: 10, cupos_disponibles: 0, precio: 22000, whatsapp: null, demo: true },
+      ];
+    }
+
+    async function loadShuttles() {
+      if (Date.now() - shuttleLoadedAt < 120e3) return; // refresca cada 2 min como máximo
+      shuttleError = null;
+      if (!supabaseClient) { shuttles = demoShuttles(); shuttleDemo = true; shuttleLoadedAt = Date.now(); return; }
+      shuttleBody.innerHTML = '<div class="grid gap-3">' + '<div class="h-36 animate-pulse rounded-2xl bg-sand-200"></div>'.repeat(3) + '</div>';
+      const { data, error } = await supabaseClient.from('salidas_shuttle')
+        .select('id, operador, destino, region, punto_encuentro, sale_at, cupos_total, cupos_disponibles, precio, whatsapp, notas')
+        .gte('sale_at', hoursAgo(1)).order('sale_at', { ascending: true }).limit(100);
+      if (error) { shuttleError = error.message; shuttles = []; console.info('[DESVIADOR] Bolsa de shuttles sin datos (¿ejecutaste supabase/utilidades.sql?):', error.message); }
+      else { shuttles = data; shuttleLoadedAt = Date.now(); }
+    }
+
+    const shuttleWaText = (s, n) => `Hola ${s.operador}, vi en DESVIADOR la salida de shuttle a ${s.destino} el ${clDate(s.sale_at, { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')} a las ${clDate(s.sale_at, { hour: '2-digit', minute: '2-digit', hour12: false })}${s.punto_encuentro ? ` (salida desde ${s.punto_encuentro})` : ''}. ${s.cupos_disponibles > 0 ? `Quiero reservar ${n} ${n === 1 ? 'cupo' : 'cupos'}. ¿Está disponible?` : '¿Me anotas en lista de espera?'}`;
+    const shuttleWaUrl = (s, n) => `https://wa.me/${String(s.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(shuttleWaText(s, n))}`;
+
+    function shuttleCard(s) {
+      const left = s.cupos_disponibles;
+      const tone = left <= 0 ? 'st-none' : left === 1 ? 'st-cerrado' : left <= 3 ? 'st-precaucion' : 'st-abierto';
+      const leftLabel = left <= 0 ? 'Completo' : `Quedan ${left} ${left === 1 ? 'cupo' : 'cupos'}`;
+      const maxN = Math.max(1, Math.min(left, 6));
+      const cta = left <= 0
+        ? (s.whatsapp ? `<a href="${shuttleWaUrl(s, 1)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="shuttle:${esc(s.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200">📝 Pedir lista de espera</a>` : '')
+        : `<div class="flex items-stretch gap-2">
+             <label class="sr-only" for="sq-${esc(s.id)}">Cupos a reservar</label>
+             <select id="sq-${esc(s.id)}" data-shuttle-qty="${esc(s.id)}" class="rounded-xl border-0 bg-sand-50 px-2.5 text-sm font-bold text-soil-950 ring-1 ring-sand-300 focus:ring-2 focus:ring-moss-600">${Array.from({ length: maxN }, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? 'cupos' : 'cupo'}</option>`).join('')}</select>
+             ${s.whatsapp
+               ? `<a href="${shuttleWaUrl(s, 1)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="shuttle:${esc(s.id)}" data-shuttle-wa="${esc(s.id)}" class="btn-wa-pro flex-1 py-3 text-sm"><span aria-hidden="true">💬</span> Reservar Cupo por WhatsApp</a>`
+               : `<button type="button" data-shuttle-demo class="btn-wa-pro flex-1 py-3 text-sm"><span aria-hidden="true">💬</span> Reservar Cupo por WhatsApp</button>`}
+           </div>`;
+      return `<li>
+        <article class="rounded-2xl bg-white/70 p-3.5 shadow-sm ring-1 ring-sand-300 ${left <= 0 ? 'opacity-75' : ''}">
+          <div class="flex gap-3">
+            <div class="grid w-16 shrink-0 place-items-center rounded-xl bg-soil-950 py-2 text-center text-sand-50">
+              <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-ochre-300">${clDate(s.sale_at, { weekday: 'short' }).replace('.', '')}</span>
+              <span class="font-display text-2xl font-extrabold leading-none">${clDate(s.sale_at, { day: 'numeric' })}</span>
+              <span class="font-mono text-[11px] font-semibold tabular-nums">${clDate(s.sale_at, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
+                <h3 class="font-display text-xl font-extrabold uppercase leading-tight text-soil-950">${esc(s.destino)}</h3>
+                <span class="trail-badge ${tone} px-2 py-1 text-[11px]">${leftLabel}</span>
+              </div>
+              <p class="mt-0.5 text-sm text-soil-700">${s.punto_encuentro ? `📍 ${esc(s.punto_encuentro)} · ` : ''}${esc(REGIONES[s.region]?.label || '')}</p>
+              <p class="mt-0.5 text-xs text-soil-600">${esc(s.operador)}${s.precio ? ` · <strong class="text-soil-900">${money(s.precio)}</strong> por persona` : ''}${s.notas ? ` · ${esc(s.notas)}` : ''}</p>
+            </div>
+          </div>
+          ${cta ? `<div class="mt-3">${cta}</div>` : ''}
+        </article>
+      </li>`;
+    }
+
+    function renderShuttles() {
+      const base = shuttles.filter((s) => new Date(s.sale_at) > Date.now() - 3600e3);
+      const zones = [...new Set(base.map((s) => s.region))].filter((r) => REGIONES[r]);
+      const chips = [{ id: 'all', label: 'Todas', test: () => true }, { id: 'finde', label: '📅 Este finde', test: (s) => isWeekendSoon(s.sale_at) }, { id: 'libres', label: '✅ Con cupos', test: (s) => s.cupos_disponibles > 0 },
+        ...zones.map((r) => ({ id: r, label: REGIONES[r].label, test: (s) => s.region === r }))];
+      if (!chips.some((c) => c.id === shuttleFilter)) shuttleFilter = 'all';
+      shuttleChipsEl.innerHTML = base.length ? chips.map((c) => {
+        const on = c.id === shuttleFilter;
+        return `<button type="button" data-shuttle-chip="${c.id}" aria-pressed="${on}" class="shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${on ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">${c.label} <span class="ml-0.5 font-mono text-[11px] ${on ? 'text-ochre-300' : 'text-soil-600'}">${base.filter(c.test).length}</span></button>`;
+      }).join('') : '';
+      const list = base.filter(chips.find((c) => c.id === shuttleFilter).test)
+        .sort((a, b) => ((b.cupos_disponibles > 0) - (a.cupos_disponibles > 0)) || (new Date(a.sale_at) - new Date(b.sale_at)));
+      document.getElementById('shuttleCount').textContent = shuttleDemo
+        ? 'Salidas de ejemplo · los operadores publicarán aquí sus cupos'
+        : `${list.length} ${list.length === 1 ? 'salida programada' : 'salidas programadas'} por operadores`;
+      if (!list.length) {
+        shuttleBody.innerHTML = `<div class="mx-auto max-w-sm py-10 text-center">
+          <p class="text-4xl" aria-hidden="true">🚐</p>
+          <p class="mt-3 font-semibold text-soil-950">${shuttleError ? 'La bolsa de cupos todavía no está activa.' : base.length ? 'No hay salidas con ese filtro.' : 'Aún no hay salidas publicadas para los próximos días.'}</p>
+          <p class="mt-1 text-sm text-soil-600">Los operadores publican sus salidas durante la semana. Mientras tanto, revisa los <button type="button" data-shuttle-tours class="font-semibold text-moss-700 underline">shuttles y tours del mapa</button>.</p>
+        </div>`;
+        return;
+      }
+      // Agrupar por día
+      let html = '', lastDay = '';
+      list.forEach((s) => {
+        const k = dayKey(s.sale_at);
+        if (k !== lastDay) {
+          const label = clDate(s.sale_at, { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '');
+          html += `${lastDay ? '</ul>' : ''}<h3 class="mb-2 mt-4 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600 first:mt-0">${label}</h3><ul class="grid gap-3 sm:grid-cols-2">`;
+          lastDay = k;
+        }
+        html += shuttleCard(s);
+      });
+      shuttleBody.innerHTML = html + '</ul>' + (shuttleDemo ? '<p class="mt-5 text-center text-xs text-soil-600">Estas salidas son de ejemplo para mostrar cómo funciona la bolsa de cupos.</p>' : '');
+    }
+
+    async function openShuttles(via) {
+      closeMobileMenu();
+      if (document.getElementById('dirDialog').open) document.getElementById('dirDialog').close();
+      shuttleDlg.showModal();
+      track('shuttle_opened', { via });
+      await loadShuttles();
+      renderShuttles();
+    }
+    shuttleChipsEl.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-shuttle-chip]');
+      if (!b) return;
+      shuttleFilter = b.dataset.shuttleChip;
+      renderShuttles();
+      shuttleBody.scrollTop = 0;
+    });
+    shuttleBody.addEventListener('change', (e) => {
+      const sel = e.target.closest('[data-shuttle-qty]');
+      if (!sel) return;
+      const s = shuttles.find((x) => String(x.id) === sel.dataset.shuttleQty);
+      const a = shuttleBody.querySelector(`[data-shuttle-wa="${CSS.escape(sel.dataset.shuttleQty)}"]`);
+      if (s && a) a.href = shuttleWaUrl(s, Number(sel.value));
+    });
+    shuttleBody.addEventListener('click', (e) => {
+      if (e.target.closest('[data-shuttle-demo]')) return toast('Salida de ejemplo: aquí los operadores publicarán sus cupos reales');
+      const wa = e.target.closest('[data-shuttle-wa]');
+      if (wa) track('shuttle_reserve_clicked', { ref: wa.dataset.shuttleWa });
+      if (e.target.closest('[data-shuttle-tours]')) {
+        shuttleDlg.close();
+        mapState.cat = 'tours'; mapState.region = 'all'; regionSelect.value = 'all';
+        if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        render(true);
+      }
+    });
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-shuttle]'); if (b) { e.preventDefault(); openShuttles(b.dataset.shuttle); } });
+
+    // ---------------------------------------------------------------------
+    // 3. 🚨 REPUESTO / TALLER DE URGENCIA (cercanía GPS)
+    // ---------------------------------------------------------------------
+    const sosDlg = utilDialog('sosDialog');
+    const sosBody = document.getElementById('sosBody');
+    const sosWhere = document.getElementById('sosWhere');
+    const sosRadiusEl = document.getElementById('sosRadius');
+    const sosNeed = document.getElementById('sosNeed');
+    const SOS_RADII = [5, 10, 20];
+    const SOS_CATS = ['talleres', 'tiendas'];
+    const TECH_RE = /taller|servicio t[eé]cnico|mantenci|mec[aá]nic|repuesto|reparaci|suspensi|bike ?fit/;
+    let sosOrigin = null, sosRadius = null, sosSeq = 0;
+
+    // Distancia en km (fórmula del haversine)
+    const kmBetween = ([a1, o1], [a2, o2]) => {
+      const R = 6371, rad = Math.PI / 180, dA = (a2 - a1) * rad, dO = (o2 - o1) * rad;
+      const h = Math.sin(dA / 2) ** 2 + Math.cos(a1 * rad) * Math.cos(a2 * rad) * Math.sin(dO / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(h));
+    };
+    const kmLabel = (km) => km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1).replace('.', ',')} km`;
+    const isTech = (p) => p.categoria === 'talleres' || TECH_RE.test(norm(`${p.nombre} ${p.descripcion || ''}`));
+    const wazeUrl = (p) => `https://waze.com/ul?ll=${p.coords[0]},${p.coords[1]}&navigate=yes`;
+    const sosDirections = (p) => sosOrigin?.gps
+      ? `https://www.google.com/maps/dir/?api=1&origin=${sosOrigin.coords[0]},${sosOrigin.coords[1]}&destination=${p.coords[0]},${p.coords[1]}&travelmode=driving`
+      : directionsUrl(p);
+    const sosWaText = (p, km) => {
+      const need = sosNeed.value.trim();
+      return `Hola ${p.nombre}, los encontré en DESVIADOR. Estoy a ${kmLabel(km)} y necesito con urgencia${need ? `: ${need}` : ' un repuesto o una reparación'}. ¿Tienen stock o pueden atenderme ahora?`;
+    };
+
+    // Comunas disponibles para elegir a mano (las del mapa, agrupadas por región)
+    function comunaOptions() {
+      const byRegion = {};
+      puntos.forEach((p) => { if (p.comuna) (byRegion[p.region] ||= new Set()).add(p.comuna); });
+      return Object.keys(REGIONES).filter((r) => byRegion[r]).map((r) =>
+        `<optgroup label="${esc(REGIONES[r].label)}">${[...byRegion[r]].sort((a, b) => a.localeCompare(b, 'es')).map((c) => `<option value="${esc(r)}|${esc(c)}">${esc(c)}</option>`).join('')}</optgroup>`).join('');
+    }
+    function comunaCenter(region, comuna) {
+      const pts = puntos.filter((p) => p.region === region && p.comuna === comuna);
+      return pts.length ? [pts.reduce((s, p) => s + p.coords[0], 0) / pts.length, pts.reduce((s, p) => s + p.coords[1], 0) / pts.length] : null;
+    }
+
+    function sosManual(reason) {
+      sosWhere.textContent = 'Elige tu comuna para buscar cerca';
+      sosRadiusEl.hidden = true;
+      sosBody.innerHTML = `
+        <div class="mx-auto max-w-md rounded-2xl bg-white/70 p-4 ring-1 ring-sand-300">
+          <p class="font-semibold text-soil-950">📍 ${reason}</p>
+          <p class="mt-1 text-sm text-soil-700">No pasa nada: elige tu comuna y te mostramos los talleres y tiendas más cercanos.</p>
+          <label for="sosComuna" class="mt-3 block text-sm font-semibold text-soil-800">Tu comuna</label>
+          <select id="sosComuna" class="field mt-1.5"><option value="">Selecciona…</option>${comunaOptions()}</select>
+          <button type="button" data-sos-gps class="mt-3 text-sm font-semibold text-moss-700 underline underline-offset-4">Reintentar con GPS</button>
+        </div>`;
+    }
+
+    function sosLocate() {
+      const seq = ++sosSeq;
+      sosOrigin = null;
+      sosWhere.textContent = 'Buscando tu ubicación…';
+      sosRadiusEl.hidden = true;
+      sosBody.innerHTML = `<div class="grid place-items-center py-12 text-center"><span class="h-10 w-10 animate-spin rounded-full border-4 border-sand-300 border-t-[#b3432b]" aria-hidden="true"></span>
+        <p class="mt-3 text-sm text-soil-700">Pidiendo tu ubicación GPS…</p><button type="button" data-sos-manual class="mt-3 text-sm font-semibold text-moss-700 underline underline-offset-4">Prefiero elegir mi comuna</button></div>`;
+      if (!navigator.geolocation) return sosManual('Tu navegador no permite usar el GPS.');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          if (seq !== sosSeq) return;
+          const coords = [pos.coords.latitude, pos.coords.longitude];
+          if (!CHILE_BOUNDS.contains(coords)) return sosManual('Tu ubicación parece estar fuera de Chile.');
+          sosOrigin = { coords, gps: true, label: 'de tu ubicación' };
+          track('sos_located', { via: 'gps' });
+          sosSearch();
+        },
+        (err) => {
+          if (seq !== sosSeq) return;
+          track('sos_located', { via: 'error', code: err.code });
+          sosManual(err.code === 1 ? 'No diste permiso para usar tu ubicación.' : 'No pudimos obtener tu ubicación.');
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 120000 },
+      );
+    }
+
+    // Detalles (WhatsApp, dirección, descripción) de los cercanos en una sola consulta
+    async function sosLoadDetails(list) {
+      const pending = list.filter((x) => x.p.detailsLoaded === false).slice(0, 40);
+      if (!pending.length || !supabaseClient) return;
+      const { data, error } = await supabaseClient.from('comercios').select(`id, ${DETAIL_COLUMNS}`).in('id', pending.map((x) => x.p.id));
+      if (error || !data) return;
+      const byId = new Map(pending.map((x) => [String(x.p.id), x.p]));
+      data.forEach((d) => { const p = byId.get(String(d.id)); if (p && p.detailsLoaded === false) Object.assign(p, { direccion: d.direccion, whatsapp: d.whatsapp, horario: d.horario, descripcion: d.descripcion, detailsLoaded: true, detailsError: false }); });
+    }
+
+    async function sosSearch() {
+      const seq = sosSeq;
+      const all = puntos.filter((p) => SOS_CATS.includes(p.categoria)).map((p) => ({ p, km: kmBetween(sosOrigin.coords, p.coords) })).sort((a, b) => a.km - b.km);
+      const counts = Object.fromEntries(SOS_RADII.map((r) => [r, all.filter((x) => x.km <= r).length]));
+      if (sosRadius == null) sosRadius = SOS_RADII.find((r) => counts[r] > 0) || 20; // el radio más chico con resultados
+      sosWhere.textContent = sosOrigin.gps ? '📍 Usando tu ubicación GPS' : `📍 Cerca del centro de ${sosOrigin.name}`;
+      sosRadiusEl.hidden = false;
+      sosRadiusEl.innerHTML = `<span class="text-xs font-semibold uppercase tracking-wider text-soil-600">Radio</span>` + SOS_RADII.map((r) => {
+        const on = r === sosRadius;
+        return `<button type="button" data-sos-radius="${r}" aria-pressed="${on}" class="rounded-full px-3 py-1.5 text-sm font-bold transition ${on ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">${r} km <span class="font-mono text-[11px] ${on ? 'text-ochre-300' : 'text-soil-600'}">${counts[r]}</span></button>`;
+      }).join('') + `<button type="button" data-sos-manual class="ml-auto text-xs font-semibold text-moss-700 underline underline-offset-2">Cambiar</button>`;
+
+      const within = all.filter((x) => x.km <= sosRadius);
+      await sosLoadDetails(within.length ? within : all.slice(0, 3));
+      if (seq !== sosSeq) return;
+      // Primero quien hace mantención o vende repuestos técnicos; luego por distancia
+      const rank = (list) => list.sort((a, b) => (isTech(b.p) - isTech(a.p)) || (a.km - b.km));
+      if (!within.length) {
+        const near = all.slice(0, 3);
+        sosBody.innerHTML = `<p class="rounded-xl st-precaucion p-3 text-sm font-semibold">No hay talleres ni tiendas a menos de ${sosRadius} km${sosRadius < 20 ? '. Prueba con un radio mayor.' : '.'} ${near.length ? 'Estos son los más cercanos:' : ''}</p>
+          <ul class="mt-3 grid gap-3">${near.map(sosCard).join('')}</ul>`;
+      } else {
+        sosBody.innerHTML = `<ul class="grid gap-3">${rank(within).map(sosCard).join('')}</ul>`;
+      }
+      track('sos_results', { radio: sosRadius, n: within.length, via: sosOrigin.gps ? 'gps' : 'comuna' });
+    }
+
+    function sosCard({ p, km }) {
+      const c = CATEGORIES[p.categoria];
+      const tech = isTech(p);
+      const wa = p.whatsapp
+        ? `<a href="${waUrl(p, sosWaText(p, km))}" target="_blank" rel="noopener" data-sos-wa="${esc(p.id)}" data-km="${km}" class="btn-wa-pro py-3 text-sm"><span aria-hidden="true">💬</span> Consultar Stock WhatsApp</a>`
+        : p.detailsLoaded === false
+        ? `<div class="h-[46px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
+        : `<button type="button" data-locate-sos="${esc(p.id)}" class="rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 hover:bg-sand-200">Sin WhatsApp · Ver ficha</button>`;
+      return `<li>
+        <article class="rounded-2xl bg-white/70 p-3.5 shadow-sm ring-1 ${tech ? 'ring-[#b3432b]/35' : 'ring-sand-300'}">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="trail-badge st-cerrado px-2 py-1 text-[11px] !normal-case">📍 A ${kmLabel(km)} ${esc(sosOrigin.label)}</span>
+            <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3')}${c.short}</span>
+            ${tech ? '<span class="rounded-full bg-soil-950 px-2 py-0.5 text-[10px] font-bold text-sand-50">🔧 Mantención / repuestos</span>' : ''}
+            ${isPro(p) ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
+          </div>
+          <h3 class="mt-2 text-base font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
+          <p class="text-sm text-soil-600">${esc([p.direccion, p.comuna].filter(Boolean).join(' · ') || REGIONES[p.region].label)}</p>
+          ${p.horario ? `<p class="mt-0.5 text-xs text-soil-600">🕑 ${esc(p.horario)}</p>` : ''}
+          <div class="mt-3 grid gap-2">
+            ${wa}
+            <div class="grid grid-cols-[1fr_auto] gap-2">
+              <a href="${sosDirections(p)}" target="_blank" rel="noopener" data-sos-go="${esc(p.id)}" class="flex items-center justify-center gap-1.5 rounded-xl bg-soil-950 py-2.5 text-sm font-semibold text-sand-50 hover:bg-soil-800">🧭 Cómo llegar</a>
+              <a href="${wazeUrl(p)}" target="_blank" rel="noopener" data-sos-go="${esc(p.id)}" class="flex items-center justify-center rounded-xl bg-sand-100 px-4 py-2.5 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200">Waze</a>
+            </div>
+          </div>
+        </article>
+      </li>`;
+    }
+
+    function openSos(via) {
+      closeMobileMenu();
+      ['dirDialog', 'shuttleDialog'].forEach((id) => { const d = document.getElementById(id); if (d.open) d.close(); });
+      sosDlg.showModal();
+      track('sos_opened', { via });
+      if (sosOrigin) sosSearch(); else sosLocate();
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-sos]'); if (b) { e.preventDefault(); openSos(b.dataset.sos); } });
+    sosRadiusEl.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-sos-radius]');
+      if (b) { sosRadius = Number(b.dataset.sosRadius); sosSeq++; sosSearch(); sosBody.scrollTop = 0; }
+    });
+    sosDlg.addEventListener('click', (e) => {
+      if (e.target.closest('[data-sos-manual]')) { sosSeq++; return sosManual('Elige tu ubicación a mano.'); }
+      if (e.target.closest('[data-sos-gps]')) { sosRadius = null; return sosLocate(); }
+      const loc = e.target.closest('[data-locate-sos]');
+      if (loc) { sosDlg.close(); return locatePoint(loc.dataset.locateSos); }
+      const wa = e.target.closest('[data-sos-wa]');
+      if (wa) track('sos_whatsapp_clicked', { ref: wa.dataset.sosWa, km: Number(wa.dataset.km).toFixed(1), necesita: !!sosNeed.value.trim() });
+      const go = e.target.closest('[data-sos-go]');
+      if (go) track('sos_directions_clicked', { ref: go.dataset.sosGo, app: go.textContent.includes('Waze') ? 'waze' : 'google' });
+    });
+    sosDlg.addEventListener('change', (e) => {
+      if (e.target.id !== 'sosComuna' || !e.target.value) return;
+      const [region, comuna] = e.target.value.split('|');
+      const coords = comunaCenter(region, comuna);
+      if (!coords) return;
+      sosOrigin = { coords, gps: false, name: comuna, label: `del centro de ${comuna}` };
+      sosRadius = null; sosSeq++;
+      track('sos_located', { via: 'comuna', comuna });
+      sosSearch();
+    });
+    // Lo que escribe en "¿Qué necesitas?" se suma al mensaje de WhatsApp
+    sosNeed.addEventListener('input', debounce(() => {
+      sosBody.querySelectorAll('[data-sos-wa]').forEach((a) => {
+        const p = puntos.find((x) => String(x.id) === a.dataset.sosWa);
+        if (p) a.href = waUrl(p, sosWaText(p, Number(a.dataset.km)));
+      });
+    }, 160));
   </script>
 
   <script>
