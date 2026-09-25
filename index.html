@@ -668,7 +668,7 @@
           <textarea id="trailComment" rows="2" maxlength="140" class="field mt-1.5 resize-none" placeholder="Ej: Sombra con barro en la bajada 2"></textarea>
         </div>
         <div class="hidden" aria-hidden="true"><label>Web <input id="trailWebsite" tabindex="-1" autocomplete="off" /></label></div>
-        <p class="text-xs leading-relaxed text-soil-600">Tu reporte es anónimo y se muestra durante 72 horas. Si ves algo que no corresponde, avísanos y lo sacamos.</p>
+        <p class="text-xs leading-relaxed text-soil-600">Tu reporte es anónimo y, durante 24 horas, tiene prioridad sobre el cálculo automático del clima. Si ves algo que no corresponde, avísanos y lo sacamos.</p>
         <div id="trailError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></div>
       </div>
       <div class="border-t border-sand-300 px-5 py-3" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
@@ -2152,11 +2152,35 @@
       precaucion: { label: '🟡 PRECAUCIÓN / BARRO',      short: '🟡 Precaución' },
       cerrado:    { label: '🔴 CERRADO / MANTENIMIENTO', short: '🔴 Cerrado' },
     };
-    const TRAIL_WINDOW_H = 72;            // un reporte vale 72 h
+    const TRAIL_WINDOW_H = 72;            // se leen los reportes de las últimas 72 h…
+    const TRAIL_OVERRIDE_H = 24;          // …pero solo los de menos de 24 h anulan al clima
     const TRAIL_COOLDOWN_MIN = 30;        // un reporte por spot cada 30 min por navegador
     const TRAIL_SENT_KEY = 'desviador-reportes-enviados';
-    const trailStatus = new Map();        // id → { estado, comentario, at, n, demo }
     const isTrailSpot = (p) => p.categoria === 'senderos';
+
+    // Dos fuentes y un resultado:
+    //   humanStatus  → último reporte de la comunidad (Supabase)          { estado, comentario, at, n }
+    //   climaStatus  → estado calculado con la lluvia de Open-Meteo        { estado, label, sub, lluvia, at }
+    //   trailStatus  → lo que se muestra, según la jerarquía de abajo      { …, fuente: 'comunidad' | 'clima' }
+    const humanStatus = new Map();
+    const climaStatus = new Map();
+    const trailStatus = new Map();
+    const hoursSince = (iso) => (Date.now() - new Date(iso)) / 3600e3;
+
+    // Jerarquía: 1) reporte humano de < 24 h · 2) clima · 3) reporte humano de 24–72 h (si el clima no respondió)
+    function resolveTrailStatus(id) {
+      id = String(id);
+      const h = humanStatus.get(id), c = climaStatus.get(id);
+      if (h && hoursSince(h.at) < TRAIL_OVERRIDE_H) trailStatus.set(id, { ...h, fuente: 'comunidad' });
+      else if (c) trailStatus.set(id, { ...c, fuente: 'clima' });
+      else if (h) trailStatus.set(id, { ...h, fuente: 'comunidad', antiguo: true });
+      else trailStatus.delete(id);
+    }
+    const trailLabel = (st) => st.label || TRAIL_STATES[st.estado].label;
+    const TRAIL_SOURCE = {
+      comunidad: '<span class="rounded-full bg-white/70 px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-soil-950/10">📢 Validado por la comunidad</span>',
+      clima:     '<span class="rounded-full bg-white/70 px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-soil-950/10">🤖 Calculado por Clima / Satélite</span>',
+    };
 
     // Ganchos que usan makeIcon, miniCard y drawerHtml (si este módulo no cargó, simplemente no aparecen)
     function trailPinDot(p) {
@@ -2166,25 +2190,34 @@
     function trailBadge(p, size) {
       const st = isTrailSpot(p) && trailStatus.get(String(p.id));
       if (!st) return '';
+      const origin = st.fuente === 'clima' ? '🤖 Calculado por Clima / Satélite' : `📢 Validado por la comunidad · ${agoLabel(st.at)}`;
       return size === 'sm'
-        ? `<span class="trail-badge st-${st.estado} px-1.5 py-0.5 text-[9.5px]" title="${esc(TRAIL_STATES[st.estado].label)} · ${agoLabel(st.at)}">${TRAIL_STATES[st.estado].label}</span>`
-        : `<span class="trail-badge st-${st.estado} px-2.5 py-1 text-xs">${TRAIL_STATES[st.estado].label}</span>`;
+        ? `<span class="trail-badge st-${st.estado} px-1.5 py-0.5 text-[9.5px]" title="${esc(trailLabel(st))} · ${origin}">${trailLabel(st)}</span>`
+        : `<span class="trail-badge st-${st.estado} px-2.5 py-1 text-xs">${trailLabel(st)}</span>`;
     }
+    const mm = (v) => `${(Math.round(v * 10) / 10).toLocaleString('es-CL')} mm`;
     function trailDrawerBlock(p) {
       if (!isTrailSpot(p)) return '';
       const st = trailStatus.get(String(p.id));
       const btn = `<button type="button" data-trail-report="${esc(p.id)}" class="inline-flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-soil-800 ring-1 ring-soil-950/15 transition hover:bg-white">📢 Reportar Estado</button>`;
       if (!st) return `
         <div class="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl st-none p-3">
-          <p class="text-xs font-semibold">⚪ Sin reportes en las últimas ${TRAIL_WINDOW_H} h. ¿Rodaste hoy?</p>${btn}
+          <p class="text-xs font-semibold">⚪ Sin reportes recientes ni datos de clima. ¿Rodaste hoy?</p>${btn}
         </div>`;
+      const human = st.fuente === 'comunidad';
+      const meta = human ? `${agoLabel(st.at)} · ${st.n} ${st.n === 1 ? 'reporte' : 'reportes'}` : `actualizado ${agoLabel(st.at)}`;
+      const detail = human
+        ? (st.comentario ? `<p class="mt-1 text-sm italic">“${esc(st.comentario)}”</p>` : '')
+        : `<p class="mt-1 text-sm">${esc(st.sub)}</p>
+           <p class="mt-1 font-mono text-[10.5px] font-semibold opacity-80">Lluvia · 24 h: ${mm(st.lluvia.h24)} · 48 h: ${mm(st.lluvia.h48)} · 7 días: ${mm(st.lluvia.d7)}</p>`;
       return `
         <div class="mt-3 rounded-xl st-${st.estado} p-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <p class="text-sm font-extrabold uppercase tracking-wide">${TRAIL_STATES[st.estado].label}</p>
-            <p class="font-mono text-[10.5px] font-semibold opacity-80">${agoLabel(st.at)} · ${st.demo ? 'ejemplo' : `${st.n} ${st.n === 1 ? 'reporte' : 'reportes'}`}</p>
+            <p class="text-sm font-extrabold uppercase tracking-wide">${trailLabel(st)}</p>
+            <p class="font-mono text-[10.5px] font-semibold opacity-80">${meta}</p>
           </div>
-          ${st.comentario ? `<p class="mt-1 text-sm italic">“${esc(st.comentario)}”</p>` : ''}
+          <div class="mt-1.5">${TRAIL_SOURCE[st.fuente]}</div>
+          ${detail}
           <div class="mt-2">${btn}</div>
         </div>`;
     }
@@ -2202,27 +2235,116 @@
       if (drawerPoint && drawer.classList.contains('is-open') && isTrailSpot(drawerPoint)) drawerBody.innerHTML = drawerHtml(drawerPoint);
     }
 
-    let trailLoaded = false;
-    async function loadTrailStatus() {
-      if (trailLoaded || !puntos.length) return;
-      trailLoaded = true;
-      if (!supabaseClient) {
-        // Sin base de datos: estados de ejemplo para ver el semáforo (igual que los puntos de respaldo)
-        const demo = { 'nevados-chillan': ['abierto', 'Pista 3 con grip perfecto', 2], 'parque-las-palmas': ['precaucion', 'Sombra con barro en la bajada 2', 5], 'el-durazno': ['cerrado', 'Mantención de saltos hasta el sábado', 20] };
-        Object.entries(demo).forEach(([id, [estado, comentario, h]]) => trailStatus.set(id, { estado, comentario, at: hoursAgo(h), n: 1, demo: true }));
-        return refreshTrailUi();
+    // --- Clima: Open-Meteo (gratis, sin API key) ---
+    const CLIMA_TTL_MS = 3 * 3600e3;      // caché local de 3 horas por cerro
+    const CLIMA_KEY = 'desviador-clima:';
+    const CLIMA_BATCH = 50;               // Open-Meteo acepta varias coordenadas en una sola llamada
+    const climaUrl = (lats, lngs) => `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lngs}&daily=precipitation_sum&hourly=precipitation&timezone=auto&past_days=7&forecast_days=1`;
+    const climaKey = (lat, lng) => `${CLIMA_KEY}${Number(lat).toFixed(3)},${Number(lng).toFixed(3)}`;
+    // Se guarda solo lo que usa el motor de reglas
+    const slimClima = (d) => ({ utc_offset_seconds: d.utc_offset_seconds, daily: { time: d.daily?.time, precipitation_sum: d.daily?.precipitation_sum }, hourly: { time: d.hourly?.time, precipitation: d.hourly?.precipitation } });
+    function climaFromCache(lat, lng) {
+      const c = readJSON(climaKey(lat, lng), null);
+      return c && Date.now() - c.t < CLIMA_TTL_MS ? c : null;
+    }
+    // Limpia entradas vencidas (no dejar crecer el localStorage)
+    try { Object.keys(localStorage).filter((k) => k.startsWith(CLIMA_KEY)).forEach((k) => { const c = readJSON(k, null); if (!c || Date.now() - c.t > CLIMA_TTL_MS) localStorage.removeItem(k); }); } catch (e) {}
+
+    // Varias coordenadas → una llamada por lote de hasta 50; lo que está en caché no se vuelve a pedir
+    async function obtenerClimaCerros(coords) {
+      const out = new Map(), missing = [];
+      coords.forEach(([lat, lng]) => { const c = climaFromCache(lat, lng); if (c) out.set(climaKey(lat, lng), c); else missing.push([lat, lng]); });
+      for (let i = 0; i < missing.length; i += CLIMA_BATCH) {
+        const batch = missing.slice(i, i + CLIMA_BATCH);
+        try {
+          const res = await fetch(climaUrl(batch.map((c) => c[0]).join(','), batch.map((c) => c[1]).join(',')));
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const json = await res.json();
+          (Array.isArray(json) ? json : [json]).forEach((d, j) => {
+            const entry = { t: Date.now(), data: slimClima(d) };
+            writeJSON(climaKey(...batch[j]), entry);
+            out.set(climaKey(...batch[j]), entry);
+          });
+        } catch (err) { console.warn('[DESVIADOR] Open-Meteo no respondió:', err.message); }
       }
+      return out;
+    }
+    // Un cerro: { t, data } con la respuesta de Open-Meteo (desde caché si tiene menos de 3 h)
+    async function obtenerClimaCerro(lat, lng) {
+      return (await obtenerClimaCerros([[lat, lng]])).get(climaKey(lat, lng)) || null;
+    }
+
+    // Lluvia acumulada en las últimas 24 h, 48 h y 7 días (por hora hasta la hora actual del lugar; si no, por día)
+    function lluviaAcumulada(data) {
+      const sum = (arr) => Math.round(arr.reduce((s, v) => s + (Number(v) || 0), 0) * 10) / 10; // a 0,1 mm (resolución de Open-Meteo)
+      const hTime = data.hourly?.time, hPrec = data.hourly?.precipitation;
+      if (hTime?.length && hPrec?.length) {
+        const nowLocal = new Date(Date.now() + (data.utc_offset_seconds || 0) * 1000).toISOString().slice(0, 13); // "YYYY-MM-DDTHH" en hora del cerro
+        let end = hTime.findIndex((t) => t.slice(0, 13) > nowLocal);
+        if (end === -1) end = hTime.length;
+        const last = (h) => hPrec.slice(Math.max(0, end - h), end);
+        return { h24: sum(last(24)), h48: sum(last(48)), d7: sum(last(168)) };
+      }
+      const d = data.daily?.precipitation_sum || [];
+      return { h24: sum(d.slice(-1)), h48: sum(d.slice(-2)), d7: sum(d.slice(-8, -1)) };
+    }
+
+    // Motor de reglas: lluvia → estado del terreno
+    function calcularEstadoCerro(lluvia) {
+      const { h24, h48, d7 } = lluvia;
+      if (h24 > 12 || h48 > 20) {
+        const cause = h24 > 12 ? `${mm(h24)} en 24 h` : `${mm(h48)} en 48 h`;
+        return { estado: 'cerrado', label: '🔴 CERRADO / BARRO PEGADO', sub: `Lluvia reciente (${cause}). Evita el terreno para no dañar la pista.` };
+      }
+      if (h48 >= 3 && h48 <= 12) return { estado: 'abierto', label: '🟢 SECO / GRIP PERFECTO', sub: 'Humedad ideal en el suelo según precipitaciones recientes.' };
+      if (d7 === 0) return { estado: 'precaucion', label: '🟡 PRECAUCIÓN / MUY SECO', sub: 'Más de 7 días sin lluvia. Suelo seco y suelto.' };
+      return { estado: 'abierto', label: '🟢 ABIERTO / SECO', sub: h48 > 12 ? `Lluvia moderada reciente (${mm(h48)} en 48 h): el suelo debería estar drenando.` : 'Sin lluvias relevantes en los últimos días.' };
+    }
+
+    let climaLoading = false;
+    async function loadClimaStatus() {
+      if (climaLoading) return;
+      const spots = puntos.filter(isTrailSpot);
+      if (!spots.length) return;
+      climaLoading = true;
+      try {
+        const results = await obtenerClimaCerros(spots.map((p) => p.coords));
+        const changed = [];
+        spots.forEach((p) => {
+          const entry = results.get(climaKey(...p.coords));
+          if (!entry) return;
+          const lluvia = lluviaAcumulada(entry.data);
+          climaStatus.set(String(p.id), { ...calcularEstadoCerro(lluvia), lluvia, at: new Date(entry.t).toISOString() });
+          resolveTrailStatus(p.id);
+          changed.push(p.id);
+        });
+        if (changed.length) refreshTrailUi(changed);
+      } finally { climaLoading = false; }
+    }
+
+    // --- Comunidad: reportes de Supabase ---
+    async function loadHumanStatus() {
+      if (!supabaseClient) return;
       const { data, error } = await supabaseClient.from('reportes_pista').select('comercio_id, estado, comentario, created_at')
         .gte('created_at', hoursAgo(TRAIL_WINDOW_H)).order('created_at', { ascending: false }).limit(500);
-      if (error) return console.info('[DESVIADOR] Semáforo de senderos sin datos (¿ejecutaste supabase/utilidades.sql?):', error.message);
+      if (error) return console.info('[DESVIADOR] Reportes de la comunidad no disponibles (¿ejecutaste supabase/utilidades.sql?):', error.message);
+      humanStatus.clear();
       data.forEach((r) => {
-        const id = String(r.comercio_id), cur = trailStatus.get(id);
+        const id = String(r.comercio_id), cur = humanStatus.get(id);
         if (cur) cur.n++; // el más reciente manda; los demás solo suman
-        else trailStatus.set(id, { estado: r.estado, comentario: r.comentario, at: r.created_at, n: 1 });
+        else humanStatus.set(id, { estado: r.estado, comentario: r.comentario, at: r.created_at, n: 1 });
       });
-      if (trailStatus.size) refreshTrailUi();
+      humanStatus.forEach((_, id) => resolveTrailStatus(id));
+      if (humanStatus.size) refreshTrailUi([...humanStatus.keys()]);
     }
-    window.addEventListener('desviador:puntos', () => { trailLoaded = false; loadTrailStatus(); });
+
+    function loadTrailStatus() {
+      if (!puntos.length) return;
+      loadHumanStatus();
+      // El clima se pide después de pintar el mapa, para no competir con la carga inicial
+      (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(() => loadClimaStatus(), { timeout: 2000 });
+    }
+    window.addEventListener('desviador:puntos', loadTrailStatus);
     loadTrailStatus(); // por si los puntos ya estaban cargados (modo respaldo)
 
     // --- Modal de reporte ---
@@ -2296,8 +2418,9 @@
       sent[p.id] = Date.now();
       writeJSON(TRAIL_SENT_KEY, sent);
       if (published) {
-        const cur = trailStatus.get(String(p.id));
-        trailStatus.set(String(p.id), { estado, comentario, at: new Date().toISOString(), n: (cur && !cur.demo ? cur.n : 0) + 1 });
+        const cur = humanStatus.get(String(p.id));
+        humanStatus.set(String(p.id), { estado, comentario, at: new Date().toISOString(), n: (cur ? cur.n : 0) + 1 });
+        resolveTrailStatus(p.id); // un reporte nuevo (< 24 h) anula el cálculo del clima
         refreshTrailUi([p.id]);
       }
       trailDlg.close();
@@ -2327,9 +2450,10 @@
         mapState.cat = 'senderos'; mapState.region = 'all'; regionSelect.value = 'all';
         if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
         render(true);
-        const n = puntos.filter((p) => isTrailSpot(p) && trailStatus.has(String(p.id))).length;
-        toast(n ? `🚦 ${n} ${n === 1 ? 'cerro con reporte' : 'cerros con reporte'} en las últimas ${TRAIL_WINDOW_H} h` : '🚦 Sin reportes recientes: abre un bikepark y reporta su estado');
-        track('trail_view_opened', { conReporte: n });
+        const withStatus = puntos.filter((p) => isTrailSpot(p) && trailStatus.has(String(p.id)));
+        const n = withStatus.length, human = withStatus.filter((p) => trailStatus.get(String(p.id)).fuente === 'comunidad').length;
+        toast(n ? `🚦 ${n} ${n === 1 ? 'cerro con estado' : 'cerros con estado'}${human ? ` · ${human} ${human === 1 ? 'validado' : 'validados'} por la comunidad` : ' · calculado por clima'}` : '🚦 Sin datos de estado aún: abre un bikepark y reporta cómo está');
+        track('trail_view_opened', { conEstado: n, comunidad: human });
       }
     });
 

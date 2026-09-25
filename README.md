@@ -83,6 +83,12 @@ Ejecuta [`supabase/utilidades.sql`](supabase/utilidades.sql) en Supabase → SQL
 - Los bikeparks y senderos muestran `🟢 ABIERTO / SECO`, `🟡 PRECAUCIÓN / BARRO` o `🔴 CERRADO / MANTENIMIENTO`: un punto de color en el pin, una etiqueta en la tarjeta y el detalle en la ficha.
 - Cualquiera puede reportar desde la ficha con `📢 Reportar Estado`: estado más un comentario breve. Cada reporte se muestra 72 horas y manda el más reciente. Un mismo navegador puede reportar un spot una vez cada 30 minutos.
 - Tabla `reportes_pista`: el público inserta (solo sobre fichas aprobadas) y ve las últimas 72 h. Borra reportes falsos desde Table Editor.
+- **Estado automático por clima (Open-Meteo, gratis y sin API key):** para cada bikepark se consulta la lluvia de los últimos 7 días, en una sola llamada para todos los cerros. La respuesta queda en caché 3 horas en el navegador.
+  - `🔴 CERRADO / BARRO PEGADO` si llovió más de 12 mm en 24 h o más de 20 mm en 48 h.
+  - `🟢 SECO / GRIP PERFECTO` si en 48 h llovió entre 3 y 12 mm.
+  - `🟡 PRECAUCIÓN / MUY SECO` si en 7 días llovió 0 mm.
+  - `🟢 ABIERTO / SECO` en cualquier otro caso.
+- **Prioridad:** un reporte de la comunidad de menos de 24 h prevalece sobre el clima (`📢 Validado por la comunidad`). Si no hay, se muestra el cálculo (`🤖 Calculado por Clima / Satélite`). Si Open-Meteo no responde, se usa el último reporte de la comunidad de hasta 72 h.
 - Opcional: `REPORTS_WEBHOOK_URL` en `supabase-config.js` avisa cada reporte a Make o n8n. Sin base ni webhook, el reporte se envía por WhatsApp a `SALES_WHATSAPP`.
 
 ### 🚐 Cupos Shuttle
