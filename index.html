@@ -327,14 +327,15 @@
           <div>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Comunidad</p>
             <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Bici Jobs &amp; Paleros</h2>
-            <p class="mt-2 max-w-xl text-sm text-soil-600">Talleres y tiendas que buscan mecánicos o vendedores, y jornadas para mantener los senderos que usamos todos.</p>
+            <p class="mt-2 max-w-xl text-sm text-soil-600">El portal de empleo del ciclismo en Chile: talleres, tiendas y operadores que buscan mecánicos, vendedores y guías. Además, jornadas para mantener los senderos que usamos todos.</p>
+            <button type="button" data-post-job="encabezado" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-sm ring-2 ring-ochre-400/70 transition hover:bg-soil-800">💼 Publicar Oferta de Trabajo</button>
           </div>
           <div id="jobTabs" class="no-scrollbar -mx-4 flex shrink-0 gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
         </div>
 
         <ul id="jobList" class="grid gap-3"></ul>
 
-        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar un aviso o convocatoria</a>
+        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de pala o convocatoria</a>
       </div>
     </section>
 
@@ -477,8 +478,7 @@
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
                 <label for="jobType" class="mb-1.5 block text-sm font-semibold text-soil-800">Tipo de aviso</label>
-                <select id="jobType" class="field">
-                  <option value="trabajo">Oferta laboral (Bici Jobs)</option>
+                <select id="jobType" class="field" aria-describedby="jobTypeHint">
                   <option value="voluntariado">Jornada de pala (Digger Day)</option>
                   <option value="comunidad">Comunidad</option>
                 </select>
@@ -488,6 +488,7 @@
                 <input id="jobPlace" maxlength="60" placeholder="Ej: San José de Maipo" class="field" />
               </div>
             </div>
+            <p id="jobTypeHint" class="text-xs text-soil-600">¿Buscas personal para tu negocio? <button type="button" data-post-job="formulario" class="font-semibold text-moss-700 underline underline-offset-2">💼 Publica una oferta de trabajo</button>.</p>
           </div>
 
           <!-- Comunes a aviso y dato -->
@@ -717,6 +718,162 @@
       </div>
       <div id="sosBody" class="flex-1 overflow-y-auto px-4 py-4 sm:px-6"></div>
     </div>
+  </dialog>
+
+  <!-- ============ BICI JOBS ============ -->
+  <!-- 📩 Postular a una oferta -->
+  <dialog id="applyDialog" class="w-[min(94vw,32rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="applyTitle">
+    <form id="applyForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
+        <div class="min-w-0">
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Bici Jobs · Postulación</p>
+          <h2 id="applyTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"></h2>
+          <p id="applyCompany" class="mt-0.5 truncate text-sm text-soil-600"></p>
+        </div>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="applyBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
+        <p id="applyDemo" class="rounded-lg st-precaucion px-3 py-2 text-xs font-semibold" hidden>Este aviso es de ejemplo: la postulación no se enviará a ninguna tienda.</p>
+        <div>
+          <label for="applyName" class="block text-sm font-semibold text-soil-800">Nombre completo</label>
+          <input id="applyName" autocomplete="name" maxlength="80" class="field mt-1.5" placeholder="Tu nombre" />
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="applyPhone" class="block text-sm font-semibold text-soil-800">Teléfono / WhatsApp</label>
+            <input id="applyPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" class="field mt-1.5" placeholder="+56 9 1234 5678" />
+          </div>
+          <div>
+            <label for="applyEmail" class="block text-sm font-semibold text-soil-800">Email</label>
+            <input id="applyEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" class="field mt-1.5" placeholder="tu@correo.cl" />
+          </div>
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="applyExp" class="block text-sm font-semibold text-soil-800">Experiencia en el rubro</label>
+            <select id="applyExp" class="field mt-1.5">
+              <option value="">Selecciona…</option>
+              <option value="menos_1">Menos de 1 año</option>
+              <option value="1_2">1 a 2 años</option>
+              <option value="3_5">3 a 5 años</option>
+              <option value="6_10">6 a 10 años</option>
+              <option value="mas_10">Más de 10 años</option>
+            </select>
+          </div>
+          <div>
+            <label for="applyCv" class="block text-sm font-semibold text-soil-800">CV o LinkedIn <span class="font-normal text-soil-600">(opcional)</span></label>
+            <input id="applyCv" type="url" inputmode="url" maxlength="300" class="field mt-1.5" placeholder="https://linkedin.com/in/…" />
+          </div>
+        </div>
+        <div>
+          <label for="applyMsg" class="flex justify-between text-sm font-semibold text-soil-800">Mensaje breve <span class="font-mono text-xs font-normal text-soil-600"><span id="applyCount">0</span>/400</span></label>
+          <textarea id="applyMsg" rows="3" maxlength="400" class="field mt-1.5 resize-none" placeholder="Ej: Certificado Shimano, experiencia en suspensiones Fox y disponibilidad inmediata."></textarea>
+        </div>
+        <div class="hidden" aria-hidden="true"><label>Web <input id="applyWebsite" tabindex="-1" autocomplete="off" /></label></div>
+        <p class="text-xs leading-relaxed text-soil-600">Tus datos se envían solo a esta tienda para evaluar tu postulación. No los publicamos.</p>
+        <p id="applyError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
+      </div>
+      <div id="applyDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-moss-600 text-3xl text-sand-50 shadow-lg">✓</div>
+        <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Postulación enviada!</h3>
+        <p id="applyDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
+        <a id="applyWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+      </div>
+      <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="submit" id="applySubmit" class="w-full rounded-xl bg-moss-600 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700">📩 Enviar postulación</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 💼 Publicar una oferta de trabajo (captación B2B) -->
+  <dialog id="postJobDialog" class="w-[min(94vw,36rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="postJobTitle">
+    <form id="postJobForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
+        <div>
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Bici Jobs · Para negocios</p>
+          <h2 id="postJobTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">💼 Publicar oferta de trabajo</h2>
+        </div>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="postJobBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
+        <div class="rounded-2xl bg-soil-950 p-4 text-sand-100">
+          <p class="font-display text-lg font-extrabold uppercase leading-tight text-sand-50">Publica tu aviso por <span class="text-ochre-300">$19.990 CLP</span></p>
+          <p class="text-sm font-semibold text-ochre-300">o Gratis para Tiendas Pro</p>
+          <ul class="mt-2.5 space-y-1 text-[13px] text-sand-200">
+            <li>✓ 30 días visible en Bici Jobs, el portal de empleo del ciclismo</li>
+            <li>✓ Las postulaciones llegan directo a tu WhatsApp</li>
+            <li>✓ Nombre, experiencia, CV y contacto de cada postulante</li>
+          </ul>
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="pjBiz" class="block text-sm font-semibold text-soil-800">Nombre del negocio</label>
+            <input id="pjBiz" maxlength="80" class="field mt-1.5" placeholder="Ej: Taller Rueda Libre" />
+          </div>
+          <div>
+            <label for="pjRole" class="block text-sm font-semibold text-soil-800">Cargo a buscar</label>
+            <input id="pjRole" maxlength="80" class="field mt-1.5" placeholder="Ej: Mecánico Specialist / Suspensión" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3.5">
+          <div>
+            <label for="pjArea" class="block text-sm font-semibold text-soil-800">Área</label>
+            <select id="pjArea" class="field mt-1.5">
+              <option value="taller">🔧 Taller</option><option value="ventas">🛒 Ventas</option><option value="logistica">📦 Logística</option><option value="guia">🧭 Guía</option><option value="otro">💼 Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="pjMode" class="block text-sm font-semibold text-soil-800">Modalidad</label>
+            <select id="pjMode" class="field mt-1.5">
+              <option value="presencial">Presencial</option><option value="terreno">Terreno</option><option value="mixto">Mixto</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3.5">
+          <div>
+            <label for="pjComuna" class="block text-sm font-semibold text-soil-800">Comuna</label>
+            <input id="pjComuna" maxlength="60" class="field mt-1.5" placeholder="Ej: Providencia" />
+          </div>
+          <div>
+            <label for="pjRegion" class="block text-sm font-semibold text-soil-800">Región</label>
+            <select id="pjRegion" class="field mt-1.5"></select>
+          </div>
+        </div>
+        <div>
+          <label for="pjDesc" class="block text-sm font-semibold text-soil-800">Responsabilidades</label>
+          <textarea id="pjDesc" rows="3" maxlength="800" class="field mt-1.5 resize-y" placeholder="Qué hará en el día a día: mantenciones, servicio de suspensiones, atención de clientes…"></textarea>
+        </div>
+        <div>
+          <label for="pjReq" class="block text-sm font-semibold text-soil-800">Requisitos técnicos</label>
+          <textarea id="pjReq" rows="2" maxlength="600" class="field mt-1.5 resize-y" placeholder="Ej: 2 años en taller, manejo de frenos hidráulicos, certificación Shimano deseable"></textarea>
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="pjSalary" class="block text-sm font-semibold text-soil-800">Rango salarial <span class="font-normal text-soil-600">(opcional)</span></label>
+            <input id="pjSalary" maxlength="60" class="field mt-1.5" placeholder="Ej: $800.000 – $1.000.000 líquido" />
+          </div>
+          <div>
+            <label for="pjPhone" class="block text-sm font-semibold text-soil-800">WhatsApp para recibir CVs</label>
+            <input id="pjPhone" type="tel" inputmode="tel" maxlength="20" class="field mt-1.5" placeholder="+56 9 1234 5678" />
+          </div>
+        </div>
+        <label for="pjPro" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
+          <input id="pjPro" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#56743a]" />
+          <span class="text-sm text-soil-700"><strong class="text-soil-950">Mi negocio tiene Plan Pro</strong> (la publicación es gratis).</span>
+        </label>
+        <div class="hidden" aria-hidden="true"><label>Web <input id="pjWebsite" tabindex="-1" autocomplete="off" /></label></div>
+        <p id="pjError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
+      </div>
+      <div id="postJobDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl text-soil-950 shadow-lg">💼</div>
+        <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Aviso recibido!</h3>
+        <p id="postJobDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
+        <a id="postJobWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+      </div>
+      <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="submit" id="postJobSubmit" class="btn-wa-pro w-full py-3 text-sm"><span aria-hidden="true">💬</span> Enviar y coordinar por WhatsApp</button>
+      </div>
+    </form>
   </dialog>
 
   <!-- Flotante móvil del configurador -->
@@ -1310,7 +1467,7 @@
       const jobBlock = p.necesidad ? `
         <div class="mt-4 rounded-xl bg-ochre-300/30 p-3.5 ring-1 ring-ochre-500/50">
           <p class="text-sm font-bold text-soil-950">💼 Buscando personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
-          ${p.whatsapp ? `<a href="${waUrl(p, `Hola, vi en DESVIADOR que buscan personal (${p.necesidad}) y me interesa postular.`)}" target="_blank" rel="noopener" data-gate="postular" data-ref="${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">Postular por WhatsApp →</a>` : ''}
+          <button type="button" data-apply="ficha-${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">📩 Postular a este trabajo →</button>
         </div>` : '';
 
       return `
@@ -2821,25 +2978,81 @@
         </div>
       </article>`).join('');
 
-    // ================= BOLSA DE EMPLEO =================
+    // ================= BICI JOBS: PORTAL DE EMPLEO =================
+    // Fuentes: 1) ofertas publicadas (Supabase: ofertas_empleo) · 2) fichas del mapa con "necesidad_personal"
+    // Los avisos de ejemplo (JOBS / JOB_DEMO_OFFERS) solo se muestran sin base de datos.
+    const $ = (id) => document.getElementById(id);
     const jobListEl = document.getElementById('jobList');
     const jobTabsEl = document.getElementById('jobTabs');
     let jobFilter = 'all';
+    const JOB_POST_PRICE = '$19.990';
+    const JOB_DEMO = !supabaseClient;
 
-    // Bici Jobs reales: fichas aprobadas del mapa con "necesidad_personal" (vienen de Supabase)
+    const JOB_AREAS = {
+      taller:    { label: 'Taller',    icon: '🔧', cls: 'bg-ochre-400/25 text-ochre-600 ring-ochre-500/40' },
+      ventas:    { label: 'Ventas',    icon: '🛒', cls: 'bg-[#2f6f6a]/10 text-[#2f6f6a] ring-[#2f6f6a]/30' },
+      logistica: { label: 'Logística', icon: '📦', cls: 'bg-soil-700/10 text-soil-700 ring-soil-700/25' },
+      guia:      { label: 'Guía',      icon: '🧭', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
+      otro:      { label: 'Otro',      icon: '💼', cls: 'bg-sand-200 text-soil-700 ring-sand-300' },
+    };
+    const JOB_MODES = { presencial: 'Presencial', terreno: 'Terreno', mixto: 'Mixto' };
+    const JOB_EXP = { menos_1: 'Menos de 1 año', '1_2': '1 a 2 años', '3_5': '3 a 5 años', '6_10': '6 a 10 años', mas_10: 'Más de 10 años' };
+
+    // Ejemplos (solo sin base de datos), con el formato de una oferta real
+    const daysAgo = (d) => new Date(Date.now() - d * 86400e3).toISOString();
+    const JOB_DEMO_OFFERS = [
+      { id: 'demo-job-1', puesto: 'Mecánico Specialist / Suspensión', empresa: 'Taller de ejemplo', comuna: 'Providencia', region: 'metropolitana', modalidad: 'presencial', area: 'taller', sueldo: '$900.000 – $1.100.000 líquido', descripcion: 'Servicio de horquillas y amortiguadores Fox/RockShox, purgado de frenos y armado de bicicletas de gama alta.', requisitos: '3 años en taller, manejo de herramientas de suspensión. Certificación SRAM o Shimano deseable.', destacado: true, created_at: daysAgo(1) },
+      { id: 'demo-job-2', puesto: 'Vendedor/a de tienda bike (fines de semana)', empresa: 'Tienda de ejemplo', comuna: 'Viña del Mar', region: 'valparaiso', modalidad: 'presencial', area: 'ventas', sueldo: null, descripcion: 'Atención de clientes, asesoría en tallas y componentes, manejo de caja.', requisitos: 'Gusto por el ciclismo y experiencia en atención de público.', created_at: daysAgo(3) },
+      { id: 'demo-job-3', puesto: 'Guía MTB bilingüe (temporada)', empresa: 'Operador de ejemplo', comuna: 'Puerto Varas', region: 'loslagos', modalidad: 'terreno', area: 'guia', sueldo: 'A convenir', descripcion: 'Guiado de grupos en rutas de enduro y e-MTB de noviembre a marzo.', requisitos: 'Inglés conversacional, primeros auxilios vigentes, mecánica básica en ruta.', created_at: daysAgo(5) },
+      { id: 'demo-job-4', puesto: 'Bodega y despacho e-commerce', empresa: 'Tienda de ejemplo', comuna: 'Quilicura', region: 'metropolitana', modalidad: 'presencial', area: 'logistica', sueldo: '$650.000 líquido', descripcion: 'Preparación de pedidos, embalaje de bicicletas y control de inventario.', requisitos: 'Orden y experiencia en bodega. Licencia B deseable.', created_at: daysAgo(6) },
+    ].map((o) => ({ ...o, demo: true }));
+
+    let jobOffers = JOB_DEMO ? JOB_DEMO_OFFERS : [];
+    async function loadJobOffers() {
+      if (JOB_DEMO) return;
+      const { data, error } = await supabaseClient.from('ofertas_empleo')
+        .select('id, comercio_id, empresa, puesto, area, modalidad, comuna, region, sueldo, descripcion, requisitos, whatsapp, destacado, created_at')
+        .order('destacado', { ascending: false }).order('created_at', { ascending: false }).limit(100);
+      if (error) return console.info('[DESVIADOR] Bici Jobs sin ofertas publicadas (¿ejecutaste supabase/empleos.sql?):', error.message);
+      jobOffers = data;
+      renderJobs();
+    }
+
+    // Área de un aviso que viene de una ficha del mapa (texto libre)
+    const guessArea = (text, cat) => {
+      const t = norm(text);
+      if (/mecanic|taller|suspensi|armad/.test(t)) return 'taller';
+      if (/vend|venta|atencion|caja/.test(t)) return 'ventas';
+      if (/bodega|logistic|despacho|reparto|inventario/.test(t)) return 'logistica';
+      if (/guia|tour|instructor/.test(t)) return 'guia';
+      return { talleres: 'taller', tiendas: 'ventas', tours: 'guia', clases: 'guia' }[cat] || 'otro';
+    };
+
+    // Todo aviso laboral se normaliza a la misma forma: { type:'trabajo', puesto, empresa, comuna, region, modalidad, area, … }
+    function offerJobs() {
+      const byComercio = (id) => id && typeof puntos !== 'undefined' ? puntos.find((p) => String(p.id) === String(id)) : null;
+      return jobOffers.map((o) => {
+        const point = byComercio(o.comercio_id);
+        return { type: 'trabajo', source: 'oferta', ...o, point, pro: point ? isPro(point) : false };
+      });
+    }
     function mapJobs() {
       try {
         return puntos.filter((p) => p.necesidad).map((p) => ({
-          type: 'trabajo', title: `${p.nombre} busca personal`, body: p.necesidad, when: 'Ficha verificada',
-          place: [p.comuna, REGIONES[p.region].label].filter(Boolean).join(' · '), tags: [CATEGORIES[p.categoria].short], point: p,
+          type: 'trabajo', source: 'ficha', id: `ficha-${p.id}`, puesto: p.necesidad, empresa: p.nombre, comuna: p.comuna, region: p.region,
+          modalidad: 'presencial', area: guessArea(p.necesidad, p.categoria), point: p, pro: isPro(p),
         }));
       } catch { return []; } // el mapa no cargó
     }
-    const allJobs = () => [...JOBS.filter((j) => j.isNew), ...mapJobs(), ...JOBS.filter((j) => !j.isNew)];
+    const communityJobs = () => (JOB_DEMO ? JOBS.filter((j) => j.type !== 'trabajo') : JOBS.filter((j) => j.isNew));
+    const allJobs = () => {
+      const work = [...offerJobs(), ...mapJobs()].sort((a, b) => ((b.destacado || b.pro) - (a.destacado || a.pro)));
+      return [...JOBS.filter((j) => j.isNew), ...work, ...communityJobs().filter((j) => !j.isNew)];
+    };
 
     function renderJobTabs() {
       const list = allJobs();
-      const tabs = [['all', 'Todos', list.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, list.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter || k !== 'comunidad')];
+      const tabs = [['all', 'Todos', list.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, list.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter || k === 'trabajo')];
       jobTabsEl.innerHTML = tabs.map(([k, label, n]) => `
         <button type="button" role="tab" data-type="${k}" aria-selected="${k === jobFilter}"
           class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${k === jobFilter ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">
@@ -2853,15 +3066,53 @@
       renderJobs();
     });
 
-    function renderJobs() {
-      renderJobTabs();
-      const items = allJobs().filter((j) => jobFilter === 'all' || j.type === jobFilter);
-      jobListEl.innerHTML = items.length ? '' : '<li class="rounded-xl border border-dashed border-sand-300 p-6 text-center text-sm text-soil-600">No hay avisos en esta categoría todavía.</li>';
-      items.forEach((j) => {
-        const t = JOB_TYPES[j.type];
-        const li = document.createElement('li');
-        li.className = 'rounded-xl border border-sand-300 bg-sand-50 p-4 transition hover:border-soil-600/40 hover:shadow-sm sm:p-5';
-        li.innerHTML = `
+    const jobAgo = (iso) => {
+      if (!iso) return '';
+      const d = Math.floor((Date.now() - new Date(iso)) / 86400e3);
+      return d <= 0 ? 'Hoy' : d === 1 ? 'Ayer' : `Hace ${d} días`;
+    };
+
+    // Tarjeta de oferta laboral
+    function jobCard(j) {
+      const a = JOB_AREAS[j.area] || JOB_AREAS.otro;
+      const place = [j.comuna, REGIONES[j.region]?.label].filter(Boolean).join(', ');
+      const isNew = j.created_at && Date.now() - new Date(j.created_at) < 3 * 86400e3;
+      const featured = j.destacado || j.pro;
+      const details = j.descripcion || j.requisitos;
+      return `
+        <article class="${featured ? 'ficha-pro' : 'bg-sand-50 ring-1 ring-sand-300 hover:ring-soil-600/40'} rounded-2xl p-4 transition hover:shadow-sm sm:p-5">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="rounded-full px-2.5 py-0.5 text-[11px] font-bold ring-1 ${a.cls}">${a.icon} ${a.label}</span>
+            <span class="rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-semibold text-soil-700 ring-1 ring-sand-300">${JOB_MODES[j.modalidad] || 'Presencial'}</span>
+            ${featured ? '<span class="badge-pro px-2 py-0.5 text-[10px]">★ Destacado</span>' : ''}
+            ${isNew ? '<span class="rounded-full bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
+            ${j.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : ''}
+            <span class="ml-auto font-mono text-[11px] text-soil-600">${j.source === 'ficha' ? 'Ficha del mapa' : jobAgo(j.created_at)}</span>
+          </div>
+          <h3 class="mt-2.5 font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 [text-wrap:balance]">${esc(j.puesto)}</h3>
+          <p class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-soil-700">
+            <span class="font-semibold text-soil-900">🏪 ${esc(j.empresa)}</span>${j.pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
+            ${place ? `<span>📍 ${esc(place)}</span>` : ''}
+            ${j.sueldo ? `<span class="font-semibold text-moss-700">💰 ${esc(j.sueldo)}</span>` : ''}
+          </p>
+          ${details ? `
+          <details class="group mt-2">
+            <summary class="cursor-pointer list-none text-sm font-semibold text-moss-700 hover:underline"><span class="group-open:hidden">Ver responsabilidades y requisitos ▾</span><span class="hidden group-open:inline">Ocultar detalle ▴</span></summary>
+            ${j.descripcion ? `<p class="mt-2 text-sm text-soil-700"><strong class="text-soil-900">Responsabilidades:</strong> ${esc(j.descripcion)}</p>` : ''}
+            ${j.requisitos ? `<p class="mt-1.5 text-sm text-soil-700"><strong class="text-soil-900">Requisitos:</strong> ${esc(j.requisitos)}</p>` : ''}
+          </details>` : ''}
+          <div class="mt-3.5 flex flex-col gap-2 sm:flex-row">
+            <button type="button" data-apply="${esc(j.id)}" class="rounded-xl bg-moss-600 px-5 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700 sm:py-2.5">📩 Postular a este Trabajo</button>
+            ${j.point ? `<button type="button" data-job-locate="${esc(j.point.id)}" class="rounded-xl bg-sand-100 px-4 py-2.5 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 transition hover:bg-sand-200">📍 Ver ficha en el mapa</button>` : ''}
+          </div>
+        </article>`;
+    }
+
+    // Tarjeta de jornada de pala / comunidad (sin cambios de diseño)
+    function communityCard(j) {
+      const t = JOB_TYPES[j.type];
+      return `
+        <div class="rounded-xl border border-sand-300 bg-sand-50 p-4 transition hover:border-soil-600/40 hover:shadow-sm sm:p-5">
           <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div class="min-w-0">
               <div class="mb-2 flex flex-wrap items-center gap-2">
@@ -2869,25 +3120,223 @@
                 ${j.isNew ? '<span class="rounded bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
                 <span class="text-xs text-soil-600">${esc(j.place)} · ${esc(j.when)}</span>
               </div>
-              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${j.point ? '💼 ' : j.type === 'voluntariado' ? '⛏️ ' : ''}${esc(j.title)}</h3>
+              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${j.type === 'voluntariado' ? '⛏️ ' : ''}${esc(j.title)}</h3>
               <p class="mt-1 text-sm text-soil-600">${esc(j.body)}</p>
-              ${j.tags.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-sand-200/70 px-2 py-0.5 text-[11px] font-medium text-soil-700">${esc(tag)}</span>`).join('')}</div>` : ''}
+              ${j.tags?.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-sand-200/70 px-2 py-0.5 text-[11px] font-medium text-soil-700">${esc(tag)}</span>`).join('')}</div>` : ''}
             </div>
-            <button type="button" class="reply-btn shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-soil-950 ring-1 ring-soil-600/40 transition hover:bg-moss-600 hover:text-sand-50 hover:ring-moss-600">${j.point ? 'Ver ficha y postular' : j.type === 'voluntariado' ? 'Sumarme' : 'Postular'}</button>
-          </div>`;
-        li.querySelector('.reply-btn').addEventListener('click', () => {
-          if (!j.point) return toast('Pronto podrás responder avisos desde DESVIADOR');
-          document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
-          setTimeout(() => openDrawer(j.point), 450);
-        });
-        jobListEl.appendChild(li);
-      });
+            <button type="button" data-community-reply class="shrink-0 self-start rounded-lg px-4 py-2 text-sm font-semibold text-soil-950 ring-1 ring-soil-600/40 transition hover:bg-moss-600 hover:text-sand-50 hover:ring-moss-600">${j.type === 'voluntariado' ? 'Sumarme' : 'Responder'}</button>
+          </div>
+        </div>`;
     }
+
+    function renderJobs() {
+      renderJobTabs();
+      const items = allJobs().filter((j) => jobFilter === 'all' || j.type === jobFilter);
+      const hasWork = items.some((j) => j.type === 'trabajo');
+      const empty = `<li class="rounded-2xl border border-dashed border-sand-300 p-6 text-center">
+          <p class="font-semibold text-soil-950">${jobFilter === 'trabajo' || jobFilter === 'all' ? 'Aún no hay ofertas de trabajo publicadas.' : 'No hay avisos en esta categoría todavía.'}</p>
+          <p class="mt-1 text-sm text-soil-600">¿Tu taller o tienda busca personal? Publica tu aviso y recibe postulaciones por WhatsApp.</p>
+          <button type="button" data-post-job="vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 hover:bg-soil-800">💼 Publicar Oferta de Trabajo</button>
+        </li>`;
+      jobListEl.innerHTML = items.length
+        ? items.map((j) => `<li>${j.type === 'trabajo' ? jobCard(j) : communityCard(j)}</li>`).join('')
+          + (!hasWork && (jobFilter === 'all') ? empty : '')
+        : empty;
+    }
+    jobListEl.addEventListener('click', (e) => {
+      if (e.target.closest('[data-community-reply]')) return toast('Pronto podrás responder avisos desde DESVIADOR');
+      const loc = e.target.closest('[data-job-locate]');
+      if (loc) return locatePoint(loc.dataset.jobLocate);
+    });
+    // "Postular" desde la lista o desde la ficha del mapa
+    document.addEventListener('click', (e) => {
+      const ap = e.target.closest('[data-apply]');
+      if (ap) openApply(allJobs().find((j) => String(j.id) === ap.dataset.apply));
+    });
+
+    // --- Cola de envíos a Supabase: si falla la red, se reintenta en la próxima visita ---
+    const JOBS_QUEUE_KEY = 'desviador-cola-empleos';
+    async function flushJobQueue() {
+      if (!supabaseClient) return;
+      const left = [];
+      for (const item of readJSON(JOBS_QUEUE_KEY, [])) {
+        const { error } = await supabaseClient.from(item.table).insert([item.row]);
+        if (error) { console.warn(`[DESVIADOR] ${item.table} sin guardar:`, error.message); left.push(item); }
+      }
+      writeJSON(JOBS_QUEUE_KEY, left);
+      return left.length === 0;
+    }
+    function queueInsert(table, row) {
+      writeJSON(JOBS_QUEUE_KEY, [...readJSON(JOBS_QUEUE_KEY, []), { table, row }]);
+      return flushJobQueue();
+    }
+    const phoneCL = (v) => { const d = String(v).replace(/\D/g, ''); return d.length === 9 && d.startsWith('9') ? '56' + d : d; };
+    const salesNumber = () => (typeof tripAdminNumber === 'function' ? tripAdminNumber() : '');
+    function showFormError(el, msg, fieldId) {
+      el.textContent = msg || ''; el.classList.toggle('hidden', !msg);
+      if (fieldId) $(fieldId).focus();
+    }
+    function unlockGateWith(email) {
+      if (typeof isUnlocked !== 'function' || isUnlocked()) return;
+      const unlock = { email, intereses: [], unlockedAt: new Date().toISOString(), version: GATE_VERSION };
+      if (!writeJSON(GATE_KEY, unlock)) gateMemory = unlock;
+    }
+
+    // --- 📩 Postulación ---
+    const applyDlg = $('applyDialog'), applyForm = $('applyForm');
+    let applyJob = null;
+    applyDlg.addEventListener('click', (e) => { if (e.target === applyDlg || e.target.closest('[data-close]')) applyDlg.close(); });
+    $('applyMsg').addEventListener('input', (e) => { $('applyCount').textContent = e.target.value.length; });
+
+    function openApply(j) {
+      if (!j) return;
+      applyJob = j;
+      applyForm.reset();
+      $('applyCount').textContent = '0';
+      $('applyTitle').textContent = j.puesto;
+      $('applyCompany').textContent = `${j.empresa}${j.comuna ? ` · ${j.comuna}` : ''}`;
+      $('applyDemo').hidden = !j.demo;
+      $('applyBody').hidden = false; $('applyDone').hidden = true;
+      $('applySubmit').textContent = '📩 Enviar postulación';
+      showFormError($('applyError'), '');
+      const prev = readJSON(GATE_KEY, null);
+      if (prev?.email) $('applyEmail').value = prev.email;
+      if (j.point && j.point.detailsLoaded === false) loadDetails(j.point); // el WhatsApp de la ficha llega bajo demanda
+      applyDlg.showModal();
+      track('job_apply_opened', { ref: j.id, area: j.area, fuente: j.source });
+    }
+
+    const applyWaText = (j, d) => [
+      `Hola ${j.empresa}, te escribo por el aviso "${j.puesto}" publicado en DESVIADOR Bici Jobs.`,
+      `• Nombre: ${d.nombre}`,
+      `• Experiencia en el rubro: ${JOB_EXP[d.experiencia]}`,
+      `• WhatsApp: +${d.telefono}`,
+      `• Email: ${d.email}`,
+      d.cv_url ? `• CV / LinkedIn: ${d.cv_url}` : '',
+      d.mensaje ? `\n${d.mensaje}` : '',
+    ].filter(Boolean).join('\n');
+
+    applyForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!$('applyDone').hidden) return applyDlg.close(); // botón "Listo"
+      const err = $('applyError');
+      const d = {
+        nombre: $('applyName').value.trim(), telefono: phoneCL($('applyPhone').value), email: $('applyEmail').value.trim().toLowerCase(),
+        experiencia: $('applyExp').value, cv_url: $('applyCv').value.trim(), mensaje: $('applyMsg').value.trim(),
+      };
+      if (d.nombre.length < 2) return showFormError(err, 'Escribe tu nombre.', 'applyName');
+      if (!/^\d{8,15}$/.test(d.telefono)) return showFormError(err, 'Revisa el teléfono: incluye el código de país, ej. +56 9 1234 5678.', 'applyPhone');
+      if (!EMAIL_RE.test(d.email)) return showFormError(err, 'Revisa el correo: debe tener el formato nombre@dominio.cl', 'applyEmail');
+      if (!d.experiencia) return showFormError(err, 'Indica tus años de experiencia en el rubro.', 'applyExp');
+      if (d.cv_url && !/^https?:\/\/\S+\.\S+/.test(d.cv_url)) return showFormError(err, 'El enlace al CV debe empezar con https://', 'applyCv');
+      if ($('applyWebsite').value) return; // bot
+      const j = applyJob;
+      if (j.demo) { applyDlg.close(); return toast('Aviso de ejemplo: aquí las tiendas publicarán sus ofertas reales'); }
+
+      const row = { oferta_id: j.source === 'oferta' ? j.id : null, comercio_id: j.point && 'detailsLoaded' in j.point ? j.point.id : (j.comercio_id || null),
+        puesto: j.puesto.slice(0, 120), empresa: j.empresa.slice(0, 120), ...d, cv_url: d.cv_url || null, mensaje: d.mensaje || null };
+      const storeWa = String((j.whatsapp || j.point?.whatsapp) || '').replace(/\D/g, '');
+      const waLink = /^\d{8,15}$/.test(storeWa) ? `https://wa.me/${storeWa}?text=${encodeURIComponent(applyWaText(j, d))}` : '';
+      unlockGateWith(d.email);
+      track('job_apply_sent', { ref: j.id, area: j.area, experiencia: d.experiencia, whatsapp: !!waLink });
+
+      if (waLink) {
+        // WhatsApp dentro del mismo clic; el registro va a la base en segundo plano
+        queueInsert('postulaciones', row);
+        openWhatsApp(waLink);
+        return showApplyDone(`Se abrió WhatsApp con tu postulación para ${j.empresa}. Solo tienes que presionar enviar.`, waLink);
+      }
+      // Sin WhatsApp de la tienda: la postulación queda en la base y el equipo la hace llegar
+      $('applySubmit').textContent = 'Enviando…';
+      const ok = supabaseClient ? await queueInsert('postulaciones', row) : false;
+      $('applySubmit').textContent = '📩 Enviar postulación';
+      if (ok) return showApplyDone(`Recibimos tu postulación y se la hacemos llegar a ${j.empresa}.`, '');
+      const admin = salesNumber();
+      if (admin) {
+        const link = `https://wa.me/${admin}?text=${encodeURIComponent(applyWaText(j, d))}`;
+        openWhatsApp(link);
+        return showApplyDone('Se abrió WhatsApp para enviar tu postulación al equipo de DESVIADOR, que la hará llegar a la tienda.', link);
+      }
+      showFormError(err, 'No pudimos enviar tu postulación. Inténtalo de nuevo en un rato.');
+    });
+    function showApplyDone(text, link) {
+      $('applyBody').hidden = true; $('applyDone').hidden = false;
+      $('applyDoneText').textContent = text;
+      $('applyWaAgain').hidden = !link; if (link) $('applyWaAgain').href = link;
+      $('applySubmit').textContent = 'Listo';
+    }
+
+    // --- 💼 Publicar oferta (captación B2B) ---
+    const postDlg = $('postJobDialog'), postForm = $('postJobForm');
+    $('pjRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
+    postDlg.addEventListener('click', (e) => { if (e.target === postDlg || e.target.closest('[data-close]')) postDlg.close(); });
+    function openPostJob(via) {
+      if ($('postJobBody').hidden) { postForm.reset(); $('pjRegion').value = 'metropolitana'; }
+      $('postJobBody').hidden = false; $('postJobDone').hidden = true;
+      $('postJobSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar y coordinar por WhatsApp';
+      showFormError($('pjError'), '');
+      postDlg.showModal();
+      track('job_post_opened', { via });
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-post-job]'); if (b) { e.preventDefault(); openPostJob(b.dataset.postJob); } });
+
+    const postWaText = (o, pro) => [
+      `Hola DESVIADOR, quiero publicar una oferta en Bici Jobs${pro ? ' (tengo Plan Pro)' : ` (${JOB_POST_PRICE} CLP)`}:`,
+      `• Negocio: ${o.empresa}`,
+      `• Cargo: ${o.puesto}`,
+      `• Área: ${JOB_AREAS[o.area].label} · ${JOB_MODES[o.modalidad]}`,
+      `• Lugar: ${o.comuna}, ${REGIONES[o.region].label}`,
+      o.sueldo ? `• Rango salarial: ${o.sueldo}` : '',
+      `• Responsabilidades: ${o.descripcion}`,
+      `• Requisitos: ${o.requisitos}`,
+      `• WhatsApp para CVs: +${o.whatsapp}`,
+    ].filter(Boolean).join('\n');
+
+    postForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!$('postJobDone').hidden) return postDlg.close(); // botón "Listo"
+      const err = $('pjError');
+      const o = {
+        empresa: $('pjBiz').value.trim(), puesto: $('pjRole').value.trim(), area: $('pjArea').value, modalidad: $('pjMode').value,
+        comuna: $('pjComuna').value.trim(), region: $('pjRegion').value, sueldo: $('pjSalary').value.trim() || null,
+        descripcion: $('pjDesc').value.trim(), requisitos: $('pjReq').value.trim(), whatsapp: phoneCL($('pjPhone').value),
+      };
+      const pro = $('pjPro').checked;
+      if (o.empresa.length < 2) return showFormError(err, 'Escribe el nombre del negocio.', 'pjBiz');
+      if (o.puesto.length < 3) return showFormError(err, 'Indica el cargo que buscas.', 'pjRole');
+      if (o.comuna.length < 2) return showFormError(err, 'Indica la comuna.', 'pjComuna');
+      if (o.descripcion.length < 15) return showFormError(err, 'Describe las responsabilidades (al menos 15 caracteres).', 'pjDesc');
+      if (o.requisitos.length < 5) return showFormError(err, 'Indica los requisitos técnicos.', 'pjReq');
+      if (!/^\d{8,15}$/.test(o.whatsapp)) return showFormError(err, 'Revisa el WhatsApp para recibir CVs: ej. +56 9 1234 5678.', 'pjPhone');
+      if ($('pjWebsite').value) return; // bot
+      track('job_post_sent', { area: o.area, region: o.region, pro });
+
+      const admin = salesNumber();
+      const link = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(postWaText(o, pro))}` : '';
+      // El aviso queda "pendiente" en la base: al confirmar el pago (o el Plan Pro) solo hay que publicarlo
+      const saved = supabaseClient ? queueInsert('ofertas_empleo', { ...o, pro_declarado: pro }) : Promise.resolve(false);
+      if (link) {
+        openWhatsApp(link);
+        return showPostDone('Se abrió WhatsApp con tu aviso listo. Envíalo y coordinamos el pago o la activación de tu Plan Pro para publicarlo.', link);
+      }
+      $('postJobSubmit').textContent = 'Enviando…';
+      if (await saved) return showPostDone('Recibimos tu aviso. Te escribiremos al WhatsApp que indicaste para coordinar el pago o tu Plan Pro y publicarlo.', '');
+      $('postJobSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar y coordinar por WhatsApp';
+      showFormError(err, supabaseClient ? 'No pudimos enviar tu aviso. Inténtalo de nuevo en un rato.' : 'La publicación de avisos aún no está habilitada. Vuelve pronto.');
+    });
+    function showPostDone(text, link) {
+      $('postJobBody').hidden = true; $('postJobDone').hidden = false;
+      $('postJobDoneText').textContent = text;
+      $('postJobWaAgain').hidden = !link; if (link) $('postJobWaAgain').href = link;
+      $('postJobSubmit').textContent = 'Listo';
+    }
+
     renderJobs();
+    loadJobOffers();
+    flushJobQueue(); // reintentar envíos que quedaron en cola
 
     // ================= FORMULARIO =================
     const form = document.getElementById('mainForm');
-    const $ = (id) => document.getElementById(id);
     $('bizCat').innerHTML = Object.entries(CATEGORIES).map(([k, c]) => `<option value="${k}">${c.short}</option>`).join('');
     $('bizRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}">${r.label}</option>`).join('');
     $('bizRegion').value = 'metropolitana';

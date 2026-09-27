@@ -99,3 +99,12 @@ Ejecuta [`supabase/utilidades.sql`](supabase/utilidades.sql) en Supabase → SQL
 ### 🚨 Repuesto / Taller de urgencia
 - Usa el GPS (o la comuna elegida a mano si no hay permiso) para mostrar talleres y tiendas a 5, 10 o 20 km. Primero aparecen los que hacen mantención o venden repuestos, luego el resto por distancia.
 - Cada resultado tiene `🧭 Cómo llegar` (Google Maps o Waze) y `💬 Consultar Stock WhatsApp`. Este botón no pasa por el gate de correo: en una emergencia no se piden datos.
+
+## Bici Jobs (portal de empleo)
+
+Ejecuta [`supabase/empleos.sql`](supabase/empleos.sql) en Supabase → SQL Editor. Crea las tablas `ofertas_empleo` y `postulaciones`.
+
+- **Ofertas:** cada tarjeta muestra puesto, empresa, comuna y región, modalidad, rango salarial (opcional) y área (Taller, Ventas, Logística, Guía). Las destacadas y las de negocios Pro llevan borde dorado y aparecen primero. Las fichas del mapa con "¿Buscas personal?" también aparecen como ofertas.
+- **📩 Postular a este Trabajo:** el postulante deja nombre, WhatsApp, email, años de experiencia, enlace a CV/LinkedIn y un mensaje. Se abre WhatsApp hacia la tienda con todo ya redactado y se guarda una copia en `postulaciones`, que solo los admins pueden leer. Si la tienda no tiene WhatsApp, la postulación queda en la base para que la hagas llegar.
+- **💼 Publicar Oferta de Trabajo** ($19.990 CLP o gratis con Plan Pro): el negocio completa el aviso y se abre el WhatsApp comercial (`SALES_WHATSAPP`) con el aviso redactado. El aviso queda en `ofertas_empleo` con estado `pendiente`. Cuando coordines el pago (o verifiques el Plan Pro, ver `pro_declarado`), cambia `estado` a `publicado`. Opcionalmente, pon `publicado_hasta` en hoy + 30 días y `destacado`, o vincula `comercio_id` a su ficha.
+- Los avisos de ejemplo solo se ven cuando no hay base de datos conectada.
