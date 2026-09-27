@@ -114,7 +114,7 @@ Ejecuta [`supabase/empleos.sql`](supabase/empleos.sql) en Supabase → SQL Edito
 Ejecuta [`supabase/guias.sql`](supabase/guias.sql) en Supabase → SQL Editor. Agrega la categoría `guias` y los campos del perfil (`foto_url`, `zonas`, `certificaciones`, `idiomas`, `disciplinas`, `tarifa`).
 
 - **Filtro 🧭 Guías & Instructores** en los accesos del mapa y en el directorio. Los pines de los guías tienen su propio color.
-- **Ficha de perfil:** foto (o iniciales), sello `✔ Guía Verificado` (todo guía aprobado), zonas de cobertura, certificaciones, idiomas, disciplinas y tarifa orientativa. Incluye un cotizador (fecha, zona, disciplina y personas) con el botón `💬 Cotizar / Reservar Salida`, que abre WhatsApp hacia el guía con todo redactado.
+- **Ficha de perfil:** foto (o iniciales), sello `✔ Guía Verificado` (solo Guía PRO), zonas de cobertura, certificaciones, idiomas, disciplinas y tarifa orientativa. Incluye un cotizador (fecha, zona, disciplina y personas) con el botón `💬 Cotizar / Reservar Salida`, que abre WhatsApp hacia el guía con todo redactado.
 - **Registro gratis (freemium):** el banner "🧭 Regístrate Gratis como Guía Local / Instructor", el filtro del directorio y cada perfil abren el formulario. El perfil entra directo a la base como ficha **pendiente**, y en el panel admin ves zonas, disciplinas, idiomas, certificaciones, tarifa y foto.
   - Antes de aprobar: verifica el perfil y ajusta el pin con **Editar** (se ubica en el centro de su comuna o región).
   - Si la base falla y hay `SALES_WHATSAPP`, el perfil se envía por WhatsApp como respaldo.
