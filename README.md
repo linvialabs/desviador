@@ -120,3 +120,29 @@ Ejecuta [`supabase/guias.sql`](supabase/guias.sql) en Supabase → SQL Editor. A
   - Ajusta el pin con **Editar**. Se ubica en el centro de su comuna o región.
   - Los campos del perfil se corrigen en Table Editor.
 - La foto debe ser un enlace `https://` a una imagen (por ejemplo, de su web o Instagram).
+
+## Planes y tarifas
+
+La sección **Anúnciate** (`#anunciate`) muestra 3 planes y un bloque para marcas. Cada botón abre WhatsApp comercial (`SALES_WHATSAPP`) con el plan de interés ya escrito. Sin número configurado, cada botón lleva al flujo equivalente del sitio: formulario de negocio, registro de guía o ficha destacada.
+
+| Plan | Precio | Cómo se activa |
+|---|---|---|
+| Gratis (Ficha básica) | $0 | Aprobar la ficha en el panel |
+| Guía Local / Freelance | $9.990/mes | Aprobar el perfil de guía en el panel |
+| Tienda / Taller PRO | $24.990/mes o $19.990/mes semestral | **Destacar** la ficha en el panel |
+| Auspicios y banners regionales | A convenir | Por WhatsApp |
+
+**Beneficios que entrega el sitio:**
+- **PRO:**
+  - pin dorado, borde gold y sello Verificado;
+  - WhatsApp destacado en el directorio;
+  - aparece primero en el directorio;
+  - prioridad en 🚨 Urgencia, dentro de los talleres y tiendas técnicas;
+  - avisos de Bici Jobs sin costo.
+- **Guía:** aparece en la pantalla final de "Arma tu Viaje" ("Guías verificados para tu viaje") según la zona elegida.
+
+**Informe mensual de visitas y clics:** ejecuta [`supabase/planes.sql`](supabase/planes.sql). Registra de forma anónima las vistas de cada ficha y los clics en WhatsApp, "Cómo llegar" y cotizaciones de guías. Para ver el informe del mes (SQL Editor):
+
+```sql
+select * from informe_mensual_fichas where mes = to_char(now(), 'YYYY-MM') order by vistas desc;
+```
