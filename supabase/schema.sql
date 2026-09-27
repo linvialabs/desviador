@@ -1,4 +1,4 @@
--- DESVIADOR · esquema de Supabase (copia del bloque SQL de index.html)
+-- BIKEGRID · esquema de Supabase (copia del bloque SQL de index.html)
 -- Ejecutar una vez en Supabase → SQL Editor.
 
 

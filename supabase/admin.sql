@@ -1,4 +1,4 @@
--- DESVIADOR · Panel de administración
+-- BIKEGRID · Panel de administración
 -- Ejecutar en Supabase → SQL Editor DESPUÉS de schema.sql. Se puede volver a ejecutar sin problema.
 
 -- 1) Lista de administradores (se edita solo desde el SQL Editor / Table Editor de Supabase)

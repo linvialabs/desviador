@@ -1,4 +1,4 @@
--- DESVIADOR · Planes de salida / viaje (configurador "Arma tu Salida / Viaje")
+-- BIKEGRID · Planes de salida / viaje (configurador "Arma tu Salida / Viaje")
 -- Ejecutar en Supabase → SQL Editor. Requiere admin.sql (usa public.is_admin()). Se puede re-ejecutar.
 
 create table if not exists public.planes_viaje (

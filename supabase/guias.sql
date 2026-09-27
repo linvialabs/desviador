@@ -1,4 +1,4 @@
--- DESVIADOR · Guías & Instructores: categoría "guias" y campos del perfil
+-- BIKEGRID · Guías & Instructores: categoría "guias" y campos del perfil
 -- Ejecutar en Supabase → SQL Editor, después de schema.sql y admin.sql. Se puede re-ejecutar.
 
 -- 1) Nueva categoría

@@ -1,4 +1,4 @@
--- DESVIADOR · Ecosistema digital de las fichas: web, Instagram, TikTok, YouTube y mapa de pistas
+-- BIKEGRID · Ecosistema digital de las fichas: web, Instagram, TikTok, YouTube y mapa de pistas
 -- Ejecutar en Supabase → SQL Editor, después de schema.sql y admin.sql. Se puede re-ejecutar.
 -- El sitio los muestra solo en fichas Pro (destacado) y guías; se cargan desde el panel admin (Editar).
 

@@ -1,4 +1,4 @@
--- DESVIADOR · Utilidades del día: semáforo de senderos (reportes de la comunidad) y bolsa de cupos shuttle
+-- BIKEGRID · Utilidades del día: semáforo de senderos (reportes de la comunidad) y bolsa de cupos shuttle
 -- Ejecutar en Supabase → SQL Editor. Requiere schema.sql y admin.sql (usa public.is_admin()). Se puede re-ejecutar.
 
 -- ============ 1. Reportes de estado de cerros / bikeparks ============

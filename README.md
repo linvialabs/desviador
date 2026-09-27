@@ -1,4 +1,4 @@
-# DESVIADOR
+# BIKEGRID
 
 Ciclismo independiente y técnico en Chile.
 
@@ -57,7 +57,7 @@ El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular
 
 **No se pierden leads:** cada lead se guarda primero en `localStorage` (`desviador-leads-pendientes`) y se borra de ahí solo cuando llega a su destino; si falla, se reintenta en la próxima visita.
 
-**Eventos (analytics mínimos):** `gate_opened`, `gate_submitted`, `gate_dismissed`, `whatsapp_clicked_after_unlock`. Se ven en la consola del navegador (`[DESVIADOR analytics]`), en `window.desviadorEvents` y se envían a `window.dataLayer` si agregas Google Tag Manager.
+**Eventos (analytics mínimos):** `gate_opened`, `gate_submitted`, `gate_dismissed`, `whatsapp_clicked_after_unlock`. Se ven en la consola del navegador (`[BIKEGRID analytics]`), en `window.desviadorEvents` y se envían a `window.dataLayer` si agregas Google Tag Manager.
 
 **Para probar de nuevo el modal:** en la consola del navegador, `localStorage.removeItem('desviador-gate')` y recarga.
 
@@ -164,3 +164,10 @@ Ejecuta [`supabase/redes.sql`](supabase/redes.sql). Agrega `website_url`, `insta
 - **Fichas PRO siempre arriba:** en el directorio, en cada filtro y en la búsqueda del mapa, sin importar la comuna o categoría.
 - **Carga de 20 en 20:** el directorio completo muestra 20 fichas y agrega 20 más al acercarse al final (`IntersectionObserver`). También hay un botón "Ver más" para teclado o navegadores sin soporte.
 - **🧭 Guías Locales:** botón en el encabezado (y en el menú móvil) que filtra el mapa a guías sin mover la vista e indica cuántos hay en la zona visible. Si no hay, muestra todos los de Chile. Un segundo toque quita el filtro.
+
+## Marca: BIKEGRID
+
+- Antes se llamaba **DESVIADOR**. Todos los textos visibles, metadatos, logo (isotipo SVG de cuadrícula de nodos + piñón), favicon y mensajes de WhatsApp dicen **BIKEGRID**.
+- La configuración ahora es `window.BIKEGRID_CONFIG` en `supabase-config.js`. El nombre anterior `DESVIADOR_CONFIG` sigue funcionando.
+- **Se mantienen a propósito** las claves internas del navegador (`desviador-guardados`, `desviador-gate`, colas de envío…) y los eventos internos (`desviador:*`), para que los usuarios actuales no pierdan sus spots guardados, desbloqueos ni envíos pendientes.
+- Este repositorio y su URL de GitHub Pages siguen llamándose `desviador`. Para la marca nueva, lo ideal es un dominio propio (ej. `bikegrid.cl` o `bikegrid.app`) apuntado a GitHub Pages.

@@ -1,4 +1,4 @@
--- DESVIADOR · Bici Jobs: ofertas de trabajo y postulaciones
+-- BIKEGRID · Bici Jobs: ofertas de trabajo y postulaciones
 -- Ejecutar en Supabase → SQL Editor. Requiere schema.sql y admin.sql (usa public.is_admin()). Se puede re-ejecutar.
 
 -- ============ 1. Ofertas de trabajo ============

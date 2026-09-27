@@ -1,4 +1,4 @@
--- DESVIADOR · Medición para el "Informe mensual de visitas y clics" del Plan PRO
+-- BIKEGRID · Medición para el "Informe mensual de visitas y clics" del Plan PRO
 -- Ejecutar en Supabase → SQL Editor. Requiere schema.sql y admin.sql (usa public.is_admin()). Se puede re-ejecutar.
 -- Anónimo: solo se guarda la ficha, el tipo de evento y la fecha (nada del visitante).
 

@@ -1,4 +1,4 @@
--- DESVIADOR · Leads del gate de contacto (correo + qué pedalea)
+-- BIKEGRID · Leads del gate de contacto (correo + qué pedalea)
 -- Ejecutar en Supabase → SQL Editor. Requiere admin.sql (usa public.is_admin()). Se puede re-ejecutar.
 
 create table if not exists public.leads (
