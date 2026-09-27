@@ -130,7 +130,7 @@ La sección **Anúnciate** (`#anunciate`) muestra 3 planes y un bloque para marc
 | Gratis (Ficha básica) | $0 | Aprobar la ficha en el panel |
 | Guía (perfil) | Gratis | Aprobar el perfil de guía en el panel |
 | Guía PRO | $9.990/mes | **Destacar** el perfil del guía en el panel |
-| Tienda / Taller PRO | $24.990/mes o $19.990/mes semestral | **Destacar** la ficha en el panel |
+| Tienda / Taller PRO | $19.990/mes por local · 2° local + $9.990/mes · Enterprise (3+ locales) a medida | **Destacar** la ficha en el panel |
 | Auspicios y banners regionales | A convenir | Por WhatsApp |
 
 **Beneficios que entrega el sitio:**
@@ -195,3 +195,40 @@ Ejecuta [`supabase/marcas.sql`](supabase/marcas.sql). Crea un **catálogo único
 - **Niveles del planificador:** usan los símbolos internacionales de dificultad (círculo verde, cuadrado azul, diamante negro y doble diamante).
 - **Marca:** `BIKE` fino + `GRID` en verde de marca `#2e7d32` (clase `text-brand` / `bg-brand`). El isotipo combina una cuadrícula de nodos GPS con un piñón.
 - **Navegación:** en mayúsculas con espaciado: MAPA · ESTADO DE PISTAS · BICI JOBS · DIRECTORIO PRO, más accesos a guías, shuttles, urgencia y el planificador.
+
+## Tarifas por locales (multi-local / Enterprise)
+
+La Ficha Pro se cobra por sucursal. Aparece en la sección de planes (`#multilocal`), en el banner "Activa tu Ficha Pro" y dentro del modal de verificación, donde el negocio elige cuántos locales tiene y el mensaje de WhatsApp se ajusta solo:
+
+| Tramo | Precio | Incluye |
+|---|---|---|
+| Local único · Ficha Pro | $19.990 CLP / mes | Geolocalización GPS, Bici Jobs ilimitado, Sello Trail Care |
+| 2° local · Segunda sucursal | + $9.990 CLP / mes | 50% de descuento en la segunda Ficha Pro |
+| Plan Enterprise · 3 o más locales | Plan a medida | Plan corporativo consolidado con atención personalizada y beneficios de red |
+
+El botón `data-plan="enterprise"` abre WhatsApp comercial con una plantilla corporativa (o el modal en modo Enterprise si `SALES_WHATSAPP` está vacío). Se reemplazó el antiguo selector mensual/semestral para no mostrar dos precios distintos para el mismo plan.
+
+## Espacios publicitarios (BIKEGRID Ads)
+
+Cuatro espacios con placeholders animados en CSS puro (cuadrícula en movimiento, brillo diagonal y texto con degradado; se detienen con `prefers-reduced-motion`):
+
+| Espacio | `data-ad-slot` | Dónde | Tamaño |
+|---|---|---|---|
+| Leaderboard | `top` | Bajo la barra de navegación | 100% de ancho, 52–64 px de alto (máx. 80) |
+| Rascacielos | `rail-left`, `rail-right` | Costados del contenido, solo ≥1280 px, visibles al dejar atrás el mapa y ocultos junto al pie de página | 160 × 600 px |
+| Franja inferior | `footer` | Antes del footer, para cierres de campaña y marcas sponsor | 100% de ancho, ~56 px |
+
+Los rascacielos nunca se muestran en pantallas de 768 px o menos. Para vender un espacio basta con configurar la creatividad en `supabase-config.js`, sin tocar el HTML:
+
+```js
+window.BIKEGRID_CONFIG = {
+  // …
+  ADS: {
+    top:         { img: 'https://…/leaderboard-1600x80.jpg', url: 'https://marca.cl', alt: 'Marca X' },
+    'rail-left': { img: 'https://…/sky-160x600.jpg',         url: 'https://tienda.cl' },
+    footer:      { img: 'https://…/franja-1200x56.jpg',       url: 'https://evento.cl' },
+  },
+};
+```
+
+Solo se aceptan URLs `https://`. Los enlaces salen con `rel="sponsored noopener"`. Se registran `ad_impression` (una por espacio y visita, con al menos 50% visible) y `ad_clicked`; los CTA de los placeholders registran `plan_cta_clicked` con `via: publicidad:<espacio>`, útil para mostrar a un anunciante cuánta gente vio y tocó su espacio.

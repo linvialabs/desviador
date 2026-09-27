@@ -159,11 +159,37 @@
     .social-trail { background: #56743a; color: #f6f1e7; }
     .social-locked { overflow: hidden; background: repeating-linear-gradient(-45deg, rgba(201,187,163,.16) 0 10px, transparent 10px 20px), #f1eadc; }
     .social-locked .ghost { display: flex; align-items: center; justify-content: center; gap: .35rem; border-radius: .6rem; padding: .5rem; font-size: .8rem; font-weight: 700; color: #9a8b76; box-shadow: inset 0 0 0 1px #d8ccb6; background: rgba(255,253,248,.6); filter: blur(.3px); user-select: none; }
+    /* ===== Espacios publicitarios (placeholders animados de la marca, CSS puro) ===== */
+    .ad-slot { position: relative; overflow: hidden; isolation: isolate; background: #15120e; color: #ede5d6; }
+    .ad-grid { position: absolute; inset: -48px; z-index: -1; background-image: linear-gradient(rgba(46,125,50,.28) 1px, transparent 1px), linear-gradient(90deg, rgba(46,125,50,.28) 1px, transparent 1px); background-size: 24px 24px; animation: adGrid 14s linear infinite; -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%); mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%); }
+    @keyframes adGrid { to { transform: translate3d(24px, 24px, 0); } }
+    .ad-shimmer::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(100deg, transparent 35%, rgba(246,241,231,.10) 50%, transparent 65%); transform: translateX(-100%); animation: adShimmer 3.6s ease-in-out infinite; }
+    @keyframes adShimmer { to { transform: translateX(100%); } }
+    .ad-text { background: linear-gradient(90deg, #c9bba3 0%, #f6f1e7 25%, #8fd18f 50%, #f6f1e7 75%, #c9bba3 100%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: adText 7s linear infinite; }
+    @keyframes adText { to { background-position: -200% 0; } }
+    .ad-node { animation: adPulse 2.4s ease-in-out infinite; }
+    .ad-node:nth-child(2n) { animation-delay: .6s; } .ad-node:nth-child(3n) { animation-delay: 1.2s; }
+    @keyframes adPulse { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+    .ad-label { font: 600 9px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(221,210,191,.55); }
+    .ad-slot > * { position: relative; z-index: 1; }
+    .ad-slot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    /* Rascacielos laterales: solo escritorio amplio, fuera del mapa (se muestran al pasar el mapa) */
+    .ad-rail { position: fixed; top: calc(3.5rem + 1rem); z-index: 900; display: none; width: 160px; height: min(600px, calc(100vh - 5.5rem)); border-radius: 1rem; box-shadow: 0 10px 30px rgba(21,18,14,.25); }
+    .ad-rail.is-left { left: 1.25rem; } .ad-rail.is-right { right: 1.25rem; }
+    @media (min-width: 1280px) {
+      .ad-rail.is-on { display: flex; }
+      .has-rails .mx-auto.max-w-6xl { max-width: min(72rem, calc(100vw - 400px)); } /* deja espacio a los rieles */
+    }
+    @media (max-width: 768px) { .ad-rail { display: none !important; } }
+
     /* Navegación: mayúsculas con espaciado */
     .navlink { position: relative; white-space: nowrap; transition: color .15s ease; }
     .navlink:hover, .navlink:focus-visible { color: #f6f1e7; }
     .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #2e7d32; transform: scaleX(0); transition: transform .2s ease; }
     .navlink:hover::after { transform: scaleX(1); }
+    .locales-opt { background: #fffdf8; }
+    .locales-opt:hover { box-shadow: inset 0 0 0 1px #54473a; }
+    .locales-opt[aria-pressed="true"] { background: #e8f3e9; box-shadow: inset 0 0 0 2px #2e7d32; }
     .icon-btn { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 9999px; color: #ede5d6; box-shadow: inset 0 0 0 1px #3d3328; transition: background-color .15s ease, color .15s ease; }
     .icon-btn:hover { background: #2b241c; color: #f6f1e7; }
     .icon-btn[aria-pressed="true"] { background: #6b4f7d; color: #f6f1e7; box-shadow: none; }
@@ -303,9 +329,20 @@
     </nav>
   </header>
 
-  <main>
+  <!-- ============ PUBLICIDAD: LEADERBOARD SUPERIOR ============ -->
+  <aside class="ad-slot ad-shimmer border-b border-soil-700" data-ad-slot="top" aria-label="Espacio publicitario">
+    <div class="ad-grid" aria-hidden="true"></div>
+    <div data-ad-creative class="mx-auto flex max-h-20 min-h-[52px] max-w-[1600px] items-center gap-3 px-4 py-2 sm:h-16 sm:px-6">
+      <svg viewBox="0 0 32 32" class="h-7 w-7 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
+      <p class="ad-text line-clamp-2 font-mono text-[10px] font-semibold uppercase leading-snug tracking-[.16em] sm:text-[11.5px] sm:tracking-[.2em]"><strong>BIKEGRID ADVERTISING</strong><span class="hidden sm:inline"> — Espacio Oficial para Marcas, Distribuidoras y Eventos</span><span class="block sm:hidden">Marcas · Distribuidoras · Eventos</span></p>
+      <span class="ad-label ml-auto hidden md:inline">Publicidad</span>
+      <button type="button" data-plan="auspicio" data-ad-cta="top" class="ml-auto shrink-0 rounded-full px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-brand/70 transition hover:bg-brand md:ml-0">Anúnciate</button>
+    </div>
+  </aside>
+
+  <main class="has-rails">
     <!-- ============ HERO: MAPA PROTAGONISTA ============ -->
-    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-sand-300 lg:grid lg:h-[calc(100vh-3.5rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
+    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-sand-300 lg:grid lg:h-[calc(100vh-3.5rem-4rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
 
       <!-- Panel izquierdo (en móvil se parte: arriba y abajo del mapa) -->
       <div class="topo-bg contents lg:flex lg:flex-col lg:gap-4 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:pb-0 lg:pt-6">
@@ -409,6 +446,7 @@
               <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para negocios · Tiendas, talleres y servicios</p>
               <h2 id="b2bTitle" class="mt-1 font-display text-3xl font-extrabold uppercase leading-tight tracking-tight text-sand-50">Activa tu Ficha Pro</h2>
               <p class="mt-2 text-sand-300">Convierte tu ficha en un canal de clientes, talento y reputación local.</p>
+              <p class="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[.14em] text-sand-300">$19.990/mes por local · 2° local + $9.990 · <a href="#multilocal" class="text-ochre-300 underline underline-offset-2">Enterprise 3+ locales</a></p>
             </div>
             <div class="flex shrink-0 flex-col gap-2 sm:flex-row">
               <button type="button" data-plan="pro" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#d4af37] px-5 py-3 text-sm font-extrabold uppercase tracking-[.1em] text-soil-950 shadow-lg transition hover:bg-[#e2c35a]"><i class="i i-badge-check" aria-hidden="true"></i> Activa tu Ficha Pro</button>
@@ -511,11 +549,7 @@
             <h2 id="plansTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-4xl"><i class="i i-wrench" aria-hidden="true"></i> Ficha Pro / Tiendas &amp; Servicios</h2>
             <p class="mt-2 text-sand-300">Tiendas, talleres, shuttles y guías: aparece donde los ciclistas buscan dónde reparar, comprar, rodar y contratar.</p>
           </div>
-          <!-- Mensual / semestral (solo cambia el Plan PRO) -->
-          <div class="inline-flex shrink-0 self-start rounded-full bg-soil-950 p-1 ring-1 ring-soil-700 md:self-auto" role="group" aria-label="Frecuencia de pago del Plan PRO">
-            <button type="button" data-billing="mensual" aria-pressed="true" class="billing-btn rounded-full px-4 py-2 text-sm font-semibold">Mensual</button>
-            <button type="button" data-billing="semestral" aria-pressed="false" class="billing-btn rounded-full px-4 py-2 text-sm font-semibold">Semestral <span class="ml-1 rounded-full bg-moss-600 px-1.5 py-0.5 text-[10px] font-bold text-sand-50">−20%</span></button>
-          </div>
+
         </div>
 
         <div class="grid items-stretch gap-4 lg:grid-cols-3">
@@ -555,8 +589,8 @@
           <article class="relative flex flex-col rounded-2xl border-2 border-[#d4af37] bg-soil-800 p-6 shadow-[0_0_0_6px_rgba(212,175,55,.12),0_20px_40px_rgba(0,0,0,.35)] lg:-my-3 lg:py-9">
             <span class="absolute -top-3 left-6 rounded-full bg-[#d4af37] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-soil-950"><i class="i i-star" aria-hidden="true"></i> El más popular</span>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-300">Plan Tienda / Taller PRO</p>
-            <p class="mt-2 flex items-baseline gap-1.5"><span id="proPrice" class="font-display text-4xl font-extrabold text-sand-50">$24.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
-            <p id="proBillingNote" class="mt-1 text-sm text-sand-300">o <button type="button" data-billing="semestral" class="font-semibold text-ochre-300 underline underline-offset-2">$19.990/mes con pago semestral</button></p>
+            <p class="mt-2 flex items-baseline gap-1.5"><span id="proPrice" class="font-display text-4xl font-extrabold text-sand-50">$19.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
+            <p class="mt-1 text-sm text-sand-300">Por local · 2° local <strong class="text-sand-50">+ $9.990</strong> · 3 o más: <a href="#multilocal" class="font-semibold text-ochre-300 underline underline-offset-2">Plan Enterprise</a></p>
             <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
               <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Pin Dorado destacado en el mapa</li>
               <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Ficha Verificada con Borde Gold</li>
@@ -569,6 +603,32 @@
             <button type="button" data-plan="pro" class="mt-6 rounded-xl bg-[#d4af37] py-3.5 text-center text-sm font-extrabold text-soil-950 shadow-lg transition hover:bg-[#e2c35a]">Sumar mi Tienda Pro</button>
             <p class="mt-2 text-center text-xs text-sand-300">Primero en el directorio de tu zona desde el día 1 · <i class="i i-sprout" aria-hidden="true"></i> 10% va a Trail Care.</p>
           </article>
+        </div>
+
+
+        <!-- Estructura multi-local / Enterprise -->
+        <div id="multilocal" class="mt-10 scroll-mt-20">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+            <h3 class="font-mono text-xs font-semibold uppercase tracking-[.24em] text-[#8fd18f]">Tarifas Ficha Pro por cantidad de locales</h3>
+            <p class="text-xs text-sand-300">Una ficha verificada por sucursal, cada una con su pin y su WhatsApp.</p>
+          </div>
+          <div class="mt-4 grid gap-3 md:grid-cols-3">
+            <article class="flex flex-col rounded-2xl bg-soil-950/70 p-5 ring-2 ring-[#d4af37]/70">
+              <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-sand-300">Local único · Ficha Pro</p>
+              <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-3xl font-extrabold uppercase text-sand-50">$19.990</span><span class="text-xs text-sand-300">CLP / mes</span></p>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-sand-300">Geolocalización GPS · Bici Jobs Ilimitado · Sello Trail Care.</p>
+            </article>
+            <article class="flex flex-col rounded-2xl bg-soil-950/70 p-5 ring-1 ring-soil-700">
+              <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-sand-300">2° local · Segunda sucursal</p>
+              <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-3xl font-extrabold uppercase text-sand-50">+ $9.990</span><span class="text-xs text-sand-300">CLP / mes</span></p>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-sand-300">50% de descuento en la segunda Ficha Pro.</p>
+            </article>
+            <article class="flex flex-col rounded-2xl bg-soil-950/70 p-5 ring-1 ring-soil-700">
+              <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-sand-300">Plan Enterprise · 3 locales o más</p>
+              <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-3xl font-extrabold uppercase text-sand-50">Plan a medida</span><span class="text-xs text-sand-300"></span></p>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-sand-300">Si tu marca opera 3 o más sucursales, contáctanos directamente para un plan corporativo consolidado con atención personalizada y beneficios de red.</p><button type="button" data-plan="enterprise" class="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[11.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600"><i class="i i-building" aria-hidden="true"></i> Contactar Enterprise</button>
+            </article>
+          </div>
         </div>
 
         <p class="mt-8 rounded-2xl bg-moss-600/15 px-5 py-4 text-sm text-sand-100 ring-1 ring-moss-500/40"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
@@ -736,6 +796,43 @@
     </section>
   </main>
 
+  <!-- ============ PUBLICIDAD: RASCACIELOS LATERALES (escritorio) ============ -->
+  <aside class="ad-slot ad-shimmer ad-rail is-left flex-col" data-ad-slot="rail-left" aria-label="Espacio publicitario">
+    <div class="ad-grid" aria-hidden="true"></div>
+    <div data-ad-creative class="flex h-full flex-col items-center justify-between px-4 py-5 text-center">
+      <span class="ad-label">Publicidad</span>
+      <div class="flex flex-col items-center gap-4">
+        <svg viewBox="0 0 32 32" class="h-14 w-14 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
+        <p class="ad-text font-display text-2xl font-extrabold uppercase leading-[1.05] tracking-tight">Posiciona tu tienda</p>
+        <p class="text-[12px] leading-relaxed text-sand-300">Conecta con la comunidad de riders en tiempo real</p>
+      </div>
+      <button type="button" data-plan="pro" data-ad-cta="rail-left" class="w-full rounded-lg bg-brand px-2 py-2 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Activa tu Ficha Pro</button>
+    </div>
+  </aside>
+  <aside class="ad-slot ad-shimmer ad-rail is-right flex-col" data-ad-slot="rail-right" aria-label="Espacio publicitario">
+    <div class="ad-grid" aria-hidden="true"></div>
+    <div data-ad-creative class="flex h-full flex-col items-center justify-between px-4 py-5 text-center">
+      <span class="ad-label">Publicidad</span>
+      <div class="flex flex-col items-center gap-4">
+        <svg viewBox="0 0 32 32" class="h-14 w-14 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
+        <p class="ad-text font-display text-2xl font-extrabold uppercase leading-[1.05] tracking-tight">Posiciona tu tienda</p>
+        <p class="text-[12px] leading-relaxed text-sand-300">Conecta con la comunidad de riders en tiempo real</p>
+      </div>
+      <button type="button" data-plan="auspicio" data-ad-cta="rail-right" class="w-full rounded-lg bg-brand px-2 py-2 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Anúnciate aquí</button>
+    </div>
+  </aside>
+
+  <!-- ============ PUBLICIDAD: FRANJA INFERIOR ============ -->
+  <aside class="ad-slot ad-shimmer border-t border-soil-700" data-ad-slot="footer" aria-label="Espacio publicitario">
+    <div class="ad-grid" aria-hidden="true"></div>
+    <div data-ad-creative class="mx-auto flex min-h-[56px] max-w-6xl items-center gap-3 px-4 py-2.5 sm:px-6">
+      <svg viewBox="0 0 32 32" class="h-6 w-6 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
+      <p class="ad-text line-clamp-2 font-mono text-[10px] font-semibold uppercase leading-snug tracking-[.16em] sm:text-[11px] sm:tracking-[.2em]"><strong>BIKEGRID PARTNERS</strong> — Espacio para cierres de campaña y marcas sponsor</p>
+      <span class="ad-label ml-auto hidden md:inline">Publicidad</span>
+      <button type="button" data-plan="auspicio" data-ad-cta="footer" class="ml-auto shrink-0 rounded-full px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-brand/70 transition hover:bg-brand md:ml-0">Auspicia</button>
+    </div>
+  </aside>
+
   <footer class="bg-soil-950 text-sand-300">
     <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm sm:px-6 md:grid-cols-[1.2fr_2fr]">
       <div>
@@ -802,8 +899,8 @@
   </dialog>
 
   <!-- Ficha Pro: reclamar / destacar un negocio (contacto comercial) -->
-  <dialog id="claimDialog" class="w-[min(92vw,27rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="claimTitle">
-    <div class="drawer-pro rounded-2xl p-6">
+  <dialog id="claimDialog" class="w-[min(94vw,30rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="claimTitle">
+    <div class="drawer-pro max-h-[92dvh] overflow-y-auto rounded-2xl p-6">
       <div class="flex items-start justify-between gap-4">
         <div class="min-w-0">
           <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Plan Pro · para negocios</p>
@@ -817,6 +914,25 @@
         <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-briefcase" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Bici Jobs Ilimitado</strong><span class="text-soil-700">Publicación directa de ofertas para mecánicos, vendedores y personal especializado.</span></span></li>
         <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-sprout" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Sello Trail Care</strong><span class="text-soil-700">Validación y prestigio comunitario al apoyar los senderos locales.</span></span></li>
       </ul>
+      <div class="mt-5 rounded-2xl bg-sand-100 p-3.5 ring-1 ring-sand-300" role="group" aria-labelledby="claimLocalesTitle">
+        <p id="claimLocalesTitle" class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-700">¿Cuántos locales tiene tu negocio?</p>
+        <div class="mt-2.5 grid gap-2">
+          <button type="button" data-locales="1" aria-pressed="true" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
+            <span><span class="block text-[11px] font-semibold uppercase tracking-[.14em] text-soil-950">Local único · Ficha Pro</span><span class="block text-xs text-soil-600">GPS de urgencias · Bici Jobs ilimitado · Sello Trail Care</span></span>
+            <span class="shrink-0 text-right font-display text-lg font-extrabold uppercase leading-none text-soil-950">$19.990<span class="block font-sans text-[10px] font-semibold normal-case text-soil-600">CLP / mes</span></span>
+          </button>
+          <button type="button" data-locales="2" aria-pressed="false" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
+            <span><span class="block text-[11px] font-semibold uppercase tracking-[.14em] text-soil-950">2° local · Segunda sucursal</span><span class="block text-xs text-soil-600">50% dcto. en la segunda Ficha Pro</span></span>
+            <span class="shrink-0 text-right font-display text-lg font-extrabold uppercase leading-none text-soil-950">+ $9.990<span class="block font-sans text-[10px] font-semibold normal-case text-soil-600">CLP / mes</span></span>
+          </button>
+          <button type="button" data-locales="3" aria-pressed="false" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
+            <span><span class="block text-[11px] font-semibold uppercase tracking-[.14em] text-soil-950">Plan Enterprise · 3 o más</span><span class="block text-xs text-soil-600">Plan corporativo consolidado con atención personalizada</span></span>
+            <span class="shrink-0 text-right font-display text-lg font-extrabold uppercase leading-none text-soil-950">A medida</span>
+          </button>
+        </div>
+        <p id="claimLocalesNote" class="mt-2.5 hidden text-xs leading-relaxed text-soil-700">Si tu marca opera 3 o más sucursales, contáctanos directamente para un plan corporativo consolidado con atención personalizada y beneficios de red.</p>
+        <p id="claimTotal" class="mt-2.5 text-right font-mono text-[11px] font-semibold uppercase tracking-[.12em] text-brand">Total: $19.990 CLP / mes</p>
+      </div>
       <p class="mt-4 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600">Mensaje que nos enviarás</p>
       <blockquote id="claimMessage" class="mt-1 rounded-xl bg-sand-100 p-3 text-sm italic leading-relaxed text-soil-800 ring-1 ring-sand-300"></blockquote>
       <div class="mt-5 grid gap-2">
@@ -2363,14 +2479,36 @@
       message: document.getElementById('claimMessage'), wa: document.getElementById('claimWhatsApp'), form: document.getElementById('claimForm'),
     };
     let claimPoint = null;
-    const claimText = (p) => p
+    let claimLocales = '1';
+    const LOCALES_TEXT = { '1': '', '2': ' para 2 locales (Ficha Pro + segunda sucursal)', '3': '' };
+    const claimText = (p) => claimLocales === '3'
+      ? `Hola, ${p ? `soy de ${p.nombre}` : 'represento a una marca'} y operamos 3 o más sucursales. Me interesa el Plan Enterprise de BIKEGRID (plan corporativo consolidado).`
+      : p
       ? p.categoria === 'guias'
         ? `Hola, soy ${p.nombre} (guía en ${p.comuna || REGIONES[p.region].label}) y me gustaría verificar mi perfil y activar Guía PRO.`
-        : `Hola, soy el dueño de ${p.nombre} en ${p.comuna || REGIONES[p.region].label} y me gustaría verificar mi tienda y activar el Plan Pro.`
-      : 'Hola, tengo una tienda, taller o servicio de shuttles y me gustaría registrar o destacar mi negocio en BIKEGRID.';
+        : `Hola, soy el dueño de ${p.nombre} en ${p.comuna || REGIONES[p.region].label} y me gustaría verificar mi tienda y activar el Plan Pro${LOCALES_TEXT[claimLocales]}.`
+      : `Hola, tengo una tienda, taller o servicio de shuttles y me gustaría registrar o destacar mi negocio en BIKEGRID${LOCALES_TEXT[claimLocales]}.`;
 
-    function openClaim(p) {
+    // Selector de locales: actualiza total y mensaje (Enterprise = contacto directo)
+    function syncClaimLocales() {
+      document.querySelectorAll('[data-locales]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.locales === claimLocales));
+      document.getElementById('claimTotal').textContent = { '1': 'Total: $19.990 CLP / mes', '2': 'Total: $29.980 CLP / mes (2 locales)', '3': 'Total: plan a medida' }[claimLocales];
+      document.getElementById('claimLocalesNote').classList.toggle('hidden', claimLocales !== '3');
+      const text = claimText(claimPoint);
+      claim.message.textContent = `“${text}”`;
+      if (SALES_WHATSAPP) claim.wa.href = `https://wa.me/${SALES_WHATSAPP}?text=${encodeURIComponent(text)}`;
+    }
+    document.getElementById('claimDialog').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-locales]');
+      if (!b) return;
+      claimLocales = b.dataset.locales;
+      syncClaimLocales();
+      track('claim_locales', { locales: claimLocales });
+    });
+
+    function openClaim(p, locales = '1') {
       claimPoint = p || null;
+      claimLocales = locales;
       const text = claimText(claimPoint);
       document.getElementById('claimTitle').textContent = claimPoint ? 'Activa tu Ficha Pro' : 'Registra o destaca tu negocio';
       claim.place.textContent = claimPoint ? `${claimPoint.nombre} · ${claimPoint.comuna || REGIONES[claimPoint.region].label}` : 'Tiendas, talleres, shuttles, escuelas y bikeparks';
@@ -2381,6 +2519,7 @@
       claim.form.className = SALES_WHATSAPP
         ? 'py-2 text-center text-sm font-semibold text-soil-700 underline underline-offset-4 hover:text-soil-950'
         : 'btn-wa-pro !bg-soil-950 py-3.5 text-[15px] hover:!bg-soil-800';
+      syncClaimLocales();
       claim.dialog.showModal();
       track('claim_opened', { ref: claimPoint?.id ?? null, via: claimPoint ? 'ficha' : 'directorio' });
     }
@@ -4128,27 +4267,16 @@
     const PLANS = {
       gratis:   { name: 'Plan Gratis (Ficha Básica)', price: () => '$0' },
       guia:     { name: 'Plan Guía PRO', price: () => '$9.990 CLP/mes' },
-      pro:      { name: 'Plan Tienda / Taller PRO', price: () => (billing === 'semestral' ? '$19.990 CLP/mes, pago semestral de $119.940' : '$24.990 CLP/mes') },
+      pro:      { name: 'Plan Tienda / Taller PRO', price: () => '$19.990 CLP/mes por local; 2° local + $9.990' },
+      enterprise: { name: 'Plan Enterprise (3 o más locales)', price: () => 'plan a medida' },
       auspicio: { name: 'Auspicios y Banners Regionales', price: () => '' },
     };
-    let billing = 'mensual';
-
-    // --- Selector mensual / semestral del Plan PRO ---
-    function setBilling(mode) {
-      billing = mode;
-      document.querySelectorAll('.billing-btn').forEach((b) => b.setAttribute('aria-pressed', b.dataset.billing === mode));
-      $('proPrice').textContent = mode === 'semestral' ? '$19.990' : '$24.990';
-      $('proBillingNote').innerHTML = mode === 'semestral'
-        ? 'Pago semestral de <strong class="text-sand-50">$119.940</strong> · <span class="font-semibold text-moss-400">ahorras $30.000</span>'
-        : 'o <button type="button" data-billing="semestral" class="font-semibold text-ochre-300 underline underline-offset-2">$19.990/mes con pago semestral</button>';
-    }
-    document.addEventListener('click', (e) => { const b = e.target.closest('[data-billing]'); if (b) setBilling(b.dataset.billing); });
-
     // --- Botones de plan → WhatsApp comercial con el plan indicado ---
     const planMessage = (key) => {
       const p = PLANS[key];
-      if (key === 'auspicio') return 'Hola BIKEGRID Represento a una marca de bicis, repuestos o equipamiento y me interesan los *Auspicios y Banners Regionales*.\n• Marca: \n• Regiones de interés: \n• Contacto: ';
-      return `Hola BIKEGRID Me interesa el *${p.name}* (${p.price()}).\n• ${key === 'guia' ? 'Nombre / escuela' : 'Nombre del negocio'}: \n• Comuna: \n• ${key === 'guia' ? 'Zonas donde guío' : 'Categoría (tienda, taller, shuttle…)'}: `;
+      if (key === 'auspicio') return 'Hola BIKEGRID. Represento a una marca de bicis, repuestos o equipamiento y me interesan los *Auspicios y Banners Regionales*.\n• Marca: \n• Regiones de interés: \n• Contacto: ';
+      if (key === 'enterprise') return 'Hola BIKEGRID. Operamos 3 o más sucursales y nos interesa el *Plan Enterprise* (plan corporativo consolidado).\n• Marca / empresa: \n• Cantidad de locales y comunas: \n• Contacto: ';
+      return `Hola BIKEGRID. Me interesa el *${p.name}* (${p.price()}).\n• ${key === 'guia' ? 'Nombre / escuela' : 'Nombre del negocio'}: \n• Comuna: \n• ${key === 'guia' ? 'Zonas donde guío' : 'Categoría (tienda, taller, shuttle…)'}: `;
     };
     // Sin número comercial configurado, cada plan lleva a su flujo del sitio
     function goToBusinessForm(featured) {
@@ -4162,12 +4290,13 @@
       guia: () => openGuideJoin('planes'),
       pro: () => goToBusinessForm(true),
       auspicio: () => toast('Escríbenos para auspicios: pronto habilitamos el contacto directo'),
+      enterprise: () => openClaim(null, '3'),
     };
     document.addEventListener('click', (e) => {
       const b = e.target.closest('[data-plan]');
       if (!b) return;
       const key = b.dataset.plan;
-      track('plan_cta_clicked', { plan: key, billing: key === 'pro' ? billing : null });
+      track('plan_cta_clicked', { plan: key, via: b.dataset.adCta ? `publicidad:${b.dataset.adCta}` : 'sitio' });
       const admin = salesNumber();
       if (!admin) return planFallback[key]();
       openWhatsApp(`https://wa.me/${admin}?text=${encodeURIComponent(planMessage(key))}`);
@@ -4499,6 +4628,48 @@
     });
     // Al abrir el directorio desde el botón principal se parte sin filtro de marca
     dirEl.open.addEventListener('click', () => { if (brandFilter) setBrandFilter(null); });
+  </script>
+  <script>
+    // ============ BIKEGRID ADS: espacios publicitarios ============
+    // Placeholders animados por defecto. Para vender un espacio basta con configurar
+    // BIKEGRID_CONFIG.ADS = { top: { img, url, alt }, 'rail-left': {…}, 'rail-right': {…}, footer: {…} }
+    (() => {
+      const cfg = window.BIKEGRID_CONFIG || window.DESVIADOR_CONFIG || {};
+      const ADS = cfg.ADS || {};
+      const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const safeUrl = (u) => (/^https:\/\//i.test(u || '') ? u : '');
+      document.querySelectorAll('[data-ad-slot]').forEach((slot) => {
+        const key = slot.dataset.adSlot;
+        const ad = ADS[key];
+        const img = safeUrl(ad && ad.img);
+        if (!img) return;
+        const url = safeUrl(ad.url);
+        const pic = `<img src="${esc(img)}" alt="${esc(ad.alt || 'Auspiciador BIKEGRID')}" loading="lazy">`;
+        slot.classList.remove('ad-shimmer');
+        slot.querySelector('.ad-grid')?.remove();
+        slot.querySelector('[data-ad-creative]').outerHTML = url
+          ? `<a data-ad-creative href="${esc(url)}" target="_blank" rel="sponsored noopener" class="block h-full w-full" style="max-height:${key === 'top' ? '80px' : 'none'}">${pic}</a>`
+          : `<div data-ad-creative class="h-full w-full">${pic}</div>`;
+        slot.addEventListener('click', (e) => { if (e.target.closest('a')) track('ad_clicked', { slot: key }); });
+      });
+
+      // Impresiones: una por espacio y visita, cuando al menos la mitad queda a la vista
+      const seen = new Set();
+      const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+        const key = en.target.dataset.adSlot;
+        if (en.isIntersecting && !seen.has(key)) { seen.add(key); track('ad_impression', { slot: key, sponsor: !!(ADS[key] && ADS[key].img) }); }
+      }), { threshold: 0.5 });
+      document.querySelectorAll('[data-ad-slot]').forEach((el) => io.observe(el));
+
+      // Rascacielos: aparecen al dejar atrás el mapa y se ocultan al llegar al pie de página
+      const rails = document.querySelectorAll('.ad-rail');
+      const hero = document.getElementById('inicio');
+      const foot = document.querySelector('[data-ad-slot="footer"]');
+      const state = { hero: true, foot: false };
+      const sync = () => rails.forEach((r) => r.classList.toggle('is-on', !state.hero && !state.foot));
+      if (hero) new IntersectionObserver(([en]) => { state.hero = en.isIntersecting && en.intersectionRatio > 0.15; sync(); }, { threshold: [0, 0.15, 0.5] }).observe(hero);
+      if (foot) new IntersectionObserver(([en]) => { state.foot = en.isIntersecting; sync(); }).observe(foot);
+    })();
   </script>
 </body>
 </html>
