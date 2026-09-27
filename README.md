@@ -115,10 +115,10 @@ Ejecuta [`supabase/guias.sql`](supabase/guias.sql) en Supabase → SQL Editor. A
 
 - **Filtro 🧭 Guías & Instructores** en los accesos del mapa y en el directorio. Los pines de los guías tienen su propio color.
 - **Ficha de perfil:** foto (o iniciales), sello `✔ Guía Verificado` (todo guía aprobado), zonas de cobertura, certificaciones, idiomas, disciplinas y tarifa orientativa. Incluye un cotizador (fecha, zona, disciplina y personas) con el botón `💬 Cotizar / Reservar Salida`, que abre WhatsApp hacia el guía con todo redactado.
-- **Registro ($9.990/mes):** hay un banner en la página, en el filtro del directorio y en cada perfil. El formulario abre tu WhatsApp comercial con la solicitud y deja el perfil como ficha **pendiente** en el panel admin, con sus zonas, disciplinas, idiomas, certificaciones, tarifa y foto a la vista.
-  - Antes de aprobar: verifica credenciales (SERNATUR, primeros auxilios) y confirma el pago.
-  - Ajusta el pin con **Editar**. Se ubica en el centro de su comuna o región.
-  - Los campos del perfil se corrigen en Table Editor.
+- **Registro gratis (freemium):** el banner "🧭 Regístrate Gratis como Guía Local / Instructor", el filtro del directorio y cada perfil abren el formulario. El perfil entra directo a la base como ficha **pendiente**, y en el panel admin ves zonas, disciplinas, idiomas, certificaciones, tarifa y foto.
+  - Antes de aprobar: verifica el perfil y ajusta el pin con **Editar** (se ubica en el centro de su comuna o región).
+  - Si la base falla y hay `SALES_WHATSAPP`, el perfil se envía por WhatsApp como respaldo.
+- **Guía PRO ($9.990/mes, opcional):** se activa con **Destacar**. Incluye sello `✔ Guía Verificado`, borde dorado, primero en el directorio, redes/web en el perfil y sugerencia en "Arma tu Viaje". Los guías gratis tienen perfil completo y reciben cotizaciones por WhatsApp, pero sin sello ni redes.
 - La foto debe ser un enlace `https://` a una imagen (por ejemplo, de su web o Instagram).
 
 ## Planes y tarifas
@@ -128,7 +128,8 @@ La sección **Anúnciate** (`#anunciate`) muestra 3 planes y un bloque para marc
 | Plan | Precio | Cómo se activa |
 |---|---|---|
 | Gratis (Ficha básica) | $0 | Aprobar la ficha en el panel |
-| Guía Local / Freelance | $9.990/mes | Aprobar el perfil de guía en el panel |
+| Guía (perfil) | Gratis | Aprobar el perfil de guía en el panel |
+| Guía PRO | $9.990/mes | **Destacar** el perfil del guía en el panel |
 | Tienda / Taller PRO | $24.990/mes o $19.990/mes semestral | **Destacar** la ficha en el panel |
 | Auspicios y banners regionales | A convenir | Por WhatsApp |
 
@@ -157,3 +158,9 @@ Ejecuta [`supabase/redes.sql`](supabase/redes.sql). Agrega `website_url`, `insta
 - **Fichas gratis:** bloque bloqueado `🔒 Redes sociales y catálogo web no verificados.` con el botón "¿Eres el dueño? Vincula tu Instagram y Web activando tu Ficha Pro", que abre el modal de Ficha Pro.
 - **Panel admin → Editar:** campos para web, Instagram, TikTok, YouTube y mapa de pistas. Acepta `@usuario`, `usuario` o la URL completa y los normaliza. Hasta ejecutar `redes.sql` aparecen desactivados.
 - Los clics a redes y web se suman al informe mensual (`clics_redes` en `informe_mensual_fichas`).
+
+## Escala del directorio (1.000+ fichas)
+
+- **Fichas PRO siempre arriba:** en el directorio, en cada filtro y en la búsqueda del mapa, sin importar la comuna o categoría.
+- **Carga de 20 en 20:** el directorio completo muestra 20 fichas y agrega 20 más al acercarse al final (`IntersectionObserver`). También hay un botón "Ver más" para teclado o navegadores sin soporte.
+- **🧭 Guías Locales:** botón en el encabezado (y en el menú móvil) que filtra el mapa a guías sin mover la vista e indica cuántos hay en la zona visible. Si no hay, muestra todos los de Chile. Un segundo toque quita el filtro.

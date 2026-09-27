@@ -149,7 +149,7 @@
     .social-ig { background: linear-gradient(135deg, #f9a03f 0%, #e1306c 50%, #833ab4 100%); color: #fff; }
     .social-neutral { background: #fffdf8; color: #2b241c; box-shadow: inset 0 0 0 1px #c9bba3; }
     .social-trail { background: #56743a; color: #f6f1e7; }
-    .social-locked { position: relative; overflow: hidden; background: repeating-linear-gradient(-45deg, rgba(201,187,163,.16) 0 10px, transparent 10px 20px), #f1eadc; }
+    .social-locked { overflow: hidden; background: repeating-linear-gradient(-45deg, rgba(201,187,163,.16) 0 10px, transparent 10px 20px), #f1eadc; }
     .social-locked .ghost { display: flex; align-items: center; justify-content: center; gap: .35rem; border-radius: .6rem; padding: .5rem; font-size: .8rem; font-weight: 700; color: #9a8b76; box-shadow: inset 0 0 0 1px #d8ccb6; background: rgba(255,253,248,.6); filter: blur(.3px); user-select: none; }
     .billing-btn { color: #ddd2bf; transition: background-color .15s ease, color .15s ease; }
     .billing-btn[aria-pressed="true"] { background: #d9a441; color: #15120e; }
@@ -184,7 +184,8 @@
         <a href="#noticias" class="hidden transition hover:text-sand-50 xl:inline">Tech</a>
         <a href="#comunidad" class="hidden transition hover:text-sand-50 lg:inline">Comunidad</a>
         <a href="#anunciate" class="hidden font-semibold text-ochre-400 transition hover:text-ochre-300 lg:inline">Anúnciate</a>
-        <button type="button" data-shuttle="header" class="font-semibold text-sand-100 transition hover:text-sand-50">🚐 Cupos Shuttle</button>
+        <button type="button" data-guides-filter="header" aria-pressed="false" class="whitespace-nowrap rounded-full px-3 py-1.5 font-semibold text-sand-100 ring-1 ring-[#8a6fa0]/70 transition hover:bg-[#6b4f7d]/40 aria-pressed:bg-[#6b4f7d] aria-pressed:text-sand-50 aria-pressed:ring-[#6b4f7d]">🧭 <span class="2xl:hidden">Guías</span><span class="hidden 2xl:inline">Guías Locales</span></button>
+        <button type="button" data-shuttle="header" class="whitespace-nowrap font-semibold text-sand-100 transition hover:text-sand-50">🚐 <span class="xl:hidden">Cupos</span><span class="hidden xl:inline">Cupos Shuttle</span></button>
         <button type="button" data-sos="header" class="sos-btn rounded-full px-3.5 py-1.5 font-semibold">🚨 <span class="2xl:hidden">Urgencia</span><span class="hidden 2xl:inline">Repuesto / Taller de Urgencia</span></button>
         <button type="button" data-trip="header" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 shadow-[0_0_0_3px_rgba(217,164,65,.25)] transition hover:bg-ochre-300">🗺️ Arma tu <span class="hidden lg:inline">Salida / Viaje</span><span class="lg:hidden">salida</span></button>
       </nav>
@@ -200,6 +201,7 @@
       <a href="#inicio" class="block border-b border-soil-800 py-3 text-sand-100">Mapa</a>
       <a href="#noticias" class="block border-b border-soil-800 py-3 text-sand-100">Tech</a>
       <a href="#comunidad" class="block border-b border-soil-800 py-3 text-sand-100">Comunidad</a>
+      <button type="button" data-guides-filter="menu" class="block w-full border-b border-soil-800 py-3 text-left text-sand-100">🧭 Guías Locales en el mapa</button>
       <button type="button" data-shuttle="menu" class="block w-full border-b border-soil-800 py-3 text-left text-sand-100">🚐 Cupos Shuttle del finde</button>
       <button type="button" data-sos="menu" class="block w-full border-b border-soil-800 py-3 text-left font-semibold text-[#f0a48f]">🚨 Repuesto / Taller de Urgencia</button>
       <button type="button" data-trip="menu" class="mt-3 block w-full rounded-lg bg-ochre-400 py-3 text-center font-semibold text-soil-950">🗺️ Arma tu Salida / Viaje</button>
@@ -285,7 +287,7 @@
         <aside id="drawer" class="drawer absolute inset-x-0 bottom-0 z-[1000] flex max-h-[78%] translate-y-[105%] flex-col rounded-t-2xl bg-sand-50 shadow-[0_-12px_40px_rgba(21,18,14,.35)] ring-1 ring-sand-300 lg:inset-y-3 lg:bottom-3 lg:left-auto lg:right-3 lg:max-h-none lg:w-[380px] lg:translate-x-[110%] lg:translate-y-0 lg:rounded-2xl"
                role="dialog" aria-modal="false" aria-labelledby="drawerTitle" aria-hidden="true">
           <div class="mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full bg-sand-300 lg:hidden"></div>
-          <button id="drawerClose" type="button" class="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200 hover:text-soil-950" aria-label="Cerrar ficha">
+          <button id="drawerClose" type="button" class="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200 hover:text-soil-950" aria-label="Cerrar ficha">
             <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
           </button>
           <div id="drawerBody" class="overflow-y-auto px-5 pb-6 pt-3 lg:pt-5"></div>
@@ -357,12 +359,12 @@
           <div class="flex gap-4">
             <span class="hidden h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ochre-400 text-3xl sm:grid" aria-hidden="true">🧭</span>
             <div class="max-w-2xl">
-              <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-300">Guías &amp; Instructores</p>
-              <h2 id="guideCtaTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl">¿Eres guía o instructor local?</h2>
-              <p class="mt-2 text-sand-200">Súmate a la red de DESVIADOR por <strong class="text-ochre-300">$9.990/mes</strong> y recibe clientes directos a tu WhatsApp.</p>
+              <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-300">Guías &amp; Instructores · <span class="text-moss-300">Gratis</span></p>
+              <h2 id="guideCtaTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl">🧭 Regístrate Gratis como Guía Local / Instructor</h2>
+              <p class="mt-2 text-sand-200">Súmate al mapa de DESVIADOR sin costo. Muestra tus rutas, credenciales y recibe consultas de ciclistas directo a tu WhatsApp.</p>
             </div>
           </div>
-          <button type="button" data-guide-join="banner" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300">🧭 Regístrate como Guía</button>
+          <button type="button" data-guide-join="banner" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300">🧭 Regístrate Gratis</button>
         </div>
       </div>
     </section>
@@ -393,6 +395,7 @@
               <li class="flex gap-3"><span class="text-moss-400">✓</span> Ubicación en el mapa nacional</li>
               <li class="flex gap-3"><span class="text-moss-400">✓</span> Teléfono y horario básico en tu ficha</li>
               <li class="flex gap-3"><span class="text-moss-400">✓</span> Presencia en el directorio (sin destacar)</li>
+              <li class="flex gap-3"><span class="text-moss-400">✓</span> Guías e instructores: perfil con zonas y consultas a tu WhatsApp</li>
               <li class="flex gap-3 text-sand-300/70"><span>—</span> Sin enlaces a web ni redes sociales</li>
             </ul>
             <button type="button" data-plan="gratis" class="mt-6 rounded-xl py-3 text-center text-sm font-bold text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-700">Registrar Negocio Gratis</button>
@@ -401,19 +404,18 @@
 
           <!-- Plan Guía -->
           <article class="flex flex-col rounded-2xl border border-[#8a6fa0]/60 bg-[#2f2538] p-6">
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#d9c3ea]">Plan Guía Local / Freelance</p>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#d9c3ea]">Plan Guía PRO · Guías e instructores</p>
             <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-4xl font-extrabold text-sand-50">$9.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
-            <p class="mt-1 text-sm text-sand-300">Para guías e instructores independientes.</p>
+            <p class="mt-1 text-sm text-sand-300">El perfil de guía es <strong class="text-moss-300">gratis</strong>. PRO te destaca y te trae más reservas.</p>
             <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Ficha de perfil destacada con foto, certificaciones e idiomas</li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span><span>Sello <strong class="text-sand-50">Guía Verificado</strong></span></li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Link directo a WhatsApp de reserva, con fecha y zona</li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Tus zonas de trabajo visibles en el perfil</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span><span>Sello <strong class="text-sand-50">Guía Verificado</strong> y borde dorado</span></li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Primero en el directorio y pin dorado en el mapa</li>
               <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Presencia en el configurador "Arma tu Viaje"</li>
               <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Tu Instagram y sitio web en el perfil</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Informe mensual de visitas y cotizaciones</li>
             </ul>
-            <button type="button" data-plan="guia" class="mt-6 rounded-xl bg-[#6b4f7d] py-3 text-center text-sm font-bold text-sand-50 transition hover:bg-[#7d5f91]">Activar Plan Guía</button>
-            <button type="button" data-guide-join="planes" class="mt-2 text-center text-xs font-semibold text-sand-300 underline-offset-4 hover:text-sand-50 hover:underline">o completa tu perfil de guía →</button>
+            <button type="button" data-plan="guia" class="mt-6 rounded-xl bg-[#6b4f7d] py-3 text-center text-sm font-bold text-sand-50 transition hover:bg-[#7d5f91]">Activar Guía PRO</button>
+            <button type="button" data-guide-join="planes" class="mt-2 text-center text-xs font-semibold text-sand-300 underline-offset-4 hover:text-sand-50 hover:underline">o regístrate gratis como guía →</button>
           </article>
 
           <!-- Plan PRO -->
@@ -626,10 +628,14 @@
       </div>
       <div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <div id="dirGuideCta" class="mb-3 flex flex-col gap-2 rounded-xl bg-[#6b4f7d]/10 p-3 ring-1 ring-[#6b4f7d]/30 sm:flex-row sm:items-center sm:justify-between" hidden>
-          <p class="text-sm text-soil-800"><strong class="text-soil-950">¿Eres guía o instructor local?</strong> Súmate a la red por $9.990/mes y recibe clientes directos a tu WhatsApp.</p>
-          <button type="button" data-guide-join="directorio" class="shrink-0 rounded-lg bg-[#6b4f7d] px-3.5 py-2 text-[13px] font-bold text-sand-50 hover:bg-[#5a4169]">🧭 Regístrate como Guía</button>
+          <p class="text-sm text-soil-800"><strong class="text-soil-950">¿Eres guía o instructor local?</strong> Súmate gratis y recibe consultas de ciclistas directo a tu WhatsApp.</p>
+          <button type="button" data-guide-join="directorio" class="shrink-0 rounded-lg bg-[#6b4f7d] px-3.5 py-2 text-[13px] font-bold text-sand-50 hover:bg-[#5a4169]">🧭 Regístrate Gratis</button>
         </div>
         <ul id="dirAll" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4"></ul>
+        <!-- Carga de 20 en 20: al acercarse a este punto se agregan más fichas -->
+        <div id="dirSentinel" class="py-5 text-center" hidden>
+          <button type="button" id="dirMore" class="rounded-full bg-sand-100 px-4 py-2 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 hover:bg-sand-200"></button>
+        </div>
         <p id="dirEmpty" class="py-10 text-center text-sm text-soil-600" hidden>Sin resultados para esa búsqueda.</p>
       </div>
       <!-- CTA comercial: siempre visible al pie del directorio -->
@@ -960,19 +966,20 @@
       <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
         <div>
           <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Red de guías DESVIADOR</p>
-          <h2 id="guideJoinTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">🧭 Regístrate como Guía</h2>
+          <h2 id="guideJoinTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">🧭 Regístrate Gratis como Guía Local / Instructor</h2>
         </div>
         <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
       </div>
       <div id="guideJoinBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
         <div class="rounded-2xl bg-[#3a2c45] p-4 text-sand-100">
-          <p class="font-display text-lg font-extrabold uppercase leading-tight text-sand-50">Tu perfil de guía por <span class="text-ochre-300">$9.990/mes</span></p>
+          <p class="flex items-center gap-2 font-display text-lg font-extrabold uppercase leading-tight text-sand-50">Perfil de guía <span class="rounded-full bg-moss-500 px-2.5 py-0.5 font-sans text-xs font-bold normal-case text-sand-50">Gratis · sin costo mensual</span></p>
+          <p class="mt-1.5 text-[13px] text-sand-200">Súmate al mapa de DESVIADOR sin costo. Muestra tus rutas, credenciales y recibe consultas de ciclistas directo a tu WhatsApp.</p>
           <ul class="mt-2 space-y-1 text-[13px] text-sand-200">
-            <li>✓ Perfil con foto, zonas, certificaciones, idiomas y tarifa</li>
-            <li>✓ Sello <strong class="text-sand-50">Guía Verificado</strong> tras revisar tus credenciales</li>
-            <li>✓ Pin en el mapa y filtro 🧭 Guías &amp; Instructores</li>
-            <li>✓ Clientes directo a tu WhatsApp, con fecha y zona</li>
+            <li>✓ Perfil con zonas, certificaciones, idiomas, disciplinas y tarifa</li>
+            <li>✓ Pin en el mapa y filtro 🧭 Guías Locales</li>
+            <li>✓ Consultas directo a tu WhatsApp, con fecha y zona</li>
           </ul>
+          <p class="mt-2 text-xs text-sand-300">¿Quieres destacar? Más adelante puedes activar <strong class="text-ochre-300">Guía PRO</strong> (sello Verificado, primero en el directorio, redes y más).</p>
         </div>
         <div class="grid gap-3.5 sm:grid-cols-2">
           <div>
@@ -1025,17 +1032,17 @@
           <textarea id="gjAbout" rows="2" maxlength="600" class="field mt-1.5 resize-y" placeholder="Qué tipo de salidas ofreces, niveles, duración, qué incluye…"></textarea>
         </div>
         <div class="hidden" aria-hidden="true"><label>Web <input id="gjWebsite" tabindex="-1" autocomplete="off" /></label></div>
-        <p class="text-xs leading-relaxed text-soil-600">Revisamos cada perfil y tus credenciales antes de publicarlo. Si no tienes una foto en línea, la coordinamos por WhatsApp.</p>
+        <p class="text-xs leading-relaxed text-soil-600">Revisamos cada perfil antes de publicarlo en el mapa y te avisamos por WhatsApp. Si no tienes una foto en línea, puedes agregarla después.</p>
         <p id="gjError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
       </div>
       <div id="guideJoinDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
         <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl shadow-lg">🧭</div>
-        <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Solicitud recibida!</h3>
+        <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Perfil recibido!</h3>
         <p id="guideJoinDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
         <a id="guideJoinWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
       </div>
       <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
-        <button type="submit" id="guideJoinSubmit" class="btn-wa-pro w-full py-3 text-sm"><span aria-hidden="true">💬</span> Enviar solicitud por WhatsApp</button>
+        <button type="submit" id="guideJoinSubmit" class="w-full rounded-xl bg-moss-600 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700">🧭 Crear mi perfil gratis</button>
       </div>
     </form>
   </dialog>
@@ -1770,6 +1777,7 @@
     const emptyEl = document.getElementById('emptyState');
     function render(fit = false) {
       shortcutsEl.querySelectorAll('.shortcut').forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === mapState.cat));
+      document.querySelectorAll('[data-guides-filter]').forEach((b) => b.setAttribute('aria-pressed', mapState.cat === 'guias'));
       closeDrawer();
 
       const visible = visiblePoints();
@@ -1877,12 +1885,40 @@
         return `<button type="button" data-chip="${c.id}" aria-pressed="${on}" class="shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${on ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">${c.label} <span class="ml-0.5 font-mono text-[11px] ${on ? 'text-ochre-300' : 'text-soil-600'}">${n}</span></button>`;
       }).join('');
 
-      dirEl.all.innerHTML = list.map(miniCard).join('');
+      // Paginación: 20 fichas por tanda (PRO siempre arriba, por dirSort). Si solo cambió el estado de las fichas, se conservan las ya mostradas.
+      const sig = `${dirChip}|${q}`;
+      const keep = sig === dirPaged.sig ? dirPaged.shown : 0;
+      dirPaged = { list, shown: 0, sig };
+      dirEl.all.innerHTML = '';
+      appendDirPage(Math.max(DIR_PAGE, keep));
       dirEl.empty.hidden = list.length > 0;
       dirEl.empty.textContent = `No hay ${chip.many} ${raw ? `que coincidan con "${raw}"` : 'por ahora'}.`;
       document.getElementById('dirGuideCta').hidden = dirChip !== 'guias'; // invitación a guías dentro del filtro
       dirEl.count.textContent = `Mostrando ${list.length} ${list.length === 1 ? chip.one : chip.many}${raw ? ` para "${raw}"` : ''} en Chile`;
     }
+    const DIR_PAGE = 20;
+    let dirPaged = { list: [], shown: 0, sig: '' };
+    const dirScroller = dirEl.dialog.querySelector('.overflow-y-auto');
+    const dirSentinel = document.getElementById('dirSentinel');
+    function appendDirPage(target) {
+      const { list } = dirPaged;
+      const upTo = Math.min(list.length, target ?? dirPaged.shown + DIR_PAGE);
+      if (upTo > dirPaged.shown) dirEl.all.insertAdjacentHTML('beforeend', list.slice(dirPaged.shown, upTo).map(miniCard).join(''));
+      dirPaged.shown = upTo;
+      dirSentinel.hidden = upTo >= list.length;
+      document.getElementById('dirMore').textContent = `Ver más (${list.length - upTo} restantes)`;
+    }
+    // Scroll infinito: IntersectionObserver sobre el contenedor del modal (sin él, queda el botón "Ver más")
+    function fillDirWhileVisible() {
+      if (!dirEl.dialog.open || dirSentinel.hidden) return;
+      const root = dirScroller.getBoundingClientRect(), sent = dirSentinel.getBoundingClientRect();
+      if (sent.top < root.bottom + 600) { appendDirPage(); requestAnimationFrame(fillDirWhileVisible); }
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => { if (entries.some((en) => en.isIntersecting)) fillDirWhileVisible(); }, { root: dirScroller, rootMargin: '0px 0px 600px 0px' }).observe(dirSentinel);
+    }
+    document.getElementById('dirMore').addEventListener('click', () => appendDirPage());
+
     dirEl.chips.addEventListener('click', (e) => {
       const b = e.target.closest('[data-chip]');
       if (!b) return;
@@ -1972,7 +2008,8 @@
       const q = norm(searchInput.value.trim());
       if (!q) { searchHits = []; return hideResults(); }
       searchHits = puntos.filter((p) =>
-        norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q));
+        norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q))
+        .sort((a, b) => isPro(b) - isPro(a)); // fichas PRO primero
       resultsEl.innerHTML = searchHits.length
         ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-sand-100 focus:bg-sand-100 focus:outline-none">
             <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-3 w-3', '#f6f1e7')}</span>
@@ -2170,7 +2207,9 @@
     };
     let claimPoint = null;
     const claimText = (p) => p
-      ? `Hola, soy el dueño de ${p.nombre} en ${p.comuna || REGIONES[p.region].label} y me gustaría verificar mi tienda y activar el Plan Pro.`
+      ? p.categoria === 'guias'
+        ? `Hola, soy ${p.nombre} (guía en ${p.comuna || REGIONES[p.region].label}) y me gustaría verificar mi perfil y activar Guía PRO.`
+        : `Hola, soy el dueño de ${p.nombre} en ${p.comuna || REGIONES[p.region].label} y me gustaría verificar mi tienda y activar el Plan Pro.`
       : 'Hola, tengo una tienda, taller o servicio de shuttles y me gustaría registrar o destacar mi negocio en DESVIADOR.';
 
     function openClaim(p) {
@@ -3722,10 +3761,9 @@
 
   <script>
     // ================= GUÍAS & INSTRUCTORES =================
-    // Perfil especial para la categoría "guias" (se engancha en drawerHtml) + registro de guías ($9.990/mes)
+    // Perfil especial para la categoría "guias" (se engancha en drawerHtml) + registro gratuito de guías (Guía PRO es opcional)
     const GUIDE_DISC = { enduro: 'Enduro', gravel: 'Gravel', emtb: 'E-MTB', downhill: 'Downhill', xc: 'XC / Trail', principiantes: 'Principiantes', ruta: 'Ruta', bikepacking: 'Bikepacking' };
     const GUIDE_LANGS = ['Español', 'English', 'Português', 'Deutsch', 'Français'];
-    const GUIDE_PRICE = '$9.990/mes';
     const initials = (name) => String(name).replace(/[·|].*$/, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
     const safePhoto = (url) => (/^https:\/\/\S+$/i.test(url || '') ? url : '');
 
@@ -3787,7 +3825,7 @@
             <h3 id="drawerTitle" class="mt-1.5 font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
             <p class="mt-1 text-sm text-soil-600">📍 ${place}</p>
             <div class="mt-1.5 flex flex-wrap gap-1.5">
-              ${p.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : '<span class="badge-pro px-2 py-0.5 text-[11px]">✔ Guía Verificado</span>'}
+              ${p.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : isPro(p) ? '<span class="badge-pro px-2 py-0.5 text-[11px]">✔ Guía Verificado</span>' : ''}
               ${p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2 py-0.5 text-[11px] font-bold text-sand-50">Amigo del Trail</span>' : ''}
             </div>
           </div>
@@ -3811,7 +3849,7 @@
 
         ${typeof socialBlock === 'function' ? socialBlock(p) : ''}
         <div class="mt-3">${quote}</div>
-        <button type="button" data-guide-join="ficha" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">🧭 ¿Eres guía o instructor? Súmate a la red</button>`;
+        <button type="button" data-guide-join="ficha" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">🧭 ¿Eres guía o instructor? Regístrate gratis</button>`;
     }
 
     // Cotizador: cada cambio actualiza el mensaje de WhatsApp (el gate lee el enlace al hacer clic)
@@ -3842,7 +3880,7 @@
     function openGuideJoin(via) {
       if ($('guideJoinBody').hidden) { gjForm.reset(); $('gjRegion').value = 'metropolitana'; gjForm.querySelectorAll('[data-disc]').forEach((c) => c.setAttribute('aria-pressed', 'false')); }
       $('guideJoinBody').hidden = false; $('guideJoinDone').hidden = true;
-      $('guideJoinSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar solicitud por WhatsApp';
+      $('guideJoinSubmit').textContent = '🧭 Crear mi perfil gratis';
       showFormError($('gjError'), '');
       document.getElementById('dirDialog').open && document.getElementById('dirDialog').close();
       gjDlg.showModal();
@@ -3882,28 +3920,33 @@
       const [lat, lng] = guideBaseCoords(g.region, g.comuna);
       const row = {
         nombre_comercio: g.nombre, categoria: 'guias', region: g.region, comuna: g.comuna, latitud: +lat.toFixed(6), longitud: +lng.toFixed(6),
-        whatsapp: g.whatsapp, descripcion: g.descripcion || null, contacto_admin: `${g.nombre} · +${g.whatsapp} (registro de guía)`, solicita_destacado: true,
+        whatsapp: g.whatsapp, descripcion: g.descripcion || null, contacto_admin: `${g.nombre} · +${g.whatsapp} (registro de guía gratis)`, solicita_destacado: false,
         foto_url: g.foto_url || null, zonas: g.zonas, certificaciones: g.certificaciones, idiomas: g.idiomas, disciplinas: g.disciplinas, tarifa: g.tarifa || null,
       };
       const text = [
-        `Hola DESVIADOR, quiero sumarme a la red de Guías & Instructores (${GUIDE_PRICE}):`,
+        'Hola DESVIADOR, quiero registrarme gratis como Guía Local / Instructor:',
         `• Nombre: ${g.nombre}`, `• Base: ${g.comuna}, ${REGIONES[g.region].label}`, `• Zonas: ${g.zonas.join(', ')}`,
         `• Disciplinas: ${g.disciplinas.map((d) => GUIDE_DISC[d]).join(', ')}`, `• Idiomas: ${g.idiomas.join(', ')}`,
         g.certificaciones.length ? `• Certificaciones: ${g.certificaciones.join('; ')}` : '', g.tarifa ? `• Tarifa: ${g.tarifa}` : '',
         `• WhatsApp para clientes: +${g.whatsapp}`,
       ].filter(Boolean).join('\n');
-      const admin = salesNumber();
-      const link = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(text)}` : '';
-      // El perfil queda "pendiente" en la base: al confirmar el pago y las credenciales, se aprueba desde el panel
-      const saved = supabaseClient ? queueInsert('comercios', row) : Promise.resolve(false);
-      if (link) {
-        openWhatsApp(link);
-        return showGuideDone('Se abrió WhatsApp con tu solicitud. Envíala y coordinamos el pago, la verificación de tus credenciales y tu foto de perfil.', link);
-      }
+      // Registro gratis: el perfil entra directo a la base como ficha pendiente de revisión
       $('guideJoinSubmit').textContent = 'Enviando…';
-      if (await saved) return showGuideDone('Recibimos tu solicitud. Te escribiremos al WhatsApp que indicaste para coordinar el pago y verificar tus credenciales.', '');
-      $('guideJoinSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar solicitud por WhatsApp';
-      showFormError(err, supabaseClient ? 'No pudimos enviar tu solicitud. Inténtalo de nuevo en un rato.' : 'El registro de guías aún no está habilitado. Vuelve pronto.');
+      let saved = false;
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('comercios').insert([row]);
+        if (!error) saved = true;
+        else { console.warn('[DESVIADOR] Perfil de guía sin guardar:', error.message); writeJSON(JOBS_QUEUE_KEY, [...readJSON(JOBS_QUEUE_KEY, []), { table: 'comercios', row }]); }
+      }
+      if (saved) return showGuideDone('Tu perfil quedó en revisión. Te escribiremos al WhatsApp que indicaste cuando esté publicado en el mapa.', '');
+      const admin = salesNumber();
+      if (admin) {
+        const link = `https://wa.me/${admin}?text=${encodeURIComponent(text)}`;
+        openWhatsApp(link);
+        return showGuideDone('Se abrió WhatsApp con tu perfil para enviarlo al equipo de DESVIADOR. Te avisaremos cuando esté publicado.', link);
+      }
+      $('guideJoinSubmit').textContent = '🧭 Crear mi perfil gratis';
+      showFormError(err, supabaseClient ? 'No pudimos enviar tu perfil. Inténtalo de nuevo en un rato.' : 'El registro de guías aún no está habilitado. Vuelve pronto.');
     });
     function showGuideDone(text, link) {
       showFormError($('gjError'), '');
@@ -3918,7 +3961,7 @@
     // ================= PLANES Y TARIFAS · MEDICIÓN · GUÍAS EN "ARMA TU VIAJE" =================
     const PLANS = {
       gratis:   { name: 'Plan Gratis (Ficha Básica)', price: () => '$0' },
-      guia:     { name: 'Plan Guía Local / Freelance', price: () => '$9.990 CLP/mes' },
+      guia:     { name: 'Plan Guía PRO', price: () => '$9.990 CLP/mes' },
       pro:      { name: 'Plan Tienda / Taller PRO', price: () => (billing === 'semestral' ? '$19.990 CLP/mes, pago semestral de $119.940' : '$24.990 CLP/mes') },
       auspicio: { name: 'Auspicios y Banners Regionales', price: () => '' },
     };
@@ -4006,8 +4049,9 @@
     window.addEventListener('desviador:trip-sent', (e) => {
       const d = e.detail, box = $('tripGuides');
       const regions = TRIP_ZONE_REGIONS[d.zona];
-      const guides = puntos.filter((p) => p.categoria === 'guias' && (!regions || regions.includes(p.region)))
-        .sort((a, b) => (isPro(b) - isPro(a)) || a.nombre.localeCompare(b.nombre, 'es')).slice(0, 3);
+      // Beneficio Guía PRO: solo guías destacados
+      const guides = puntos.filter((p) => p.categoria === 'guias' && isPro(p) && (!regions || regions.includes(p.region)))
+        .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')).slice(0, 3);
       box.hidden = !guides.length;
       if (!guides.length) return;
       box.innerHTML = `<p class="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600">🧭 Guías verificados para tu viaje</p>
@@ -4033,7 +4077,7 @@
     // Fichas PRO y guías (membresía pagada): botones visibles. Fichas gratis: bloque bloqueado con invitación a Pro.
     const SOCIAL_COLUMNS = 'website_url, instagram_handle, tiktok_handle, youtube_channel, strava_or_trailforks_url';
     let socialUnavailable = false; // las columnas aún no existen en la base
-    const hasDigitalPlan = (p) => isPro(p) || p.categoria === 'guias';
+    const hasDigitalPlan = (p) => isPro(p); // tiendas PRO y Guía PRO
 
     // Normalizadores: aceptan "@usuario", "usuario" o la URL completa
     const cleanHandle = (v, host) => {
@@ -4135,6 +4179,26 @@
           ${igPreview}
         </div>`;
     }
+  </script>
+
+  <script>
+    // ================= 🧭 GUÍAS LOCALES: filtro rápido del encabezado =================
+    // Filtra el mapa a guías sin mover la vista: primero cuenta los que están en la zona visible.
+    function filterGuidesInView(via) {
+      document.getElementById('mobileMenu')?.classList.add('hidden');
+      if (mapState.cat === 'guias') { mapState.cat = null; render(false); return toast('Mostrando todas las categorías'); }
+      mapState.cat = 'guias';
+      render(false);
+      if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const bounds = map.getBounds();
+      const all = visiblePoints();
+      const inView = all.filter((e) => bounds.contains(e.marker.getLatLng())).length;
+      track('guides_filter', { via, enVista: inView, total: all.length });
+      if (inView) return toast(`🧭 ${inView} ${inView === 1 ? 'guía' : 'guías'} en la zona visible del mapa`);
+      if (all.length) { render(true); return toast(`No hay guías en esta zona: te mostramos ${all.length === 1 ? 'el guía' : `los ${all.length} guías`} de ${mapState.region === 'all' ? 'Chile' : REGIONES[mapState.region].label}`); }
+      toast('Aún no hay guías en el mapa. ¿Eres guía? Regístrate gratis');
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-guides-filter]'); if (b) { e.preventDefault(); filterGuidesInView(b.dataset.guidesFilter); } });
   </script>
 </body>
 </html>
