@@ -146,3 +146,14 @@ La sección **Anúnciate** (`#anunciate`) muestra 3 planes y un bloque para marc
 ```sql
 select * from informe_mensual_fichas where mes = to_char(now(), 'YYYY-MM') order by vistas desc;
 ```
+
+## Ecosistema digital (web y redes en las fichas)
+
+Ejecuta [`supabase/redes.sql`](supabase/redes.sql). Agrega `website_url`, `instagram_handle`, `tiktok_handle`, `youtube_channel` y `strava_or_trailforks_url`, validados en la base (sin `javascript:`, usuarios válidos, mapas solo `https://`).
+
+- **Fichas PRO y guías:** sección **🌐 Ecosistema Digital & Redes**.
+  - Botones: `🌐 Ver Sitio Web / Catálogo`, `📸 Instagram` (abre la app en el celular), TikTok, YouTube y `🚵 Mapa de Pistas (Trailforks / Strava)`.
+  - Con Instagram cargado, se despliega "Ver novedades de @usuario", con enlaces a publicaciones e historias.
+- **Fichas gratis:** bloque bloqueado `🔒 Redes sociales y catálogo web no verificados.` con el botón "¿Eres el dueño? Vincula tu Instagram y Web activando tu Ficha Pro", que abre el modal de Ficha Pro.
+- **Panel admin → Editar:** campos para web, Instagram, TikTok, YouTube y mapa de pistas. Acepta `@usuario`, `usuario` o la URL completa y los normaliza. Hasta ejecutar `redes.sql` aparecen desactivados.
+- Los clics a redes y web se suman al informe mensual (`clics_redes` en `informe_mensual_fichas`).

@@ -5,7 +5,7 @@
 create table if not exists public.eventos_ficha (
   id          bigint generated always as identity primary key,
   comercio_id uuid not null references public.comercios(id) on delete cascade,
-  tipo        text not null check (tipo in ('vista','whatsapp','como_llegar','cotizar')),
+  tipo        text not null check (tipo in ('vista','whatsapp','como_llegar','cotizar','redes')),
   created_at  timestamptz not null default now()
 );
 create index if not exists eventos_ficha_comercio_idx on public.eventos_ficha (comercio_id, created_at desc);
@@ -35,7 +35,8 @@ select
   count(*) filter (where e.tipo = 'vista')                as vistas,
   count(*) filter (where e.tipo = 'whatsapp')             as clics_whatsapp,
   count(*) filter (where e.tipo = 'como_llegar')          as clics_como_llegar,
-  count(*) filter (where e.tipo = 'cotizar')              as cotizaciones
+  count(*) filter (where e.tipo = 'cotizar')              as cotizaciones,
+  count(*) filter (where e.tipo = 'redes')                as clics_redes
 from public.eventos_ficha e
 join public.comercios c on c.id = e.comercio_id
 group by c.id, c.nombre_comercio, c.categoria, c.comuna, c.destacado, 6;

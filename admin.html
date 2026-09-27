@@ -185,6 +185,18 @@
             <div><label for="e_personal" class="lbl">Busca personal <span class="font-normal text-sand-300/70">(público · Bici Jobs)</span></label><input id="e_personal" maxlength="200" placeholder="Ej: mecánico part-time" class="fld" /></div>
             <div><label for="e_descripcion" class="lbl">Descripción pública</label><textarea id="e_descripcion" rows="3" maxlength="600" class="fld resize-y"></textarea></div>
 
+            <fieldset id="e_social" class="space-y-4 rounded-xl border border-[#d4af37]/50 p-4">
+              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#e2c35a]">🌐 Ecosistema digital · visible solo en fichas Pro y guías</legend>
+              <p id="e_socialNote" class="-mt-1 text-xs text-sand-300/80">Pega la URL o el usuario; se valida al guardar.</p>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div><label for="e_web" class="lbl">🌐 Sitio web / tienda online</label><input id="e_web" type="url" maxlength="300" placeholder="https://tiendabike.cl" class="fld" /></div>
+                <div><label for="e_ig" class="lbl">📸 Instagram</label><input id="e_ig" maxlength="80" placeholder="@tiendabike" class="fld" /></div>
+                <div><label for="e_tiktok" class="lbl">🎵 TikTok</label><input id="e_tiktok" maxlength="80" placeholder="@tiendabike" class="fld" /></div>
+                <div><label for="e_yt" class="lbl">▶️ YouTube</label><input id="e_yt" maxlength="200" placeholder="@canal o https://youtube.com/…" class="fld" /></div>
+              </div>
+              <div><label for="e_trail" class="lbl">🚵 Mapa de pistas (Trailforks / Strava) <span class="font-normal text-sand-300/70">· para bikeparks y senderos</span></label><input id="e_trail" type="url" maxlength="300" placeholder="https://www.trailforks.com/region/…" class="fld" /></div>
+            </fieldset>
+
             <fieldset class="space-y-4 rounded-xl border border-dashed border-ochre-400/40 p-4">
               <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-ochre-300">Privado (no se publica)</legend>
               <div><label for="e_contacto" class="lbl">Contacto del dueño</label><input id="e_contacto" maxlength="120" class="fld" /></div>
@@ -656,6 +668,16 @@
       $('e_solicita').checked = !!r.solicita_destacado;
       $('e_amigo').checked = !!r.es_amigo_trail;
       $('e_destacado').checked = !!r.destacado;
+      // Redes: solo si la base ya tiene las columnas (supabase/redes.sql)
+      const socialReady = 'website_url' in r;
+      $('e_social').disabled = !socialReady;
+      $('e_social').classList.toggle('opacity-50', !socialReady);
+      $('e_socialNote').textContent = socialReady ? 'Pega la URL o el usuario; se valida al guardar.' : 'Ejecuta supabase/redes.sql en Supabase para activar estos campos.';
+      $('e_web').value = r.website_url || '';
+      $('e_ig').value = r.instagram_handle ? '@' + r.instagram_handle : '';
+      $('e_tiktok').value = r.tiktok_handle ? '@' + r.tiktok_handle : '';
+      $('e_yt').value = r.youtube_channel || '';
+      $('e_trail').value = r.strava_or_trailforks_url || '';
       $('editMeta').textContent = `Creado ${fmtDate(r.created_at)}`;
       $('editError').classList.add('hidden');
       $('listView').hidden = true; $('editView').hidden = false;
@@ -694,7 +716,41 @@
       if (!(lat >= -56.8 && lat <= -17.2) || !(lng >= -77.5 && lng <= -65.5)) return fail('Las coordenadas deben estar dentro de Chile.');
       if (phone && (phone.length < 8 || phone.length > 15)) return fail('El WhatsApp debe tener entre 8 y 15 dígitos (ej: 56912345678).');
 
+      // Redes: se normalizan a lo que acepta la base ("@usuario" o URL → usuario; web sin https → https://)
+      const handle = (id, host) => {
+        const v = $(id).value.trim();
+        if (!v) return null;
+        const h = v.replace(new RegExp(`^https?://(www\\.)?${host}/@?`, 'i'), '').replace(/^@/, '').split(/[/?#]/)[0];
+        return /^[A-Za-z0-9._]{1,30}$/.test(h) ? h : undefined;
+      };
+      const url = (id, httpsOnly) => {
+        const v = $(id).value.trim();
+        if (!v) return null;
+        const full = /^https?:\/\//i.test(v) ? v : `https://${v}`;
+        if (httpsOnly && !/^https:\/\//i.test(full)) return undefined;
+        return /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(full) && full.length <= 300 ? full : undefined;
+      };
+      const ytVal = (() => {
+        const v = $('e_yt').value.trim();
+        if (!v) return null;
+        if (/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(v)) return v;
+        const h = v.replace(/^@/, '');
+        return /^[A-Za-z0-9._-]{3,100}$/.test(h) ? h : undefined;
+      })();
+      const social = {};
+      if (!$('e_social').disabled) {
+        Object.assign(social, {
+          website_url: url('e_web'), instagram_handle: handle('e_ig', 'instagram\\.com'), tiktok_handle: handle('e_tiktok', 'tiktok\\.com'),
+          youtube_channel: ytVal, strava_or_trailforks_url: url('e_trail', true),
+        });
+        const bad = { website_url: 'el sitio web', instagram_handle: 'el Instagram', tiktok_handle: 'el TikTok', youtube_channel: 'el canal de YouTube', strava_or_trailforks_url: 'el mapa de pistas (debe empezar con https://)' };
+        const wrong = Object.keys(social).find((k) => social[k] === undefined);
+        if (wrong) return fail(`Revisa ${bad[wrong]}.`);
+        if (social.tiktok_handle && social.tiktok_handle.length < 2) return fail('Revisa el TikTok.');
+      }
+
       const changes = {
+        ...social,
         nombre_comercio: nombre,
         categoria: $('e_categoria').value,
         region: $('e_region').value,

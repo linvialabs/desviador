@@ -142,6 +142,15 @@
     #trailDialog .trip-opt.st-abierto:has(input:checked) { background: #d5e8c4; color: #2c4a15; }
     #trailDialog .trip-opt.st-precaucion:has(input:checked) { background: #f3e0a3; color: #5e450a; }
     #trailDialog .trip-opt.st-cerrado:has(input:checked) { background: #f1c7b9; color: #7a2716; }
+    /* Ecosistema digital (fichas Pro) y bloque bloqueado (fichas gratis) */
+    .social-btn { display: flex; align-items: center; justify-content: center; gap: .45rem; border-radius: .75rem; padding: .7rem .8rem; font-size: .875rem; font-weight: 700; transition: transform .12s ease, box-shadow .15s ease, background-color .15s ease; }
+    .social-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(21,18,14,.18); }
+    .social-web { background: #15120e; color: #f6f1e7; }
+    .social-ig { background: linear-gradient(135deg, #f9a03f 0%, #e1306c 50%, #833ab4 100%); color: #fff; }
+    .social-neutral { background: #fffdf8; color: #2b241c; box-shadow: inset 0 0 0 1px #c9bba3; }
+    .social-trail { background: #56743a; color: #f6f1e7; }
+    .social-locked { position: relative; overflow: hidden; background: repeating-linear-gradient(-45deg, rgba(201,187,163,.16) 0 10px, transparent 10px 20px), #f1eadc; }
+    .social-locked .ghost { display: flex; align-items: center; justify-content: center; gap: .35rem; border-radius: .6rem; padding: .5rem; font-size: .8rem; font-weight: 700; color: #9a8b76; box-shadow: inset 0 0 0 1px #d8ccb6; background: rgba(255,253,248,.6); filter: blur(.3px); user-select: none; }
     .billing-btn { color: #ddd2bf; transition: background-color .15s ease, color .15s ease; }
     .billing-btn[aria-pressed="true"] { background: #d9a441; color: #15120e; }
     .util-chip { display: inline-flex; align-items: center; gap: .3rem; border-radius: 9999px; padding: .45rem .7rem; font-size: .78rem; font-weight: 700; transition: box-shadow .15s ease, background-color .15s ease; }
@@ -384,6 +393,7 @@
               <li class="flex gap-3"><span class="text-moss-400">✓</span> Ubicación en el mapa nacional</li>
               <li class="flex gap-3"><span class="text-moss-400">✓</span> Teléfono y horario básico en tu ficha</li>
               <li class="flex gap-3"><span class="text-moss-400">✓</span> Presencia en el directorio (sin destacar)</li>
+              <li class="flex gap-3 text-sand-300/70"><span>—</span> Sin enlaces a web ni redes sociales</li>
             </ul>
             <button type="button" data-plan="gratis" class="mt-6 rounded-xl py-3 text-center text-sm font-bold text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-700">Registrar Negocio Gratis</button>
             <a href="#registrar" data-register="negocio" class="mt-2 text-center text-xs font-semibold text-sand-300 underline-offset-4 hover:text-sand-50 hover:underline">o regístralo tú mismo con el formulario →</a>
@@ -400,6 +410,7 @@
               <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Link directo a WhatsApp de reserva, con fecha y zona</li>
               <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Tus zonas de trabajo visibles en el perfil</li>
               <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Presencia en el configurador "Arma tu Viaje"</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Tu Instagram y sitio web en el perfil</li>
             </ul>
             <button type="button" data-plan="guia" class="mt-6 rounded-xl bg-[#6b4f7d] py-3 text-center text-sm font-bold text-sand-50 transition hover:bg-[#7d5f91]">Activar Plan Guía</button>
             <button type="button" data-guide-join="planes" class="mt-2 text-center text-xs font-semibold text-sand-300 underline-offset-4 hover:text-sand-50 hover:underline">o completa tu perfil de guía →</button>
@@ -418,6 +429,7 @@
               <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Publicaciones ilimitadas en Bici Jobs</li>
               <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Prioridad en el filtro "Urgencia / Repuestos"</li>
               <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Informe mensual de visitas y clics a tu ficha</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Ecosistema digital: tu web, Instagram, TikTok/YouTube y mapa de pistas en la ficha</li>
             </ul>
             <button type="button" data-plan="pro" class="mt-6 rounded-xl bg-[#d4af37] py-3.5 text-center text-sm font-extrabold text-soil-950 shadow-lg transition hover:bg-[#e2c35a]">Sumar mi Tienda Pro</button>
             <p class="mt-2 text-center text-xs text-sand-300">Primero en el directorio de tu zona desde el día 1.</p>
@@ -1652,6 +1664,8 @@
           ${row('Horario', loading ? skel('w-28') : p.horario ? esc(p.horario) : 'Por confirmar', !loading && !p.horario)}
           ${row('Coordenadas', `<span class="font-mono text-xs tabular-nums">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</span>`)}
         </dl>
+
+        ${typeof socialBlock === 'function' ? socialBlock(p) : ''}
 
         <div class="mt-5 grid gap-2.5">
           ${contactBlock}
@@ -3795,6 +3809,7 @@
           ].join('')}
         </div>
 
+        ${typeof socialBlock === 'function' ? socialBlock(p) : ''}
         <div class="mt-3">${quote}</div>
         <button type="button" data-guide-join="ficha" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">🧭 ¿Eres guía o instructor? Súmate a la red</button>`;
     }
@@ -3953,7 +3968,7 @@
 
     // --- Medición anónima para el informe mensual de cada ficha (vistas y clics) ---
     // Tabla eventos_ficha (supabase/planes.sql). Sin datos personales; solo ficha, tipo y fecha.
-    const EVENT_TYPES = ['vista', 'whatsapp', 'como_llegar', 'cotizar'];
+    const EVENT_TYPES = ['vista', 'whatsapp', 'como_llegar', 'cotizar', 'redes'];
     let eventsDisabled = false;
     function logFichaEvent(id, tipo) {
       if (!supabaseClient || eventsDisabled || !EVENT_TYPES.includes(tipo)) return;
@@ -3979,6 +3994,7 @@
       const a = e.target.closest('a[href]');
       if (!a) return;
       if (a.matches('[data-guide-wa]')) return logFichaEvent(drawerPoint?.id, 'cotizar');
+      if (a.matches('[data-social-link]')) return logFichaEvent(drawerPoint?.id, 'redes');
       if (a.matches('[data-sos-wa]')) return logFichaEvent(a.dataset.sosWa, 'whatsapp');
       if (a.matches('[data-sos-go]')) return logFichaEvent(a.dataset.sosGo, 'como_llegar');
       if (a.matches('[data-gate="whatsapp"][data-ref]')) return logFichaEvent(a.dataset.ref, 'whatsapp');
@@ -4009,6 +4025,116 @@
       track('trip_guide_opened', { ref: b.dataset.tripGuide });
       locatePoint(b.dataset.tripGuide);
     });
+  </script>
+
+  <script>
+    // ================= ECOSISTEMA DIGITAL & REDES =================
+    // Campos opcionales por ficha: website_url, instagram_handle, tiktok_handle, youtube_channel, strava_or_trailforks_url (supabase/redes.sql)
+    // Fichas PRO y guías (membresía pagada): botones visibles. Fichas gratis: bloque bloqueado con invitación a Pro.
+    const SOCIAL_COLUMNS = 'website_url, instagram_handle, tiktok_handle, youtube_channel, strava_or_trailforks_url';
+    let socialUnavailable = false; // las columnas aún no existen en la base
+    const hasDigitalPlan = (p) => isPro(p) || p.categoria === 'guias';
+
+    // Normalizadores: aceptan "@usuario", "usuario" o la URL completa
+    const cleanHandle = (v, host) => {
+      let h = String(v || '').trim();
+      if (!h) return '';
+      h = h.replace(new RegExp(`^https?://(www\\.)?${host}/@?`, 'i'), '').replace(/^@/, '').split(/[/?#]/)[0];
+      return /^[A-Za-z0-9._]{1,30}$/.test(h) ? h : '';
+    };
+    const safeUrl = (v) => {
+      const u = String(v || '').trim();
+      if (!u) return '';
+      const full = /^https?:\/\//i.test(u) ? u : `https://${u}`;
+      return /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(full) ? full : '';
+    };
+    const youtubeUrl = (v) => {
+      const u = String(v || '').trim();
+      if (/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(u)) return u;
+      const h = u.replace(/^@/, '');
+      return /^[A-Za-z0-9._-]{3,100}$/.test(h) ? `https://www.youtube.com/@${h}` : '';
+    };
+    function socialLinks(p) {
+      const s = p.social || {};
+      return {
+        web: safeUrl(s.website_url),
+        ig: cleanHandle(s.instagram_handle, 'instagram\\.com'),
+        tiktok: cleanHandle(s.tiktok_handle, 'tiktok\\.com'),
+        yt: youtubeUrl(s.youtube_channel),
+        trail: /^https:\/\//i.test(s.strava_or_trailforks_url || '') ? s.strava_or_trailforks_url.trim() : '',
+      };
+    }
+
+    // Una consulta aparte (no rompe la ficha si las columnas aún no existen)
+    function loadSocial(p) {
+      if (p.socialLoaded || p.socialLoading) return;
+      if (!supabaseClient || socialUnavailable || !('detailsLoaded' in p)) { p.socialLoaded = true; return; }
+      p.socialLoading = true;
+      supabaseClient.from('comercios').select(SOCIAL_COLUMNS).eq('id', p.id).maybeSingle().then(({ data, error }) => {
+        p.socialLoading = false; p.socialLoaded = true;
+        if (error) {
+          if (error.code === '42703' || /column|permission/i.test(error.message)) socialUnavailable = true;
+          return console.info('[DESVIADOR] Redes de fichas no disponibles (¿ejecutaste supabase/redes.sql?):', error.message);
+        }
+        p.social = data || {};
+        if (drawerPoint === p && drawer.classList.contains('is-open')) drawerBody.innerHTML = drawerHtml(p);
+      });
+    }
+
+    const extLink = (href, cls, label, kind) => `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer" data-social-link="${kind}" class="social-btn ${cls}">${label}</a>`;
+
+    function socialBlock(p) {
+      if (!hasDigitalPlan(p)) {
+        return `
+        <div class="social-locked mt-4 rounded-xl p-3.5 ring-1 ring-sand-300" aria-label="Redes sociales no verificadas">
+          <div class="grid grid-cols-2 gap-2 opacity-80" aria-hidden="true">
+            <span class="ghost">🔒 🌐 Sitio web</span><span class="ghost">🔒 📸 Instagram</span>
+          </div>
+          <p class="mt-2.5 text-sm font-semibold text-soil-700">🔒 Redes sociales y catálogo web no verificados.</p>
+          <button type="button" data-claim="${esc(p.id)}" class="mt-1 text-left text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">¿Eres el dueño? Vincula tu Instagram y Web activando tu Ficha Pro</button>
+        </div>`;
+      }
+      loadSocial(p);
+      if (!p.socialLoaded) return `<div class="mt-4 h-24 animate-pulse rounded-xl bg-sand-200" aria-label="Cargando redes"></div>`;
+      const L = socialLinks(p);
+      if (!L.web && !L.ig && !L.tiktok && !L.yt && !L.trail) return '';
+      const buttons = [
+        L.web ? extLink(L.web, 'social-web col-span-2', `🌐 Ver Sitio Web / Catálogo`, 'web') : '',
+        L.ig ? extLink(`https://www.instagram.com/${L.ig}/`, 'social-ig', '📸 Instagram', 'instagram') : '',
+        L.tiktok ? extLink(`https://www.tiktok.com/@${L.tiktok}`, 'social-neutral', '🎵 TikTok', 'tiktok') : '',
+        L.yt ? extLink(L.yt, 'social-neutral', '▶️ YouTube', 'youtube') : '',
+        L.trail ? extLink(L.trail, 'social-trail col-span-2', '🚵 Mapa de Pistas (Trailforks / Strava)', 'pistas') : '',
+      ].filter(Boolean);
+      // Si quedan en número impar, el último ocupa todo el ancho
+      const small = buttons.filter((b) => !b.includes('col-span-2'));
+      if (small.length % 2) buttons[buttons.indexOf(small[small.length - 1])] = small[small.length - 1].replace('class="social-btn', 'class="social-btn col-span-2');
+      const igPreview = L.ig ? `
+          <details class="group mt-2 rounded-xl bg-white/70 ring-1 ring-sand-300">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-semibold text-soil-800">
+              <span>✨ Ver novedades de <span class="text-[#c13584]">@${esc(L.ig)}</span></span><span class="text-soil-600 transition group-open:rotate-180">▾</span>
+            </summary>
+            <div class="px-3 pb-3">
+              <div class="flex items-center gap-3 rounded-lg p-2.5 text-white social-ig">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20 text-lg ring-2 ring-white/60" aria-hidden="true">📸</span>
+                <div class="min-w-0"><p class="truncate font-bold">@${esc(L.ig)}</p><p class="text-xs text-white/85">${esc(p.nombre)} en Instagram</p></div>
+              </div>
+              <div class="mt-2 grid grid-cols-2 gap-2">
+                ${extLink(`https://www.instagram.com/${L.ig}/`, 'social-neutral !py-2 text-xs', '🖼️ Últimas publicaciones', 'instagram')}
+                ${extLink(`https://www.instagram.com/stories/${L.ig}/`, 'social-neutral !py-2 text-xs', '⭕ Historias de hoy', 'instagram')}
+              </div>
+              <p class="mt-1.5 text-[11px] text-soil-600">Se abre en la app de Instagram (o en la web).</p>
+            </div>
+          </details>` : '';
+      return `
+        <div class="mt-4 rounded-xl bg-sand-100 p-3.5 ring-1 ring-[#d4af37]/60">
+          <div class="flex items-center justify-between gap-2">
+            <p class="font-display text-base font-extrabold uppercase tracking-tight text-soil-950">🌐 Ecosistema Digital &amp; Redes</p>
+            <span class="badge-pro shrink-0 whitespace-nowrap px-1.5 py-0.5 text-[10px]">✔ Verificado</span>
+          </div>
+          <div class="mt-2.5 grid grid-cols-2 gap-2">${buttons.join('')}</div>
+          ${igPreview}
+        </div>`;
+    }
   </script>
 </body>
 </html>
