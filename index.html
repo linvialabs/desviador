@@ -187,6 +187,16 @@
     .navlink:hover, .navlink:focus-visible { color: #f6f1e7; }
     .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #2e7d32; transform: scaleX(0); transition: transform .2s ease; }
     .navlink:hover::after { transform: scaleX(1); }
+    /* Bici Jobs: chips de especialidad técnica */
+    .chip-t { display: inline-flex; align-items: center; gap: .35rem; border-radius: 9999px; padding: .42rem .8rem; font-size: 12.5px; font-weight: 600; line-height: 1.2; background: #fffdf8; color: #2b241c; box-shadow: inset 0 0 0 1px #ddd2bf; transition: background .15s, box-shadow .15s, color .15s; }
+    .chip-t:hover { box-shadow: inset 0 0 0 1px #54473a; }
+    .chip-t[aria-pressed="true"] { background: #e8f3e9; color: #1f5a23; box-shadow: inset 0 0 0 1.5px #2e7d32; }
+    .chip-t .chip-tick { display: none; }
+    .chip-t[aria-pressed="true"] .chip-tick { display: inline-block; }
+    .chip-t.is-dark { background: transparent; color: #ede5d6; box-shadow: inset 0 0 0 1px #54473a; }
+    .chip-t.is-dark[aria-pressed="true"] { background: #2e7d32; color: #f6f1e7; box-shadow: none; }
+    .badge-t { display: inline-flex; align-items: center; gap: .3rem; border-radius: .4rem; padding: .18rem .5rem; font-size: 11px; font-weight: 600; background: rgba(46,125,50,.07); color: #276b2b; box-shadow: inset 0 0 0 1px rgba(46,125,50,.22); }
+    .badge-t.is-match { background: #2e7d32; color: #f6f1e7; box-shadow: none; }
     .locales-opt { background: #fffdf8; }
     .locales-opt:hover { box-shadow: inset 0 0 0 1px #54473a; }
     .locales-opt[aria-pressed="true"] { background: #e8f3e9; box-shadow: inset 0 0 0 2px #2e7d32; }
@@ -268,6 +278,14 @@
     .i-shield { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z%22/%3E%3Cpath d=%22m9 12 2 2 4-4%22/%3E%3C/svg%3E"); }
     .i-crosshair { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M22 12h-4M6 12H2M12 6V2M12 22v-4%22/%3E%3C/svg%3E"); }
     .i-users { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2%22/%3E%3Ccircle cx=%229%22 cy=%227%22 r=%224%22/%3E%3Cpath d=%22M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75%22/%3E%3C/svg%3E"); }
+    .i-cog { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%223%22/%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%227%22/%3E%3Cpath d=%22M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12%22/%3E%3C/svg%3E"); }
+    .i-droplet { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z%22/%3E%3C/svg%3E"); }
+    .i-battery { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2216%22 height=%2210%22 x=%222%22 y=%227%22 rx=%222%22/%3E%3Cpath d=%22M22 11v2%22/%3E%3Cpath d=%22m10 9-2 3h4l-2 3%22/%3E%3C/svg%3E"); }
+    .i-file { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z%22/%3E%3Cpath d=%22M14 2v4a2 2 0 0 0 2 2h4M16 13H8M16 17H8M10 9H8%22/%3E%3C/svg%3E"); }
+    .i-paperclip { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48%22/%3E%3C/svg%3E"); }
+    .i-link { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71%22/%3E%3Cpath d=%22M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71%22/%3E%3C/svg%3E"); }
+    .i-user { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%225%22/%3E%3Cpath d=%22M20 21a8 8 0 0 0-16 0%22/%3E%3C/svg%3E"); }
+    .i-filter { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 3H2l8 9.46V19l4 2v-8.54L22 3z%22/%3E%3C/svg%3E"); }
     /* Indicadores de estado tipo LED */
     .led { display: inline-block; width: .6em; height: .6em; flex-shrink: 0; border-radius: 9999px; vertical-align: .05em; }
     .led-green { background: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.18), 0 0 6px rgba(46,125,50,.6); }
@@ -490,19 +508,59 @@
     <!-- ============ BOLSA DE EMPLEO & COMUNIDAD ============ -->
     <section id="comunidad" class="scroll-mt-16 border-y border-sand-300 bg-sand-100">
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
+        <div class="mb-6 flex flex-col gap-5">
+          <div class="min-w-0 flex-1">
             <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-brand">Empleo &amp; comunidad</p>
-            <h2 class="mt-1 flex items-center gap-3 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl"><i class="i i-briefcase text-[.8em] text-brand" aria-hidden="true"></i>Bici Jobs</h2>
-            <p class="mt-2 max-w-xl text-sm text-soil-600">Portal de empleo de la industria del ciclismo: talleres, tiendas y operadores que buscan mecánicos, vendedores y guías, junto a las convocatorias de mantención de senderos.</p>
-            <button type="button" data-post-job="encabezado" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-sm ring-2 ring-ochre-400/70 transition hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Oferta de Trabajo</button>
+            <h2 id="jobsTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl"><span class="flex items-center gap-3"><i class="i i-briefcase text-[.8em] text-brand" aria-hidden="true"></i>Bici Jobs</span><span class="mt-1 block max-w-2xl text-lg leading-snug text-soil-700 [text-wrap:balance] sm:text-2xl">— Reclutamiento Técnico y Talento para la Industria Ciclista.</span></h2>
+            <p class="mt-2 max-w-xl text-sm text-soil-600">Conectamos tiendas y talleres con mecánicos certificados, especialistas en <span class="whitespace-nowrap">E-Bikes</span> y personal de retail.</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button type="button" data-cv-open="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-brand-600"><i class="i i-user" aria-hidden="true"></i> Arma tu CV Técnico</button>
+              <button type="button" data-post-job="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Vacante</button>
+              <a href="#talento" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-soil-800 ring-1 ring-soil-600/40 transition hover:bg-sand-50"><i class="i i-users" aria-hidden="true"></i> Buscar candidatos</a>
+            </div>
           </div>
-          <div id="jobTabs" class="no-scrollbar -mx-4 flex shrink-0 gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
+          <div id="jobTabs" class="no-scrollbar -mx-4 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
         </div>
 
         <ul id="jobList" class="grid gap-3"></ul>
 
         <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de mantención de senderos</a>
+
+        <!-- Reclutamiento para tiendas (B2B): buscador de candidatos por especialidad y cercanía -->
+        <div id="talento" class="mt-10 scroll-mt-20 overflow-hidden rounded-2xl bg-sand-50 shadow-sm ring-1 ring-sand-300" role="region" aria-labelledby="talentTitle">
+          <div class="flex flex-col gap-4 bg-soil-950 px-5 py-5 text-sand-100 sm:px-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.22em] text-[#8fd18f]">Para tiendas y talleres · Reclutamiento</p>
+              <h3 id="talentTitle" class="mt-1 flex items-center gap-2.5 font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-3xl"><i class="i i-users text-[.85em] text-[#8fd18f]" aria-hidden="true"></i>Talento técnico disponible</h3>
+              <p class="mt-1 max-w-xl text-sm text-sand-300">Filtra candidatos por especialidad y cercanía. El contacto se coordina con BIKEGRID y está incluido en la Ficha Pro.</p>
+            </div>
+            <button type="button" data-post-job="talento" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 transition hover:bg-brand-600"><i class="i i-briefcase" aria-hidden="true"></i> Publicar vacante</button>
+          </div>
+          <div class="space-y-4 px-5 py-5 sm:px-6">
+            <div>
+              <p class="flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-600"><i class="i i-filter" aria-hidden="true"></i>Especialidad técnica</p>
+              <div id="talentGroups" class="no-scrollbar -mx-5 mt-2 flex gap-1.5 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar candidatos por especialidad"></div>
+              <div id="talentBadges" class="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Especialidad específica" hidden></div>
+            </div>
+            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+              <div class="sm:w-56">
+                <label for="talentRegion" class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-600">Región</label>
+                <select id="talentRegion" class="field mt-1.5"></select>
+              </div>
+              <button type="button" id="talentNear" aria-pressed="false" class="chip-t justify-center !py-3 sm:!py-2.5"><i class="i i-crosshair" aria-hidden="true"></i> Cerca de mi tienda</button>
+              <div class="sm:w-48">
+                <label for="talentRadius" class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-600">Radio</label>
+                <select id="talentRadius" class="field mt-1.5" disabled>
+                  <option value="">Sin límite</option><option value="10">Hasta 10 km</option><option value="25">Hasta 25 km</option><option value="50">Hasta 50 km</option><option value="100">Hasta 100 km</option>
+                </select>
+              </div>
+              <p id="talentCount" class="font-mono text-[11px] font-semibold uppercase tracking-[.14em] text-soil-600 sm:ml-auto sm:pb-3" aria-live="polite"></p>
+            </div>
+            <ul id="talentList" class="grid gap-3 md:grid-cols-2"></ul>
+            <button type="button" id="talentMore" class="w-full rounded-xl py-3 text-[12px] font-semibold uppercase tracking-[.12em] text-soil-800 ring-1 ring-sand-300 transition hover:bg-sand-100" hidden>Ver más candidatos</button>
+            <p class="border-t border-sand-300 pt-4 text-sm text-soil-600">¿Eres mecánico, vendedor técnico o guía? <button type="button" data-cv-open="talento" class="font-semibold text-brand underline underline-offset-2 hover:text-brand-600">Arma tu CV Técnico</button> y aparece en este buscador.</p>
+          </div>
+        </div>
 
         <!-- Programa institucional Trail Care -->
         <article class="relative mt-10 overflow-hidden rounded-2xl bg-soil-950 p-6 text-sand-100 shadow-xl sm:p-8" aria-labelledby="trailCareTitle">
@@ -1088,6 +1146,7 @@
       </div>
       <div id="applyBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
         <p id="applyDemo" class="rounded-lg st-precaucion px-3 py-2 text-xs font-semibold" hidden>Este aviso es de ejemplo: la postulación no se enviará a ninguna tienda.</p>
+        <div id="applyCvNote" class="flex items-center gap-2.5 rounded-lg bg-brand-50 px-3 py-2 text-[13px] text-soil-800 ring-1 ring-brand/25"></div>
         <div>
           <label for="applyName" class="block text-sm font-semibold text-soil-800">Nombre completo</label>
           <input id="applyName" autocomplete="name" maxlength="80" class="field mt-1.5" placeholder="Tu nombre" />
@@ -1139,13 +1198,112 @@
     </form>
   </dialog>
 
+  <!-- CV Técnico Ciclista: ficha de trabajo del postulante -->
+  <dialog id="cvDialog" class="w-[min(94vw,40rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="cvTitle">
+    <form id="cvForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
+        <div>
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-brand">Bici Jobs · Postulantes</p>
+          <h2 id="cvTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"><i class="i i-user" aria-hidden="true"></i> CV Técnico Ciclista</h2>
+          <p class="mt-0.5 text-sm text-soil-600">Tu ficha de trabajo: las tiendas te encuentran por especialidad y cercanía.</p>
+        </div>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
+      </div>
+      <div id="cvBody" class="flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
+        <fieldset class="space-y-3.5">
+          <legend class="mb-3 font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600">1 · Disponibilidad</legend>
+          <div>
+            <label for="cvName" class="block text-sm font-semibold text-soil-800">Nombre completo</label>
+            <input id="cvName" autocomplete="name" maxlength="80" class="field mt-1.5" placeholder="Ej: Matías Rojas" />
+          </div>
+          <div class="grid gap-3.5 sm:grid-cols-2">
+            <div>
+              <label for="cvComuna" class="block text-sm font-semibold text-soil-800">Comuna / Ciudad</label>
+              <input id="cvComuna" maxlength="60" class="field mt-1.5" placeholder="Ej: Ñuñoa" />
+            </div>
+            <div>
+              <label for="cvRegion" class="block text-sm font-semibold text-soil-800">Región</label>
+              <select id="cvRegion" class="field mt-1.5"></select>
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-soil-800" id="cvJornadaLabel">Modalidad <span class="font-normal text-soil-600">(puedes marcar varias)</span></p>
+            <div class="mt-1.5 flex flex-wrap gap-1.5" role="group" aria-labelledby="cvJornadaLabel"><button type="button" class="chip-t" data-cv-jornada="full_time" aria-pressed="false"><i class="i i-check chip-tick" aria-hidden="true"></i>Full-time</button><button type="button" class="chip-t" data-cv-jornada="part_time" aria-pressed="false"><i class="i i-check chip-tick" aria-hidden="true"></i>Part-time</button><button type="button" class="chip-t" data-cv-jornada="temporada" aria-pressed="false"><i class="i i-check chip-tick" aria-hidden="true"></i>Temporada / Eventos</button></div>
+          </div>
+          <div class="grid gap-3.5 sm:grid-cols-2">
+            <div>
+              <label for="cvPhone" class="block text-sm font-semibold text-soil-800">WhatsApp</label>
+              <input id="cvPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" class="field mt-1.5" placeholder="+56 9 1234 5678" />
+            </div>
+            <div>
+              <label for="cvEmail" class="block text-sm font-semibold text-soil-800">Email</label>
+              <input id="cvEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" class="field mt-1.5" placeholder="tu@correo.cl" />
+            </div>
+          </div>
+          <button type="button" id="cvGeo" class="inline-flex items-center gap-2 text-left text-sm font-semibold text-brand hover:text-brand-600"><i class="i i-crosshair" aria-hidden="true"></i> <span id="cvGeoText">Usar mi ubicación aproximada (mejora la búsqueda por cercanía)</span></button>
+        </fieldset>
+
+        <fieldset>
+          <legend class="mb-1 font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600">2 · Especialización técnica</legend>
+          <p class="mb-3 text-xs text-soil-600">Toca las habilidades que dominas. <span id="cvBadgeCount" class="font-semibold text-brand"></span></p>
+          <div id="cvBadges" class="grid gap-2.5 sm:grid-cols-2"></div>
+        </fieldset>
+
+        <fieldset class="space-y-3.5">
+          <legend class="mb-3 font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600">3 · Experiencia anterior</legend>
+          <div class="sm:w-1/2">
+            <label for="cvYears" class="block text-sm font-semibold text-soil-800">Años en el rubro</label>
+            <select id="cvYears" class="field mt-1.5">
+              <option value="">Selecciona…</option><option value="menos_1">Menos de 1 año</option><option value="1_2">1 a 2 años</option><option value="3_5">3 a 5 años</option><option value="6_10">6 a 10 años</option><option value="mas_10">Más de 10 años</option>
+            </select>
+          </div>
+          <div>
+            <label for="cvExp" class="flex justify-between text-sm font-semibold text-soil-800">Tiendas, talleres o apoyo en carreras <span class="font-mono text-xs font-normal text-soil-600"><span id="cvExpCount">0</span>/600</span></label>
+            <textarea id="cvExp" rows="3" maxlength="600" class="field mt-1.5 resize-y" placeholder="Ej: 3 años en taller de Providencia (suspensiones y armado). Mecánico de apoyo en Enduro Series 2025."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="mb-3 font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600">4 · Currículum <span class="normal-case tracking-normal">(opcional)</span></legend>
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="cvFile" class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-sand-100 px-4 py-2.5 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 transition focus-within:ring-2 focus-within:ring-brand hover:bg-sand-200"><i class="i i-paperclip" aria-hidden="true"></i> Adjuntar PDF<input id="cvFile" type="file" accept="application/pdf,.pdf" class="sr-only" /></label>
+            <button type="button" id="cvLinkToggle" aria-expanded="false" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 transition hover:bg-sand-100"><i class="i i-link" aria-hidden="true"></i> Pegar enlace</button>
+          </div>
+          <p id="cvFileInfo" class="mt-2 hidden items-center gap-2 rounded-lg bg-brand-50 px-3 py-2 text-sm text-soil-800 ring-1 ring-brand/25"><i class="i i-file text-brand" aria-hidden="true"></i><span id="cvFileName" class="min-w-0 flex-1 truncate"></span><button type="button" id="cvFileRemove" class="text-soil-600 hover:text-soil-950" aria-label="Quitar PDF"><i class="i i-x" aria-hidden="true"></i></button></p>
+          <input id="cvLink" type="url" inputmode="url" maxlength="300" class="field mt-2" placeholder="https://linkedin.com/in/… o enlace a tu CV" hidden />
+          <p class="mt-2 text-xs text-soil-600">PDF de hasta 5 MB. Tu CV, teléfono y email no se publican: solo los ve el equipo de BIKEGRID para conectarte con tiendas.</p>
+        </fieldset>
+
+        <label for="cvConsent" class="flex cursor-pointer items-start gap-3 rounded-lg bg-brand-50 p-3 ring-1 ring-brand/25">
+          <input id="cvConsent" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#2e7d32]" />
+          <span class="text-sm text-soil-700">Acepto que BIKEGRID muestre mi ficha técnica a tiendas y talleres (nombre abreviado, comuna, especialidades y experiencia).</span>
+        </label>
+        <div class="hidden" aria-hidden="true"><label>Web <input id="cvWebsite" tabindex="-1" autocomplete="off" /></label></div>
+        <p id="cvError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
+      </div>
+      <div id="cvDone" class="flex-1 overflow-y-auto px-5 py-7 sm:px-6" hidden>
+        <div class="text-center">
+          <div class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-brand text-2xl text-sand-50 shadow-lg"><i class="i i-check" aria-hidden="true"></i></div>
+          <h3 class="mt-3 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡CV Técnico listo!</h3>
+          <p id="cvDoneText" class="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-soil-700"></p>
+        </div>
+        <p class="mt-5 font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600">Así te verán las tiendas</p>
+        <div id="cvPreview" class="mt-2"></div>
+        <a id="cvWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+      </div>
+      <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="submit" id="cvSubmit" class="w-full rounded-xl bg-brand py-3 text-[13px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Guardar mi CV Técnico</button>
+      </div>
+    </form>
+  </dialog>
+
   <!-- <i class="i i-briefcase" aria-hidden="true"></i> Publicar una oferta de trabajo (captación B2B) -->
   <dialog id="postJobDialog" class="w-[min(94vw,36rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="postJobTitle">
     <form id="postJobForm" class="flex max-h-[92dvh] flex-col" novalidate>
       <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
         <div>
           <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Bici Jobs · Para negocios</p>
-          <h2 id="postJobTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"><i class="i i-briefcase" aria-hidden="true"></i> Publicar oferta de trabajo</h2>
+          <h2 id="postJobTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"><i class="i i-briefcase" aria-hidden="true"></i> Publicar vacante</h2>
         </div>
         <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
@@ -1156,7 +1314,7 @@
           <ul class="mt-2.5 space-y-1 text-[13px] text-sand-200">
             <li><i class="i i-check" aria-hidden="true"></i> 30 días visible en Bici Jobs, el portal de empleo del ciclismo</li>
             <li><i class="i i-check" aria-hidden="true"></i> Las postulaciones llegan directo a tu WhatsApp</li>
-            <li><i class="i i-check" aria-hidden="true"></i> Nombre, experiencia, CV y contacto de cada postulante</li>
+            <li><i class="i i-check" aria-hidden="true"></i> Nombre, experiencia, CV y especialidades técnicas de cada postulante</li>
           </ul>
         </div>
         <div class="grid gap-3.5 sm:grid-cols-2">
@@ -1165,41 +1323,51 @@
             <input id="pjBiz" maxlength="80" class="field mt-1.5" placeholder="Ej: Taller Rueda Libre" />
           </div>
           <div>
-            <label for="pjRole" class="block text-sm font-semibold text-soil-800">Cargo a buscar</label>
-            <input id="pjRole" maxlength="80" class="field mt-1.5" placeholder="Ej: Mecánico Specialist / Suspensión" />
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3.5">
-          <div>
-            <label for="pjArea" class="block text-sm font-semibold text-soil-800">Área</label>
-            <select id="pjArea" class="field mt-1.5">
-              <option value="taller">Taller</option><option value="ventas">Ventas</option><option value="logistica">Logística</option><option value="guia">Guía</option><option value="otro">Otro</option>
-            </select>
-          </div>
-          <div>
-            <label for="pjMode" class="block text-sm font-semibold text-soil-800">Modalidad</label>
-            <select id="pjMode" class="field mt-1.5">
-              <option value="presencial">Presencial</option><option value="terreno">Terreno</option><option value="mixto">Mixto</option>
+            <label for="pjCargo" class="block text-sm font-semibold text-soil-800">Cargo</label>
+            <select id="pjCargo" class="field mt-1.5">
+              <option value="">Selecciona…</option><option value="mecanico">Mecánico</option><option value="vendedor_tecnico">Vendedor Técnico</option><option value="jefe_tienda">Jefe de Tienda</option><option value="guia_shuttle">Guía / Shuttle</option>
             </select>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-3.5">
+        <div class="grid gap-3.5 sm:grid-cols-2">
           <div>
-            <label for="pjComuna" class="block text-sm font-semibold text-soil-800">Comuna</label>
-            <input id="pjComuna" maxlength="60" class="field mt-1.5" placeholder="Ej: Providencia" />
+            <label for="pjRole" class="block text-sm font-semibold text-soil-800">Especialidad del cargo <span class="font-normal text-soil-600">(opcional)</span></label>
+            <input id="pjRole" maxlength="60" class="field mt-1.5" placeholder="Ej: Suspensión y E-Bikes" />
           </div>
           <div>
-            <label for="pjRegion" class="block text-sm font-semibold text-soil-800">Región</label>
-            <select id="pjRegion" class="field mt-1.5"></select>
+            <label for="pjJornada" class="block text-sm font-semibold text-soil-800">Jornada</label>
+            <select id="pjJornada" class="field mt-1.5">
+              <option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="temporada">Temporada / Eventos</option>
+            </select>
           </div>
         </div>
+        <fieldset class="space-y-3.5 rounded-xl bg-sand-100/70 p-3.5 ring-1 ring-sand-300">
+          <legend class="sr-only">Sucursal y ubicación</legend>
+          <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600" aria-hidden="true">Sucursal / Ubicación</p>
+          <div>
+            <label for="pjSucursal" class="block text-sm font-semibold text-soil-800">Sucursal <span class="font-normal text-soil-600">(opcional)</span></label>
+            <input id="pjSucursal" maxlength="80" class="field mt-1.5" placeholder="Ej: Casa matriz · Av. Irarrázaval 1234" />
+          </div>
+          <div class="grid grid-cols-2 gap-3.5">
+            <div>
+              <label for="pjComuna" class="block text-sm font-semibold text-soil-800">Comuna</label>
+              <input id="pjComuna" maxlength="60" class="field mt-1.5" placeholder="Ej: Providencia" />
+            </div>
+            <div>
+              <label for="pjRegion" class="block text-sm font-semibold text-soil-800">Región</label>
+              <select id="pjRegion" class="field mt-1.5"></select>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="block text-sm font-semibold text-soil-800">Requisitos clave <span class="font-normal text-soil-600">(toca los que exiges)</span></legend>
+          <div id="pjBadges" class="mt-2 space-y-2"></div>
+          <label for="pjReq" class="mt-3 block text-sm font-semibold text-soil-800">Otros requisitos <span class="font-normal text-soil-600">(opcional si marcaste requisitos clave)</span></label>
+          <textarea id="pjReq" rows="2" maxlength="400" class="field mt-1.5 resize-y" placeholder="Ej: 2 años en taller, licencia B, certificación Shimano deseable"></textarea>
+        </fieldset>
         <div>
-          <label for="pjDesc" class="block text-sm font-semibold text-soil-800">Responsabilidades</label>
+          <label for="pjDesc" class="block text-sm font-semibold text-soil-800">Responsabilidades del cargo</label>
           <textarea id="pjDesc" rows="3" maxlength="800" class="field mt-1.5 resize-y" placeholder="Qué hará en el día a día: mantenciones, servicio de suspensiones, atención de clientes…"></textarea>
-        </div>
-        <div>
-          <label for="pjReq" class="block text-sm font-semibold text-soil-800">Requisitos técnicos</label>
-          <textarea id="pjReq" rows="2" maxlength="600" class="field mt-1.5 resize-y" placeholder="Ej: 2 años en taller, manejo de frenos hidráulicos, certificación Shimano deseable"></textarea>
         </div>
         <div class="grid gap-3.5 sm:grid-cols-2">
           <div>
@@ -3516,23 +3684,57 @@
       otro:      { label: 'Otro',      icon: '<i class="i i-briefcase" aria-hidden="true"></i>', cls: 'bg-sand-200 text-soil-700 ring-sand-300' },
     };
     const JOB_MODES = { presencial: 'Presencial', terreno: 'Terreno', mixto: 'Mixto' };
+    // Vacantes estandarizadas: cargo → área del portal
+    const JOB_CARGOS = {
+      mecanico:         { label: 'Mecánico',         icon: 'wrench', area: 'taller' },
+      vendedor_tecnico: { label: 'Vendedor Técnico', icon: 'bag',    area: 'ventas' },
+      jefe_tienda:      { label: 'Jefe de Tienda',   icon: 'store',  area: 'ventas' },
+      guia_shuttle:     { label: 'Guía / Shuttle',   icon: 'bus',    area: 'guia' },
+    };
+    const JORNADAS = { full_time: 'Full-time', part_time: 'Part-time', temporada: 'Temporada / Eventos' };
+    // Badges de especialización técnica (mismas claves en supabase/talento.sql y empleos.sql)
+    const TECH_BADGES = {
+      transmision: { label: 'Transmisión',           icon: 'cog',     items: { sram_axs: 'SRAM AXS', shimano_di2: 'Shimano Di2', mecanico_tradicional: 'Mecánico tradicional' } },
+      suspension:  { label: 'Suspensiones & Frenos', icon: 'droplet', items: { fox_rockshox: 'Mantenimiento Fox / RockShox', purgado_hidraulico: 'Purgado hidráulico' } },
+      ebike:       { label: 'E-Bikes',               icon: 'battery', items: { ebike_bosch: 'Diagnóstico Bosch', ebike_brose: 'Brose', ebike_shimano_steps: 'Shimano Steps', ebike_specialized: 'Specialized' } },
+      taller:      { label: 'Taller General',        icon: 'wrench',  items: { enrayado: 'Armado de ruedas (enrayado)', carbono: 'Diagnóstico de carbono', montaje: 'Montaje desde cero' } },
+    };
+    const BADGE_INFO = Object.fromEntries(Object.entries(TECH_BADGES).flatMap(([group, g]) => Object.entries(g.items).map(([k, label]) => [k, {
+      label, group, icon: g.icon, card: group === 'ebike' && !label.startsWith('Diagnóstico') ? `E-Bike ${label}` : label,
+    }])));
+    const badgeTag = (k, match = false) => BADGE_INFO[k] ? `<span class="badge-t${match ? ' is-match' : ''}"><i class="i i-${BADGE_INFO[k].icon}" aria-hidden="true"></i>${esc(BADGE_INFO[k].card)}</span>` : '';
+    // Chips agrupados por especialidad (CV Técnico y publicador de vacantes)
+    const badgeChips = (attr, compact = false) => Object.entries(TECH_BADGES).map(([, g]) => `
+      <div class="${compact ? '' : 'rounded-xl bg-sand-100/70 p-3 ring-1 ring-sand-300'}">
+        <p class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[.14em] text-soil-700"><i class="i i-${g.icon} text-brand" aria-hidden="true"></i>${g.label}</p>
+        <div class="mt-1.5 flex flex-wrap gap-1.5">${Object.entries(g.items).map(([k, label]) =>
+          `<button type="button" class="chip-t" ${attr}="${k}" aria-pressed="false"><i class="i i-check chip-tick" aria-hidden="true"></i>${label}</button>`).join('')}</div>
+      </div>`).join('');
+    const pressed = (root, attr) => [...root.querySelectorAll(`[${attr}][aria-pressed="true"]`)].map((b) => b.getAttribute(attr));
+    const setPressed = (root, attr, keys = []) => root.querySelectorAll(`[${attr}]`).forEach((b) => b.setAttribute('aria-pressed', keys.includes(b.getAttribute(attr))));
+    document.addEventListener('click', (e) => {
+      const chip = e.target.closest('[data-cv-badge], [data-cv-jornada], [data-pj-badge]');
+      if (chip) { chip.setAttribute('aria-pressed', chip.getAttribute('aria-pressed') !== 'true'); chip.dispatchEvent(new Event('chipchange', { bubbles: true })); }
+    });
     const JOB_EXP = { menos_1: 'Menos de 1 año', '1_2': '1 a 2 años', '3_5': '3 a 5 años', '6_10': '6 a 10 años', mas_10: 'Más de 10 años' };
 
     // Ejemplos (solo sin base de datos), con el formato de una oferta real
     const daysAgo = (d) => new Date(Date.now() - d * 86400e3).toISOString();
     const JOB_DEMO_OFFERS = [
-      { id: 'demo-job-1', puesto: 'Mecánico Specialist / Suspensión', empresa: 'Taller de ejemplo', comuna: 'Providencia', region: 'metropolitana', modalidad: 'presencial', area: 'taller', sueldo: '$900.000 – $1.100.000 líquido', descripcion: 'Servicio de horquillas y amortiguadores Fox/RockShox, purgado de frenos y armado de bicicletas de gama alta.', requisitos: '3 años en taller, manejo de herramientas de suspensión. Certificación SRAM o Shimano deseable.', destacado: true, created_at: daysAgo(1) },
-      { id: 'demo-job-2', puesto: 'Vendedor/a de tienda bike (fines de semana)', empresa: 'Tienda de ejemplo', comuna: 'Viña del Mar', region: 'valparaiso', modalidad: 'presencial', area: 'ventas', sueldo: null, descripcion: 'Atención de clientes, asesoría en tallas y componentes, manejo de caja.', requisitos: 'Gusto por el ciclismo y experiencia en atención de público.', created_at: daysAgo(3) },
-      { id: 'demo-job-3', puesto: 'Guía MTB bilingüe (temporada)', empresa: 'Operador de ejemplo', comuna: 'Puerto Varas', region: 'loslagos', modalidad: 'terreno', area: 'guia', sueldo: 'A convenir', descripcion: 'Guiado de grupos en rutas de enduro y e-MTB de noviembre a marzo.', requisitos: 'Inglés conversacional, primeros auxilios vigentes, mecánica básica en ruta.', created_at: daysAgo(5) },
+      { id: 'demo-job-1', puesto: 'Mecánico · Suspensión y E-Bikes', cargo: 'mecanico', jornada: 'full_time', sucursal: 'Casa matriz', requisitos_badges: ['fox_rockshox', 'purgado_hidraulico', 'ebike_bosch'], empresa: 'Taller de ejemplo', comuna: 'Providencia', region: 'metropolitana', modalidad: 'presencial', area: 'taller', sueldo: '$900.000 – $1.100.000 líquido', descripcion: 'Servicio de horquillas y amortiguadores Fox/RockShox, purgado de frenos y armado de bicicletas de gama alta.', requisitos: '3 años en taller, manejo de herramientas de suspensión. Certificación SRAM o Shimano deseable.', destacado: true, created_at: daysAgo(1) },
+      { id: 'demo-job-2', puesto: 'Vendedor Técnico · Fines de semana', cargo: 'vendedor_tecnico', jornada: 'part_time', requisitos_badges: ['mecanico_tradicional'], empresa: 'Tienda de ejemplo', comuna: 'Viña del Mar', region: 'valparaiso', modalidad: 'presencial', area: 'ventas', sueldo: null, descripcion: 'Atención de clientes, asesoría en tallas y componentes, manejo de caja.', requisitos: 'Gusto por el ciclismo y experiencia en atención de público.', created_at: daysAgo(3) },
+      { id: 'demo-job-3', puesto: 'Guía / Shuttle · MTB bilingüe', cargo: 'guia_shuttle', jornada: 'temporada', requisitos_badges: [], empresa: 'Operador de ejemplo', comuna: 'Puerto Varas', region: 'loslagos', modalidad: 'terreno', area: 'guia', sueldo: 'A convenir', descripcion: 'Guiado de grupos en rutas de enduro y e-MTB de noviembre a marzo.', requisitos: 'Inglés conversacional, primeros auxilios vigentes, mecánica básica en ruta.', created_at: daysAgo(5) },
       { id: 'demo-job-4', puesto: 'Bodega y despacho e-commerce', empresa: 'Tienda de ejemplo', comuna: 'Quilicura', region: 'metropolitana', modalidad: 'presencial', area: 'logistica', sueldo: '$650.000 líquido', descripcion: 'Preparación de pedidos, embalaje de bicicletas y control de inventario.', requisitos: 'Orden y experiencia en bodega. Licencia B deseable.', created_at: daysAgo(6) },
     ].map((o) => ({ ...o, demo: true }));
 
     let jobOffers = JOB_DEMO ? JOB_DEMO_OFFERS : [];
     async function loadJobOffers() {
       if (JOB_DEMO) return;
-      const { data, error } = await supabaseClient.from('ofertas_empleo')
-        .select('id, comercio_id, empresa, puesto, area, modalidad, comuna, region, sueldo, descripcion, requisitos, whatsapp, destacado, created_at')
+      const BASE = 'id, comercio_id, empresa, puesto, area, modalidad, comuna, region, sueldo, descripcion, requisitos, whatsapp, destacado, created_at';
+      const query = (cols) => supabaseClient.from('ofertas_empleo').select(cols)
         .order('destacado', { ascending: false }).order('created_at', { ascending: false }).limit(100);
+      let { data, error } = await query(`${BASE}, cargo, jornada, sucursal, requisitos_badges`);
+      if (error) ({ data, error } = await query(BASE)); // aún sin la sección 3 de empleos.sql
       if (error) return console.info('[BIKEGRID] Bici Jobs sin ofertas publicadas (¿ejecutaste supabase/empleos.sql?):', error.message);
       jobOffers = data;
       renderJobs();
@@ -3594,8 +3796,10 @@
 
     // Tarjeta de oferta laboral
     function jobCard(j) {
-      const a = JOB_AREAS[j.area] || JOB_AREAS.otro;
-      const place = [j.comuna, REGIONES[j.region]?.label].filter(Boolean).join(', ');
+      const cargo = JOB_CARGOS[j.cargo];
+      const a = cargo ? { label: cargo.label, icon: `<i class="i i-${cargo.icon}" aria-hidden="true"></i>`, cls: (JOB_AREAS[cargo.area] || JOB_AREAS.otro).cls } : (JOB_AREAS[j.area] || JOB_AREAS.otro);
+      const place = [j.sucursal, [j.comuna, REGIONES[j.region]?.label].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
+      const reqBadges = (j.requisitos_badges || []).filter((k) => BADGE_INFO[k]);
       const isNew = j.created_at && Date.now() - new Date(j.created_at) < 3 * 86400e3;
       const featured = j.destacado || j.pro;
       const details = j.descripcion || j.requisitos;
@@ -3603,7 +3807,7 @@
         <article class="${featured ? 'ficha-pro' : 'bg-sand-50 ring-1 ring-sand-300 hover:ring-soil-600/40'} rounded-2xl p-4 transition hover:shadow-sm sm:p-5">
           <div class="flex flex-wrap items-center gap-1.5">
             <span class="rounded-full px-2.5 py-0.5 text-[11px] font-bold ring-1 ${a.cls}">${a.icon} ${a.label}</span>
-            <span class="rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-semibold text-soil-700 ring-1 ring-sand-300">${JOB_MODES[j.modalidad] || 'Presencial'}</span>
+            <span class="rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-semibold text-soil-700 ring-1 ring-sand-300">${JORNADAS[j.jornada] || JOB_MODES[j.modalidad] || 'Presencial'}</span>
             ${featured ? '<span class="badge-pro px-2 py-0.5 text-[10px]"><i class="i i-star" aria-hidden="true"></i> Destacado</span>' : ''}
             ${isNew ? '<span class="rounded-full bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
             ${j.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : ''}
@@ -3615,6 +3819,7 @@
             ${place ? `<span><i class="i i-pin" aria-hidden="true"></i> ${esc(place)}</span>` : ''}
             ${j.sueldo ? `<span class="font-semibold text-moss-700"><i class="i i-banknote" aria-hidden="true"></i> ${esc(j.sueldo)}</span>` : ''}
           </p>
+          ${reqBadges.length ? `<div class="mt-2.5 flex flex-wrap items-center gap-1.5"><span class="font-mono text-[10px] font-semibold uppercase tracking-[.16em] text-soil-600">Requisitos clave</span>${reqBadges.map((k) => badgeTag(k)).join('')}</div>` : ''}
           ${details ? `
           <details class="group mt-2">
             <summary class="cursor-pointer list-none text-sm font-semibold text-moss-700 hover:underline"><span class="group-open:hidden">Ver responsabilidades y requisitos ▾</span><span class="hidden group-open:inline">Ocultar detalle ▴</span></summary>
@@ -3680,14 +3885,16 @@
       if (!supabaseClient) return;
       const left = [];
       for (const item of readJSON(JOBS_QUEUE_KEY, [])) {
-        const { error } = await supabaseClient.from(item.table).insert([item.row]);
+        let { error } = await supabaseClient.from(item.table).insert([item.row]);
+        // Base sin las columnas nuevas: se guarda la versión compatible (el detalle igual va en el texto)
+        if (error && item.legacy && /column|schema cache/i.test(error.message)) ({ error } = await supabaseClient.from(item.table).insert([item.legacy]));
         if (error) { console.warn(`[BIKEGRID] ${item.table} sin guardar:`, error.message); left.push(item); }
       }
       writeJSON(JOBS_QUEUE_KEY, left);
       return left.length === 0;
     }
-    function queueInsert(table, row) {
-      writeJSON(JOBS_QUEUE_KEY, [...readJSON(JOBS_QUEUE_KEY, []), { table, row }]);
+    function queueInsert(table, row, legacy) {
+      writeJSON(JOBS_QUEUE_KEY, [...readJSON(JOBS_QUEUE_KEY, []), { table, row, ...(legacy ? { legacy } : {}) }]);
       return flushJobQueue();
     }
     const phoneCL = (v) => { const d = String(v).replace(/\D/g, ''); return d.length === 9 && d.startsWith('9') ? '56' + d : d; };
@@ -3721,18 +3928,40 @@
       showFormError($('applyError'), '');
       const prev = readJSON(GATE_KEY, null);
       if (prev?.email) $('applyEmail').value = prev.email;
+      syncApplyCv(true);
       if (j.point && j.point.detailsLoaded === false) loadDetails(j.point); // el WhatsApp de la ficha llega bajo demanda
       applyDlg.showModal();
       track('job_apply_opened', { ref: j.id, area: j.area, fuente: j.source });
     }
 
-    const applyWaText = (j, d) => [
+    // Si el postulante ya armó su CV Técnico, se usa para completar y enriquecer la postulación
+    function syncApplyCv(prefill) {
+      const cv = readJSON(CV_KEY, null);
+      const note = $('applyCvNote');
+      if (cv?.especialidades?.length) {
+        if (prefill) {
+          if (!$('applyName').value) $('applyName').value = cv.nombre || '';
+          if (!$('applyPhone').value && cv.telefono) $('applyPhone').value = `+${cv.telefono}`;
+          if (!$('applyEmail').value) $('applyEmail').value = cv.email || '';
+          if (!$('applyExp').value) $('applyExp').value = cv.experiencia_anos || '';
+          if (!$('applyCv').value && cv.cv_url) $('applyCv').value = cv.cv_url;
+        }
+        note.innerHTML = `<i class="i i-badge-check text-lg text-brand" aria-hidden="true"></i><span class="flex-1">Se adjunta tu <strong>CV Técnico</strong>: ${cv.especialidades.length} especialidad${cv.especialidades.length === 1 ? '' : 'es'}.</span><button type="button" data-cv-open="postulacion" class="text-xs font-semibold text-brand underline underline-offset-2">Editar</button>`;
+      } else {
+        note.innerHTML = `<i class="i i-user text-lg text-brand" aria-hidden="true"></i><span class="flex-1">Destaca tu postulación con tus especialidades técnicas.</span><button type="button" data-cv-open="postulacion" class="shrink-0 text-xs font-semibold text-brand underline underline-offset-2">Armar CV Técnico</button>`;
+      }
+    }
+    document.addEventListener('bikegrid:cv', () => { if (applyDlg.open) syncApplyCv(true); });
+
+    const applyWaText = (j, d, cv = readJSON(CV_KEY, null)) => [
       `Hola ${j.empresa}, te escribo por el aviso "${j.puesto}" publicado en BIKEGRID Bici Jobs.`,
       `• Nombre: ${d.nombre}`,
       `• Experiencia en el rubro: ${JOB_EXP[d.experiencia]}`,
       `• WhatsApp: +${d.telefono}`,
       `• Email: ${d.email}`,
       d.cv_url ? `• CV / LinkedIn: ${d.cv_url}` : '',
+      cv?.especialidades?.length ? `• Especialidades: ${cv.especialidades.map((k) => BADGE_INFO[k]?.card).filter(Boolean).join(', ')}` : '',
+      cv?.jornadas?.length ? `• Disponibilidad: ${cv.jornadas.map((k) => JORNADAS[k]).join(', ')}` : '',
       d.mensaje ? `\n${d.mensaje}` : '',
     ].filter(Boolean).join('\n');
 
@@ -3790,9 +4019,10 @@
     // --- <i class="i i-briefcase" aria-hidden="true"></i> Publicar oferta (captación B2B) ---
     const postDlg = $('postJobDialog'), postForm = $('postJobForm');
     $('pjRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
+    $('pjBadges').innerHTML = badgeChips('data-pj-badge', true);
     postDlg.addEventListener('click', (e) => { if (e.target === postDlg || e.target.closest('[data-close]')) postDlg.close(); });
     function openPostJob(via) {
-      if ($('postJobBody').hidden) { postForm.reset(); $('pjRegion').value = 'metropolitana'; }
+      if ($('postJobBody').hidden) { postForm.reset(); $('pjRegion').value = 'metropolitana'; setPressed(postDlg, 'data-pj-badge'); }
       $('postJobBody').hidden = false; $('postJobDone').hidden = true;
       $('postJobSubmit').innerHTML = '<span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Enviar y coordinar por WhatsApp';
       showFormError($('pjError'), '');
@@ -3805,11 +4035,12 @@
       `Hola BIKEGRID, quiero publicar una oferta en Bici Jobs${pro ? ' (tengo Plan Pro)' : ` (${JOB_POST_PRICE} CLP)`}:`,
       `• Negocio: ${o.empresa}`,
       `• Cargo: ${o.puesto}`,
-      `• Área: ${JOB_AREAS[o.area].label} · ${JOB_MODES[o.modalidad]}`,
-      `• Lugar: ${o.comuna}, ${REGIONES[o.region].label}`,
+      `• Jornada: ${JORNADAS[o.jornada]}`,
+      `• Ubicación: ${o.sucursal ? `${o.sucursal}, ` : ''}${o.comuna}, ${REGIONES[o.region].label}`,
+      o.requisitos_badges.length ? `• Requisitos clave: ${o.requisitos_badges.map((k) => BADGE_INFO[k].card).join(', ')}` : '',
       o.sueldo ? `• Rango salarial: ${o.sueldo}` : '',
       `• Responsabilidades: ${o.descripcion}`,
-      `• Requisitos: ${o.requisitos}`,
+      o.otros ? `• Otros requisitos: ${o.otros}` : '',
       `• WhatsApp para CVs: +${o.whatsapp}`,
     ].filter(Boolean).join('\n');
 
@@ -3817,25 +4048,34 @@
       e.preventDefault();
       if (!$('postJobDone').hidden) return postDlg.close(); // botón "Listo"
       const err = $('pjError');
+      const cargo = $('pjCargo').value, especialidad = $('pjRole').value.trim();
+      const badges = pressed(postDlg, 'data-pj-badge');
+      const otros = $('pjReq').value.trim();
       const o = {
-        empresa: $('pjBiz').value.trim(), puesto: $('pjRole').value.trim(), area: $('pjArea').value, modalidad: $('pjMode').value,
+        empresa: $('pjBiz').value.trim(), cargo, jornada: $('pjJornada').value, sucursal: $('pjSucursal').value.trim() || null,
+        puesto: cargo ? `${JOB_CARGOS[cargo].label}${especialidad ? ` · ${especialidad}` : ''}`.slice(0, 80) : '',
+        area: JOB_CARGOS[cargo]?.area || 'otro', modalidad: cargo === 'guia_shuttle' ? 'terreno' : 'presencial',
         comuna: $('pjComuna').value.trim(), region: $('pjRegion').value, sueldo: $('pjSalary').value.trim() || null,
-        descripcion: $('pjDesc').value.trim(), requisitos: $('pjReq').value.trim(), whatsapp: phoneCL($('pjPhone').value),
+        descripcion: $('pjDesc').value.trim(), requisitos_badges: badges, otros, whatsapp: phoneCL($('pjPhone').value),
       };
+      // Texto completo de requisitos (también sirve si la base aún no tiene las columnas nuevas)
+      o.requisitos = [badges.map((k) => BADGE_INFO[k].card).join(', '), otros].filter(Boolean).join('. ').slice(0, 600);
       const pro = $('pjPro').checked;
       if (o.empresa.length < 2) return showFormError(err, 'Escribe el nombre del negocio.', 'pjBiz');
-      if (o.puesto.length < 3) return showFormError(err, 'Indica el cargo que buscas.', 'pjRole');
-      if (o.comuna.length < 2) return showFormError(err, 'Indica la comuna.', 'pjComuna');
+      if (!cargo) return showFormError(err, 'Elige el cargo que buscas.', 'pjCargo');
+      if (o.comuna.length < 2) return showFormError(err, 'Indica la comuna de la sucursal.', 'pjComuna');
       if (o.descripcion.length < 15) return showFormError(err, 'Describe las responsabilidades (al menos 15 caracteres).', 'pjDesc');
-      if (o.requisitos.length < 5) return showFormError(err, 'Indica los requisitos técnicos.', 'pjReq');
+      if (o.requisitos.length < 5) return showFormError(err, 'Marca al menos un requisito clave o escribe los requisitos.', 'pjReq');
       if (!/^\d{8,15}$/.test(o.whatsapp)) return showFormError(err, 'Revisa el WhatsApp para recibir CVs: ej. +56 9 1234 5678.', 'pjPhone');
       if ($('pjWebsite').value) return; // bot
-      track('job_post_sent', { area: o.area, region: o.region, pro });
+      track('job_post_sent', { area: o.area, cargo: o.cargo, jornada: o.jornada, requisitos: badges.length, region: o.region, pro });
 
       const admin = salesNumber();
       const link = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(postWaText(o, pro))}` : '';
       // El aviso queda "pendiente" en la base: al confirmar el pago (o el Plan Pro) solo hay que publicarlo
-      const saved = supabaseClient ? queueInsert('ofertas_empleo', { ...o, pro_declarado: pro }) : Promise.resolve(false);
+      const { otros: _o, ...row } = o;
+      const { cargo: _c, jornada: _j, sucursal: _s, requisitos_badges: _b, ...legacy } = row;
+      const saved = supabaseClient ? queueInsert('ofertas_empleo', { ...row, pro_declarado: pro }, { ...legacy, pro_declarado: pro }) : Promise.resolve(false);
       if (link) {
         openWhatsApp(link);
         return showPostDone('Se abrió WhatsApp con tu aviso listo. Envíalo y coordinamos el pago o la activación de tu Plan Pro para publicarlo.', link);
@@ -3852,6 +4092,324 @@
       $('postJobWaAgain').hidden = !link; if (link) $('postJobWaAgain').href = link;
       $('postJobSubmit').textContent = 'Listo';
     }
+
+    // ================= BICI JOBS: TALENTO TÉCNICO =================
+    // CV Técnico del postulante (perfiles_tecnicos, queda "pendiente") + buscador de candidatos para tiendas.
+    // Público: nombre abreviado, comuna, especialidades y experiencia. Contacto, email y CV quedan solo para BIKEGRID.
+    const CV_KEY = 'bikegrid-cv-tecnico';
+    const TALENT_PAGE = 6;
+    const TALENT_DEMO = !supabaseClient;
+    const nombrePublico = (n) => {
+      const [a = '', b = ''] = String(n).trim().split(/\s+/);
+      return `${a.charAt(0).toUpperCase()}${a.slice(1).toLowerCase()}${b ? ` ${b.charAt(0).toUpperCase()}.` : ''}`;
+    };
+    const TALENT_DEMO_ROWS = [
+      { id: 'demo-cv-1', nombre_publico: 'Matías R.', comuna: 'Ñuñoa', region: 'metropolitana', lat: -33.46, lng: -70.6, jornadas: ['full_time'], especialidades: ['sram_axs', 'shimano_di2', 'fox_rockshox', 'purgado_hidraulico'], experiencia_anos: '3_5', experiencia: 'Taller en Providencia: servicio de suspensiones y armado de bicis de gama alta. Mecánico de apoyo en carreras de enduro.', created_at: daysAgo(1) },
+      { id: 'demo-cv-2', nombre_publico: 'Fernanda C.', comuna: 'Las Condes', region: 'metropolitana', lat: -33.41, lng: -70.57, jornadas: ['full_time', 'part_time'], especialidades: ['ebike_bosch', 'ebike_shimano_steps', 'ebike_specialized', 'montaje'], experiencia_anos: '1_2', experiencia: 'Técnica e-bike en tienda multimarca: diagnóstico de motores, actualización de firmware y armado.', created_at: daysAgo(2) },
+      { id: 'demo-cv-3', nombre_publico: 'Diego P.', comuna: 'Viña del Mar', region: 'valparaiso', lat: -33.02, lng: -71.55, jornadas: ['part_time', 'temporada'], especialidades: ['mecanico_tradicional', 'enrayado', 'purgado_hidraulico'], experiencia_anos: '6_10', experiencia: 'Taller propio por 6 años. Enrayado a mano y restauración de bicicletas clásicas.', created_at: daysAgo(4) },
+      { id: 'demo-cv-4', nombre_publico: 'Camila S.', comuna: 'Pucón', region: 'araucania', lat: -39.27, lng: -71.98, jornadas: ['temporada'], especialidades: ['ebike_brose', 'ebike_bosch', 'mecanico_tradicional'], experiencia_anos: '3_5', experiencia: 'Guía y mecánica de flota e-MTB en operador turístico, temporadas 2023 a 2025.', created_at: daysAgo(5) },
+      { id: 'demo-cv-5', nombre_publico: 'Tomás V.', comuna: 'Concepción', region: 'biobio', lat: -36.83, lng: -73.05, jornadas: ['full_time'], especialidades: ['carbono', 'montaje', 'sram_axs', 'fox_rockshox'], experiencia_anos: 'mas_10', experiencia: 'Jefe de taller en tienda de ruta y MTB. Diagnóstico y reparación de cuadros de carbono.', created_at: daysAgo(7) },
+      { id: 'demo-cv-6', nombre_publico: 'Josefa M.', comuna: 'Puerto Varas', region: 'loslagos', lat: -41.32, lng: -72.99, jornadas: ['part_time'], especialidades: ['mecanico_tradicional', 'shimano_di2'], experiencia_anos: 'menos_1', experiencia: 'Curso de mecánica certificado y práctica en tienda local. Apoyo en Patagonia Bike Race.', created_at: daysAgo(9) },
+    ].map((c) => ({ ...c, demo: true }));
+    let talent = TALENT_DEMO ? TALENT_DEMO_ROWS : [];
+    const talentState = { group: '', badge: '', region: '', origin: null, radius: '', shown: TALENT_PAGE };
+
+    async function loadTalent() {
+      if (TALENT_DEMO) return;
+      const { data, error } = await supabaseClient.from('perfiles_tecnicos')
+        .select('id, nombre_publico, comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, created_at')
+        .order('created_at', { ascending: false }).limit(300);
+      if (error) return console.info('[BIKEGRID] Buscador de candidatos sin datos (¿ejecutaste supabase/talento.sql?):', error.message);
+      talent = data;
+      renderTalent();
+    }
+
+    // Ubicación de un candidato: GPS aproximado → centro de su comuna según las fichas del mapa → centro de la región
+    let comunaIdx = null, comunaIdxLen = -1;
+    function candidateCoords(c) {
+      if (c.lat != null && c.lng != null) return [Number(c.lat), Number(c.lng)];
+      const pts = typeof puntos !== 'undefined' ? puntos : [];
+      if (comunaIdxLen !== pts.length) {
+        comunaIdx = {};
+        for (const p of pts) if (p.comuna && p.coords) (comunaIdx[norm(p.comuna)] ||= []).push(p.coords);
+        comunaIdxLen = pts.length;
+      }
+      const list = comunaIdx[norm(c.comuna || '')];
+      if (list?.length) return [list.reduce((a, x) => a + x[0], 0) / list.length, list.reduce((a, x) => a + x[1], 0) / list.length];
+      const b = REGIONES[c.region]?.bounds;
+      return b ? [(b[0][0] + b[1][0]) / 2, (b[0][1] + b[1][1]) / 2] : null;
+    }
+
+    const matchesSkill = (c) => talentState.badge ? c.especialidades.includes(talentState.badge)
+      : talentState.group ? c.especialidades.some((k) => BADGE_INFO[k]?.group === talentState.group) : true;
+    const isMatchBadge = (k) => (talentState.badge ? k === talentState.badge : talentState.group && BADGE_INFO[k]?.group === talentState.group);
+
+    function filteredTalent() {
+      let list = talent.filter((c) => Array.isArray(c.especialidades) && matchesSkill(c));
+      if (talentState.origin) {
+        list = list.map((c) => { const ll = candidateCoords(c); return { ...c, km: ll ? kmBetween(talentState.origin, ll) : Infinity }; })
+          .filter((c) => !talentState.radius || c.km <= Number(talentState.radius))
+          .sort((a, b) => a.km - b.km);
+      } else if (talentState.region) list = list.filter((c) => c.region === talentState.region);
+      // Sin cercanía: primero quien calza con más especialidades filtradas, luego lo más reciente
+      if (!talentState.origin && (talentState.group || talentState.badge)) {
+        const score = (c) => c.especialidades.filter(isMatchBadge).length;
+        list = list.sort((a, b) => score(b) - score(a));
+      }
+      return list;
+    }
+
+    function candidateCard(c, { preview = false } = {}) {
+      const initials = c.nombre_publico.split(' ').map((w) => w.charAt(0)).join('').slice(0, 2).toUpperCase();
+      const place = [c.comuna, REGIONES[c.region]?.label].filter(Boolean).join(', ');
+      const skills = [...c.especialidades].sort((a, b) => isMatchBadge(b) - isMatchBadge(a));
+      return `
+        <article class="flex h-full flex-col rounded-2xl bg-white/80 p-4 ring-1 ring-sand-300 transition hover:ring-soil-600/40">
+          <div class="flex items-start gap-3">
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-soil-950 font-display text-lg font-extrabold text-sand-50" aria-hidden="true">${esc(initials)}</span>
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <h4 class="truncate font-display text-lg font-extrabold uppercase leading-tight text-soil-950">${esc(c.nombre_publico)}</h4>
+                ${c.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : ''}
+              </div>
+              <p class="text-[13px] text-soil-600"><i class="i i-pin" aria-hidden="true"></i> ${esc(place)}${Number.isFinite(c.km) ? ` · <span class="font-semibold text-brand">a ${kmLabel(c.km)}</span>` : ''}</p>
+            </div>
+            <span class="shrink-0 rounded-md bg-sand-100 px-2 py-1 text-right font-mono text-[10px] font-semibold uppercase leading-tight text-soil-700 ring-1 ring-sand-300">${esc(JOB_EXP[c.experiencia_anos] || '')}</span>
+          </div>
+          <p class="mt-2.5 flex flex-wrap gap-1">${(c.jornadas || []).map((k) => `<span class="rounded-full bg-sand-100 px-2 py-0.5 text-[11px] font-semibold text-soil-700 ring-1 ring-sand-300">${esc(JORNADAS[k] || '')}</span>`).join('')}</p>
+          <div class="mt-2 flex flex-wrap gap-1.5">${skills.map((k) => badgeTag(k, isMatchBadge(k))).join('')}</div>
+          ${c.experiencia ? `<p class="mt-2.5 line-clamp-2 text-[13px] leading-relaxed text-soil-700">${esc(c.experiencia)}</p>` : ''}
+          ${preview ? '' : `<div class="mt-auto pt-3.5"><button type="button" data-talent-contact="${esc(c.id)}" class="w-full rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 transition hover:bg-brand-600"><i class="i i-message" aria-hidden="true"></i> Solicitar contacto</button></div>`}
+        </article>`;
+    }
+
+    const talentGroupsEl = $('talentGroups'), talentBadgesEl = $('talentBadges');
+    function renderTalentFilters() {
+      const count = (fn) => talent.filter((c) => Array.isArray(c.especialidades) && c.especialidades.some(fn)).length;
+      talentGroupsEl.innerHTML = [['', 'Todas', 'users', talent.length], ...Object.entries(TECH_BADGES).map(([k, g]) => [k, g.label, g.icon, count((b) => BADGE_INFO[b]?.group === k)])]
+        .map(([k, label, icon, n]) => `<button type="button" class="chip-t shrink-0" data-tgroup="${k}" aria-pressed="${talentState.group === k}"><i class="i i-${icon}" aria-hidden="true"></i>${label} <span class="font-mono text-[10.5px] opacity-70">${n}</span></button>`).join('');
+      const g = TECH_BADGES[talentState.group];
+      talentBadgesEl.hidden = !g;
+      talentBadgesEl.innerHTML = g ? [['', `Todo ${g.label}`], ...Object.entries(g.items)].map(([k, label]) =>
+        `<button type="button" class="chip-t !bg-transparent !py-1.5 text-[12px]" data-tbadge="${k}" aria-pressed="${talentState.badge === k}"><i class="i i-check chip-tick" aria-hidden="true"></i>${label}</button>`).join('') : '';
+    }
+    function renderTalent() {
+      renderTalentFilters();
+      const list = filteredTalent();
+      const shown = list.slice(0, talentState.shown);
+      const skill = talentState.badge ? BADGE_INFO[talentState.badge].card : TECH_BADGES[talentState.group]?.label;
+      $('talentCount').textContent = `${list.length} candidato${list.length === 1 ? '' : 's'}${skill ? ` · ${skill}` : ''}${talentState.origin ? ' · por cercanía' : ''}`;
+      $('talentList').innerHTML = shown.length ? shown.map((c) => `<li>${candidateCard(c)}</li>`).join('') : `
+        <li class="rounded-2xl border border-dashed border-sand-300 p-6 text-center md:col-span-2">
+          <p class="font-semibold text-soil-950">${talent.length ? 'Ningún candidato calza con este filtro todavía.' : 'Aún no hay fichas técnicas publicadas.'}</p>
+          <p class="mt-1 text-sm text-soil-600">Publica tu vacante y te avisamos cuando se sume talento con ese perfil.</p>
+          <button type="button" data-post-job="talento-vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar vacante</button>
+        </li>`;
+      $('talentMore').hidden = list.length <= shown.length;
+      $('talentMore').textContent = `Ver más candidatos (${list.length - shown.length})`;
+    }
+
+    $('talentRegion').innerHTML = `<option value="">Todo Chile</option>${Object.entries(REGIONES).map(([k, r]) => `<option value="${k}">${r.label}</option>`).join('')}`;
+    const talentTrack = () => track('talent_filter', { grupo: talentState.group || null, badge: talentState.badge || null, region: talentState.region || null, cercania: !!talentState.origin, radio: talentState.radius || null });
+    talentGroupsEl.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-tgroup]'); if (!b) return;
+      talentState.group = b.dataset.tgroup === talentState.group ? '' : b.dataset.tgroup;
+      talentState.badge = ''; talentState.shown = TALENT_PAGE;
+      renderTalent(); talentTrack();
+    });
+    talentBadgesEl.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-tbadge]'); if (!b) return;
+      talentState.badge = b.dataset.tbadge; talentState.shown = TALENT_PAGE;
+      renderTalent(); talentTrack();
+    });
+    $('talentRegion').addEventListener('change', (e) => {
+      talentState.region = e.target.value;
+      if (talentState.region) setTalentOrigin(null);
+      talentState.shown = TALENT_PAGE; renderTalent(); talentTrack();
+    });
+    $('talentRadius').addEventListener('change', (e) => { talentState.radius = e.target.value; talentState.shown = TALENT_PAGE; renderTalent(); talentTrack(); });
+    function setTalentOrigin(ll) {
+      talentState.origin = ll;
+      $('talentNear').setAttribute('aria-pressed', !!ll);
+      $('talentRadius').disabled = !ll;
+      if (!ll) { talentState.radius = ''; $('talentRadius').value = ''; }
+    }
+    $('talentNear').addEventListener('click', () => {
+      if (talentState.origin) { setTalentOrigin(null); talentState.shown = TALENT_PAGE; return renderTalent(); }
+      if (!navigator.geolocation) return toast('Tu navegador no permite geolocalización. Filtra por región.');
+      $('talentNear').disabled = true;
+      navigator.geolocation.getCurrentPosition((pos) => {
+        $('talentNear').disabled = false;
+        setTalentOrigin([pos.coords.latitude, pos.coords.longitude]);
+        talentState.region = ''; $('talentRegion').value = ''; talentState.shown = TALENT_PAGE;
+        renderTalent(); talentTrack();
+      }, () => { $('talentNear').disabled = false; toast('No pudimos obtener tu ubicación. Filtra por región.'); }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    });
+    $('talentMore').addEventListener('click', () => { talentState.shown += TALENT_PAGE; renderTalent(); });
+
+    // Contacto: lo coordina BIKEGRID (beneficio Ficha Pro). Nunca se exponen los datos del candidato.
+    $('talentList').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-talent-contact]'); if (!b) return;
+      const c = talent.find((x) => String(x.id) === b.dataset.talentContact); if (!c) return;
+      track('talent_contact', { ref: c.id, badge: talentState.badge || null, grupo: talentState.group || null });
+      if (c.demo) return toast('Candidato de ejemplo: aquí verás las fichas técnicas reales');
+      const admin = salesNumber();
+      if (!admin) return toast('Escríbenos para contactar candidatos: pronto habilitamos el contacto directo');
+      const text = [
+        `Hola BIKEGRID. Quiero contactar al candidato *${c.nombre_publico}* (ref. ${String(c.id).slice(0, 8)}) de ${c.comuna}.`,
+        `• Especialidades: ${c.especialidades.map((k) => BADGE_INFO[k]?.card).filter(Boolean).join(', ')}`,
+        `• Disponibilidad: ${(c.jornadas || []).map((k) => JORNADAS[k]).join(', ')}`,
+        '• Mi tienda / taller: ',
+        '• Cargo que busco: ',
+      ].join('\n');
+      openWhatsApp(`https://wa.me/${admin}?text=${encodeURIComponent(text)}`);
+    });
+
+    // --- CV Técnico Ciclista ---
+    const cvDlg = $('cvDialog'), cvForm = $('cvForm');
+    let cvGeo = null, cvFile = null;
+    $('cvBadges').innerHTML = badgeChips('data-cv-badge');
+    $('cvRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
+    cvDlg.addEventListener('click', (e) => { if (e.target === cvDlg || e.target.closest('[data-close]')) cvDlg.close(); });
+    const cvBadgeCount = () => { const n = pressed(cvDlg, 'data-cv-badge').length; $('cvBadgeCount').textContent = n ? `${n} seleccionada${n === 1 ? '' : 's'}` : ''; };
+    cvDlg.addEventListener('chipchange', cvBadgeCount);
+    $('cvExp').addEventListener('input', (e) => { $('cvExpCount').textContent = e.target.value.length; });
+
+    function setCvFile(file) {
+      cvFile = file || null;
+      $('cvFileInfo').classList.toggle('hidden', !cvFile); $('cvFileInfo').classList.toggle('flex', !!cvFile);
+      $('cvFileName').textContent = cvFile ? `${cvFile.name} · ${Math.max(1, Math.round(cvFile.size / 1024))} KB` : '';
+      if (!cvFile) $('cvFile').value = '';
+    }
+    $('cvFile').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+      if (!isPdf) { setCvFile(null); return showFormError($('cvError'), 'El CV debe ser un archivo PDF.'); }
+      if (file.size > 5 * 1024 * 1024) { setCvFile(null); return showFormError($('cvError'), 'El PDF pesa más de 5 MB. Comprímelo o pega un enlace.'); }
+      showFormError($('cvError'), '');
+      setCvFile(file);
+    });
+    $('cvFileRemove').addEventListener('click', () => setCvFile(null));
+    $('cvLinkToggle').addEventListener('click', (e) => {
+      const show = $('cvLink').hidden;
+      $('cvLink').hidden = !show; e.currentTarget.setAttribute('aria-expanded', show);
+      if (show) $('cvLink').focus();
+    });
+    $('cvGeo').addEventListener('click', () => {
+      if (!navigator.geolocation) return toast('Tu navegador no permite geolocalización');
+      navigator.geolocation.getCurrentPosition((pos) => {
+        // Solo 2 decimales (±1 km): suficiente para "cercanía" sin exponer tu dirección
+        cvGeo = { lat: Math.round(pos.coords.latitude * 100) / 100, lng: Math.round(pos.coords.longitude * 100) / 100 };
+        $('cvGeoText').textContent = 'Ubicación aproximada guardada (±1 km)';
+      }, () => toast('No pudimos obtener tu ubicación. Usaremos tu comuna.'), { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    });
+
+    function openCv(via) {
+      // Primera apertura o después de guardar: se parte desde la ficha guardada. Si no, se conserva lo que estabas escribiendo.
+      if (!cvDlg.dataset.ready || !$('cvDone').hidden) {
+        cvDlg.dataset.ready = '1';
+        cvForm.reset(); setCvFile(null); cvGeo = null;
+        $('cvRegion').value = 'metropolitana'; $('cvLink').hidden = true; $('cvLinkToggle').setAttribute('aria-expanded', 'false');
+        $('cvGeoText').textContent = 'Usar mi ubicación aproximada (mejora la búsqueda por cercanía)';
+        const saved = readJSON(CV_KEY, null) || {};
+        const gate = readJSON(GATE_KEY, null);
+        $('cvName').value = saved.nombre || '';
+        $('cvComuna').value = saved.comuna || '';
+        if (REGIONES[saved.region]) $('cvRegion').value = saved.region;
+        $('cvPhone').value = saved.telefono ? `+${saved.telefono}` : '';
+        $('cvEmail').value = saved.email || gate?.email || '';
+        $('cvYears').value = saved.experiencia_anos || '';
+        $('cvExp').value = saved.experiencia || '';
+        if (saved.cv_url) { $('cvLink').value = saved.cv_url; $('cvLink').hidden = false; }
+        if (saved.lat != null) { cvGeo = { lat: saved.lat, lng: saved.lng }; $('cvGeoText').textContent = 'Ubicación aproximada guardada (±1 km)'; }
+        setPressed(cvDlg, 'data-cv-badge', saved.especialidades);
+        setPressed(cvDlg, 'data-cv-jornada', saved.jornadas);
+      }
+      $('cvExpCount').textContent = $('cvExp').value.length;
+      cvBadgeCount();
+      $('cvBody').hidden = false; $('cvDone').hidden = true;
+      $('cvSubmit').textContent = 'Guardar mi CV Técnico';
+      showFormError($('cvError'), '');
+      cvDlg.showModal();
+      track('cv_opened', { via });
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-cv-open]'); if (b) { e.preventDefault(); openCv(b.dataset.cvOpen); } });
+
+    const cvWaText = (d) => [
+      'Hola BIKEGRID. Quiero sumar mi CV Técnico a Bici Jobs:',
+      `• Nombre: ${d.nombre}`,
+      `• Comuna: ${d.comuna}, ${REGIONES[d.region].label}`,
+      `• Modalidad: ${d.jornadas.map((k) => JORNADAS[k]).join(', ')}`,
+      `• Especialidades: ${d.especialidades.map((k) => BADGE_INFO[k].card).join(', ')}`,
+      `• Experiencia: ${JOB_EXP[d.experiencia_anos]}${d.experiencia ? `. ${d.experiencia}` : ''}`,
+      d.cv_url ? `• CV: ${d.cv_url}` : '',
+      `• WhatsApp: +${d.telefono} · Email: ${d.email}`,
+    ].filter(Boolean).join('\n');
+
+    cvForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!$('cvDone').hidden) return cvDlg.close(); // botón "Listo"
+      const err = $('cvError');
+      const d = {
+        nombre: $('cvName').value.trim().replace(/\s+/g, ' '), comuna: $('cvComuna').value.trim(), region: $('cvRegion').value,
+        jornadas: pressed(cvDlg, 'data-cv-jornada'), telefono: phoneCL($('cvPhone').value), email: $('cvEmail').value.trim().toLowerCase(),
+        especialidades: pressed(cvDlg, 'data-cv-badge'), experiencia_anos: $('cvYears').value, experiencia: $('cvExp').value.trim() || null,
+        cv_url: $('cvLink').hidden ? null : ($('cvLink').value.trim() || null), lat: cvGeo?.lat ?? null, lng: cvGeo?.lng ?? null,
+      };
+      if (d.nombre.length < 2) return showFormError(err, 'Escribe tu nombre.', 'cvName');
+      if (d.comuna.length < 2) return showFormError(err, 'Indica tu comuna o ciudad.', 'cvComuna');
+      if (!d.jornadas.length) return showFormError(err, 'Elige al menos una modalidad: Full-time, Part-time o Temporada.');
+      if (!/^\d{8,15}$/.test(d.telefono)) return showFormError(err, 'Revisa tu WhatsApp: incluye el código de país, ej. +56 9 1234 5678.', 'cvPhone');
+      if (!EMAIL_RE.test(d.email)) return showFormError(err, 'Revisa el correo: debe tener el formato nombre@dominio.cl', 'cvEmail');
+      if (!d.especialidades.length) return showFormError(err, 'Marca al menos una especialización técnica.');
+      if (!d.experiencia_anos) return showFormError(err, 'Indica tus años de experiencia en el rubro.', 'cvYears');
+      if (d.cv_url && !/^https:\/\/\S+\.\S+/.test(d.cv_url)) return showFormError(err, 'El enlace al CV debe empezar con https://', 'cvLink');
+      if (!$('cvConsent').checked) return showFormError(err, 'Para aparecer en el buscador de tiendas, acepta que mostremos tu ficha técnica.', 'cvConsent');
+      if ($('cvWebsite').value) return; // bot
+      showFormError(err, '');
+
+      // Copia local (sin el PDF) para completar postulaciones y editar la ficha después
+      writeJSON(CV_KEY, { ...d, hasPdf: !!cvFile, savedAt: new Date().toISOString() });
+      unlockGateWith(d.email);
+      document.dispatchEvent(new CustomEvent('bikegrid:cv'));
+      track('cv_submitted', { especialidades: d.especialidades.length, grupos: [...new Set(d.especialidades.map((k) => BADGE_INFO[k].group))].join(','), jornadas: d.jornadas.join(','), pdf: !!cvFile, link: !!d.cv_url, gps: d.lat != null, region: d.region });
+
+      if (!supabaseClient) {
+        const admin = salesNumber();
+        if (!admin) return showFormError(err, 'El registro de CV Técnico aún no está habilitado. Vuelve pronto.');
+        const link = `https://wa.me/${admin}?text=${encodeURIComponent(cvWaText(d))}`;
+        openWhatsApp(link);
+        return showCvDone(d, `Se abrió WhatsApp con tu CV Técnico. Envíalo${cvFile ? ' y adjunta tu PDF en el mismo chat' : ''} y lo sumamos al buscador de tiendas.`, link);
+      }
+      $('cvSubmit').textContent = 'Guardando…';
+      let cv_path = null;
+      if (cvFile) {
+        const id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+        const { error } = await supabaseClient.storage.from('cvs-tecnicos').upload(`${id}.pdf`, cvFile, { contentType: 'application/pdf', upsert: false });
+        if (error) {
+          $('cvSubmit').textContent = 'Guardar mi CV Técnico';
+          console.warn('[BIKEGRID] CV sin subir:', error.message);
+          return showFormError(err, 'No pudimos subir tu PDF. Inténtalo de nuevo o usa "Pegar enlace".');
+        }
+        cv_path = `${id}.pdf`;
+      }
+      const ok = await queueInsert('perfiles_tecnicos', { ...d, cv_path });
+      showCvDone(d, ok
+        ? 'Tu ficha quedó en revisión y aparecerá en el buscador de tiendas en menos de 24 horas hábiles. Al postular a un aviso, tus especialidades se adjuntan solas.'
+        : 'Guardamos tu ficha en este dispositivo y la enviaremos automáticamente en tu próxima visita.', '');
+    });
+    function showCvDone(d, text, link) {
+      $('cvBody').hidden = true; $('cvDone').hidden = false;
+      $('cvDoneText').textContent = text;
+      $('cvPreview').innerHTML = candidateCard({ ...d, nombre_publico: nombrePublico(d.nombre) }, { preview: true });
+      $('cvWaAgain').hidden = !link; if (link) $('cvWaAgain').href = link;
+      $('cvSubmit').textContent = 'Listo';
+    }
+
+    renderTalent();
+    loadTalent();
+    document.addEventListener('desviador:puntos', () => { if (talentState.origin && !TALENT_DEMO) renderTalent(); });
 
     renderJobs();
     loadJobOffers();

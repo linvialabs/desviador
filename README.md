@@ -109,6 +109,23 @@ Ejecuta [`supabase/empleos.sql`](supabase/empleos.sql) en Supabase → SQL Edito
 - **💼 Publicar Oferta de Trabajo** ($19.990 CLP o gratis con Plan Pro): el negocio completa el aviso y se abre el WhatsApp comercial (`SALES_WHATSAPP`) con el aviso redactado. El aviso queda en `ofertas_empleo` con estado `pendiente`. Cuando coordines el pago (o verifiques el Plan Pro, ver `pro_declarado`), cambia `estado` a `publicado`. Opcionalmente, pon `publicado_hasta` en hoy + 30 días y `destacado`, o vincula `comercio_id` a su ficha.
 - Los avisos de ejemplo solo se ven cuando no hay base de datos conectada.
 
+### Reclutamiento técnico: CV Técnico y buscador para tiendas
+
+Ejecuta [`supabase/talento.sql`](supabase/talento.sql) (tabla `perfiles_tecnicos` y bucket privado `cvs-tecnicos`) y vuelve a ejecutar [`supabase/empleos.sql`](supabase/empleos.sql) (su sección 3 agrega `cargo`, `jornada`, `sucursal` y `requisitos_badges` a las vacantes). Ambos se pueden re-ejecutar.
+
+- **CV Técnico Ciclista** (botón "Arma tu CV Técnico"): el postulante indica disponibilidad (nombre, comuna, región, modalidad Full-time / Part-time / Temporada), especialidades en chips, años y experiencia anterior, y adjunta un PDF (máx. 5 MB) o un enlace.
+  - Especialidades: Transmisión (SRAM AXS, Shimano Di2, Mecánico tradicional) · Suspensiones & Frenos (Fox / RockShox, Purgado hidráulico) · E-Bikes (Bosch, Brose, Shimano Steps, Specialized) · Taller General (Enrayado, Diagnóstico de carbono, Montaje desde cero).
+  - La ficha entra como `pendiente`. Revísala en Table Editor → `perfiles_tecnicos` y cambia `estado` a `publicado` para que aparezca en el buscador (`oculto` la retira).
+  - El PDF queda en Storage → `cvs-tecnicos`, con el nombre guardado en `cv_path`. Solo los admins pueden abrirlo.
+  - Una copia queda en el navegador del postulante: al postular a un aviso se completan sus datos y se agregan sus especialidades al mensaje de WhatsApp.
+- **Buscador de candidatos** (sección "Talento técnico disponible"): filtros por grupo o especialidad exacta (por ejemplo, "E-Bikes → Diagnóstico Bosch"), por región o "Cerca de mi tienda" con radio de 10 a 100 km.
+  - La distancia usa la ubicación aproximada del postulante si la compartió (redondeada a ±1 km) o, si no, el centro de su comuna.
+  - El público solo ve nombre abreviado ("Matías R."), comuna, modalidad, especialidades y experiencia. Teléfono, email y CV nunca salen de la base.
+  - "Solicitar contacto" abre WhatsApp comercial con la referencia del candidato: el contacto lo coordinas tú, y es un beneficio de la Ficha Pro.
+- **Publicar vacante (estandarizado):** cargo (Mecánico, Vendedor Técnico, Jefe de Tienda, Guía / Shuttle), especialidad opcional, jornada, sucursal y ubicación, requisitos clave en chips, más otros requisitos y responsabilidades. Las tarjetas muestran el cargo, la jornada, la sucursal y los requisitos clave.
+  - Si aún no ejecutas la sección 3 de `empleos.sql`, la web guarda la vacante sin las columnas nuevas (el detalle igual queda en `puesto` y `requisitos`).
+- Métricas: `cv_opened`, `cv_submitted`, `talent_filter`, `talent_contact`, `job_post_sent` (con cargo, jornada y cantidad de requisitos).
+
 ## Guías & Instructores
 
 Ejecuta [`supabase/guias.sql`](supabase/guias.sql) en Supabase → SQL Editor. Agrega la categoría `guias` y los campos del perfil (`foto_url`, `zonas`, `certificaciones`, `idiomas`, `disciplinas`, `tarifa`).

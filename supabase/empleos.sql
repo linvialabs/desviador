@@ -83,3 +83,18 @@ drop policy if exists "Admins leen postulaciones" on public.postulaciones;
 create policy "Admins leen postulaciones" on public.postulaciones for select to authenticated using (public.is_admin());
 drop policy if exists "Admins borran postulaciones" on public.postulaciones;
 create policy "Admins borran postulaciones" on public.postulaciones for delete to authenticated using (public.is_admin());
+
+-- ============ 3. Vacantes estandarizadas (publicador para tiendas) ============
+-- Columnas nuevas del formulario "Publicar vacante". La web sigue funcionando sin ellas (usa puesto / requisitos).
+alter table public.ofertas_empleo add column if not exists cargo text
+  check (cargo in ('mecanico','vendedor_tecnico','jefe_tienda','guia_shuttle'));
+alter table public.ofertas_empleo add column if not exists jornada text
+  check (jornada in ('full_time','part_time','temporada'));
+alter table public.ofertas_empleo add column if not exists sucursal text
+  check (char_length(sucursal) <= 80);
+alter table public.ofertas_empleo add column if not exists requisitos_badges text[] not null default '{}'
+  check (cardinality(requisitos_badges) <= 12 and requisitos_badges <@ array[
+    'sram_axs','shimano_di2','mecanico_tradicional','fox_rockshox','purgado_hidraulico',
+    'ebike_bosch','ebike_brose','ebike_shimano_steps','ebike_specialized','enrayado','carbono','montaje']::text[]);
+grant select (cargo, jornada, sucursal, requisitos_badges) on public.ofertas_empleo to anon, authenticated;
+grant insert (cargo, jornada, sucursal, requisitos_badges) on public.ofertas_empleo to anon, authenticated;
