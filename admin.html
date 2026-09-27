@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex, nofollow" />
   <title>BIKEGRID · Panel de administración</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"%3E%3Crect width="32" height="32" rx="8" fill="%23d9a441"/%3E%3Cpath d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="%2315120e" stroke-width="1.3" stroke-linecap="round" opacity=".5"/%3E%3Cg fill="%2315120e"%3E%3Ccircle cx="8" cy="8" r="1.8"/%3E%3Ccircle cx="16" cy="8" r="1.8"/%3E%3Ccircle cx="24" cy="8" r="1.8"/%3E%3Ccircle cx="8" cy="16" r="1.8"/%3E%3Ccircle cx="24" cy="16" r="1.8"/%3E%3Ccircle cx="8" cy="24" r="1.8"/%3E%3Ccircle cx="16" cy="24" r="1.8"/%3E%3Ccircle cx="24" cy="24" r="1.8"/%3E%3C/g%3E%3Ccircle cx="16" cy="16" r="5.9" fill="none" stroke="%2315120e" stroke-width="1.7" stroke-dasharray="1.55 1.54"/%3E%3Ccircle cx="16" cy="16" r="4.3" fill="none" stroke="%2315120e" stroke-width="1.9"/%3E%3Ccircle cx="16" cy="16" r="1.5" fill="%2315120e"/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%232e7d32%22/%3E%3Cpath d=%22M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.2%22 stroke-linecap=%22round%22 opacity=%22.55%22/%3E%3Cg fill=%22%23f6f1e7%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2224%22 r=%221.7%22/%3E%3C/g%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225.9%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.7%22 stroke-dasharray=%221.55 1.54%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%224.3%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.6%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%221.4%22 fill=%22%23f6f1e7%22/%3E%3C/svg%3E" />
   <meta name="theme-color" content="#15120e" />
 
   <!-- Tailwind CSS -->
@@ -21,6 +21,7 @@
             moss:  { 300: '#b5c99a', 400: '#8fae6a', 500: '#6e8f4c', 600: '#56743a', 700: '#435c2d' },
             ochre: { 300: '#e8c27a', 400: '#d9a441', 500: '#c08a2c', 600: '#9c6f22' },
             clay:  { 300: '#e0a184', 400: '#c9764f', 500: '#a4532f' },
+            brand: { DEFAULT: '#2e7d32', 600: '#276b2b', 50: '#e8f3e9' },
           },
           fontFamily: {
             sans: ['Barlow', 'system-ui', 'sans-serif'],
@@ -73,6 +74,75 @@
     .topo-bg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='none' stroke='%23c9bba3' stroke-opacity='.07' stroke-width='1.2'%3E%3Cpath d='M-20 60c60-30 110 20 170 0s90-50 150-30 70 40 90 30'/%3E%3Cpath d='M-20 95c55-25 105 25 170 5s95-45 150-25 70 35 90 25'/%3E%3Cpath d='M-20 130c50-20 100 30 170 10s100-40 150-20 70 30 90 20'/%3E%3Cpath d='M-20 200c70 30 120-20 180 5s80 45 140 25 50-30 80-20'/%3E%3Cpath d='M-20 235c65 25 115-15 180 10s85 40 140 20 50-25 80-15'/%3E%3Cellipse cx='250' cy='330' rx='60' ry='22'/%3E%3C/g%3E%3C/svg%3E"); }
     input, select, textarea { color-scheme: dark; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+    /* Iconos SVG monocromáticos (trazo 1,5 px): <i class="i i-nombre"></i> toma el color del texto */
+    .i { display: inline-block; width: 1.1em; height: 1.1em; flex-shrink: 0; vertical-align: -0.18em; background-color: currentColor; -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+    .i-pin { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-map { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z%22/%3E%3Cpath d=%22M9 4v14M15 6v14%22/%3E%3C/svg%3E"); }
+    .i-compass { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z%22/%3E%3C/svg%3E"); }
+    .i-message { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7.9 20A9 9 0 1 0 4 16.1L2 22Z%22/%3E%3C/svg%3E"); }
+    .i-briefcase { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%222%22 y=%227%22 width=%2220%22 height=%2214%22 rx=%222%22/%3E%3Cpath d=%22M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16%22/%3E%3C/svg%3E"); }
+    .i-bus { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3%22/%3E%3Ccircle cx=%227%22 cy=%2218%22 r=%222%22/%3E%3Cpath d=%22M9 18h5%22/%3E%3Ccircle cx=%2216%22 cy=%2218%22 r=%222%22/%3E%3C/svg%3E"); }
+    .i-siren { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7 18v-6a5 5 0 1 1 10 0v6%22/%3E%3Cpath d=%22M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z%22/%3E%3Cpath d=%22M21 12h1M18.5 4.5 18 5M2 12h1M12 2v1M4.9 4.9l.7.7M12 12v6%22/%3E%3C/svg%3E"); }
+    .i-activity { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 12h-4l-3 9L9 3l-3 9H2%22/%3E%3C/svg%3E"); }
+    .i-bike { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2218.5%22 cy=%2217.5%22 r=%223.5%22/%3E%3Ccircle cx=%225.5%22 cy=%2217.5%22 r=%223.5%22/%3E%3Ccircle cx=%2215%22 cy=%225%22 r=%221%22/%3E%3Cpath d=%22M12 17.5V14l-3-3 4-3 2 3h2%22/%3E%3C/svg%3E"); }
+    .i-tag { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z%22/%3E%3Ccircle cx=%227.5%22 cy=%227.5%22 r=%22.5%22/%3E%3C/svg%3E"); }
+    .i-badge-check { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z%22/%3E%3Cpath d=%22m9 12 2 2 4-4%22/%3E%3C/svg%3E"); }
+    .i-check { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 6 9 17l-5-5%22/%3E%3C/svg%3E"); }
+    .i-x { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M18 6 6 18M6 6l12 12%22/%3E%3C/svg%3E"); }
+    .i-star { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath fill=%22black%22 d=%22M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z%22/%3E%3C/svg%3E"); }
+    .i-star-o { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z%22/%3E%3C/svg%3E"); }
+    .i-mail { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2220%22 height=%2216%22 x=%222%22 y=%224%22 rx=%222%22/%3E%3Cpath d=%22m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7%22/%3E%3C/svg%3E"); }
+    .i-wrench { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z%22/%3E%3C/svg%3E"); }
+    .i-mountain { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m8 3 4 8 5-5 5 15H2L8 3z%22/%3E%3C/svg%3E"); }
+    .i-sprout { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7 20h10M10 20c5.5-2.5.8-6.4 3-10%22/%3E%3Cpath d=%22M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z%22/%3E%3Cpath d=%22M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z%22/%3E%3C/svg%3E"); }
+    .i-shovel { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2 22v-5l5-5 5 5-5 5z%22/%3E%3Cpath d=%22M9.5 14.5 16 8%22/%3E%3Cpath d=%22m17 2 5 5-.5.5a3.53 3.53 0 0 1-5 0 3.53 3.53 0 0 1 0-5L17 2%22/%3E%3C/svg%3E"); }
+    .i-lock { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2218%22 height=%2211%22 x=%223%22 y=%2211%22 rx=%222%22/%3E%3Cpath d=%22M7 11V7a5 5 0 0 1 10 0v4%22/%3E%3C/svg%3E"); }
+    .i-globe { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20%22/%3E%3C/svg%3E"); }
+    .i-instagram { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2220%22 height=%2220%22 x=%222%22 y=%222%22 rx=%225%22/%3E%3Cpath d=%22M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z%22/%3E%3Cpath d=%22M17.5 6.5h.01%22/%3E%3C/svg%3E"); }
+    .i-camera { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z%22/%3E%3Ccircle cx=%2212%22 cy=%2213%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-bag { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z%22/%3E%3Cpath d=%22M3 6h18M16 10a4 4 0 0 1-8 0%22/%3E%3C/svg%3E"); }
+    .i-package { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m7.5 4.27 9 5.15%22/%3E%3Cpath d=%22M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z%22/%3E%3Cpath d=%22m3.3 7 8.7 5 8.7-5M12 22V12%22/%3E%3C/svg%3E"); }
+    .i-sparkles { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M9.9 15.5A2 2 0 0 0 8.5 14.1l-6.1-1.6a.5.5 0 0 1 0-1l6.1-1.6A2 2 0 0 0 9.9 8.5l1.6-6.1a.5.5 0 0 1 1 0l1.6 6.1a2 2 0 0 0 1.4 1.4l6.1 1.6a.5.5 0 0 1 0 1l-6.1 1.6a2 2 0 0 0-1.4 1.4l-1.6 6.1a.5.5 0 0 1-1 0z%22/%3E%3C/svg%3E"); }
+    .i-key { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%227.5%22 cy=%2215.5%22 r=%225.5%22/%3E%3Cpath d=%22m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3%22/%3E%3C/svg%3E"); }
+    .i-store { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7%22/%3E%3Cpath d=%22M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8%22/%3E%3Cpath d=%22M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4M2 7h20%22/%3E%3C/svg%3E"); }
+    .i-cap { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 10 12 5 2 10l10 5 10-5z%22/%3E%3Cpath d=%22M6 12v5c3 3 9 3 12 0v-5%22/%3E%3C/svg%3E"); }
+    .i-cpu { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2216%22 height=%2216%22 x=%224%22 y=%224%22 rx=%222%22/%3E%3Crect width=%226%22 height=%226%22 x=%229%22 y=%229%22 rx=%221%22/%3E%3Cpath d=%22M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2%22/%3E%3C/svg%3E"); }
+    .i-arrow-up { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m5 12 7-7 7 7M12 19V5%22/%3E%3C/svg%3E"); }
+    .i-zap { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z%22/%3E%3C/svg%3E"); }
+    .i-route { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%226%22 cy=%2219%22 r=%223%22/%3E%3Cpath d=%22M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15%22/%3E%3Ccircle cx=%2218%22 cy=%225%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-trees { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z%22/%3E%3Cpath d=%22M7 16v6M13 19v3%22/%3E%3Cpath d=%22M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5%22/%3E%3C/svg%3E"); }
+    .i-sun { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%224%22/%3E%3Cpath d=%22M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41%22/%3E%3C/svg%3E"); }
+    .i-tree { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z%22/%3E%3Cpath d=%22M12 22v-3%22/%3E%3C/svg%3E"); }
+    .i-rain { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2%22/%3E%3Cpath d=%22M16 14v6M8 14v6M12 16v6%22/%3E%3C/svg%3E"); }
+    .i-rocks { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m3 20 5-11 4 5 3-3 6 9z%22/%3E%3C/svg%3E"); }
+    .i-tent { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M3.5 21 14 3M20.5 21 10 3M15.5 21 12 15l-3.5 6M2 21h20%22/%3E%3C/svg%3E"); }
+    .i-building { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2216%22 height=%2220%22 x=%224%22 y=%222%22 rx=%222%22/%3E%3Cpath d=%22M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01%22/%3E%3C/svg%3E"); }
+    .i-flame { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z%22/%3E%3C/svg%3E"); }
+    .i-snowflake { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2 12h20M12 2v20M20 16l-4-4 4-4M4 8l4 4-4 4M16 4l-4 4-4-4M8 20l4-4 4 4%22/%3E%3C/svg%3E"); }
+    .i-chevron-down { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E"); }
+    .i-clipboard { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%228%22 height=%224%22 x=%228%22 y=%222%22 rx=%221%22/%3E%3Cpath d=%22M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2%22/%3E%3C/svg%3E"); }
+    .i-calendar { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2218%22 height=%2218%22 x=%223%22 y=%224%22 rx=%222%22/%3E%3Cpath d=%22M16 2v4M8 2v4M3 10h18%22/%3E%3C/svg%3E"); }
+    .i-clock { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M12 6v6l4 2%22/%3E%3C/svg%3E"); }
+    .i-banknote { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2220%22 height=%2212%22 x=%222%22 y=%226%22 rx=%222%22/%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%222%22/%3E%3Cpath d=%22M6 12h.01M18 12h.01%22/%3E%3C/svg%3E"); }
+    .i-languages { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6%22/%3E%3C/svg%3E"); }
+    .i-music { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M9 18V5l12-2v13%22/%3E%3Ccircle cx=%226%22 cy=%2218%22 r=%223%22/%3E%3Ccircle cx=%2218%22 cy=%2216%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-image { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2218%22 height=%2218%22 x=%223%22 y=%223%22 rx=%222%22/%3E%3Ccircle cx=%229%22 cy=%229%22 r=%222%22/%3E%3Cpath d=%22m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21%22/%3E%3C/svg%3E"); }
+    .i-circle { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%229%22/%3E%3C/svg%3E"); }
+    .i-megaphone { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m3 11 18-5v12L3 14v-3z%22/%3E%3Cpath d=%22M11.6 16.8a3 3 0 1 1-5.8-1.6%22/%3E%3C/svg%3E"); }
+    .i-download { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3%22/%3E%3C/svg%3E"); }
+    .i-play { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2.5 17a24 24 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.6 49.6 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24 24 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.6 49.6 0 0 1-16.2 0A2 2 0 0 1 2.5 17%22/%3E%3Cpath d=%22m10 15 5-3-5-3z%22/%3E%3C/svg%3E"); }
+    .i-shield { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z%22/%3E%3Cpath d=%22m9 12 2 2 4-4%22/%3E%3C/svg%3E"); }
+    .i-crosshair { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M22 12h-4M6 12H2M12 6V2M12 22v-4%22/%3E%3C/svg%3E"); }
+    .i-users { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2%22/%3E%3Ccircle cx=%229%22 cy=%227%22 r=%224%22/%3E%3Cpath d=%22M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75%22/%3E%3C/svg%3E"); }
+    /* Indicadores de estado tipo LED */
+    .led { display: inline-block; width: .6em; height: .6em; flex-shrink: 0; border-radius: 9999px; vertical-align: .05em; }
+    .led-green { background: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.18), 0 0 6px rgba(46,125,50,.6); }
+    .led-yellow { background: #e0a800; box-shadow: 0 0 0 2px rgba(224,168,0,.18), 0 0 6px rgba(224,168,0,.6); }
+    .led-red { background: #c62828; box-shadow: 0 0 0 2px rgba(198,40,40,.18), 0 0 6px rgba(198,40,40,.55); }
+    .led-gray { background: #9e9e9e; box-shadow: 0 0 0 2px rgba(158,158,158,.2); }
+    /* Dificultad de pista (estándar internacional): círculo verde, cuadrado azul, diamante negro */
+    .dif { display: inline-block; width: .75em; height: .75em; flex-shrink: 0; vertical-align: -.02em; }
+    .dif-green { border-radius: 9999px; background: #2e7d32; } .dif-blue { background: #1565c0; } .dif-black { background: #15120e; transform: rotate(45deg) scale(.82); }
   </style>
 </head>
 
@@ -82,8 +152,8 @@
   <main id="loginView" class="topo-bg grid min-h-screen place-items-center px-4 py-10" hidden>
     <div class="w-full max-w-sm">
       <p class="mb-6 flex items-center justify-center gap-2">
-        <svg viewBox="0 0 32 32" class="h-9 w-9 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#d9a441"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#15120e" stroke-width="1.3" stroke-linecap="round" opacity=".5"/><g fill="#15120e"><circle cx="8" cy="8" r="1.8"/><circle cx="16" cy="8" r="1.8"/><circle cx="24" cy="8" r="1.8"/><circle cx="8" cy="16" r="1.8"/><circle cx="24" cy="16" r="1.8"/><circle cx="8" cy="24" r="1.8"/><circle cx="16" cy="24" r="1.8"/><circle cx="24" cy="24" r="1.8"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#15120e" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#15120e" stroke-width="1.9"/><circle cx="16" cy="16" r="1.5" fill="#15120e"/></svg>
-        <span class="font-display text-[1.75rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-ochre-400">Grid</span></span>
+        <svg viewBox="0 0 32 32" class="h-9 w-9 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#2e7d32"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#f6f1e7" stroke-width="1.2" stroke-linecap="round" opacity=".55"/><g fill="#f6f1e7"><circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="24" cy="8" r="1.7"/><circle cx="8" cy="16" r="1.7"/><circle cx="24" cy="16" r="1.7"/><circle cx="8" cy="24" r="1.7"/><circle cx="16" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#f6f1e7" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#f6f1e7" stroke-width="1.6"/><circle cx="16" cy="16" r="1.4" fill="#f6f1e7"/></svg>
+        <span class="font-display text-[1.75rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span>
       </p>
       <form id="loginForm" class="space-y-4 rounded-2xl border border-soil-700 bg-soil-900/95 p-6 shadow-2xl" novalidate>
         <div>
@@ -110,12 +180,12 @@
     <header class="sticky top-0 z-[1100] border-b border-soil-700 bg-soil-950/95 backdrop-blur">
       <div class="flex h-14 items-center justify-between gap-3 px-4 sm:px-6">
         <div class="flex min-w-0 items-center gap-3">
-          <svg viewBox="0 0 32 32" class="h-7 w-7 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#d9a441"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#15120e" stroke-width="1.3" stroke-linecap="round" opacity=".5"/><g fill="#15120e"><circle cx="8" cy="8" r="1.8"/><circle cx="16" cy="8" r="1.8"/><circle cx="24" cy="8" r="1.8"/><circle cx="8" cy="16" r="1.8"/><circle cx="24" cy="16" r="1.8"/><circle cx="8" cy="24" r="1.8"/><circle cx="16" cy="24" r="1.8"/><circle cx="24" cy="24" r="1.8"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#15120e" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#15120e" stroke-width="1.9"/><circle cx="16" cy="16" r="1.5" fill="#15120e"/></svg><span class="font-display text-[1.35rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-ochre-400">Grid</span></span>
+          <svg viewBox="0 0 32 32" class="h-7 w-7 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#2e7d32"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#f6f1e7" stroke-width="1.2" stroke-linecap="round" opacity=".55"/><g fill="#f6f1e7"><circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="24" cy="8" r="1.7"/><circle cx="8" cy="16" r="1.7"/><circle cx="24" cy="16" r="1.7"/><circle cx="8" cy="24" r="1.7"/><circle cx="16" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#f6f1e7" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#f6f1e7" stroke-width="1.6"/><circle cx="16" cy="16" r="1.4" fill="#f6f1e7"/></svg><span class="font-display text-[1.35rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span>
           <span class="rounded bg-ochre-400/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-ochre-300 ring-1 ring-ochre-400/40">Admin</span>
         </div>
         <div class="flex items-center gap-2 text-sm">
           <span id="userEmail" class="hidden max-w-[220px] truncate text-sand-300 md:inline"></span>
-          <button id="importBtn" type="button" class="rounded-lg bg-ochre-400 px-3 py-1.5 font-semibold text-soil-950 hover:bg-ochre-300" title="Importar CSV masivo">📥<span class="hidden sm:inline"> Importar CSV Masivo</span><span class="sr-only sm:hidden"> Importar CSV masivo</span></button>
+          <button id="importBtn" type="button" class="rounded-lg bg-ochre-400 px-3 py-1.5 font-semibold text-soil-950 hover:bg-ochre-300" title="Importar CSV masivo"><i class="i i-download" aria-hidden="true"></i><span class="hidden sm:inline"> Importar CSV Masivo</span><span class="sr-only sm:hidden"> Importar CSV masivo</span></button>
           <button id="refreshBtn" type="button" class="rounded-lg px-3 py-1.5 text-sand-200 ring-1 ring-soil-700 hover:bg-soil-800" title="Recargar datos">↻<span class="sr-only"> Recargar</span></button>
           <a href="./" target="_blank" rel="noopener" class="hidden rounded-lg px-3 py-1.5 text-sand-200 ring-1 ring-soil-700 hover:bg-soil-800 sm:inline">Ver sitio</a>
           <button id="logoutBtn" type="button" class="rounded-lg bg-soil-800 px-3 py-1.5 font-semibold text-sand-50 hover:bg-soil-700">Salir</button>
@@ -185,7 +255,7 @@
             <div><label for="e_descripcion" class="lbl">Descripción pública</label><textarea id="e_descripcion" rows="3" maxlength="600" class="fld resize-y"></textarea></div>
 
             <fieldset id="e_brands" class="space-y-3 rounded-xl border border-soil-600 p-4">
-              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-sand-200">🏷️ Marcas que trabaja · la primera es la principal</legend>
+              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-sand-200"><i class="i i-tag" aria-hidden="true"></i> Marcas que trabaja · la primera es la principal</legend>
               <p id="e_brandsNote" class="-mt-1 text-xs text-sand-300/80">Escribe y presiona Enter (o coma). Si la marca ya existe, se reutiliza; si no, se crea en el catálogo.</p>
               <div id="e_brandChips" class="flex flex-wrap gap-1.5"></div>
               <input id="e_brandInput" list="e_brandList" maxlength="40" autocomplete="off" placeholder="Ej: Specialized" class="fld" />
@@ -194,15 +264,15 @@
             </fieldset>
 
             <fieldset id="e_social" class="space-y-4 rounded-xl border border-[#d4af37]/50 p-4">
-              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#e2c35a]">🌐 Ecosistema digital · visible solo en fichas Pro y guías</legend>
+              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#e2c35a]"><i class="i i-globe" aria-hidden="true"></i> Ecosistema digital · visible solo en fichas Pro y guías</legend>
               <p id="e_socialNote" class="-mt-1 text-xs text-sand-300/80">Pega la URL o el usuario; se valida al guardar.</p>
               <div class="grid gap-4 sm:grid-cols-2">
-                <div><label for="e_web" class="lbl">🌐 Sitio web / tienda online</label><input id="e_web" type="url" maxlength="300" placeholder="https://tiendabike.cl" class="fld" /></div>
-                <div><label for="e_ig" class="lbl">📸 Instagram</label><input id="e_ig" maxlength="80" placeholder="@tiendabike" class="fld" /></div>
-                <div><label for="e_tiktok" class="lbl">🎵 TikTok</label><input id="e_tiktok" maxlength="80" placeholder="@tiendabike" class="fld" /></div>
-                <div><label for="e_yt" class="lbl">▶️ YouTube</label><input id="e_yt" maxlength="200" placeholder="@canal o https://youtube.com/…" class="fld" /></div>
+                <div><label for="e_web" class="lbl"><i class="i i-globe" aria-hidden="true"></i> Sitio web / tienda online</label><input id="e_web" type="url" maxlength="300" placeholder="https://tiendabike.cl" class="fld" /></div>
+                <div><label for="e_ig" class="lbl"><i class="i i-instagram" aria-hidden="true"></i> Instagram</label><input id="e_ig" maxlength="80" placeholder="@tiendabike" class="fld" /></div>
+                <div><label for="e_tiktok" class="lbl"><i class="i i-music" aria-hidden="true"></i> TikTok</label><input id="e_tiktok" maxlength="80" placeholder="@tiendabike" class="fld" /></div>
+                <div><label for="e_yt" class="lbl"><i class="i i-play" aria-hidden="true"></i> YouTube</label><input id="e_yt" maxlength="200" placeholder="@canal o https://youtube.com/…" class="fld" /></div>
               </div>
-              <div><label for="e_trail" class="lbl">🚵 Mapa de pistas (Trailforks / Strava) <span class="font-normal text-sand-300/70">· para bikeparks y senderos</span></label><input id="e_trail" type="url" maxlength="300" placeholder="https://www.trailforks.com/region/…" class="fld" /></div>
+              <div><label for="e_trail" class="lbl"><i class="i i-bike" aria-hidden="true"></i> Mapa de pistas (Trailforks / Strava) <span class="font-normal text-sand-300/70">· para bikeparks y senderos</span></label><input id="e_trail" type="url" maxlength="300" placeholder="https://www.trailforks.com/region/…" class="fld" /></div>
             </fieldset>
 
             <fieldset class="space-y-4 rounded-xl border border-dashed border-ochre-400/40 p-4">
@@ -243,20 +313,20 @@
           <h2 id="importTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50">Importar CSV masivo</h2>
           <p class="mt-0.5 text-sm text-sand-300">Las filas válidas se publican directo en el mapa, o quedan en <strong class="text-sand-50">Pendientes</strong> si prefieres revisarlas.</p>
         </div>
-        <button id="importClose" type="button" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-soil-800 text-sand-200 hover:bg-soil-700 disabled:opacity-40" aria-label="Cerrar">✕</button>
+        <button id="importClose" type="button" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-soil-800 text-sand-200 hover:bg-soil-700 disabled:opacity-40" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
 
       <div class="overflow-y-auto px-5 py-5">
         <!-- Paso 1: elegir archivo -->
         <div id="importStep1">
           <label id="dropZone" for="csvFile" class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-soil-600 bg-soil-950/60 px-4 py-10 text-center transition hover:border-ochre-400">
-            <span class="text-3xl" aria-hidden="true">📥</span>
+            <span class="text-3xl" aria-hidden="true"><i class="i i-download" aria-hidden="true"></i></span>
             <span class="font-semibold text-sand-50">Arrastra tu archivo CSV aquí</span>
             <span class="text-sm text-sand-300">o <span class="text-ochre-300 underline underline-offset-2">haz clic para elegirlo</span> · máximo 5 MB y 2.000 filas</span>
             <input id="csvFile" type="file" accept=".csv,text/csv" class="sr-only" />
           </label>
           <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
-            <a href="plantilla_bikegrid.csv" download="plantilla_bikegrid.csv" class="font-semibold text-moss-300 hover:underline">⬇ Descargar plantilla_bikegrid.csv</a>
+            <a href="plantilla_bikegrid.csv" download="plantilla_bikegrid.csv" class="font-semibold text-moss-300 hover:underline"><i class="i i-download" aria-hidden="true"></i> Descargar plantilla_bikegrid.csv</a>
             <span class="text-sand-300/80">¿Trabajas en Excel? Usa <em>Guardar como → CSV UTF-8</em>.</span>
           </div>
           <details class="mt-4 rounded-lg bg-soil-950/60 p-3 text-xs leading-relaxed text-sand-300">
@@ -533,10 +603,10 @@
       const OFF = 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800';
       const out = [];
       out.push(b('mapa', 'Ver en mapa', 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800'));
-      if (r.estado !== 'aprobado') out.push(b('aprobar', '✓ Aprobar', 'bg-moss-600 text-sand-50 hover:bg-moss-500'));
-      if (r.estado === 'pendiente') out.push(b('rechazar', '✕ Rechazar', 'text-clay-300 ring-1 ring-clay-500/60 hover:bg-clay-500/15'));
+      if (r.estado !== 'aprobado') out.push(b('aprobar', '<i class="i i-check" aria-hidden="true"></i> Aprobar', 'bg-moss-600 text-sand-50 hover:bg-moss-500'));
+      if (r.estado === 'pendiente') out.push(b('rechazar', '<i class="i i-x" aria-hidden="true"></i> Rechazar', 'text-clay-300 ring-1 ring-clay-500/60 hover:bg-clay-500/15'));
       if (r.estado === 'aprobado') out.push(b('pendiente', 'Despublicar', 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800'));
-      out.push(b('amigo', r.es_amigo_trail ? '★ Amiga del Trail' : '☆ Amiga del Trail', r.es_amigo_trail ? 'bg-moss-400 text-soil-950' : OFF, r.es_amigo_trail));
+      out.push(b('amigo', r.es_amigo_trail ? '<i class="i i-star" aria-hidden="true"></i> Amiga del Trail' : '<i class="i i-star-o" aria-hidden="true"></i> Amiga del Trail', r.es_amigo_trail ? 'bg-moss-400 text-soil-950' : OFF, r.es_amigo_trail));
       out.push(b('destacar', r.destacado ? '◆ Destacada' : '◇ Destacar', r.destacado ? 'bg-ochre-400 text-soil-950' : OFF, r.destacado));
       out.push(b('editar', 'Editar', 'text-sand-200 ring-1 ring-soil-600 hover:bg-soil-800'));
       if (r.estado !== 'pendiente') out.push(b('eliminar', 'Eliminar', 'text-clay-300 hover:bg-clay-500/15'));
@@ -548,9 +618,9 @@
       const row = (k, v) => v ? `<div><dt class="text-sand-300/70">${k}</dt><dd class="text-sand-50">${esc(v)}</dd></div>` : '';
       const list = (a) => (Array.isArray(a) && a.length ? a.join(', ') : '');
       return [
-        row('🗺️ Zonas', list(r.zonas)), row('🚵 Disciplinas', list(r.disciplinas)), row('🗣️ Idiomas', list(r.idiomas)),
-        row('🎓 Certificaciones (verificar)', list(r.certificaciones)), row('💲 Tarifa', r.tarifa),
-        r.foto_url ? `<div><dt class="text-sand-300/70">📷 Foto</dt><dd><a href="${esc(r.foto_url)}" target="_blank" rel="noopener noreferrer" class="text-ochre-300 underline">Ver foto</a></dd></div>` : '',
+        row('<i class="i i-map" aria-hidden="true"></i> Zonas', list(r.zonas)), row('<i class="i i-bike" aria-hidden="true"></i> Disciplinas', list(r.disciplinas)), row('<i class="i i-languages" aria-hidden="true"></i> Idiomas', list(r.idiomas)),
+        row('<i class="i i-cap" aria-hidden="true"></i> Certificaciones (verificar)', list(r.certificaciones)), row('<i class="i i-banknote" aria-hidden="true"></i> Tarifa', r.tarifa),
+        r.foto_url ? `<div><dt class="text-sand-300/70"><i class="i i-camera" aria-hidden="true"></i> Foto</dt><dd><a href="${esc(r.foto_url)}" target="_blank" rel="noopener noreferrer" class="text-ochre-300 underline">Ver foto</a></dd></div>` : '',
       ].join('');
     };
 
@@ -567,9 +637,9 @@
           <div><dt class="text-sand-300/70">Coordenadas</dt><dd class="font-mono text-xs text-sand-50">${(+r.latitud).toFixed(5)}, ${(+r.longitud).toFixed(5)}</dd></div>
           <div><dt class="text-sand-300/70">WhatsApp público</dt><dd class="font-mono text-xs text-sand-50">${r.whatsapp ? '+' + esc(r.whatsapp) : '—'}</dd></div>
           ${r.horario ? `<div><dt class="text-sand-300/70">Horario</dt><dd class="text-sand-50">${esc(r.horario)}</dd></div>` : ''}
-          ${r.necesidad_personal ? `<div><dt class="text-sand-300/70">💼 Busca personal (público)</dt><dd class="text-ochre-300">${esc(r.necesidad_personal)}</dd></div>` : ''}
+          ${r.necesidad_personal ? `<div><dt class="text-sand-300/70"><i class="i i-briefcase" aria-hidden="true"></i> Busca personal (público)</dt><dd class="text-ochre-300">${esc(r.necesidad_personal)}</dd></div>` : ''}
           ${r.categoria === 'guias' ? guideInfo(r) : ''}
-          ${r.marcas_sugeridas ? `<div><dt class="text-sand-300/70">🏷️ Marcas sugeridas</dt><dd class="text-sand-50">${esc(r.marcas_sugeridas)}</dd></div>` : ''}
+          ${r.marcas_sugeridas ? `<div><dt class="text-sand-300/70"><i class="i i-tag" aria-hidden="true"></i> Marcas sugeridas</dt><dd class="text-sand-50">${esc(r.marcas_sugeridas)}</dd></div>` : ''}
         </dl>
         ${r.descripcion ? `<p class="mt-3 rounded-lg bg-soil-950/60 p-3 text-sm text-sand-200">${esc(r.descripcion)}</p>` : ''}
         ${priv ? `<dl class="mt-3 grid gap-x-6 gap-y-2 rounded-lg border border-dashed border-ochre-400/30 p-3 text-sm sm:grid-cols-2"><p class="font-mono text-[10px] font-bold uppercase tracking-wider text-ochre-300 sm:col-span-2">Privado</p>${priv}</dl>` : ''}
@@ -658,7 +728,7 @@
     fillSelect($('e_categoria'), Object.entries(CATEGORIES).map(([k, c]) => [k, c.label]));
     fillSelect($('e_region'), Object.entries(REGIONES));
 
-    // ================= 🏷️ MARCAS (supabase/marcas.sql) =================
+    // ================= <i class="i i-tag" aria-hidden="true"></i> MARCAS (supabase/marcas.sql) =================
     const brands = { ready: false, catalog: [], byComercio: new Map(), editing: [] };
     const brandSlug = (t) => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     const cleanBrand = (t) => String(t || '').replace(/\s+/g, ' ').trim().slice(0, 40);
@@ -678,8 +748,8 @@
     function renderBrandChips() {
       $('e_brandChips').innerHTML = brands.editing.length ? brands.editing.map((n, i) => `
         <span class="inline-flex items-center gap-1 rounded-full py-1 pl-2.5 pr-1 text-xs font-bold ${i === 0 ? 'bg-ochre-400 text-soil-950' : 'bg-soil-800 text-sand-100 ring-1 ring-soil-600'}">
-          ${i === 0 ? '★ ' : `<button type="button" data-brand-main="${i}" title="Hacer principal" class="text-sand-300 hover:text-ochre-300">☆</button>`}${esc(n)}${i === 0 ? ' · principal' : ''}
-          <button type="button" data-brand-del="${i}" aria-label="Quitar ${esc(n)}" class="grid h-5 w-5 place-items-center rounded-full hover:bg-black/20">✕</button>
+          ${i === 0 ? '<i class="i i-star" aria-hidden="true"></i> ' : `<button type="button" data-brand-main="${i}" title="Hacer principal" class="text-sand-300 hover:text-ochre-300"><i class="i i-star-o" aria-hidden="true"></i></button>`}${esc(n)}${i === 0 ? ' · principal' : ''}
+          <button type="button" data-brand-del="${i}" aria-label="Quitar ${esc(n)}" class="grid h-5 w-5 place-items-center rounded-full hover:bg-black/20"><i class="i i-x" aria-hidden="true"></i></button>
         </span>`).join('') : '<span class="text-xs text-sand-300/70">Sin marcas asignadas.</span>';
     }
     function addBrand(raw) {
@@ -1040,7 +1110,7 @@
               <td class="px-3 py-2">${esc(REGIONES[r.region])}</td>
               <td class="px-3 py-2">${esc(r.comuna || '—')}</td>
               <td class="px-3 py-2 font-mono">${r.latitud}, ${r.longitud}</td>
-              <td class="px-3 py-2">${r.es_amigo_trail ? '★' : ''}${r.destacado ? ' ◆' : ''}</td></tr>`).join('')}</tbody>
+              <td class="px-3 py-2">${r.es_amigo_trail ? '<i class="i i-star" aria-hidden="true"></i>' : ''}${r.destacado ? ' ◆' : ''}</td></tr>`).join('')}</tbody>
           </table>
         </div>` : '';
 

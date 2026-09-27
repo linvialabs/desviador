@@ -187,3 +187,11 @@ Ejecuta [`supabase/marcas.sql`](supabase/marcas.sql). Crea un **catálogo único
   - Escribe y presiona Enter. Autocompleta desde el catálogo y reutiliza la marca si ya existe.
   - ☆ hace principal a una marca; ✕ la quita.
   - "Usar estas" carga las marcas sugeridas por el negocio.
+
+## Diseño premium (sin emojis)
+
+- **Iconos:** la interfaz no usa emojis. Los iconos son SVG monocromáticos (trazo 1,5 px, estilo Lucide) definidos como clases CSS: `<i class="i i-compass"></i>`. Toman el color del texto y no agregan dependencias externas.
+- **Semáforo:** usa indicadores LED (`.led-green`, `.led-yellow`, `.led-red`, `.led-gray`).
+- **Niveles del planificador:** usan los símbolos internacionales de dificultad (círculo verde, cuadrado azul, diamante negro y doble diamante).
+- **Marca:** `BIKE` fino + `GRID` en verde de marca `#2e7d32` (clase `text-brand` / `bg-brand`). El isotipo combina una cuadrícula de nodos GPS con un piñón.
+- **Navegación:** en mayúsculas con espaciado: MAPA · ESTADO DE PISTAS · BICI JOBS · DIRECTORIO PRO, más accesos a guías, shuttles, urgencia y el planificador.

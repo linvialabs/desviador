@@ -11,7 +11,7 @@
   <meta property="og:title" content="BIKEGRID — La red global de servicios, mapas y comunidad del pedal." />
   <meta property="og:description" content="Talleres, tiendas, bikeparks, guías y shuttles en un solo mapa. Semáforo de cerros, Bici Jobs y comunidad del pedal." />
   <meta name="twitter:card" content="summary" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"%3E%3Crect width="32" height="32" rx="8" fill="%23d9a441"/%3E%3Cpath d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="%2315120e" stroke-width="1.3" stroke-linecap="round" opacity=".5"/%3E%3Cg fill="%2315120e"%3E%3Ccircle cx="8" cy="8" r="1.8"/%3E%3Ccircle cx="16" cy="8" r="1.8"/%3E%3Ccircle cx="24" cy="8" r="1.8"/%3E%3Ccircle cx="8" cy="16" r="1.8"/%3E%3Ccircle cx="24" cy="16" r="1.8"/%3E%3Ccircle cx="8" cy="24" r="1.8"/%3E%3Ccircle cx="16" cy="24" r="1.8"/%3E%3Ccircle cx="24" cy="24" r="1.8"/%3E%3C/g%3E%3Ccircle cx="16" cy="16" r="5.9" fill="none" stroke="%2315120e" stroke-width="1.7" stroke-dasharray="1.55 1.54"/%3E%3Ccircle cx="16" cy="16" r="4.3" fill="none" stroke="%2315120e" stroke-width="1.9"/%3E%3Ccircle cx="16" cy="16" r="1.5" fill="%2315120e"/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%232e7d32%22/%3E%3Cpath d=%22M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.2%22 stroke-linecap=%22round%22 opacity=%22.55%22/%3E%3Cg fill=%22%23f6f1e7%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2224%22 r=%221.7%22/%3E%3C/g%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225.9%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.7%22 stroke-dasharray=%221.55 1.54%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%224.3%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.6%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%221.4%22 fill=%22%23f6f1e7%22/%3E%3C/svg%3E" />
   <meta name="theme-color" content="#15120e" />
 
   <!-- Tailwind CSS -->
@@ -27,6 +27,7 @@
             moss:  { 300: '#b5c99a', 400: '#8fae6a', 500: '#6e8f4c', 600: '#56743a', 700: '#435c2d' },
             ochre: { 300: '#e8c27a', 400: '#d9a441', 500: '#c08a2c', 600: '#9c6f22' },
             ink:   '#241f19',
+            brand: { DEFAULT: '#2e7d32', 600: '#276b2b', 50: '#e8f3e9' },
           },
           fontFamily: {
             sans: ['Barlow', 'system-ui', 'sans-serif'],
@@ -158,6 +159,16 @@
     .social-trail { background: #56743a; color: #f6f1e7; }
     .social-locked { overflow: hidden; background: repeating-linear-gradient(-45deg, rgba(201,187,163,.16) 0 10px, transparent 10px 20px), #f1eadc; }
     .social-locked .ghost { display: flex; align-items: center; justify-content: center; gap: .35rem; border-radius: .6rem; padding: .5rem; font-size: .8rem; font-weight: 700; color: #9a8b76; box-shadow: inset 0 0 0 1px #d8ccb6; background: rgba(255,253,248,.6); filter: blur(.3px); user-select: none; }
+    /* Navegación: mayúsculas con espaciado */
+    .navlink { position: relative; white-space: nowrap; transition: color .15s ease; }
+    .navlink:hover, .navlink:focus-visible { color: #f6f1e7; }
+    .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #2e7d32; transform: scaleX(0); transition: transform .2s ease; }
+    .navlink:hover::after { transform: scaleX(1); }
+    .icon-btn { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 9999px; color: #ede5d6; box-shadow: inset 0 0 0 1px #3d3328; transition: background-color .15s ease, color .15s ease; }
+    .icon-btn:hover { background: #2b241c; color: #f6f1e7; }
+    .icon-btn[aria-pressed="true"] { background: #6b4f7d; color: #f6f1e7; box-shadow: none; }
+    .mnav { display: flex; width: 100%; align-items: center; gap: .75rem; border-bottom: 1px solid #2b241c; padding: .8rem 0; text-align: left; font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #ede5d6; }
+    .mnav .i { font-size: 1.05rem; color: #c9bba3; }
     .billing-btn { color: #ddd2bf; transition: background-color .15s ease, color .15s ease; }
     .billing-btn[aria-pressed="true"] { background: #d9a441; color: #15120e; }
     .util-chip { display: inline-flex; align-items: center; gap: .3rem; border-radius: 9999px; padding: .45rem .7rem; font-size: .78rem; font-weight: 700; transition: box-shadow .15s ease, background-color .15s ease; }
@@ -171,6 +182,75 @@
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { scrollbar-width: none; }
+    /* Iconos SVG monocromáticos (trazo 1,5 px): <i class="i i-nombre"></i> toma el color del texto */
+    .i { display: inline-block; width: 1.1em; height: 1.1em; flex-shrink: 0; vertical-align: -0.18em; background-color: currentColor; -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+    .i-pin { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z%22/%3E%3Ccircle cx=%2212%22 cy=%2210%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-map { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z%22/%3E%3Cpath d=%22M9 4v14M15 6v14%22/%3E%3C/svg%3E"); }
+    .i-compass { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z%22/%3E%3C/svg%3E"); }
+    .i-message { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7.9 20A9 9 0 1 0 4 16.1L2 22Z%22/%3E%3C/svg%3E"); }
+    .i-briefcase { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%222%22 y=%227%22 width=%2220%22 height=%2214%22 rx=%222%22/%3E%3Cpath d=%22M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16%22/%3E%3C/svg%3E"); }
+    .i-bus { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3%22/%3E%3Ccircle cx=%227%22 cy=%2218%22 r=%222%22/%3E%3Cpath d=%22M9 18h5%22/%3E%3Ccircle cx=%2216%22 cy=%2218%22 r=%222%22/%3E%3C/svg%3E"); }
+    .i-siren { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7 18v-6a5 5 0 1 1 10 0v6%22/%3E%3Cpath d=%22M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z%22/%3E%3Cpath d=%22M21 12h1M18.5 4.5 18 5M2 12h1M12 2v1M4.9 4.9l.7.7M12 12v6%22/%3E%3C/svg%3E"); }
+    .i-activity { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 12h-4l-3 9L9 3l-3 9H2%22/%3E%3C/svg%3E"); }
+    .i-bike { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2218.5%22 cy=%2217.5%22 r=%223.5%22/%3E%3Ccircle cx=%225.5%22 cy=%2217.5%22 r=%223.5%22/%3E%3Ccircle cx=%2215%22 cy=%225%22 r=%221%22/%3E%3Cpath d=%22M12 17.5V14l-3-3 4-3 2 3h2%22/%3E%3C/svg%3E"); }
+    .i-tag { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z%22/%3E%3Ccircle cx=%227.5%22 cy=%227.5%22 r=%22.5%22/%3E%3C/svg%3E"); }
+    .i-badge-check { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z%22/%3E%3Cpath d=%22m9 12 2 2 4-4%22/%3E%3C/svg%3E"); }
+    .i-check { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 6 9 17l-5-5%22/%3E%3C/svg%3E"); }
+    .i-x { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M18 6 6 18M6 6l12 12%22/%3E%3C/svg%3E"); }
+    .i-star { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath fill=%22black%22 d=%22M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z%22/%3E%3C/svg%3E"); }
+    .i-star-o { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z%22/%3E%3C/svg%3E"); }
+    .i-mail { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2220%22 height=%2216%22 x=%222%22 y=%224%22 rx=%222%22/%3E%3Cpath d=%22m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7%22/%3E%3C/svg%3E"); }
+    .i-wrench { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z%22/%3E%3C/svg%3E"); }
+    .i-mountain { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m8 3 4 8 5-5 5 15H2L8 3z%22/%3E%3C/svg%3E"); }
+    .i-sprout { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M7 20h10M10 20c5.5-2.5.8-6.4 3-10%22/%3E%3Cpath d=%22M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z%22/%3E%3Cpath d=%22M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z%22/%3E%3C/svg%3E"); }
+    .i-shovel { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2 22v-5l5-5 5 5-5 5z%22/%3E%3Cpath d=%22M9.5 14.5 16 8%22/%3E%3Cpath d=%22m17 2 5 5-.5.5a3.53 3.53 0 0 1-5 0 3.53 3.53 0 0 1 0-5L17 2%22/%3E%3C/svg%3E"); }
+    .i-lock { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2218%22 height=%2211%22 x=%223%22 y=%2211%22 rx=%222%22/%3E%3Cpath d=%22M7 11V7a5 5 0 0 1 10 0v4%22/%3E%3C/svg%3E"); }
+    .i-globe { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20%22/%3E%3C/svg%3E"); }
+    .i-instagram { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2220%22 height=%2220%22 x=%222%22 y=%222%22 rx=%225%22/%3E%3Cpath d=%22M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z%22/%3E%3Cpath d=%22M17.5 6.5h.01%22/%3E%3C/svg%3E"); }
+    .i-camera { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z%22/%3E%3Ccircle cx=%2212%22 cy=%2213%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-bag { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z%22/%3E%3Cpath d=%22M3 6h18M16 10a4 4 0 0 1-8 0%22/%3E%3C/svg%3E"); }
+    .i-package { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m7.5 4.27 9 5.15%22/%3E%3Cpath d=%22M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z%22/%3E%3Cpath d=%22m3.3 7 8.7 5 8.7-5M12 22V12%22/%3E%3C/svg%3E"); }
+    .i-sparkles { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M9.9 15.5A2 2 0 0 0 8.5 14.1l-6.1-1.6a.5.5 0 0 1 0-1l6.1-1.6A2 2 0 0 0 9.9 8.5l1.6-6.1a.5.5 0 0 1 1 0l1.6 6.1a2 2 0 0 0 1.4 1.4l6.1 1.6a.5.5 0 0 1 0 1l-6.1 1.6a2 2 0 0 0-1.4 1.4l-1.6 6.1a.5.5 0 0 1-1 0z%22/%3E%3C/svg%3E"); }
+    .i-key { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%227.5%22 cy=%2215.5%22 r=%225.5%22/%3E%3Cpath d=%22m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3%22/%3E%3C/svg%3E"); }
+    .i-store { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7%22/%3E%3Cpath d=%22M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8%22/%3E%3Cpath d=%22M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4M2 7h20%22/%3E%3C/svg%3E"); }
+    .i-cap { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 10 12 5 2 10l10 5 10-5z%22/%3E%3Cpath d=%22M6 12v5c3 3 9 3 12 0v-5%22/%3E%3C/svg%3E"); }
+    .i-cpu { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2216%22 height=%2216%22 x=%224%22 y=%224%22 rx=%222%22/%3E%3Crect width=%226%22 height=%226%22 x=%229%22 y=%229%22 rx=%221%22/%3E%3Cpath d=%22M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2%22/%3E%3C/svg%3E"); }
+    .i-arrow-up { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m5 12 7-7 7 7M12 19V5%22/%3E%3C/svg%3E"); }
+    .i-zap { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z%22/%3E%3C/svg%3E"); }
+    .i-route { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%226%22 cy=%2219%22 r=%223%22/%3E%3Cpath d=%22M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15%22/%3E%3Ccircle cx=%2218%22 cy=%225%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-trees { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z%22/%3E%3Cpath d=%22M7 16v6M13 19v3%22/%3E%3Cpath d=%22M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5%22/%3E%3C/svg%3E"); }
+    .i-sun { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%224%22/%3E%3Cpath d=%22M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41%22/%3E%3C/svg%3E"); }
+    .i-tree { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z%22/%3E%3Cpath d=%22M12 22v-3%22/%3E%3C/svg%3E"); }
+    .i-rain { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 14.9A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 2.5 8.2%22/%3E%3Cpath d=%22M16 14v6M8 14v6M12 16v6%22/%3E%3C/svg%3E"); }
+    .i-rocks { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m3 20 5-11 4 5 3-3 6 9z%22/%3E%3C/svg%3E"); }
+    .i-tent { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M3.5 21 14 3M20.5 21 10 3M15.5 21 12 15l-3.5 6M2 21h20%22/%3E%3C/svg%3E"); }
+    .i-building { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2216%22 height=%2220%22 x=%224%22 y=%222%22 rx=%222%22/%3E%3Cpath d=%22M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01%22/%3E%3C/svg%3E"); }
+    .i-flame { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z%22/%3E%3C/svg%3E"); }
+    .i-snowflake { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2 12h20M12 2v20M20 16l-4-4 4-4M4 8l4 4-4 4M16 4l-4 4-4-4M8 20l4-4 4 4%22/%3E%3C/svg%3E"); }
+    .i-chevron-down { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E"); }
+    .i-clipboard { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%228%22 height=%224%22 x=%228%22 y=%222%22 rx=%221%22/%3E%3Cpath d=%22M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2%22/%3E%3C/svg%3E"); }
+    .i-calendar { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2218%22 height=%2218%22 x=%223%22 y=%224%22 rx=%222%22/%3E%3Cpath d=%22M16 2v4M8 2v4M3 10h18%22/%3E%3C/svg%3E"); }
+    .i-clock { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M12 6v6l4 2%22/%3E%3C/svg%3E"); }
+    .i-banknote { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2220%22 height=%2212%22 x=%222%22 y=%226%22 rx=%222%22/%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%222%22/%3E%3Cpath d=%22M6 12h.01M18 12h.01%22/%3E%3C/svg%3E"); }
+    .i-languages { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6%22/%3E%3C/svg%3E"); }
+    .i-music { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M9 18V5l12-2v13%22/%3E%3Ccircle cx=%226%22 cy=%2218%22 r=%223%22/%3E%3Ccircle cx=%2218%22 cy=%2216%22 r=%223%22/%3E%3C/svg%3E"); }
+    .i-image { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2218%22 height=%2218%22 x=%223%22 y=%223%22 rx=%222%22/%3E%3Ccircle cx=%229%22 cy=%229%22 r=%222%22/%3E%3Cpath d=%22m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21%22/%3E%3C/svg%3E"); }
+    .i-circle { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%229%22/%3E%3C/svg%3E"); }
+    .i-megaphone { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m3 11 18-5v12L3 14v-3z%22/%3E%3Cpath d=%22M11.6 16.8a3 3 0 1 1-5.8-1.6%22/%3E%3C/svg%3E"); }
+    .i-download { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3%22/%3E%3C/svg%3E"); }
+    .i-play { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M2.5 17a24 24 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.6 49.6 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24 24 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.6 49.6 0 0 1-16.2 0A2 2 0 0 1 2.5 17%22/%3E%3Cpath d=%22m10 15 5-3-5-3z%22/%3E%3C/svg%3E"); }
+    .i-shield { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z%22/%3E%3Cpath d=%22m9 12 2 2 4-4%22/%3E%3C/svg%3E"); }
+    .i-crosshair { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M22 12h-4M6 12H2M12 6V2M12 22v-4%22/%3E%3C/svg%3E"); }
+    .i-users { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2%22/%3E%3Ccircle cx=%229%22 cy=%227%22 r=%224%22/%3E%3Cpath d=%22M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75%22/%3E%3C/svg%3E"); }
+    /* Indicadores de estado tipo LED */
+    .led { display: inline-block; width: .6em; height: .6em; flex-shrink: 0; border-radius: 9999px; vertical-align: .05em; }
+    .led-green { background: #2e7d32; box-shadow: 0 0 0 2px rgba(46,125,50,.18), 0 0 6px rgba(46,125,50,.6); }
+    .led-yellow { background: #e0a800; box-shadow: 0 0 0 2px rgba(224,168,0,.18), 0 0 6px rgba(224,168,0,.6); }
+    .led-red { background: #c62828; box-shadow: 0 0 0 2px rgba(198,40,40,.18), 0 0 6px rgba(198,40,40,.55); }
+    .led-gray { background: #9e9e9e; box-shadow: 0 0 0 2px rgba(158,158,158,.2); }
+    /* Dificultad de pista (estándar internacional): círculo verde, cuadrado azul, diamante negro */
+    .dif { display: inline-block; width: .75em; height: .75em; flex-shrink: 0; vertical-align: -.02em; }
+    .dif-green { border-radius: 9999px; background: #2e7d32; } .dif-blue { background: #1565c0; } .dif-black { background: #15120e; transform: rotate(45deg) scale(.82); }
   </style>
 </head>
 
@@ -180,40 +260,46 @@
   <header class="sticky top-0 z-[1100] border-b border-soil-700 bg-soil-950">
     <div class="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-4 sm:px-6">
       <a href="#inicio" class="flex items-center gap-2.5" aria-label="BIKEGRID, inicio">
-        <svg viewBox="0 0 32 32" class="h-8 w-8 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#d9a441"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#15120e" stroke-width="1.3" stroke-linecap="round" opacity=".5"/><g fill="#15120e"><circle cx="8" cy="8" r="1.8"/><circle cx="16" cy="8" r="1.8"/><circle cx="24" cy="8" r="1.8"/><circle cx="8" cy="16" r="1.8"/><circle cx="24" cy="16" r="1.8"/><circle cx="8" cy="24" r="1.8"/><circle cx="16" cy="24" r="1.8"/><circle cx="24" cy="24" r="1.8"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#15120e" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#15120e" stroke-width="1.9"/><circle cx="16" cy="16" r="1.5" fill="#15120e"/></svg>
-        <span class="font-display text-[1.45rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-ochre-400">Grid</span></span>
+        <svg viewBox="0 0 32 32" class="h-8 w-8 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#2e7d32"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#f6f1e7" stroke-width="1.2" stroke-linecap="round" opacity=".55"/><g fill="#f6f1e7"><circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="24" cy="8" r="1.7"/><circle cx="8" cy="16" r="1.7"/><circle cx="24" cy="16" r="1.7"/><circle cx="8" cy="24" r="1.7"/><circle cx="16" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#f6f1e7" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#f6f1e7" stroke-width="1.6"/><circle cx="16" cy="16" r="1.4" fill="#f6f1e7"/></svg>
+        <span class="font-display text-[1.45rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span>
       </a>
 
-      <nav class="hidden items-center gap-4 text-sm font-medium text-sand-300 md:flex xl:gap-5" aria-label="Principal">
-        <a href="#inicio" class="hidden transition hover:text-sand-50 xl:inline">Mapa</a>
-        <a href="#noticias" class="hidden transition hover:text-sand-50 xl:inline">Tech</a>
-        <a href="#comunidad" class="hidden whitespace-nowrap transition hover:text-sand-50 xl:inline">💼 Bici Jobs</a>
-        <a href="#anunciate" class="hidden whitespace-nowrap font-semibold text-ochre-400 transition hover:text-ochre-300 lg:inline">🛠️ Ficha Pro</a>
-        <button type="button" data-guides-filter="header" aria-pressed="false" class="whitespace-nowrap rounded-full px-3 py-1.5 font-semibold text-sand-100 ring-1 ring-[#8a6fa0]/70 transition hover:bg-[#6b4f7d]/40 aria-pressed:bg-[#6b4f7d] aria-pressed:text-sand-50 aria-pressed:ring-[#6b4f7d]">🧭 <span class="2xl:hidden">Guías</span><span class="hidden 2xl:inline">Guías Locales</span></button>
-        <button type="button" data-shuttle="header" class="whitespace-nowrap font-semibold text-sand-100 transition hover:text-sand-50">🚐 <span class="xl:hidden">Cupos</span><span class="hidden xl:inline">Cupos Shuttle</span></button>
-        <button type="button" data-sos="header" class="sos-btn rounded-full px-3.5 py-1.5 font-semibold">🚨 <span class="2xl:hidden">Urgencia</span><span class="hidden 2xl:inline">Repuesto / Taller de Urgencia</span></button>
-        <button type="button" data-trip="header" class="rounded-full bg-ochre-400 px-4 py-1.5 font-semibold text-soil-950 shadow-[0_0_0_3px_rgba(217,164,65,.25)] transition hover:bg-ochre-300">🗺️ Arma tu <span class="hidden lg:inline">Salida / Viaje</span><span class="lg:hidden">salida</span></button>
+      <nav class="hidden items-center md:flex" aria-label="Principal">
+        <div class="hidden items-center gap-4 pr-4 text-[11px] font-semibold uppercase tracking-[.12em] text-sand-300 lg:flex xl:gap-7 xl:pr-5 xl:text-[11.5px] xl:tracking-[.14em]">
+          <a href="#inicio" class="navlink">Mapa</a>
+          <button type="button" data-trail-view class="navlink uppercase tracking-[.14em]">Estado de pistas</button>
+          <a href="#comunidad" class="navlink">Bici Jobs</a>
+          <button type="button" data-dir-open class="navlink uppercase tracking-[.14em]">Directorio Pro</button>
+        </div>
+        <div class="flex items-center gap-2 lg:border-l lg:border-soil-700 lg:pl-4 xl:pl-5">
+          <button type="button" data-guides-filter="header" aria-pressed="false" class="icon-btn" aria-label="Guías locales en el mapa" title="Guías locales"><i class="i i-compass" aria-hidden="true"></i></button>
+          <button type="button" data-shuttle="header" class="icon-btn" aria-label="Cupos shuttle" title="Cupos shuttle"><i class="i i-bus" aria-hidden="true"></i></button>
+          <button type="button" data-sos="header" aria-label="Repuesto o taller de urgencia" class="sos-btn inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 xl:px-3.5 text-[11.5px] font-semibold uppercase tracking-[.12em]"><i class="i i-siren" aria-hidden="true"></i><span class="hidden xl:inline">Urgencia</span></button>
+          <button type="button" data-trip="header" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 py-1.5 text-[11.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600"><i class="i i-map" aria-hidden="true"></i><span class="hidden xl:inline">Arma tu salida</span><span class="xl:hidden">Salida</span></button>
+        </div>
       </nav>
 
       <div class="flex items-center gap-2 md:hidden">
-      <button type="button" data-sos="header-movil" class="sos-btn whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-bold" aria-label="Repuesto o taller de urgencia">🚨 Urgencia</button>
+      <button type="button" data-sos="header-movil" class="sos-btn inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[.1em]" aria-label="Repuesto o taller de urgencia"><i class="i i-siren" aria-hidden="true"></i> Urgencia</button>
       <button id="menuBtn" class="rounded-md p-2 text-sand-100 ring-1 ring-soil-600 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       </button>
       </div>
     </div>
     <nav id="mobileMenu" class="hidden max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-t border-soil-700 px-4 pb-4 md:hidden" aria-label="Móvil">
-      <a href="#inicio" class="block border-b border-soil-800 py-3 text-sand-100">🗺️ Mapa</a>
-      <button type="button" data-trail-view class="block w-full border-b border-soil-800 py-3 text-left text-sand-100">🟢 Semáforo &amp; Estado de Cerros</button>
-      <a href="#comunidad" class="block border-b border-soil-800 py-3 text-sand-100">💼 Bici Jobs</a>
-      <a href="#anunciate" class="block border-b border-soil-800 py-3 text-sand-100">🛠️ Ficha Pro / Tiendas &amp; Servicios</a>
-      <button type="button" data-sos="menu" class="block w-full border-b border-soil-800 py-3 pl-6 text-left font-semibold text-[#f0a48f]">🚨 Repuesto / Taller de Urgencia</button>
-      <p class="pt-3 text-sand-100">🏔️ Shuttles, Guías &amp; Bikeparks</p>
-      <button type="button" data-guides-filter="menu" class="block w-full py-2 pl-6 text-left text-sand-300">🧭 Guías Locales en el mapa</button>
-      <button type="button" data-shuttle="menu" class="block w-full py-2 pl-6 text-left text-sand-300">🚐 Cupos Shuttle del finde</button>
-      <button type="button" data-menu-senderos class="block w-full border-b border-soil-800 py-2 pb-3 pl-6 text-left text-sand-300">🚵 Bikeparks &amp; Senderos</button>
-      <a href="#noticias" class="block border-b border-soil-800 py-3 text-sand-100">Tech</a>
-      <button type="button" data-trip="menu" class="mt-3 block w-full rounded-lg bg-ochre-400 py-3 text-center font-semibold text-soil-950">🗺️ Arma tu Salida / Viaje</button>
+      <p class="pb-1 pt-4 font-mono text-[10px] font-semibold uppercase tracking-[.2em] text-sand-300/60">Navegación</p>
+      <a href="#inicio" class="mnav"><i class="i i-pin" aria-hidden="true"></i>Mapa</a>
+      <button type="button" data-trail-view class="mnav"><span class="grid w-[1.05rem] place-items-center"><i class="led led-green" aria-hidden="true"></i></span>Estado de pistas</button>
+      <a href="#comunidad" class="mnav"><i class="i i-briefcase" aria-hidden="true"></i>Bici Jobs</a>
+      <button type="button" data-dir-open class="mnav"><i class="i i-badge-check" aria-hidden="true"></i>Directorio Pro</button>
+      <p class="pb-1 pt-5 font-mono text-[10px] font-semibold uppercase tracking-[.2em] text-sand-300/60">Utilidades</p>
+      <button type="button" data-sos="menu" class="mnav !text-[#f0a48f]"><i class="i i-siren" aria-hidden="true"></i>Repuesto / taller de urgencia</button>
+      <button type="button" data-guides-filter="menu" class="mnav"><i class="i i-compass" aria-hidden="true"></i>Guías locales</button>
+      <button type="button" data-shuttle="menu" class="mnav"><i class="i i-bus" aria-hidden="true"></i>Cupos shuttle</button>
+      <button type="button" data-menu-senderos class="mnav"><i class="i i-mountain" aria-hidden="true"></i>Bikeparks &amp; senderos</button>
+      <a href="#anunciate" class="mnav !text-ochre-300"><i class="i i-badge-check" aria-hidden="true"></i>Planes para negocios</a>
+      <a href="#noticias" class="mnav"><i class="i i-activity" aria-hidden="true"></i>Tech</a>
+      <button type="button" data-trip="menu" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-brand py-3 text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50"><i class="i i-map" aria-hidden="true"></i>Arma tu salida / viaje</button>
     </nav>
   </header>
 
@@ -247,8 +333,8 @@
             <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
             <!-- En escritorio estos dos accesos viven en el encabezado -->
             <div id="utilRow" class="mt-2.5 grid grid-cols-[1.35fr_1fr] gap-2 sm:flex sm:flex-wrap lg:hidden" role="group" aria-label="Utilidades del día">
-              <button type="button" data-sos="hero" class="util-chip sos-btn justify-center text-center leading-tight shadow-sm">🚨 Repuesto / Taller de Urgencia</button>
-              <button type="button" data-shuttle="hero" class="util-chip justify-center bg-soil-950 text-sand-50 shadow-sm hover:bg-soil-800">🚐 Cupos Shuttle</button>
+              <button type="button" data-sos="hero" class="util-chip sos-btn justify-center text-center leading-tight shadow-sm"><i class="i i-siren" aria-hidden="true"></i> Repuesto / Taller de Urgencia</button>
+              <button type="button" data-shuttle="hero" class="util-chip justify-center bg-soil-950 text-sand-50 shadow-sm hover:bg-soil-800"><i class="i i-bus" aria-hidden="true"></i> Cupos Shuttle</button>
             </div>
           </div>
 
@@ -317,13 +403,35 @@
     <!-- ============ CAPTACIÓN B2B: RECLAMA TU TIENDA ============ -->
     <section aria-labelledby="b2bTitle" class="border-b border-sand-300 bg-sand-100">
       <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div class="relative flex flex-col gap-5 overflow-hidden rounded-2xl bg-soil-900 p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
-          <div class="max-w-2xl">
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para negocios</p>
-            <h2 id="b2bTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl">¿Eres dueño o administrador de una tienda, taller o bikepark?</h2>
-            <p class="mt-2 text-sand-300">Aparece gratis en el directorio nacional de BIKEGRID, publica tus ofertas de trabajo y conecta con la comunidad de tu zona.</p>
+        <div class="rounded-2xl bg-soil-900 p-6 sm:p-8">
+          <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div class="max-w-2xl">
+              <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para negocios · Tiendas, talleres y servicios</p>
+              <h2 id="b2bTitle" class="mt-1 font-display text-3xl font-extrabold uppercase leading-tight tracking-tight text-sand-50">Activa tu Ficha Pro</h2>
+              <p class="mt-2 text-sand-300">Convierte tu ficha en un canal de clientes, talento y reputación local.</p>
+            </div>
+            <div class="flex shrink-0 flex-col gap-2 sm:flex-row">
+              <button type="button" data-plan="pro" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#d4af37] px-5 py-3 text-sm font-extrabold uppercase tracking-[.1em] text-soil-950 shadow-lg transition hover:bg-[#e2c35a]"><i class="i i-badge-check" aria-hidden="true"></i> Activa tu Ficha Pro</button>
+              <a href="#registrar" data-register="negocio" class="rounded-xl px-5 py-3 text-center text-sm font-semibold uppercase tracking-[.1em] text-sand-100 ring-1 ring-sand-300/40 transition hover:bg-soil-800">Registrar gratis</a>
+            </div>
           </div>
-          <a href="#registrar" data-register="negocio" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300">+ Registrar o Reclamar mi Negocio</a>
+          <div class="mt-6 grid gap-3 md:grid-cols-3">
+            <div class="rounded-xl bg-soil-800/80 p-4 ring-1 ring-soil-700">
+              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand/20 text-[#8fd18f] ring-1 ring-brand/50"><i class="i i-crosshair text-lg" aria-hidden="true"></i></span>
+              <p class="mt-3 text-[13px] font-semibold uppercase tracking-[.1em] text-sand-50">Visibilidad GPS de Urgencias &amp; Repuestos</p>
+              <p class="mt-1 text-sm leading-relaxed text-sand-300">Canaliza riders que necesitan solución inmediata el fin de semana.</p>
+            </div>
+            <div class="rounded-xl bg-soil-800/80 p-4 ring-1 ring-soil-700">
+              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand/20 text-[#8fd18f] ring-1 ring-brand/50"><i class="i i-briefcase text-lg" aria-hidden="true"></i></span>
+              <p class="mt-3 text-[13px] font-semibold uppercase tracking-[.1em] text-sand-50">Bici Jobs Ilimitado</p>
+              <p class="mt-1 text-sm leading-relaxed text-sand-300">Publicación directa de ofertas para mecánicos, vendedores y personal especializado.</p>
+            </div>
+            <div class="rounded-xl bg-soil-800/80 p-4 ring-1 ring-soil-700">
+              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand/20 text-[#8fd18f] ring-1 ring-brand/50"><i class="i i-sprout text-lg" aria-hidden="true"></i></span>
+              <p class="mt-3 text-[13px] font-semibold uppercase tracking-[.1em] text-sand-50">Sello Trail Care</p>
+              <p class="mt-1 text-sm leading-relaxed text-sand-300">Validación y prestigio comunitario al apoyar los senderos locales.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -346,17 +454,34 @@
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Comunidad · Empleo</p>
-            <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">💼 Bici Jobs &amp; Paleros</h2>
-            <p class="mt-2 max-w-xl text-sm text-soil-600">El portal de empleo del ciclismo en Chile: talleres, tiendas y operadores que buscan mecánicos, vendedores y guías. Además, jornadas para mantener los senderos que usamos todos.</p>
-            <button type="button" data-post-job="encabezado" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-sm ring-2 ring-ochre-400/70 transition hover:bg-soil-800">💼 Publicar Oferta de Trabajo</button>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-brand">Empleo &amp; comunidad</p>
+            <h2 class="mt-1 flex items-center gap-3 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl"><i class="i i-briefcase text-[.8em] text-brand" aria-hidden="true"></i>Bici Jobs</h2>
+            <p class="mt-2 max-w-xl text-sm text-soil-600">Portal de empleo de la industria del ciclismo: talleres, tiendas y operadores que buscan mecánicos, vendedores y guías, junto a las convocatorias de mantención de senderos.</p>
+            <button type="button" data-post-job="encabezado" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-sm ring-2 ring-ochre-400/70 transition hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Oferta de Trabajo</button>
           </div>
           <div id="jobTabs" class="no-scrollbar -mx-4 flex shrink-0 gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
         </div>
 
         <ul id="jobList" class="grid gap-3"></ul>
 
-        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de pala o convocatoria</a>
+        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de mantención de senderos</a>
+
+        <!-- Programa institucional Trail Care -->
+        <article class="relative mt-10 overflow-hidden rounded-2xl bg-soil-950 p-6 text-sand-100 shadow-xl sm:p-8" aria-labelledby="trailCareTitle">
+          <div class="absolute inset-y-0 left-0 w-1.5 bg-brand" aria-hidden="true"></div>
+          <div class="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
+          <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div class="flex gap-4">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand text-sand-50 shadow-lg"><i class="i i-sprout text-2xl" aria-hidden="true"></i></span>
+              <div class="max-w-2xl">
+                <h3 id="trailCareTitle" class="font-mono text-xs font-semibold uppercase tracking-[.24em] text-[#8fd18f]">Programa BIKEGRID Trail Care</h3>
+                <p class="mt-2 text-lg leading-relaxed text-sand-50 sm:text-xl">El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
+                <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs font-semibold uppercase tracking-[.14em] text-sand-300"><span class="inline-flex items-center gap-1.5"><i class="i i-shovel" aria-hidden="true"></i>Herramientas</span><span class="inline-flex items-center gap-1.5"><i class="i i-package" aria-hidden="true"></i>Insumos</span><span class="inline-flex items-center gap-1.5"><i class="i i-mountain" aria-hidden="true"></i>Senderos locales</span></p>
+              </div>
+            </div>
+            <a href="#anunciate" class="shrink-0 rounded-xl px-5 py-3 text-center text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-800">Ver Ficha Pro</a>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -365,14 +490,14 @@
       <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div class="relative flex flex-col gap-5 overflow-hidden rounded-2xl bg-[#3a2c45] p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
           <div class="flex gap-4">
-            <span class="hidden h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ochre-400 text-3xl sm:grid" aria-hidden="true">🧭</span>
+            <span class="hidden h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ochre-400 text-3xl sm:grid" aria-hidden="true"><i class="i i-compass" aria-hidden="true"></i></span>
             <div class="max-w-2xl">
               <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-300">Guías &amp; Instructores · <span class="text-moss-300">Gratis</span></p>
-              <h2 id="guideCtaTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl">🧭 Regístrate Gratis como Guía Local / Instructor</h2>
+              <h2 id="guideCtaTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl"><i class="i i-compass" aria-hidden="true"></i> Regístrate Gratis como Guía Local / Instructor</h2>
               <p class="mt-2 text-sand-200">Súmate al mapa de BIKEGRID sin costo. Muestra tus rutas, credenciales y recibe consultas de ciclistas directo a tu WhatsApp.</p>
             </div>
           </div>
-          <button type="button" data-guide-join="banner" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300">🧭 Regístrate Gratis</button>
+          <button type="button" data-guide-join="banner" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300"><i class="i i-compass" aria-hidden="true"></i> Regístrate Gratis</button>
         </div>
       </div>
     </section>
@@ -383,7 +508,7 @@
         <div class="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div class="max-w-2xl">
             <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Anúnciate · Planes y tarifas</p>
-            <h2 id="plansTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-4xl">🛠️ Ficha Pro / Tiendas &amp; Servicios</h2>
+            <h2 id="plansTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-4xl"><i class="i i-wrench" aria-hidden="true"></i> Ficha Pro / Tiendas &amp; Servicios</h2>
             <p class="mt-2 text-sand-300">Tiendas, talleres, shuttles y guías: aparece donde los ciclistas buscan dónde reparar, comprar, rodar y contratar.</p>
           </div>
           <!-- Mensual / semestral (solo cambia el Plan PRO) -->
@@ -400,10 +525,10 @@
             <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-4xl font-extrabold text-sand-50">$0</span><span class="text-sm text-sand-300">CLP / siempre</span></p>
             <p class="mt-1 text-sm text-sand-300">Para empezar a aparecer.</p>
             <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
-              <li class="flex gap-3"><span class="text-moss-400">✓</span> Ubicación en el mapa nacional</li>
-              <li class="flex gap-3"><span class="text-moss-400">✓</span> Teléfono y horario básico en tu ficha</li>
-              <li class="flex gap-3"><span class="text-moss-400">✓</span> Presencia en el directorio (sin destacar)</li>
-              <li class="flex gap-3"><span class="text-moss-400">✓</span> Guías e instructores: perfil con zonas y consultas a tu WhatsApp</li>
+              <li class="flex gap-3"><span class="text-moss-400"><i class="i i-check" aria-hidden="true"></i></span> Ubicación en el mapa nacional</li>
+              <li class="flex gap-3"><span class="text-moss-400"><i class="i i-check" aria-hidden="true"></i></span> Teléfono y horario básico en tu ficha</li>
+              <li class="flex gap-3"><span class="text-moss-400"><i class="i i-check" aria-hidden="true"></i></span> Presencia en el directorio (sin destacar)</li>
+              <li class="flex gap-3"><span class="text-moss-400"><i class="i i-check" aria-hidden="true"></i></span> Guías e instructores: perfil con zonas y consultas a tu WhatsApp</li>
               <li class="flex gap-3 text-sand-300/70"><span>—</span> Sin enlaces a web ni redes sociales</li>
             </ul>
             <button type="button" data-plan="gratis" class="mt-6 rounded-xl py-3 text-center text-sm font-bold text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-700">Registrar Negocio Gratis</button>
@@ -416,11 +541,11 @@
             <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-4xl font-extrabold text-sand-50">$9.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
             <p class="mt-1 text-sm text-sand-300">El perfil de guía es <strong class="text-moss-300">gratis</strong>. PRO te destaca y te trae más reservas.</p>
             <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span><span>Sello <strong class="text-sand-50">Guía Verificado</strong> y borde dorado</span></li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Primero en el directorio y pin dorado en el mapa</li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Presencia en el configurador "Arma tu Viaje"</li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Tu Instagram y sitio web en el perfil</li>
-              <li class="flex gap-3"><span class="text-[#c9a8e0]">✓</span> Informe mensual de visitas y cotizaciones</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]"><i class="i i-check" aria-hidden="true"></i></span><span>Sello <strong class="text-sand-50">Guía Verificado</strong> y borde dorado</span></li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]"><i class="i i-check" aria-hidden="true"></i></span> Primero en el directorio y pin dorado en el mapa</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]"><i class="i i-check" aria-hidden="true"></i></span> Presencia en el configurador "Arma tu Viaje"</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]"><i class="i i-check" aria-hidden="true"></i></span> Tu Instagram y sitio web en el perfil</li>
+              <li class="flex gap-3"><span class="text-[#c9a8e0]"><i class="i i-check" aria-hidden="true"></i></span> Informe mensual de visitas y cotizaciones</li>
             </ul>
             <button type="button" data-plan="guia" class="mt-6 rounded-xl bg-[#6b4f7d] py-3 text-center text-sm font-bold text-sand-50 transition hover:bg-[#7d5f91]">Activar Guía PRO</button>
             <button type="button" data-guide-join="planes" class="mt-2 text-center text-xs font-semibold text-sand-300 underline-offset-4 hover:text-sand-50 hover:underline">o regístrate gratis como guía →</button>
@@ -428,25 +553,25 @@
 
           <!-- Plan PRO -->
           <article class="relative flex flex-col rounded-2xl border-2 border-[#d4af37] bg-soil-800 p-6 shadow-[0_0_0_6px_rgba(212,175,55,.12),0_20px_40px_rgba(0,0,0,.35)] lg:-my-3 lg:py-9">
-            <span class="absolute -top-3 left-6 rounded-full bg-[#d4af37] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-soil-950">★ El más popular</span>
+            <span class="absolute -top-3 left-6 rounded-full bg-[#d4af37] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-soil-950"><i class="i i-star" aria-hidden="true"></i> El más popular</span>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-300">Plan Tienda / Taller PRO</p>
             <p class="mt-2 flex items-baseline gap-1.5"><span id="proPrice" class="font-display text-4xl font-extrabold text-sand-50">$24.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
             <p id="proBillingNote" class="mt-1 text-sm text-sand-300">o <button type="button" data-billing="semestral" class="font-semibold text-ochre-300 underline underline-offset-2">$19.990/mes con pago semestral</button></p>
             <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Pin Dorado destacado en el mapa</li>
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Ficha Verificada con Borde Gold</li>
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Botón directo de WhatsApp Comercial, también en el directorio</li>
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Publicaciones ilimitadas en Bici Jobs</li>
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Prioridad en el filtro "Urgencia / Repuestos"</li>
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Informe mensual de visitas y clics a tu ficha</li>
-              <li class="flex gap-3"><span class="text-[#d4af37]">✓</span> Ecosistema digital: tu web, Instagram, TikTok/YouTube y mapa de pistas en la ficha</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Pin Dorado destacado en el mapa</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Ficha Verificada con Borde Gold</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Botón directo de WhatsApp Comercial, también en el directorio</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Publicaciones ilimitadas en Bici Jobs</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Prioridad en el filtro "Urgencia / Repuestos"</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Informe mensual de visitas y clics a tu ficha</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Ecosistema digital: tu web, Instagram, TikTok/YouTube y mapa de pistas en la ficha</li>
             </ul>
             <button type="button" data-plan="pro" class="mt-6 rounded-xl bg-[#d4af37] py-3.5 text-center text-sm font-extrabold text-soil-950 shadow-lg transition hover:bg-[#e2c35a]">Sumar mi Tienda Pro</button>
-            <p class="mt-2 text-center text-xs text-sand-300">Primero en el directorio de tu zona desde el día 1 · 🌱 10% va a Trail Care.</p>
+            <p class="mt-2 text-center text-xs text-sand-300">Primero en el directorio de tu zona desde el día 1 · <i class="i i-sprout" aria-hidden="true"></i> 10% va a Trail Care.</p>
           </article>
         </div>
 
-        <p class="mt-8 rounded-2xl bg-moss-600/15 px-5 py-4 text-sm text-sand-100 ring-1 ring-moss-500/40">🌱 <strong class="font-semibold">Compromiso Trail Care:</strong> El 10% de cada Ficha Pro se destina a la compra de herramientas e insumos para los paleros y mantención de senderos en Chile.</p>
+        <p class="mt-8 rounded-2xl bg-moss-600/15 px-5 py-4 text-sm text-sand-100 ring-1 ring-moss-500/40"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
 
         <!-- Auspiciadores & marcas -->
         <div class="mt-10 flex flex-col gap-4 rounded-2xl bg-gradient-to-r from-soil-950 to-[#3a2c20] p-6 ring-1 ring-ochre-400/40 sm:p-7 md:flex-row md:items-center md:justify-between">
@@ -469,10 +594,10 @@
           <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Registra tu negocio o envía un dato</h2>
           <p class="mt-3 text-soil-600">Suma tu taller, tienda o escuela al mapa, publica un aviso para la comunidad o avísanos de un sendero cerrado o un dato que corregir.</p>
           <ul class="mt-6 space-y-3 text-sm text-soil-600">
-            <li class="flex gap-3"><span class="text-moss-600">✓</span> Revisamos cada ficha antes de publicarla en el mapa.</li>
-            <li class="flex gap-3"><span class="text-moss-600">✓</span> Te contactamos para confirmar ubicación y datos.</li>
-            <li class="flex gap-3"><span class="text-moss-600">✓</span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
-            <li class="flex gap-3"><span class="text-ochre-500">★</span> <span><strong class="text-soil-950">¿Tu negocio ya aparece en el mapa?</strong> Regístralo con el mismo nombre: verificamos que eres el dueño y te damos el control de la ficha.</span></li>
+            <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> Revisamos cada ficha antes de publicarla en el mapa.</li>
+            <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> Te contactamos para confirmar ubicación y datos.</li>
+            <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
+            <li class="flex gap-3"><span class="text-ochre-500"><i class="i i-star" aria-hidden="true"></i></span> <span><strong class="text-soil-950">¿Tu negocio ya aparece en el mapa?</strong> Regístralo con el mismo nombre: verificamos que eres el dueño y te damos el control de la ficha.</span></li>
           </ul>
         </div>
 
@@ -553,7 +678,7 @@
               <input id="bizStaff" maxlength="200" placeholder="Ej: mecánico part-time, vendedor fin de semana" class="field" />
             </div>
             <div>
-              <label for="bizBrands" class="mb-1.5 block text-sm font-semibold text-soil-800">🏷️ Marcas que trabajas <span class="font-normal text-soil-600">(opcional · la principal primero, separadas por coma)</span></label>
+              <label for="bizBrands" class="mb-1.5 block text-sm font-semibold text-soil-800"><i class="i i-tag" aria-hidden="true"></i> Marcas que trabajas <span class="font-normal text-soil-600">(opcional · la principal primero, separadas por coma)</span></label>
               <input id="bizBrands" maxlength="200" list="brandList" placeholder="Ej: Specialized, Fox, Shimano" class="field" />
             </div>
             <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
@@ -568,7 +693,7 @@
               <div>
                 <label for="jobType" class="mb-1.5 block text-sm font-semibold text-soil-800">Tipo de aviso</label>
                 <select id="jobType" class="field" aria-describedby="jobTypeHint">
-                  <option value="voluntariado">Jornada de pala (Digger Day)</option>
+                  <option value="voluntariado">Jornada de mantención de senderos</option>
                   <option value="comunidad">Comunidad</option>
                 </select>
               </div>
@@ -577,7 +702,7 @@
                 <input id="jobPlace" maxlength="60" placeholder="Ej: San José de Maipo" class="field" />
               </div>
             </div>
-            <p id="jobTypeHint" class="text-xs text-soil-600">¿Buscas personal para tu negocio? <button type="button" data-post-job="formulario" class="font-semibold text-moss-700 underline underline-offset-2">💼 Publica una oferta de trabajo</button>.</p>
+            <p id="jobTypeHint" class="text-xs text-soil-600">¿Buscas personal para tu negocio? <button type="button" data-post-job="formulario" class="font-semibold text-moss-700 underline underline-offset-2"><i class="i i-briefcase" aria-hidden="true"></i> Publica una oferta de trabajo</button>.</p>
           </div>
 
           <!-- Comunes a aviso y dato -->
@@ -612,17 +737,18 @@
   </main>
 
   <footer class="bg-soil-950 text-sand-300">
-    <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm sm:px-6 md:grid-cols-[1.3fr_2fr]">
+    <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm sm:px-6 md:grid-cols-[1.2fr_2fr]">
       <div>
-        <a href="#inicio" class="inline-flex items-center gap-2.5" aria-label="BIKEGRID, inicio"><svg viewBox="0 0 32 32" class="h-9 w-9 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#d9a441"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#15120e" stroke-width="1.3" stroke-linecap="round" opacity=".5"/><g fill="#15120e"><circle cx="8" cy="8" r="1.8"/><circle cx="16" cy="8" r="1.8"/><circle cx="24" cy="8" r="1.8"/><circle cx="8" cy="16" r="1.8"/><circle cx="24" cy="16" r="1.8"/><circle cx="8" cy="24" r="1.8"/><circle cx="16" cy="24" r="1.8"/><circle cx="24" cy="24" r="1.8"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#15120e" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#15120e" stroke-width="1.9"/><circle cx="16" cy="16" r="1.5" fill="#15120e"/></svg><span class="font-display text-2xl uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-ochre-400">Grid</span></span></a>
+        <a href="#inicio" class="inline-flex items-center gap-2.5" aria-label="BIKEGRID, inicio"><svg viewBox="0 0 32 32" class="h-9 w-9 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#2e7d32"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#f6f1e7" stroke-width="1.2" stroke-linecap="round" opacity=".55"/><g fill="#f6f1e7"><circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="24" cy="8" r="1.7"/><circle cx="8" cy="16" r="1.7"/><circle cx="24" cy="16" r="1.7"/><circle cx="8" cy="24" r="1.7"/><circle cx="16" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#f6f1e7" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#f6f1e7" stroke-width="1.6"/><circle cx="16" cy="16" r="1.4" fill="#f6f1e7"/></svg><span class="font-display text-2xl uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span></a>
         <p class="mt-3 max-w-xs text-sand-300">BIKEGRID — La red global de servicios, mapas y comunidad del pedal.</p>
-        <button type="button" id="privacyLink" class="mt-4 text-xs text-sand-300/70 underline-offset-4 hover:text-sand-50 hover:underline">Privacidad &amp; Seguridad</button>
+        <p class="mt-3 inline-flex items-center gap-2 text-xs text-[#8fd18f]"><i class="i i-sprout" aria-hidden="true"></i>Programa Trail Care: 10% de Ficha Pro a los senderos</p>
+        <button type="button" id="privacyLink" class="mt-4 block text-xs text-sand-300/70 underline-offset-4 hover:text-sand-50 hover:underline">Privacidad &amp; Seguridad</button>
       </div>
-      <nav class="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4" aria-label="Pie de página">
-        <div><p class="font-semibold text-sand-50">🟢 Semáforo &amp; Estado de Cerros</p><button type="button" data-trail-view class="mt-1.5 text-left text-sand-300 hover:text-sand-50">Ver cerros en el mapa</button></div>
-        <div><p class="font-semibold text-sand-50">💼 Bici Jobs</p><a href="#comunidad" class="mt-1.5 block hover:text-sand-50">Ofertas de trabajo</a><button type="button" data-post-job="footer" class="mt-1 block text-left hover:text-sand-50">Publicar oferta</button></div>
-        <div><p class="font-semibold text-sand-50">🛠️ Ficha Pro / Tiendas &amp; Servicios</p><a href="#anunciate" class="mt-1.5 block text-ochre-400 hover:text-ochre-300">Planes y tarifas</a><button type="button" data-sos="footer" class="mt-1 block text-left hover:text-sand-50">🚨 Urgencia</button></div>
-        <div><p class="font-semibold text-sand-50">🏔️ Shuttles, Guías &amp; Bikeparks</p><button type="button" data-trip="footer" class="mt-1.5 block text-left hover:text-sand-50">Planificador de viajes</button><button type="button" data-shuttle="footer" class="mt-1 block text-left hover:text-sand-50">Cupos Shuttle</button><button type="button" data-guides-filter="footer" class="mt-1 block text-left hover:text-sand-50">Guías Locales</button></div>
+      <nav class="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4" aria-label="Pie de página">
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="led led-green" aria-hidden="true"></i>Estado de pistas</p><button type="button" data-trail-view class="mt-2 block text-left hover:text-sand-50">Ver cerros en el mapa</button></div>
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-briefcase" aria-hidden="true"></i>Bici Jobs</p><a href="#comunidad" class="mt-2 block text-left hover:text-sand-50">Ofertas de trabajo</a><button type="button" data-post-job="footer" class="mt-2 block text-left hover:text-sand-50">Publicar oferta</button></div>
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-badge-check" aria-hidden="true"></i>Directorio Pro</p><button type="button" data-dir-open class="mt-2 block text-left hover:text-sand-50">Directorio completo</button><a href="#anunciate" class="mt-2 block text-left hover:text-sand-50 text-ochre-400">Planes y tarifas</a><button type="button" data-sos="footer" class="mt-2 block text-left hover:text-sand-50">Urgencia GPS</button></div>
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-mountain" aria-hidden="true"></i>Shuttles & guías</p><button type="button" data-trip="footer" class="mt-2 block text-left hover:text-sand-50">Planificador de viajes</button><button type="button" data-shuttle="footer" class="mt-2 block text-left hover:text-sand-50">Cupos shuttle</button><button type="button" data-guides-filter="footer" class="mt-2 block text-left hover:text-sand-50">Guías locales</button></div>
       </nav>
     </div>
   </footer>
@@ -636,18 +762,18 @@
             <h2 id="dirDialogTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950">Directorio completo</h2>
             <p id="dirDialogCount" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"></p>
           </div>
-          <button type="button" id="dirClose" class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar directorio">✕</button>
+          <button type="button" id="dirClose" class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar directorio"><i class="i i-x" aria-hidden="true"></i></button>
         </div>
         <label for="dirSearch" class="sr-only">Filtrar el directorio</label>
         <input id="dirSearch" type="search" autocomplete="off" placeholder="Filtrar por nombre, comuna o categoría…" class="mt-3 w-full rounded-xl border-0 bg-white/70 px-4 py-2.5 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
         <!-- Filtros rápidos por categoría: scroll horizontal en móvil, en filas en pantallas grandes -->
         <div id="dirChips" class="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" role="group" aria-label="Filtrar por categoría"></div>
-        <!-- 🏷️ Filtro por marca: catálogo único de marcas -->
+        <!-- <i class="i i-tag" aria-hidden="true"></i> Filtro por marca: catálogo único de marcas -->
         <div id="dirBrandBar" class="mt-2.5 flex items-center gap-2" hidden>
-          <label for="dirBrand" class="shrink-0 text-xs font-bold uppercase tracking-wider text-soil-600">🏷️ Marca</label>
+          <label for="dirBrand" class="shrink-0 text-xs font-bold uppercase tracking-wider text-soil-600"><i class="i i-tag" aria-hidden="true"></i> Marca</label>
           <div class="relative w-40 shrink-0 sm:w-56">
             <input id="dirBrand" list="brandList" autocomplete="off" placeholder="Specialized, Fox…" class="w-full rounded-full border-0 bg-white/70 py-1.5 pl-3 pr-8 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
-            <button type="button" id="dirBrandClear" class="absolute right-1.5 top-1/2 hidden h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-soil-600 hover:bg-sand-200" aria-label="Quitar filtro de marca">✕</button>
+            <button type="button" id="dirBrandClear" class="absolute right-1.5 top-1/2 hidden h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-soil-600 hover:bg-sand-200" aria-label="Quitar filtro de marca"><i class="i i-x" aria-hidden="true"></i></button>
           </div>
           <div id="dirBrandTop" class="no-scrollbar -mr-4 flex gap-1.5 overflow-x-auto pr-4 sm:mr-0 sm:pr-0" role="group" aria-label="Marcas más trabajadas"></div>
         </div>
@@ -656,7 +782,7 @@
       <div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <div id="dirGuideCta" class="mb-3 flex flex-col gap-2 rounded-xl bg-[#6b4f7d]/10 p-3 ring-1 ring-[#6b4f7d]/30 sm:flex-row sm:items-center sm:justify-between" hidden>
           <p class="text-sm text-soil-800"><strong class="text-soil-950">¿Eres guía o instructor local?</strong> Súmate gratis y recibe consultas de ciclistas directo a tu WhatsApp.</p>
-          <button type="button" data-guide-join="directorio" class="shrink-0 rounded-lg bg-[#6b4f7d] px-3.5 py-2 text-[13px] font-bold text-sand-50 hover:bg-[#5a4169]">🧭 Regístrate Gratis</button>
+          <button type="button" data-guide-join="directorio" class="shrink-0 rounded-lg bg-[#6b4f7d] px-3.5 py-2 text-[13px] font-bold text-sand-50 hover:bg-[#5a4169]"><i class="i i-compass" aria-hidden="true"></i> Regístrate Gratis</button>
         </div>
         <ul id="dirAll" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4"></ul>
         <!-- Carga de 20 en 20: al acercarse a este punto se agregan más fichas -->
@@ -684,20 +810,20 @@
           <h2 id="claimTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">Activa tu Ficha Pro</h2>
           <p id="claimPlace" class="mt-1.5 truncate text-sm text-soil-600"></p>
         </div>
-        <button type="button" id="claimClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        <button type="button" id="claimClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
-      <ul class="mt-4 space-y-2 text-sm text-soil-800">
-        <li class="flex gap-2"><span class="badge-pro h-5 shrink-0 px-1.5 text-[10px]">✔</span><span>Sello <strong class="font-semibold">Verificado</strong> y borde dorado en tu ficha</span></li>
-        <li class="flex gap-2"><span aria-hidden="true">💬</span> Botón de WhatsApp destacado: los ciclistas te escriben directo</li>
-        <li class="flex gap-2"><span aria-hidden="true">⬆️</span> Apareces primero en el directorio y con pin dorado en el mapa</li>
+      <ul class="mt-4 space-y-3 text-sm">
+        <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-crosshair" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Visibilidad GPS de Urgencias &amp; Repuestos</strong><span class="text-soil-700">Canaliza riders que necesitan solución inmediata el fin de semana.</span></span></li>
+        <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-briefcase" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Bici Jobs Ilimitado</strong><span class="text-soil-700">Publicación directa de ofertas para mecánicos, vendedores y personal especializado.</span></span></li>
+        <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-sprout" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Sello Trail Care</strong><span class="text-soil-700">Validación y prestigio comunitario al apoyar los senderos locales.</span></span></li>
       </ul>
       <p class="mt-4 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600">Mensaje que nos enviarás</p>
       <blockquote id="claimMessage" class="mt-1 rounded-xl bg-sand-100 p-3 text-sm italic leading-relaxed text-soil-800 ring-1 ring-sand-300"></blockquote>
       <div class="mt-5 grid gap-2">
-        <a id="claimWhatsApp" href="#" target="_blank" rel="noopener" class="btn-wa-pro py-3.5 text-[15px]" hidden><span aria-hidden="true">💬</span> Escribir por WhatsApp</a>
+        <a id="claimWhatsApp" href="#" target="_blank" rel="noopener" class="btn-wa-pro py-3.5 text-[15px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Escribir por WhatsApp</a>
         <a id="claimForm" href="#registrar" class="rounded-xl bg-soil-950 py-3 text-center text-sm font-semibold text-sand-50 transition hover:bg-soil-800">Enviar solicitud por formulario</a>
       </div>
-      <p class="mt-4 rounded-lg bg-moss-600/10 px-3 py-2 text-xs leading-relaxed text-moss-700 ring-1 ring-moss-600/25">🌱 <strong class="font-semibold">Compromiso Trail Care:</strong> El 10% de cada Ficha Pro se destina a la compra de herramientas e insumos para los paleros y mantención de senderos en Chile.</p>
+      <p class="mt-4 rounded-lg bg-moss-600/10 px-3 py-2 text-xs leading-relaxed text-moss-700 ring-1 ring-moss-600/25"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
       <p class="mt-3 text-center text-xs text-soil-600"><a href="#anunciate" data-close-claim class="font-semibold text-moss-700 underline underline-offset-2">Ver planes y tarifas</a> · Para ciclistas, BIKEGRID es gratis.</p>
     </div>
   </dialog>
@@ -741,7 +867,7 @@
     <div class="max-h-[80vh] overflow-y-auto p-6">
       <div class="flex items-start justify-between gap-4">
         <h2 id="privacyTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950">Privacidad &amp; Seguridad</h2>
-        <button type="button" id="privacyClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        <button type="button" id="privacyClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <div class="mt-4 space-y-4 text-sm leading-relaxed text-soil-700">
         <p><strong class="text-soil-950">Qué publicamos de cada negocio:</strong> nombre, categoría, ubicación, comuna, dirección, WhatsApp, horario, descripción y, si lo indica, qué personal busca.</p>
@@ -756,24 +882,24 @@
   </dialog>
 
   <!-- ============ UTILIDADES DEL DÍA ============ -->
-  <!-- 🚦 Reportar estado de un cerro / bikepark -->
+  <!-- <i class="i i-activity" aria-hidden="true"></i> Reportar estado de un cerro / bikepark -->
   <dialog id="trailDialog" class="w-[min(94vw,26rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="trailTitle">
     <form id="trailForm" class="flex max-h-[92dvh] flex-col" novalidate>
       <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4">
         <div class="min-w-0">
           <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Estado de cerros y pistas</p>
-          <h2 id="trailTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">📢 Reportar estado</h2>
+          <h2 id="trailTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950"><i class="i i-megaphone" aria-hidden="true"></i> Reportar estado</h2>
           <p id="trailPlace" class="mt-1 truncate text-sm text-soil-600"></p>
         </div>
-        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <div class="flex-1 space-y-4 overflow-y-auto px-5 py-4">
         <fieldset>
           <legend class="text-sm font-bold text-soil-950">¿Cómo está hoy?</legend>
           <div class="mt-2 grid gap-2">
-            <label class="trip-opt st-abierto !shadow-none ring-1 ring-[#a9c78c]"><input type="radio" name="trailEstado" value="abierto" /><span>🟢 ABIERTO / SECO</span><span class="tick">✓</span></label>
-            <label class="trip-opt st-precaucion !shadow-none ring-1 ring-[#e2c566]"><input type="radio" name="trailEstado" value="precaucion" /><span>🟡 PRECAUCIÓN / BARRO</span><span class="tick">✓</span></label>
-            <label class="trip-opt st-cerrado !shadow-none ring-1 ring-[#e3a08c]"><input type="radio" name="trailEstado" value="cerrado" /><span>🔴 CERRADO / MANTENIMIENTO</span><span class="tick">✓</span></label>
+            <label class="trip-opt st-abierto !shadow-none ring-1 ring-[#a9c78c]"><input type="radio" name="trailEstado" value="abierto" /><span><i class="led led-green" aria-hidden="true"></i> ABIERTO / SECO</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+            <label class="trip-opt st-precaucion !shadow-none ring-1 ring-[#e2c566]"><input type="radio" name="trailEstado" value="precaucion" /><span><i class="led led-yellow" aria-hidden="true"></i> PRECAUCIÓN / BARRO</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+            <label class="trip-opt st-cerrado !shadow-none ring-1 ring-[#e3a08c]"><input type="radio" name="trailEstado" value="cerrado" /><span><i class="led led-red" aria-hidden="true"></i> CERRADO / MANTENIMIENTO</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
           </div>
         </fieldset>
         <div>
@@ -790,16 +916,16 @@
     </form>
   </dialog>
 
-  <!-- 🚐 Bolsa de shuttles & cupos del finde -->
+  <!-- <i class="i i-bus" aria-hidden="true"></i> Bolsa de shuttles & cupos del finde -->
   <dialog id="shuttleDialog" class="m-0 h-[100dvh] max-h-none w-full max-w-none bg-sand-50 p-0 text-ink backdrop:bg-soil-950/70 sm:m-auto sm:h-[85vh] sm:w-[min(94vw,46rem)] sm:rounded-2xl sm:shadow-2xl" aria-labelledby="shuttleTitle">
     <div class="flex h-full flex-col">
       <div class="border-b border-sand-300 px-4 pb-3 pt-4 sm:px-6">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h2 id="shuttleTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950">🚐 Cupos Shuttle</h2>
+            <h2 id="shuttleTitle" class="font-display text-2xl font-extrabold uppercase tracking-tight text-soil-950"><i class="i i-bus" aria-hidden="true"></i> Cupos Shuttle</h2>
             <p id="shuttleCount" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">Salidas programadas por operadores</p>
           </div>
-          <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+          <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
         </div>
         <div id="shuttleChips" class="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar salidas"></div>
       </div>
@@ -813,16 +939,16 @@
     </div>
   </dialog>
 
-  <!-- 🚨 Repuesto / taller de urgencia -->
+  <!-- <i class="i i-siren" aria-hidden="true"></i> Repuesto / taller de urgencia -->
   <dialog id="sosDialog" class="m-0 h-[100dvh] max-h-none w-full max-w-none bg-sand-50 p-0 text-ink backdrop:bg-soil-950/70 sm:m-auto sm:h-[88vh] sm:w-[min(94vw,40rem)] sm:rounded-2xl sm:shadow-2xl" aria-labelledby="sosTitle">
     <div class="flex h-full flex-col">
       <div class="border-b border-sand-300 px-4 pb-3 pt-4 sm:px-6">
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0">
-            <h2 id="sosTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">🚨 Repuesto / Taller de urgencia</h2>
+            <h2 id="sosTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950"><i class="i i-siren" aria-hidden="true"></i> Repuesto / Taller de urgencia</h2>
             <p id="sosWhere" class="mt-1 truncate text-sm text-soil-600" aria-live="polite">Buscando tu ubicación…</p>
           </div>
-          <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+          <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
         </div>
         <label for="sosNeed" class="sr-only">¿Qué necesitas?</label>
         <input id="sosNeed" maxlength="100" autocomplete="off" class="field mt-3 !bg-white/80" placeholder="¿Qué necesitas? Ej: cámara 29, pata de cambio, purgar frenos" />
@@ -833,7 +959,7 @@
   </dialog>
 
   <!-- ============ BICI JOBS ============ -->
-  <!-- 📩 Postular a una oferta -->
+  <!-- <i class="i i-mail" aria-hidden="true"></i> Postular a una oferta -->
   <dialog id="applyDialog" class="w-[min(94vw,32rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="applyTitle">
     <form id="applyForm" class="flex max-h-[92dvh] flex-col" novalidate>
       <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
@@ -842,7 +968,7 @@
           <h2 id="applyTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"></h2>
           <p id="applyCompany" class="mt-0.5 truncate text-sm text-soil-600"></p>
         </div>
-        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <div id="applyBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
         <p id="applyDemo" class="rounded-lg st-precaucion px-3 py-2 text-xs font-semibold" hidden>Este aviso es de ejemplo: la postulación no se enviará a ninguna tienda.</p>
@@ -886,35 +1012,35 @@
         <p id="applyError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
       </div>
       <div id="applyDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
-        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-moss-600 text-3xl text-sand-50 shadow-lg">✓</div>
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-moss-600 text-3xl text-sand-50 shadow-lg"><i class="i i-check" aria-hidden="true"></i></div>
         <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Postulación enviada!</h3>
         <p id="applyDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
-        <a id="applyWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+        <a id="applyWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
       </div>
       <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
-        <button type="submit" id="applySubmit" class="w-full rounded-xl bg-moss-600 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700">📩 Enviar postulación</button>
+        <button type="submit" id="applySubmit" class="w-full rounded-xl bg-moss-600 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700"><i class="i i-mail" aria-hidden="true"></i> Enviar postulación</button>
       </div>
     </form>
   </dialog>
 
-  <!-- 💼 Publicar una oferta de trabajo (captación B2B) -->
+  <!-- <i class="i i-briefcase" aria-hidden="true"></i> Publicar una oferta de trabajo (captación B2B) -->
   <dialog id="postJobDialog" class="w-[min(94vw,36rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="postJobTitle">
     <form id="postJobForm" class="flex max-h-[92dvh] flex-col" novalidate>
       <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
         <div>
           <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Bici Jobs · Para negocios</p>
-          <h2 id="postJobTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">💼 Publicar oferta de trabajo</h2>
+          <h2 id="postJobTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"><i class="i i-briefcase" aria-hidden="true"></i> Publicar oferta de trabajo</h2>
         </div>
-        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <div id="postJobBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
         <div class="rounded-2xl bg-soil-950 p-4 text-sand-100">
           <p class="font-display text-lg font-extrabold uppercase leading-tight text-sand-50">Publica tu aviso por <span class="text-ochre-300">$19.990 CLP</span></p>
           <p class="text-sm font-semibold text-ochre-300">o Gratis para Tiendas Pro</p>
           <ul class="mt-2.5 space-y-1 text-[13px] text-sand-200">
-            <li>✓ 30 días visible en Bici Jobs, el portal de empleo del ciclismo</li>
-            <li>✓ Las postulaciones llegan directo a tu WhatsApp</li>
-            <li>✓ Nombre, experiencia, CV y contacto de cada postulante</li>
+            <li><i class="i i-check" aria-hidden="true"></i> 30 días visible en Bici Jobs, el portal de empleo del ciclismo</li>
+            <li><i class="i i-check" aria-hidden="true"></i> Las postulaciones llegan directo a tu WhatsApp</li>
+            <li><i class="i i-check" aria-hidden="true"></i> Nombre, experiencia, CV y contacto de cada postulante</li>
           </ul>
         </div>
         <div class="grid gap-3.5 sm:grid-cols-2">
@@ -931,7 +1057,7 @@
           <div>
             <label for="pjArea" class="block text-sm font-semibold text-soil-800">Área</label>
             <select id="pjArea" class="field mt-1.5">
-              <option value="taller">🔧 Taller</option><option value="ventas">🛒 Ventas</option><option value="logistica">📦 Logística</option><option value="guia">🧭 Guía</option><option value="otro">💼 Otro</option>
+              <option value="taller">Taller</option><option value="ventas">Ventas</option><option value="logistica">Logística</option><option value="guia">Guía</option><option value="otro">Otro</option>
             </select>
           </div>
           <div>
@@ -977,13 +1103,13 @@
         <p id="pjError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
       </div>
       <div id="postJobDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
-        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl text-soil-950 shadow-lg">💼</div>
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl text-soil-950 shadow-lg"><i class="i i-briefcase" aria-hidden="true"></i></div>
         <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Aviso recibido!</h3>
         <p id="postJobDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
-        <a id="postJobWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+        <a id="postJobWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
       </div>
       <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
-        <button type="submit" id="postJobSubmit" class="btn-wa-pro w-full py-3 text-sm"><span aria-hidden="true">💬</span> Enviar y coordinar por WhatsApp</button>
+        <button type="submit" id="postJobSubmit" class="btn-wa-pro w-full py-3 text-sm"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Enviar y coordinar por WhatsApp</button>
       </div>
     </form>
   </dialog>
@@ -994,18 +1120,18 @@
       <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
         <div>
           <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Red de guías BIKEGRID</p>
-          <h2 id="guideJoinTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">🧭 Regístrate Gratis como Guía Local / Instructor</h2>
+          <h2 id="guideJoinTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl"><i class="i i-compass" aria-hidden="true"></i> Regístrate Gratis como Guía Local / Instructor</h2>
         </div>
-        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <div id="guideJoinBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
         <div class="rounded-2xl bg-[#3a2c45] p-4 text-sand-100">
           <p class="flex items-center gap-2 font-display text-lg font-extrabold uppercase leading-tight text-sand-50">Perfil de guía <span class="rounded-full bg-moss-500 px-2.5 py-0.5 font-sans text-xs font-bold normal-case text-sand-50">Gratis · sin costo mensual</span></p>
           <p class="mt-1.5 text-[13px] text-sand-200">Súmate al mapa de BIKEGRID sin costo. Muestra tus rutas, credenciales y recibe consultas de ciclistas directo a tu WhatsApp.</p>
           <ul class="mt-2 space-y-1 text-[13px] text-sand-200">
-            <li>✓ Perfil con zonas, certificaciones, idiomas, disciplinas y tarifa</li>
-            <li>✓ Pin en el mapa y filtro 🧭 Guías Locales</li>
-            <li>✓ Consultas directo a tu WhatsApp, con fecha y zona</li>
+            <li><i class="i i-check" aria-hidden="true"></i> Perfil con zonas, certificaciones, idiomas, disciplinas y tarifa</li>
+            <li><i class="i i-check" aria-hidden="true"></i> Pin en el mapa y filtro <i class="i i-compass" aria-hidden="true"></i> Guías Locales</li>
+            <li><i class="i i-check" aria-hidden="true"></i> Consultas directo a tu WhatsApp, con fecha y zona</li>
           </ul>
           <p class="mt-2 text-xs text-sand-300">¿Quieres destacar? Más adelante puedes activar <strong class="text-ochre-300">Guía PRO</strong> (sello Verificado, primero en el directorio, redes y más).</p>
         </div>
@@ -1064,19 +1190,19 @@
         <p id="gjError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
       </div>
       <div id="guideJoinDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
-        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl shadow-lg">🧭</div>
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl shadow-lg"><i class="i i-compass" aria-hidden="true"></i></div>
         <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Perfil recibido!</h3>
         <p id="guideJoinDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
-        <a id="guideJoinWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+        <a id="guideJoinWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
       </div>
       <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
-        <button type="submit" id="guideJoinSubmit" class="w-full rounded-xl bg-moss-600 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700">🧭 Crear mi perfil gratis</button>
+        <button type="submit" id="guideJoinSubmit" class="w-full rounded-xl bg-moss-600 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700"><i class="i i-compass" aria-hidden="true"></i> Crear mi perfil gratis</button>
       </div>
     </form>
   </dialog>
 
   <!-- Flotante móvil del configurador -->
-  <button type="button" id="tripFab" data-trip="fab" class="fixed bottom-4 right-4 z-[1500] inline-flex items-center gap-1.5 rounded-full bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-xl ring-2 ring-ochre-400/80 md:hidden" style="margin-bottom:env(safe-area-inset-bottom)">🗺️ Arma tu Salida / Viaje</button>
+  <button type="button" id="tripFab" data-trip="fab" class="fixed bottom-4 right-4 z-[1500] inline-flex items-center gap-1.5 rounded-full bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-xl ring-2 ring-ochre-400/80 md:hidden" style="margin-bottom:env(safe-area-inset-bottom)"><i class="i i-map" aria-hidden="true"></i> Arma tu Salida / Viaje</button>
 
   <!-- Configurador por pasos: arma tu salida / viaje -->
   <dialog id="tripDialog" class="w-[min(94vw,38rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70 backdrop:backdrop-blur-[2px]" aria-labelledby="tripTitle">
@@ -1087,7 +1213,7 @@
             <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Planificador BIKEGRID</p>
             <h2 id="tripTitle" class="font-display text-xl sm:text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950">Arma tu salida / viaje</h2>
           </div>
-          <button type="button" id="tripClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+          <button type="button" id="tripClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
         </div>
         <div id="tripProgressWrap" class="mt-3">
           <div class="flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">
@@ -1104,11 +1230,11 @@
         <fieldset class="trip-step" data-step="1">
           <legend class="text-base font-bold text-soil-950">¿Qué disciplina quieres rodar?</legend>
           <div class="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="enduro_dh" /><span class="ico">🚵</span><span>MTB Enduro/DH</span><span class="tick">✓</span></label>
-            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="emtb" /><span class="ico">⚡</span><span>E-MTB</span><span class="tick">✓</span></label>
-            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="gravel" /><span class="ico">🚲</span><span>Gravel</span><span class="tick">✓</span></label>
-            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="ruta" /><span class="ico">🛣️</span><span>Ruta / Carretera</span><span class="tick">✓</span></label>
-            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="trail_xc" /><span class="ico">🏞️</span><span>Trail / XC</span><span class="tick">✓</span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="enduro_dh" /><span class="ico"><i class="i i-bike" aria-hidden="true"></i></span><span>MTB Enduro/DH</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="emtb" /><span class="ico"><i class="i i-zap" aria-hidden="true"></i></span><span>E-MTB</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="gravel" /><span class="ico"><i class="i i-bike" aria-hidden="true"></i></span><span>Gravel</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="ruta" /><span class="ico"><i class="i i-route" aria-hidden="true"></i></span><span>Ruta / Carretera</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+            <label class="trip-opt is-card"><input type="radio" name="disciplina" value="trail_xc" /><span class="ico"><i class="i i-trees" aria-hidden="true"></i></span><span>Trail / XC</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
           </div>
         </fieldset>
 
@@ -1117,19 +1243,19 @@
           <fieldset>
             <legend class="text-base font-bold text-soil-950">Tu nivel</legend>
             <div class="mt-3 grid gap-2 sm:grid-cols-2">
-              <label class="trip-opt"><input type="radio" name="nivel" value="principiante" /><span class="ico">🟢</span><span>Principiante</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="nivel" value="intermedio" /><span class="ico">🔵</span><span>Intermedio</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="nivel" value="avanzado" /><span class="ico">🔴</span><span>Avanzado / Black Diamond</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="nivel" value="experto" /><span class="ico">⚫⚫</span><span>Experto / Pro</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="principiante" /><span class="ico"><i class="dif dif-green" aria-hidden="true"></i></span><span>Principiante</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="intermedio" /><span class="ico"><i class="dif dif-blue" aria-hidden="true"></i></span><span>Intermedio</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="avanzado" /><span class="ico"><i class="dif dif-black" aria-hidden="true"></i></span><span>Avanzado / Black Diamond</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="nivel" value="experto" /><span class="ico inline-flex gap-0.5"><i class="dif dif-black" aria-hidden="true"></i><i class="dif dif-black" aria-hidden="true"></i></span><span>Experto / Pro</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
             </div>
           </fieldset>
           <fieldset>
             <legend class="text-base font-bold text-soil-950">Terreno que prefieres</legend>
             <div class="mt-3 grid grid-cols-2 gap-2">
-              <label class="trip-opt"><input type="radio" name="terreno" value="seco" /><span class="ico">☀️</span><span>Seco / Grip</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="terreno" value="bosque" /><span class="ico">🌲</span><span>Bosque / Suelto</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="terreno" value="barro" /><span class="ico">🌧️</span><span>Barro / Lluvia</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="terreno" value="rocoso" /><span class="ico">🪨</span><span>Rocoso / Técnico</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="seco" /><span class="ico"><i class="i i-sun" aria-hidden="true"></i></span><span>Seco / Grip</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="bosque" /><span class="ico"><i class="i i-tree" aria-hidden="true"></i></span><span>Bosque / Suelto</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="barro" /><span class="ico"><i class="i i-rain" aria-hidden="true"></i></span><span>Barro / Lluvia</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="terreno" value="rocoso" /><span class="ico"><i class="i i-rocks" aria-hidden="true"></i></span><span>Rocoso / Técnico</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
             </div>
           </fieldset>
         </div>
@@ -1139,19 +1265,19 @@
           <fieldset>
             <legend class="text-base font-bold text-soil-950">Duración</legend>
             <div class="mt-3 grid gap-2 sm:grid-cols-3">
-              <label class="trip-opt"><input type="radio" name="duracion" value="1_dia" /><span>1 Día <span class="block text-xs font-medium opacity-70">Express</span></span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="duracion" value="fin_de_semana" /><span>Fin de Semana <span class="block text-xs font-medium opacity-70">2-3 días</span></span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="duracion" value="expedicion" /><span>Expedición <span class="block text-xs font-medium opacity-70">4+ días</span></span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="duracion" value="1_dia" /><span>1 Día <span class="block text-xs font-medium opacity-70">Express</span></span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="duracion" value="fin_de_semana" /><span>Fin de Semana <span class="block text-xs font-medium opacity-70">2-3 días</span></span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="duracion" value="expedicion" /><span>Expedición <span class="block text-xs font-medium opacity-70">4+ días</span></span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
             </div>
           </fieldset>
           <fieldset>
             <legend class="text-base font-bold text-soil-950">Servicios que necesitas <span class="text-sm font-normal text-soil-600">(opcional, elige varios)</span></legend>
             <div class="mt-3 grid gap-2 sm:grid-cols-2">
-              <label class="trip-opt"><input type="checkbox" name="servicios" value="shuttle" /><span class="ico">🚐</span><span>Shuttle / Traslado</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="checkbox" name="servicios" value="guia" /><span class="ico">🧭</span><span>Guía Local Verificado</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="checkbox" name="servicios" value="arriendo" /><span class="ico">🚵</span><span>Arriendo de Bici / E-MTB</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="checkbox" name="servicios" value="alojamiento" /><span class="ico">🏕️</span><span>Alojamiento recomendado</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="checkbox" name="servicios" value="soporte" /><span class="ico">🔧</span><span>Soporte Técnico / Mecánico</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="shuttle" /><span class="ico"><i class="i i-bus" aria-hidden="true"></i></span><span>Shuttle / Traslado</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="guia" /><span class="ico"><i class="i i-compass" aria-hidden="true"></i></span><span>Guía Local Verificado</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="arriendo" /><span class="ico"><i class="i i-bike" aria-hidden="true"></i></span><span>Arriendo de Bici / E-MTB</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="alojamiento" /><span class="ico"><i class="i i-tent" aria-hidden="true"></i></span><span>Alojamiento recomendado</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="checkbox" name="servicios" value="soporte" /><span class="ico"><i class="i i-wrench" aria-hidden="true"></i></span><span>Soporte Técnico / Mecánico</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
             </div>
           </fieldset>
         </div>
@@ -1161,11 +1287,11 @@
           <fieldset>
             <legend class="text-base font-bold text-soil-950">Destino</legend>
             <div class="mt-3 grid gap-2 sm:grid-cols-2">
-              <label class="trip-opt"><input type="radio" name="zona" value="santiago" /><span class="ico">🏙️</span><span>Santiago / Zona Central</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="zona" value="pucon" /><span class="ico">🌋</span><span>Pucón / Araucanía</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="zona" value="chillan" /><span class="ico">🏔️</span><span>Nevados de Chillán</span><span class="tick">✓</span></label>
-              <label class="trip-opt"><input type="radio" name="zona" value="patagonia" /><span class="ico">🧊</span><span>Patagonia / Sur</span><span class="tick">✓</span></label>
-              <label class="trip-opt sm:col-span-2"><input type="radio" name="zona" value="abierto" /><span class="ico">✨</span><span>Acepto recomendaciones</span><span class="tick">✓</span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="santiago" /><span class="ico"><i class="i i-building" aria-hidden="true"></i></span><span>Santiago / Zona Central</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="pucon" /><span class="ico"><i class="i i-flame" aria-hidden="true"></i></span><span>Pucón / Araucanía</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="chillan" /><span class="ico"><i class="i i-mountain" aria-hidden="true"></i></span><span>Nevados de Chillán</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt"><input type="radio" name="zona" value="patagonia" /><span class="ico"><i class="i i-snowflake" aria-hidden="true"></i></span><span>Patagonia / Sur</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt sm:col-span-2"><input type="radio" name="zona" value="abierto" /><span class="ico"><i class="i i-sparkles" aria-hidden="true"></i></span><span>Acepto recomendaciones</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
             </div>
           </fieldset>
           <div class="grid grid-cols-[1fr_auto] gap-3">
@@ -1203,8 +1329,8 @@
           <fieldset>
             <legend class="text-sm font-semibold text-soil-800">Idioma de atención</legend>
             <div class="mt-1.5 grid grid-cols-2 gap-2">
-              <label class="trip-opt py-2.5"><input type="radio" name="idioma" value="es" checked /><span>🇨🇱 Español</span><span class="tick">✓</span></label>
-              <label class="trip-opt py-2.5"><input type="radio" name="idioma" value="en" /><span>🇬🇧 English</span><span class="tick">✓</span></label>
+              <label class="trip-opt py-2.5"><input type="radio" name="idioma" value="es" checked /><span>Español</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
+              <label class="trip-opt py-2.5"><input type="radio" name="idioma" value="en" /><span>English</span><span class="tick"><i class="i i-check" aria-hidden="true"></i></span></label>
             </div>
           </fieldset>
           <div class="hidden" aria-hidden="true"><label>Web <input id="tripWebsite" tabindex="-1" autocomplete="off" /></label></div>
@@ -1213,12 +1339,12 @@
 
         <!-- Éxito -->
         <div id="tripDone" class="trip-step py-4 text-center" hidden>
-          <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-moss-600 text-3xl text-sand-50 shadow-lg">✓</div>
+          <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-moss-600 text-3xl text-sand-50 shadow-lg"><i class="i i-check" aria-hidden="true"></i></div>
           <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Recibimos tu plan!</h3>
           <p class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700">Te responderemos con la mejor propuesta en menos de 2 horas.</p>
           <div id="tripGuides" class="mx-auto mt-5 max-w-sm text-left" hidden></div>
           <dl id="tripSummary" class="mx-auto mt-5 max-w-sm divide-y divide-sand-200 rounded-xl bg-white/70 px-4 text-left text-sm ring-1 ring-sand-300"></dl>
-          <a id="tripWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+          <a id="tripWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
         </div>
       </div>
 
@@ -1380,15 +1506,15 @@
 
     const JOBS = [
       { type: 'trabajo',      title: 'Mecánico buscando taller',                    place: 'Santiago · Zona oriente', when: 'Hace 2 h',    body: '8 años de experiencia en suspensiones Fox/RockShox y frenos hidráulicos. Disponible jornada completa o part-time.', tags: ['Suspensión', 'Full-time'] },
-      { type: 'voluntariado', title: 'Convocatoria de paleros para mantener trail', place: 'San José de Maipo',       when: 'Hace 5 h',    body: 'Jornada de mantención este sábado a las 8:00. Llevamos herramientas y colación. Trae guantes y agua.', tags: ['Sábado', 'Sin experiencia'] },
+      { type: 'voluntariado', title: 'Convocatoria de mantención de sendero', place: 'San José de Maipo',       when: 'Hace 5 h',    body: 'Jornada de mantención este sábado a las 8:00. Llevamos herramientas y colación. Trae guantes y agua.', tags: ['Sábado', 'Sin experiencia'] },
       { type: 'trabajo',      title: 'Taller busca ayudante de mecánica',           place: 'Valparaíso',              when: 'Ayer',        body: 'Buscamos a alguien con ganas de aprender. Te formamos en ruedas y transmisiones. Sueldo más comisión.', tags: ['Aprendiz', 'Part-time'] },
-      { type: 'voluntariado', title: 'Digger Day: reconstrucción de peraltes',       place: 'Concepción',              when: 'Hace 2 días', body: 'Rehacemos curvas y saltos erosionados por la lluvia. Palas, rastrillos y colación incluidos.', tags: ['Sábado', 'Herramientas incluidas'] },
+      { type: 'voluntariado', title: 'Jornada de reconstrucción de peraltes',       place: 'Concepción',              when: 'Hace 2 días', body: 'Rehacemos curvas y saltos erosionados por la lluvia. Palas, rastrillos y colación incluidos.', tags: ['Sábado', 'Herramientas incluidas'] },
       { type: 'trabajo',      title: 'Guía bilingüe para tours de temporada',       place: 'Puerto Varas',            when: 'Hace 3 días', body: 'Temporada de noviembre a marzo. Inglés conversacional y primeros auxilios. Alojamiento incluido.', tags: ['Temporada', 'Inglés'] },
       { type: 'voluntariado', title: 'Jornada de drenajes en sendero de enduro',    place: 'Lo Barnechea',            when: 'Hace 4 días', body: 'Antes de las lluvias: cortes de agua y reparación de curvas. Punto de encuentro a las 9:00.', tags: ['Domingo', 'Herramientas incluidas'] },
     ];
     const JOB_TYPES = {
-      trabajo:      { label: 'Bici Job',       tab: '💼 Ofertas Laborales / Bici Jobs', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
-      voluntariado: { label: 'Digger Day',     tab: '⛏️ Jornadas de Pala / Digger Days', cls: 'bg-ochre-400/20 text-ochre-600 ring-ochre-500/40' },
+      trabajo:      { label: 'Bici Job',       tab: 'Ofertas laborales', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
+      voluntariado: { label: 'Mantención',     tab: 'Mantención de senderos', cls: 'bg-ochre-400/20 text-ochre-600 ring-ochre-500/40' },
       comunidad:    { label: 'Comunidad',      tab: 'Comunidad',         cls: 'bg-soil-700/10 text-soil-700 ring-soil-700/25' },
     };
 
@@ -1651,7 +1777,7 @@
       const skel = (w) => `<span class="inline-block h-3.5 ${w} animate-pulse rounded bg-sand-200 align-middle" aria-hidden="true"></span>`;
       const c = CATEGORIES[p.categoria];
       const status = [
-        isPro(p) ? '<span class="badge-pro px-2.5 py-1 text-xs">✔ Verificado</span>' : '',
+        isPro(p) ? '<span class="badge-pro px-2.5 py-1 text-xs"><i class="i i-badge-check" aria-hidden="true"></i> Verificado</span>' : '',
         p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2.5 py-1 text-xs font-bold text-sand-50">Amiga del Trail</span>' : '',
       ].join('');
       const place = [p.comuna, REGIONES[p.region].label].filter(Boolean).map(esc).join(' · ');
@@ -1667,7 +1793,7 @@
         : failed
         ? `<p class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el contacto. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
         : p.whatsapp && isPro(p)
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro py-3.5 text-[15px]"><span aria-hidden="true">💬</span> Contactar por WhatsApp</a>`
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro py-3.5 text-[15px]"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Contactar por WhatsApp</a>`
         : p.whatsapp
         ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
         : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
@@ -1678,8 +1804,8 @@
       // Alerta Bici Jobs: el negocio busca personal
       const jobBlock = p.necesidad ? `
         <div class="mt-4 rounded-xl bg-ochre-300/30 p-3.5 ring-1 ring-ochre-500/50">
-          <p class="text-sm font-bold text-soil-950">💼 Buscando personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
-          <button type="button" data-apply="ficha-${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">📩 Postular a este trabajo →</button>
+          <p class="text-sm font-bold text-soil-950"><i class="i i-briefcase" aria-hidden="true"></i> Buscando personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
+          <button type="button" data-apply="ficha-${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline"><i class="i i-mail" aria-hidden="true"></i> Postular a este trabajo →</button>
         </div>` : '';
 
       return `
@@ -1687,7 +1813,7 @@
           <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
           ${status}
         </div>
-        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '★ Guardado' : '☆ Guardar spot'}</button>
+        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '<i class="i i-star" aria-hidden="true"></i> Guardado' : '<i class="i i-star-o" aria-hidden="true"></i> Guardar spot'}</button>
         <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
         <p class="mt-1.5 text-sm text-soil-600">${place}</p>
         ${typeof trailDrawerBlock === 'function' ? trailDrawerBlock(p) : ''}
@@ -1707,12 +1833,12 @@
           ${contactBlock}
           <div class="grid grid-cols-2 gap-2.5">
             <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'}">
-              <span aria-hidden="true">📍</span> Cómo llegar
+              <span aria-hidden="true"><i class="i i-pin" aria-hidden="true"></i></span> Cómo llegar
             </a>
             <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
           </div>
         </div>
-        ${isPro(p) ? '' : `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 transition hover:text-soil-950">⚙️ ¿Eres el dueño? Activa tu Ficha Pro</button>`}`;
+        ${isPro(p) ? '' : `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 transition hover:text-soil-950"><i class="i i-key" aria-hidden="true"></i> ¿Eres el dueño? Activa tu Ficha Pro</button>`}`;
     }
 
     function openDrawer(p) {
@@ -1849,14 +1975,14 @@
       const pro = isPro(p);
       // Pro: WhatsApp destacado (sus detalles llegan con loadProDetails); si aún no llega, abre la ficha
       const proCta = !pro ? '' : p.whatsapp
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro px-1 py-1.5 text-xs leading-tight"><span aria-hidden="true">💬</span> Contactar por WhatsApp</a>`
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro px-1 py-1.5 text-xs leading-tight"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Contactar por WhatsApp</a>`
         : '';
       return `<li>
         <article class="${pro ? 'ficha-pro' : 'ring-1 ring-sand-300 hover:ring-soil-600/50 bg-sand-50'} flex h-full flex-col justify-between gap-2.5 rounded-xl p-3 shadow-sm transition">
           <div class="min-w-0">
             <div class="flex flex-wrap items-center gap-1">
               <span class="inline-flex max-w-full items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3 shrink-0')}<span class="truncate">${c.short}</span></span>
-              ${pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
+              ${pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]"><i class="i i-badge-check" aria-hidden="true"></i> Verificado</span>' : ''}
               ${typeof trailBadge === 'function' ? trailBadge(p, 'sm') : ''}
             </div>
             <h3 class="mt-1.5 line-clamp-2 text-[13px] font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
@@ -1865,8 +1991,8 @@
           </div>
           <div class="grid gap-1.5">
             ${proCta}
-            <button type="button" data-locate="${esc(p.id)}" class="rounded-lg ${pro && p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'} py-1.5 text-xs font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400">📍 Ubicar</button>
-            ${pro ? '' : `<button type="button" data-claim="${esc(p.id)}" class="text-left text-[10.5px] font-medium leading-tight text-soil-600 underline decoration-sand-300 underline-offset-2 transition hover:text-soil-950 hover:decoration-ochre-500">⚙️ ¿Eres el dueño? Activa tu Ficha Pro</button>`}
+            <button type="button" data-locate="${esc(p.id)}" class="rounded-lg ${pro && p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'} py-1.5 text-xs font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400"><i class="i i-pin" aria-hidden="true"></i> Ubicar</button>
+            ${pro ? '' : `<button type="button" data-claim="${esc(p.id)}" class="text-left text-[10.5px] font-medium leading-tight text-soil-600 underline decoration-sand-300 underline-offset-2 transition hover:text-soil-950 hover:decoration-ochre-500"><i class="i i-key" aria-hidden="true"></i> ¿Eres el dueño? Activa tu Ficha Pro</button>`}
           </div>
         </article>
       </li>`;
@@ -1878,26 +2004,26 @@
       const count = (fn) => list.filter(fn).length;
       const pill = (icon, n, label, action) => `<button type="button" data-stat="${action}" class="inline-flex items-center gap-1 rounded-full bg-sand-50 px-2.5 py-1 text-xs text-soil-700 ring-1 ring-sand-300 transition hover:ring-soil-600"><span aria-hidden="true">${icon}</span><strong class="font-mono tabular-nums text-soil-950">${n}</strong> ${label}</button>`;
       dirEl.stats.innerHTML = [
-        pill('📍', list.length, list.length === 1 ? 'Punto' : 'Puntos', 'all'),
-        pill('🛠️', count((p) => p.categoria === 'talleres'), 'Talleres', 'talleres'),
-        pill('🚵', count((p) => p.categoria === 'senderos'), 'Bikeparks', 'senderos'),
+        pill('<i class="i i-pin" aria-hidden="true"></i>', list.length, list.length === 1 ? 'Punto' : 'Puntos', 'all'),
+        pill('<i class="i i-wrench" aria-hidden="true"></i>', count((p) => p.categoria === 'talleres'), 'Talleres', 'talleres'),
+        pill('<i class="i i-bike" aria-hidden="true"></i>', count((p) => p.categoria === 'senderos'), 'Bikeparks', 'senderos'),
       ].join('');
       dirEl.top.innerHTML = list.slice(0, DIR_TOP).map(miniCard).join('');
-      dirEl.open.textContent = `🔽 Ver directorio completo (${list.length})`;
+      dirEl.open.textContent = `Ver directorio completo (${list.length})`;
       if (dirEl.dialog.open) renderDirectoryDialog();
     }
 
     // Filtros rápidos del directorio. "Comunidad / Paleros" = negocios con sello Amiga del Trail
     const DIR_CHIPS = [
       { id: 'all',      label: 'Todos',                     one: 'punto',                 many: 'puntos',                     test: () => true },
-      { id: 'talleres', label: '🛠️ Talleres',               one: 'taller',                many: 'talleres',                   test: (p) => p.categoria === 'talleres' },
-      { id: 'tiendas',  label: '🏪 Tiendas',                one: 'tienda',                many: 'tiendas',                    test: (p) => p.categoria === 'tiendas' },
-      { id: 'senderos', label: '🚵 Bikeparks / Senderos',   one: 'bikepark o sendero',    many: 'bikeparks y senderos',       test: (p) => p.categoria === 'senderos' },
-      { id: 'tours',    label: '🚐 Shuttles / Tours',       one: 'shuttle o tour',        many: 'shuttles y tours',           test: (p) => p.categoria === 'tours' },
-      { id: 'clases',   label: '🎓 Escuelas / Clases',      one: 'escuela',               many: 'escuelas',                   test: (p) => p.categoria === 'clases' },
-      { id: 'guias',    label: '🧭 Guías & Instructores',   one: 'guía o instructor',     many: 'guías e instructores',       test: (p) => p.categoria === 'guias' },
-      { id: 'saved',    label: '★ Guardados',               one: 'spot guardado',         many: 'spots guardados',            test: (p) => isSaved(p.id), onlyIfAny: true },
-      { id: 'trail',    label: '⛏️ Comunidad / Paleros',    one: 'Amiga del Trail',       many: 'Amigas del Trail',           test: (p) => p.amigoTrail },
+      { id: 'talleres', label: '<i class="i i-wrench" aria-hidden="true"></i> Talleres',               one: 'taller',                many: 'talleres',                   test: (p) => p.categoria === 'talleres' },
+      { id: 'tiendas',  label: '<i class="i i-store" aria-hidden="true"></i> Tiendas',                one: 'tienda',                many: 'tiendas',                    test: (p) => p.categoria === 'tiendas' },
+      { id: 'senderos', label: '<i class="i i-bike" aria-hidden="true"></i> Bikeparks / Senderos',   one: 'bikepark o sendero',    many: 'bikeparks y senderos',       test: (p) => p.categoria === 'senderos' },
+      { id: 'tours',    label: '<i class="i i-bus" aria-hidden="true"></i> Shuttles / Tours',       one: 'shuttle o tour',        many: 'shuttles y tours',           test: (p) => p.categoria === 'tours' },
+      { id: 'clases',   label: '<i class="i i-cap" aria-hidden="true"></i> Escuelas / Clases',      one: 'escuela',               many: 'escuelas',                   test: (p) => p.categoria === 'clases' },
+      { id: 'guias',    label: '<i class="i i-compass" aria-hidden="true"></i> Guías & Instructores',   one: 'guía o instructor',     many: 'guías e instructores',       test: (p) => p.categoria === 'guias' },
+      { id: 'saved',    label: '<i class="i i-star" aria-hidden="true"></i> Guardados',               one: 'spot guardado',         many: 'spots guardados',            test: (p) => isSaved(p.id), onlyIfAny: true },
+      { id: 'trail',    label: '<i class="i i-shovel" aria-hidden="true"></i> Comunidad / Paleros',    one: 'Amiga del Trail',       many: 'Amigas del Trail',           test: (p) => p.amigoTrail },
     ];
     let dirChip = 'all';
 
@@ -1907,7 +2033,7 @@
       const q = norm(raw);
       const all = sortedPoints();
       let list = all.filter((p) => chip.test(p) && (!q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label} ${typeof brandText === 'function' ? brandText(p) : ''}`).includes(q)));
-      if (typeof applyBrandFilter === 'function') list = applyBrandFilter(list); // 🏷️ marca: principales primero
+      if (typeof applyBrandFilter === 'function') list = applyBrandFilter(list); // <i class="i i-tag" aria-hidden="true"></i> marca: principales primero
 
       // Píldoras con su total (sin contar el texto, para que el número no "salte" al escribir)
       dirEl.chips.innerHTML = DIR_CHIPS.filter((c) => !c.onlyIfAny || c.id === dirChip || all.some(c.test)).map((c) => {
@@ -2136,7 +2262,7 @@
       const on = toggleSaved(ref);
       document.querySelectorAll(`.save-btn[data-ref="${CSS.escape(ref)}"]`).forEach((b) => {
         b.setAttribute('aria-pressed', on);
-        b.textContent = on ? '★ Guardado' : '☆ Guardar spot';
+        b.innerHTML = on ? '<i class="i i-star" aria-hidden="true"></i> Guardado' : '<i class="i i-star-o" aria-hidden="true"></i> Guardar spot';
         b.classList.toggle('bg-ochre-400', on); b.classList.toggle('text-soil-950', on); b.classList.toggle('ring-ochre-500', on);
         b.classList.toggle('bg-sand-50', !on); b.classList.toggle('text-soil-800', !on); b.classList.toggle('ring-sand-300', !on);
       });
@@ -2149,7 +2275,7 @@
       if (!el) return;
       const action = { type: el.dataset.gate, url: el.getAttribute('href'), ref: el.dataset.ref || null };
       if (isUnlocked()) {
-        if (action.type === 'guardar') { toast(runSave(action.ref) ? 'Spot guardado ★' : 'Spot quitado de guardados'); }
+        if (action.type === 'guardar') { toast(runSave(action.ref) ? 'Spot guardado ' : 'Spot quitado de guardados'); }
         else track('whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref }); // el enlace se abre normal
         return;
       }
@@ -2223,7 +2349,7 @@
         openWhatsApp(action.url);
       } else if (action.type === 'guardar') {
         runSave(action.ref);
-        setTimeout(() => toast('Listo · spot guardado ★'), 400);
+        setTimeout(() => toast('Listo · spot guardado '), 400);
       }
     });
 
@@ -2536,9 +2662,9 @@
     // =====================================================================
     // UTILIDADES DEL DÍA — módulos independientes (no modifican el código previo;
     // se enganchan con 4 llamadas opcionales: trailPinDot, trailBadge, trailDrawerBlock y el evento 'desviador:puntos')
-    //   1. 🚦 Semáforo de senderos + reporte de la comunidad
-    //   2. 🚐 Bolsa de shuttles & cupos del finde
-    //   3. 🚨 Repuesto / taller de urgencia por cercanía GPS
+    //   1. <i class="i i-activity" aria-hidden="true"></i> Semáforo de senderos + reporte de la comunidad
+    //   2. <i class="i i-bus" aria-hidden="true"></i> Bolsa de shuttles & cupos del finde
+    //   3. <i class="i i-siren" aria-hidden="true"></i> Repuesto / taller de urgencia por cercanía GPS
     // =====================================================================
     const UTIL_WEBHOOK_URL = (window.BIKEGRID_CONFIG || window.DESVIADOR_CONFIG)?.REPORTS_WEBHOOK_URL || ''; // opcional: Make / n8n para reportes de estado
     const CL_TZ = 'America/Santiago';
@@ -2555,12 +2681,12 @@
     const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
 
     // ---------------------------------------------------------------------
-    // 1. 🚦 SEMÁFORO DE SENDEROS
+    // 1. <i class="i i-activity" aria-hidden="true"></i> SEMÁFORO DE SENDEROS
     // ---------------------------------------------------------------------
     const TRAIL_STATES = {
-      abierto:    { label: '🟢 ABIERTO / SECO',          short: '🟢 Abierto' },
-      precaucion: { label: '🟡 PRECAUCIÓN / BARRO',      short: '🟡 Precaución' },
-      cerrado:    { label: '🔴 CERRADO / MANTENIMIENTO', short: '🔴 Cerrado' },
+      abierto:    { label: 'ABIERTO / SECO',          short: 'Abierto' },
+      precaucion: { label: 'PRECAUCIÓN / BARRO',      short: 'Precaución' },
+      cerrado:    { label: 'CERRADO / MANTENIMIENTO', short: 'Cerrado' },
     };
     const TRAIL_WINDOW_H = 72;            // se leen los reportes de las últimas 72 h…
     const TRAIL_OVERRIDE_H = 24;          // …pero solo los de menos de 24 h anulan al clima
@@ -2587,9 +2713,11 @@
       else trailStatus.delete(id);
     }
     const trailLabel = (st) => st.label || TRAIL_STATES[st.estado].label;
+    const TRAIL_LED = { abierto: 'green', precaucion: 'yellow', cerrado: 'red' };
+    const trailLed = (estado) => `<i class="led led-${TRAIL_LED[estado] || 'gray'}" aria-hidden="true"></i>`;
     const TRAIL_SOURCE = {
-      comunidad: '<span class="rounded-full bg-white/70 px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-soil-950/10">📢 Validado por la comunidad</span>',
-      clima:     '<span class="rounded-full bg-white/70 px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-soil-950/10">🤖 Calculado por Clima / Satélite</span>',
+      comunidad: '<span class="rounded-full bg-white/70 px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-soil-950/10"><i class="i i-megaphone" aria-hidden="true"></i> Validado por la comunidad</span>',
+      clima:     '<span class="rounded-full bg-white/70 px-2 py-0.5 text-[10.5px] font-bold ring-1 ring-soil-950/10"><i class="i i-cpu" aria-hidden="true"></i> Calculado por Clima / Satélite</span>',
     };
 
     // Ganchos que usan makeIcon, miniCard y drawerHtml (si este módulo no cargó, simplemente no aparecen)
@@ -2600,19 +2728,19 @@
     function trailBadge(p, size) {
       const st = isTrailSpot(p) && trailStatus.get(String(p.id));
       if (!st) return '';
-      const origin = st.fuente === 'clima' ? '🤖 Calculado por Clima / Satélite' : `📢 Validado por la comunidad · ${agoLabel(st.at)}`;
+      const origin = st.fuente === 'clima' ? 'Calculado por Clima / Satélite' : `Validado por la comunidad · ${agoLabel(st.at)}`;
       return size === 'sm'
-        ? `<span class="trail-badge st-${st.estado} px-1.5 py-0.5 text-[9.5px]" title="${esc(trailLabel(st))} · ${origin}">${trailLabel(st)}</span>`
-        : `<span class="trail-badge st-${st.estado} px-2.5 py-1 text-xs">${trailLabel(st)}</span>`;
+        ? `<span class="trail-badge st-${st.estado} px-1.5 py-0.5 text-[9.5px]" title="${esc(trailLabel(st))} · ${origin}">${trailLed(st.estado)}${trailLabel(st)}</span>`
+        : `<span class="trail-badge st-${st.estado} px-2.5 py-1 text-xs">${trailLed(st.estado)}${trailLabel(st)}</span>`;
     }
     const mm = (v) => `${(Math.round(v * 10) / 10).toLocaleString('es-CL')} mm`;
     function trailDrawerBlock(p) {
       if (!isTrailSpot(p)) return '';
       const st = trailStatus.get(String(p.id));
-      const btn = `<button type="button" data-trail-report="${esc(p.id)}" class="inline-flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-soil-800 ring-1 ring-soil-950/15 transition hover:bg-white">📢 Reportar Estado</button>`;
+      const btn = `<button type="button" data-trail-report="${esc(p.id)}" class="inline-flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-soil-800 ring-1 ring-soil-950/15 transition hover:bg-white"><i class="i i-megaphone" aria-hidden="true"></i> Reportar Estado</button>`;
       if (!st) return `
         <div class="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl st-none p-3">
-          <p class="text-xs font-semibold">⚪ Sin reportes recientes ni datos de clima. ¿Rodaste hoy?</p>${btn}
+          <p class="flex items-center gap-2 text-xs font-semibold"><i class="led led-gray" aria-hidden="true"></i>Sin reportes recientes ni datos de clima. ¿Rodaste hoy?</p>${btn}
         </div>`;
       const human = st.fuente === 'comunidad';
       const meta = human ? `${agoLabel(st.at)} · ${st.n} ${st.n === 1 ? 'reporte' : 'reportes'}` : `actualizado ${agoLabel(st.at)}`;
@@ -2623,7 +2751,7 @@
       return `
         <div class="mt-3 rounded-xl st-${st.estado} p-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <p class="text-sm font-extrabold uppercase tracking-wide">${trailLabel(st)}</p>
+            <p class="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide">${trailLed(st.estado)}${trailLabel(st)}</p>
             <p class="font-mono text-[10.5px] font-semibold opacity-80">${meta}</p>
           </div>
           <div class="mt-1.5">${TRAIL_SOURCE[st.fuente]}</div>
@@ -2704,11 +2832,11 @@
       const { h24, h48, d7 } = lluvia;
       if (h24 > 12 || h48 > 20) {
         const cause = h24 > 12 ? `${mm(h24)} en 24 h` : `${mm(h48)} en 48 h`;
-        return { estado: 'cerrado', label: '🔴 CERRADO / BARRO PEGADO', sub: `Lluvia reciente (${cause}). Evita el terreno para no dañar la pista.` };
+        return { estado: 'cerrado', label: 'CERRADO / BARRO PEGADO', sub: `Lluvia reciente (${cause}). Evita el terreno para no dañar la pista.` };
       }
-      if (h48 >= 3 && h48 <= 12) return { estado: 'abierto', label: '🟢 SECO / GRIP PERFECTO', sub: 'Humedad ideal en el suelo según precipitaciones recientes.' };
-      if (d7 === 0) return { estado: 'precaucion', label: '🟡 PRECAUCIÓN / MUY SECO', sub: 'Más de 7 días sin lluvia. Suelo seco y suelto.' };
-      return { estado: 'abierto', label: '🟢 ABIERTO / SECO', sub: h48 > 12 ? `Lluvia moderada reciente (${mm(h48)} en 48 h): el suelo debería estar drenando.` : 'Sin lluvias relevantes en los últimos días.' };
+      if (h48 >= 3 && h48 <= 12) return { estado: 'abierto', label: 'SECO / GRIP PERFECTO', sub: 'Humedad ideal en el suelo según precipitaciones recientes.' };
+      if (d7 === 0) return { estado: 'precaucion', label: 'PRECAUCIÓN / MUY SECO', sub: 'Más de 7 días sin lluvia. Suelo seco y suelto.' };
+      return { estado: 'abierto', label: 'ABIERTO / SECO', sub: h48 > 12 ? `Lluvia moderada reciente (${mm(h48)} en 48 h): el suelo debería estar drenando.` : 'Sin lluvias relevantes en los últimos días.' };
     }
 
     let climaLoading = false;
@@ -2834,17 +2962,17 @@
         refreshTrailUi([p.id]);
       }
       trailDlg.close();
-      toast(published ? '¡Gracias! Tu reporte ya está en el mapa 🚦' : '¡Gracias! Recibimos tu reporte 🚦');
+      toast(published ? '¡Gracias! Tu reporte ya está en el mapa ' : '¡Gracias! Recibimos tu reporte ');
       track('trail_report_sent', { ref: p.id, estado, published });
     }
 
-    // Acceso "🚦 Estado de cerros" junto a los accesos directos del mapa (antes de "Ver todo")
+    // Acceso "<i class="i i-activity" aria-hidden="true"></i> Estado de cerros" junto a los accesos directos del mapa (antes de "Ver todo")
     (function addTrailShortcut() {
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.dataset.trailView = '';
       chip.className = 'inline-flex items-center gap-2 rounded-full bg-sand-50 px-3.5 py-2 text-sm font-semibold text-soil-800 shadow-sm ring-1 ring-sand-300 transition hover:ring-soil-600';
-      chip.textContent = '🟢 Semáforo & Estado de Cerros';
+      chip.innerHTML = '<i class="led led-green" aria-hidden="true"></i> Estado de pistas';
       shortcutsEl.insertBefore(chip, resetBtn);
     })();
 
@@ -2862,13 +2990,13 @@
         render(true);
         const withStatus = puntos.filter((p) => isTrailSpot(p) && trailStatus.has(String(p.id)));
         const n = withStatus.length, human = withStatus.filter((p) => trailStatus.get(String(p.id)).fuente === 'comunidad').length;
-        toast(n ? `🚦 ${n} ${n === 1 ? 'cerro con estado' : 'cerros con estado'}${human ? ` · ${human} ${human === 1 ? 'validado' : 'validados'} por la comunidad` : ' · calculado por clima'}` : '🚦 Sin datos de estado aún: abre un bikepark y reporta cómo está');
+        toast(n ? `${n} ${n === 1 ? 'cerro con estado' : 'cerros con estado'}${human ? ` · ${human} ${human === 1 ? 'validado' : 'validados'} por la comunidad` : ' · calculado por clima'}` : 'Sin datos de estado aún: abre un bikepark y reporta cómo está');
         track('trail_view_opened', { conEstado: n, comunidad: human });
       }
     });
 
     // ---------------------------------------------------------------------
-    // 2. 🚐 BOLSA DE SHUTTLES & CUPOS DEL FINDE
+    // 2. <i class="i i-bus" aria-hidden="true"></i> BOLSA DE SHUTTLES & CUPOS DEL FINDE
     // ---------------------------------------------------------------------
     const shuttleDlg = utilDialog('shuttleDialog');
     const shuttleBody = document.getElementById('shuttleBody');
@@ -2914,13 +3042,13 @@
       const leftLabel = left <= 0 ? 'Completo' : `Quedan ${left} ${left === 1 ? 'cupo' : 'cupos'}`;
       const maxN = Math.max(1, Math.min(left, 6));
       const cta = left <= 0
-        ? (s.whatsapp ? `<a href="${shuttleWaUrl(s, 1)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="shuttle:${esc(s.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200">📝 Pedir lista de espera</a>` : '')
+        ? (s.whatsapp ? `<a href="${shuttleWaUrl(s, 1)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="shuttle:${esc(s.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200"><i class="i i-clipboard" aria-hidden="true"></i> Pedir lista de espera</a>` : '')
         : `<div class="flex items-stretch gap-2">
              <label class="sr-only" for="sq-${esc(s.id)}">Cupos a reservar</label>
              <select id="sq-${esc(s.id)}" data-shuttle-qty="${esc(s.id)}" class="rounded-xl border-0 bg-sand-50 px-2.5 text-sm font-bold text-soil-950 ring-1 ring-sand-300 focus:ring-2 focus:ring-moss-600">${Array.from({ length: maxN }, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? 'cupos' : 'cupo'}</option>`).join('')}</select>
              ${s.whatsapp
-               ? `<a href="${shuttleWaUrl(s, 1)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="shuttle:${esc(s.id)}" data-shuttle-wa="${esc(s.id)}" class="btn-wa-pro flex-1 py-3 text-sm"><span aria-hidden="true">💬</span> Reservar Cupo por WhatsApp</a>`
-               : `<button type="button" data-shuttle-demo class="btn-wa-pro flex-1 py-3 text-sm"><span aria-hidden="true">💬</span> Reservar Cupo por WhatsApp</button>`}
+               ? `<a href="${shuttleWaUrl(s, 1)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="shuttle:${esc(s.id)}" data-shuttle-wa="${esc(s.id)}" class="btn-wa-pro flex-1 py-3 text-sm"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Reservar Cupo por WhatsApp</a>`
+               : `<button type="button" data-shuttle-demo class="btn-wa-pro flex-1 py-3 text-sm"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Reservar Cupo por WhatsApp</button>`}
            </div>`;
       return `<li>
         <article class="rounded-2xl bg-white/70 p-3.5 shadow-sm ring-1 ring-sand-300 ${left <= 0 ? 'opacity-75' : ''}">
@@ -2935,7 +3063,7 @@
                 <h3 class="font-display text-xl font-extrabold uppercase leading-tight text-soil-950">${esc(s.destino)}</h3>
                 <span class="trail-badge ${tone} px-2 py-1 text-[11px]">${leftLabel}</span>
               </div>
-              <p class="mt-0.5 text-sm text-soil-700">${s.punto_encuentro ? `📍 ${esc(s.punto_encuentro)} · ` : ''}${esc(REGIONES[s.region]?.label || '')}</p>
+              <p class="mt-0.5 text-sm text-soil-700">${s.punto_encuentro ? `<i class="i i-pin" aria-hidden="true"></i> ${esc(s.punto_encuentro)} · ` : ''}${esc(REGIONES[s.region]?.label || '')}</p>
               <p class="mt-0.5 text-xs text-soil-600">${esc(s.operador)}${s.precio ? ` · <strong class="text-soil-900">${money(s.precio)}</strong> por persona` : ''}${s.notas ? ` · ${esc(s.notas)}` : ''}</p>
             </div>
           </div>
@@ -2947,7 +3075,7 @@
     function renderShuttles() {
       const base = shuttles.filter((s) => new Date(s.sale_at) > Date.now() - 3600e3);
       const zones = [...new Set(base.map((s) => s.region))].filter((r) => REGIONES[r]);
-      const chips = [{ id: 'all', label: 'Todas', test: () => true }, { id: 'finde', label: '📅 Este finde', test: (s) => isWeekendSoon(s.sale_at) }, { id: 'libres', label: '✅ Con cupos', test: (s) => s.cupos_disponibles > 0 },
+      const chips = [{ id: 'all', label: 'Todas', test: () => true }, { id: 'finde', label: '<i class="i i-calendar" aria-hidden="true"></i> Este finde', test: (s) => isWeekendSoon(s.sale_at) }, { id: 'libres', label: '<i class="i i-check" aria-hidden="true"></i> Con cupos', test: (s) => s.cupos_disponibles > 0 },
         ...zones.map((r) => ({ id: r, label: REGIONES[r].label, test: (s) => s.region === r }))];
       if (!chips.some((c) => c.id === shuttleFilter)) shuttleFilter = 'all';
       shuttleChipsEl.innerHTML = base.length ? chips.map((c) => {
@@ -2961,7 +3089,7 @@
         : `${list.length} ${list.length === 1 ? 'salida programada' : 'salidas programadas'} por operadores`;
       if (!list.length) {
         shuttleBody.innerHTML = `<div class="mx-auto max-w-sm py-10 text-center">
-          <p class="text-4xl" aria-hidden="true">🚐</p>
+          <p class="text-4xl" aria-hidden="true"><i class="i i-bus" aria-hidden="true"></i></p>
           <p class="mt-3 font-semibold text-soil-950">${shuttleError ? 'La bolsa de cupos todavía no está activa.' : base.length ? 'No hay salidas con ese filtro.' : 'Aún no hay salidas publicadas para los próximos días.'}</p>
           <p class="mt-1 text-sm text-soil-600">Los operadores publican sus salidas durante la semana. Mientras tanto, revisa los <button type="button" data-shuttle-tours class="font-semibold text-moss-700 underline">shuttles y tours del mapa</button>.</p>
         </div>`;
@@ -3017,7 +3145,7 @@
     document.addEventListener('click', (e) => { const b = e.target.closest('[data-shuttle]'); if (b) { e.preventDefault(); openShuttles(b.dataset.shuttle); } });
 
     // ---------------------------------------------------------------------
-    // 3. 🚨 REPUESTO / TALLER DE URGENCIA (cercanía GPS)
+    // 3. <i class="i i-siren" aria-hidden="true"></i> REPUESTO / TALLER DE URGENCIA (cercanía GPS)
     // ---------------------------------------------------------------------
     const sosDlg = utilDialog('sosDialog');
     const sosBody = document.getElementById('sosBody');
@@ -3063,7 +3191,7 @@
       sosRadiusEl.hidden = true;
       sosBody.innerHTML = `
         <div class="mx-auto max-w-md rounded-2xl bg-white/70 p-4 ring-1 ring-sand-300">
-          <p class="font-semibold text-soil-950">📍 ${reason}</p>
+          <p class="font-semibold text-soil-950"><i class="i i-pin" aria-hidden="true"></i> ${reason}</p>
           <p class="mt-1 text-sm text-soil-700">No pasa nada: elige tu comuna y te mostramos los talleres y tiendas más cercanos.</p>
           <label for="sosComuna" class="mt-3 block text-sm font-semibold text-soil-800">Tu comuna</label>
           <select id="sosComuna" class="field mt-1.5"><option value="">Selecciona…</option>${comunaOptions()}</select>
@@ -3112,7 +3240,7 @@
       const all = puntos.filter((p) => SOS_CATS.includes(p.categoria)).map((p) => ({ p, km: kmBetween(sosOrigin.coords, p.coords) })).sort((a, b) => a.km - b.km);
       const counts = Object.fromEntries(SOS_RADII.map((r) => [r, all.filter((x) => x.km <= r).length]));
       if (sosRadius == null) sosRadius = SOS_RADII.find((r) => counts[r] > 0) || 20; // el radio más chico con resultados
-      sosWhere.textContent = sosOrigin.gps ? '📍 Usando tu ubicación GPS' : `📍 Cerca del centro de ${sosOrigin.name}`;
+      sosWhere.textContent = sosOrigin.gps ? 'Usando tu ubicación GPS' : `Cerca del centro de ${sosOrigin.name}`;
       sosRadiusEl.hidden = false;
       sosRadiusEl.innerHTML = `<span class="text-xs font-semibold uppercase tracking-wider text-soil-600">Radio</span>` + SOS_RADII.map((r) => {
         const on = r === sosRadius;
@@ -3138,25 +3266,25 @@
       const c = CATEGORIES[p.categoria];
       const tech = isTech(p);
       const wa = p.whatsapp
-        ? `<a href="${waUrl(p, sosWaText(p, km))}" target="_blank" rel="noopener" data-sos-wa="${esc(p.id)}" data-km="${km}" class="btn-wa-pro py-3 text-sm"><span aria-hidden="true">💬</span> Consultar Stock WhatsApp</a>`
+        ? `<a href="${waUrl(p, sosWaText(p, km))}" target="_blank" rel="noopener" data-sos-wa="${esc(p.id)}" data-km="${km}" class="btn-wa-pro py-3 text-sm"><span aria-hidden="true"></span> Consultar Stock WhatsApp</a>`
         : p.detailsLoaded === false
         ? `<div class="h-[46px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
         : `<button type="button" data-locate-sos="${esc(p.id)}" class="rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 hover:bg-sand-200">Sin WhatsApp · Ver ficha</button>`;
       return `<li>
         <article class="rounded-2xl bg-white/70 p-3.5 shadow-sm ring-1 ${tech ? 'ring-[#b3432b]/35' : 'ring-sand-300'}">
           <div class="flex flex-wrap items-center gap-1.5">
-            <span class="trail-badge st-cerrado px-2 py-1 text-[11px] !normal-case">📍 A ${kmLabel(km)} ${esc(sosOrigin.label)}</span>
+            <span class="trail-badge st-cerrado px-2 py-1 text-[11px] !normal-case"><i class="i i-pin" aria-hidden="true"></i> A ${kmLabel(km)} ${esc(sosOrigin.label)}</span>
             <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3 w-3')}${c.short}</span>
-            ${tech ? '<span class="rounded-full bg-soil-950 px-2 py-0.5 text-[10px] font-bold text-sand-50">🔧 Mantención / repuestos</span>' : ''}
-            ${isPro(p) ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
+            ${tech ? '<span class="rounded-full bg-soil-950 px-2 py-0.5 text-[10px] font-bold text-sand-50"><i class="i i-wrench" aria-hidden="true"></i> Mantención / repuestos</span>' : ''}
+            ${isPro(p) ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]"><i class="i i-badge-check" aria-hidden="true"></i> Verificado</span>' : ''}
           </div>
           <h3 class="mt-2 text-base font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
           <p class="text-sm text-soil-600">${esc([p.direccion, p.comuna].filter(Boolean).join(' · ') || REGIONES[p.region].label)}</p>
-          ${p.horario ? `<p class="mt-0.5 text-xs text-soil-600">🕑 ${esc(p.horario)}</p>` : ''}
+          ${p.horario ? `<p class="mt-0.5 text-xs text-soil-600"><i class="i i-clock" aria-hidden="true"></i> ${esc(p.horario)}</p>` : ''}
           <div class="mt-3 grid gap-2">
             ${wa}
             <div class="grid grid-cols-[1fr_auto] gap-2">
-              <a href="${sosDirections(p)}" target="_blank" rel="noopener" data-sos-go="${esc(p.id)}" class="flex items-center justify-center gap-1.5 rounded-xl bg-soil-950 py-2.5 text-sm font-semibold text-sand-50 hover:bg-soil-800">🧭 Cómo llegar</a>
+              <a href="${sosDirections(p)}" target="_blank" rel="noopener" data-sos-go="${esc(p.id)}" class="flex items-center justify-center gap-1.5 rounded-xl bg-soil-950 py-2.5 text-sm font-semibold text-sand-50 hover:bg-soil-800"><i class="i i-compass" aria-hidden="true"></i> Cómo llegar</a>
               <a href="${wazeUrl(p)}" target="_blank" rel="noopener" data-sos-go="${esc(p.id)}" class="flex items-center justify-center rounded-xl bg-sand-100 px-4 py-2.5 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200">Waze</a>
             </div>
           </div>
@@ -3242,11 +3370,11 @@
     const JOB_DEMO = !supabaseClient;
 
     const JOB_AREAS = {
-      taller:    { label: 'Taller',    icon: '🔧', cls: 'bg-ochre-400/25 text-ochre-600 ring-ochre-500/40' },
-      ventas:    { label: 'Ventas',    icon: '🛒', cls: 'bg-[#2f6f6a]/10 text-[#2f6f6a] ring-[#2f6f6a]/30' },
-      logistica: { label: 'Logística', icon: '📦', cls: 'bg-soil-700/10 text-soil-700 ring-soil-700/25' },
-      guia:      { label: 'Guía',      icon: '🧭', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
-      otro:      { label: 'Otro',      icon: '💼', cls: 'bg-sand-200 text-soil-700 ring-sand-300' },
+      taller:    { label: 'Taller',    icon: '<i class="i i-wrench" aria-hidden="true"></i>', cls: 'bg-ochre-400/25 text-ochre-600 ring-ochre-500/40' },
+      ventas:    { label: 'Ventas',    icon: '<i class="i i-bag" aria-hidden="true"></i>', cls: 'bg-[#2f6f6a]/10 text-[#2f6f6a] ring-[#2f6f6a]/30' },
+      logistica: { label: 'Logística', icon: '<i class="i i-package" aria-hidden="true"></i>', cls: 'bg-soil-700/10 text-soil-700 ring-soil-700/25' },
+      guia:      { label: 'Guía',      icon: '<i class="i i-compass" aria-hidden="true"></i>', cls: 'bg-moss-600/10 text-moss-700 ring-moss-600/30' },
+      otro:      { label: 'Otro',      icon: '<i class="i i-briefcase" aria-hidden="true"></i>', cls: 'bg-sand-200 text-soil-700 ring-sand-300' },
     };
     const JOB_MODES = { presencial: 'Presencial', terreno: 'Terreno', mixto: 'Mixto' };
     const JOB_EXP = { menos_1: 'Menos de 1 año', '1_2': '1 a 2 años', '3_5': '3 a 5 años', '6_10': '6 a 10 años', mas_10: 'Más de 10 años' };
@@ -3337,16 +3465,16 @@
           <div class="flex flex-wrap items-center gap-1.5">
             <span class="rounded-full px-2.5 py-0.5 text-[11px] font-bold ring-1 ${a.cls}">${a.icon} ${a.label}</span>
             <span class="rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-semibold text-soil-700 ring-1 ring-sand-300">${JOB_MODES[j.modalidad] || 'Presencial'}</span>
-            ${featured ? '<span class="badge-pro px-2 py-0.5 text-[10px]">★ Destacado</span>' : ''}
+            ${featured ? '<span class="badge-pro px-2 py-0.5 text-[10px]"><i class="i i-star" aria-hidden="true"></i> Destacado</span>' : ''}
             ${isNew ? '<span class="rounded-full bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
             ${j.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : ''}
             <span class="ml-auto font-mono text-[11px] text-soil-600">${j.source === 'ficha' ? 'Ficha del mapa' : jobAgo(j.created_at)}</span>
           </div>
           <h3 class="mt-2.5 font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 [text-wrap:balance]">${esc(j.puesto)}</h3>
           <p class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-soil-700">
-            <span class="font-semibold text-soil-900">🏪 ${esc(j.empresa)}</span>${j.pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]">✔ Verificado</span>' : ''}
-            ${place ? `<span>📍 ${esc(place)}</span>` : ''}
-            ${j.sueldo ? `<span class="font-semibold text-moss-700">💰 ${esc(j.sueldo)}</span>` : ''}
+            <span class="font-semibold text-soil-900"><i class="i i-store" aria-hidden="true"></i> ${esc(j.empresa)}</span>${j.pro ? '<span class="badge-pro px-1.5 py-0.5 text-[10px]"><i class="i i-badge-check" aria-hidden="true"></i> Verificado</span>' : ''}
+            ${place ? `<span><i class="i i-pin" aria-hidden="true"></i> ${esc(place)}</span>` : ''}
+            ${j.sueldo ? `<span class="font-semibold text-moss-700"><i class="i i-banknote" aria-hidden="true"></i> ${esc(j.sueldo)}</span>` : ''}
           </p>
           ${details ? `
           <details class="group mt-2">
@@ -3355,8 +3483,8 @@
             ${j.requisitos ? `<p class="mt-1.5 text-sm text-soil-700"><strong class="text-soil-900">Requisitos:</strong> ${esc(j.requisitos)}</p>` : ''}
           </details>` : ''}
           <div class="mt-3.5 flex flex-col gap-2 sm:flex-row">
-            <button type="button" data-apply="${esc(j.id)}" class="rounded-xl bg-moss-600 px-5 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700 sm:py-2.5">📩 Postular a este Trabajo</button>
-            ${j.point ? `<button type="button" data-job-locate="${esc(j.point.id)}" class="rounded-xl bg-sand-100 px-4 py-2.5 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 transition hover:bg-sand-200">📍 Ver ficha en el mapa</button>` : ''}
+            <button type="button" data-apply="${esc(j.id)}" class="rounded-xl bg-moss-600 px-5 py-3 text-sm font-bold text-sand-50 transition hover:bg-moss-700 sm:py-2.5"><i class="i i-mail" aria-hidden="true"></i> Postular a este Trabajo</button>
+            ${j.point ? `<button type="button" data-job-locate="${esc(j.point.id)}" class="rounded-xl bg-sand-100 px-4 py-2.5 text-sm font-semibold text-soil-800 ring-1 ring-sand-300 transition hover:bg-sand-200"><i class="i i-pin" aria-hidden="true"></i> Ver ficha en el mapa</button>` : ''}
           </div>
         </article>`;
     }
@@ -3373,7 +3501,7 @@
                 ${j.isNew ? '<span class="rounded bg-ochre-400 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-soil-950">Nuevo</span>' : ''}
                 <span class="text-xs text-soil-600">${esc(j.place)} · ${esc(j.when)}</span>
               </div>
-              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${j.type === 'voluntariado' ? '⛏️ ' : ''}${esc(j.title)}</h3>
+              <h3 class="font-display text-lg font-bold uppercase tracking-tight text-soil-950">${j.type === 'voluntariado' ? '<i class="i i-shovel" aria-hidden="true"></i> ' : ''}${esc(j.title)}</h3>
               <p class="mt-1 text-sm text-soil-600">${esc(j.body)}</p>
               ${j.tags?.length ? `<div class="mt-3 flex flex-wrap gap-1.5">${j.tags.map((tag) => `<span class="rounded bg-sand-200/70 px-2 py-0.5 text-[11px] font-medium text-soil-700">${esc(tag)}</span>`).join('')}</div>` : ''}
             </div>
@@ -3389,7 +3517,7 @@
       const empty = `<li class="rounded-2xl border border-dashed border-sand-300 p-6 text-center">
           <p class="font-semibold text-soil-950">${jobFilter === 'trabajo' || jobFilter === 'all' ? 'Aún no hay ofertas de trabajo publicadas.' : 'No hay avisos en esta categoría todavía.'}</p>
           <p class="mt-1 text-sm text-soil-600">¿Tu taller o tienda busca personal? Publica tu aviso y recibe postulaciones por WhatsApp.</p>
-          <button type="button" data-post-job="vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 hover:bg-soil-800">💼 Publicar Oferta de Trabajo</button>
+          <button type="button" data-post-job="vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Oferta de Trabajo</button>
         </li>`;
       jobListEl.innerHTML = items.length
         ? items.map((j) => `<li>${j.type === 'trabajo' ? jobCard(j) : communityCard(j)}</li>`).join('')
@@ -3435,7 +3563,7 @@
       if (!writeJSON(GATE_KEY, unlock)) gateMemory = unlock;
     }
 
-    // --- 📩 Postulación ---
+    // --- <i class="i i-mail" aria-hidden="true"></i> Postulación ---
     const applyDlg = $('applyDialog'), applyForm = $('applyForm');
     let applyJob = null;
     applyDlg.addEventListener('click', (e) => { if (e.target === applyDlg || e.target.closest('[data-close]')) applyDlg.close(); });
@@ -3450,7 +3578,7 @@
       $('applyCompany').textContent = `${j.empresa}${j.comuna ? ` · ${j.comuna}` : ''}`;
       $('applyDemo').hidden = !j.demo;
       $('applyBody').hidden = false; $('applyDone').hidden = true;
-      $('applySubmit').textContent = '📩 Enviar postulación';
+      $('applySubmit').textContent = 'Enviar postulación';
       showFormError($('applyError'), '');
       const prev = readJSON(GATE_KEY, null);
       if (prev?.email) $('applyEmail').value = prev.email;
@@ -3502,7 +3630,7 @@
       // Sin WhatsApp de la tienda: la postulación queda en la base y el equipo la hace llegar
       $('applySubmit').textContent = 'Enviando…';
       const ok = supabaseClient ? await queueInsert('postulaciones', row) : false;
-      $('applySubmit').textContent = '📩 Enviar postulación';
+      $('applySubmit').textContent = 'Enviar postulación';
       if (ok) return showApplyDone(`Recibimos tu postulación y se la hacemos llegar a ${j.empresa}.`, '');
       const admin = salesNumber();
       if (admin) {
@@ -3520,14 +3648,14 @@
       $('applySubmit').textContent = 'Listo';
     }
 
-    // --- 💼 Publicar oferta (captación B2B) ---
+    // --- <i class="i i-briefcase" aria-hidden="true"></i> Publicar oferta (captación B2B) ---
     const postDlg = $('postJobDialog'), postForm = $('postJobForm');
     $('pjRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
     postDlg.addEventListener('click', (e) => { if (e.target === postDlg || e.target.closest('[data-close]')) postDlg.close(); });
     function openPostJob(via) {
       if ($('postJobBody').hidden) { postForm.reset(); $('pjRegion').value = 'metropolitana'; }
       $('postJobBody').hidden = false; $('postJobDone').hidden = true;
-      $('postJobSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar y coordinar por WhatsApp';
+      $('postJobSubmit').innerHTML = '<span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Enviar y coordinar por WhatsApp';
       showFormError($('pjError'), '');
       postDlg.showModal();
       track('job_post_opened', { via });
@@ -3575,7 +3703,7 @@
       }
       $('postJobSubmit').textContent = 'Enviando…';
       if (await saved) return showPostDone('Recibimos tu aviso. Te escribiremos al WhatsApp que indicaste para coordinar el pago o tu Plan Pro y publicarlo.', '');
-      $('postJobSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar y coordinar por WhatsApp';
+      $('postJobSubmit').innerHTML = '<span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Enviar y coordinar por WhatsApp';
       showFormError(err, supabaseClient ? 'No pudimos enviar tu aviso. Inténtalo de nuevo en un rato.' : 'La publicación de avisos aún no está habilitada. Vuelve pronto.');
     });
     function showPostDone(text, link) {
@@ -3808,7 +3936,7 @@
     function guideAvatar(p, size = 'h-16 w-16 text-xl') {
       const photo = safePhoto(p.foto_url);
       return `<div class="relative ${size} shrink-0">
-        <div class="grid h-full w-full place-items-center rounded-full bg-[#6b4f7d] font-display font-extrabold text-sand-50 ring-2 ring-[#d4af37]" aria-hidden="true">${esc(initials(p.nombre) || '🧭')}</div>
+        <div class="grid h-full w-full place-items-center rounded-full bg-[#6b4f7d] font-display font-extrabold text-sand-50 ring-2 ring-[#d4af37]" aria-hidden="true">${esc(initials(p.nombre) || '<i class="i i-compass" aria-hidden="true"></i>')}</div>
         ${photo ? `<img src="${esc(photo)}" alt="Foto de ${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full rounded-full object-cover ring-2 ring-[#d4af37]" onerror="this.remove()" />` : ''}
       </div>`;
     }
@@ -3851,8 +3979,8 @@
               <label class="text-xs font-semibold text-soil-700">Disciplina<select data-gq="disciplina" class="field mt-1 !py-2 text-sm"><option value="">Cualquiera</option>${disc.map((d) => `<option>${esc(d)}</option>`).join('')}</select></label>
             </div>
             ${p.whatsapp
-              ? `<a href="${guideWaUrl(p, { zona: zonas[0] || '', personas: 2 })}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" data-guide-wa class="btn-wa-pro mt-3 py-3.5 text-[15px]"><span aria-hidden="true">💬</span> Cotizar / Reservar Salida</a>`
-              : `<button type="button" data-guide-demo class="btn-wa-pro mt-3 w-full py-3.5 text-[15px]"><span aria-hidden="true">💬</span> Cotizar / Reservar Salida</button>`}
+              ? `<a href="${guideWaUrl(p, { zona: zonas[0] || '', personas: 2 })}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" data-guide-wa class="btn-wa-pro mt-3 py-3.5 text-[15px]"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Cotizar / Reservar Salida</a>`
+              : `<button type="button" data-guide-demo class="btn-wa-pro mt-3 w-full py-3.5 text-[15px]"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Cotizar / Reservar Salida</button>`}
           </div>`;
 
       return `
@@ -3861,14 +3989,14 @@
           <div class="min-w-0">
             <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-sand-50" style="background:${CATEGORIES.guias.color}">${svgIcon('guias', 'h-3 w-3')}Guía / Instructor</span>
             <h3 id="drawerTitle" class="mt-1.5 font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
-            <p class="mt-1 text-sm text-soil-600">📍 ${place}</p>
+            <p class="mt-1 text-sm text-soil-600"><i class="i i-pin" aria-hidden="true"></i> ${place}</p>
             <div class="mt-1.5 flex flex-wrap gap-1.5">
-              ${p.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : isPro(p) ? '<span class="badge-pro px-2 py-0.5 text-[11px]">✔ Guía Verificado</span>' : ''}
+              ${p.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : isPro(p) ? '<span class="badge-pro px-2 py-0.5 text-[11px]"><i class="i i-badge-check" aria-hidden="true"></i> Guía Verificado</span>' : ''}
               ${p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2 py-0.5 text-[11px] font-bold text-sand-50">Amigo del Trail</span>' : ''}
             </div>
           </div>
         </div>
-        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '★ Guardado' : '☆ Guardar spot'}</button>
+        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '<i class="i i-star" aria-hidden="true"></i> Guardado' : '<i class="i i-star-o" aria-hidden="true"></i> Guardar spot'}</button>
 
         ${loading ? '' : p.tarifa ? `<div class="mt-4 flex items-center justify-between gap-3 rounded-xl bg-soil-950 px-4 py-3 text-sand-50">
           <span class="font-mono text-[10.5px] font-semibold uppercase tracking-wider text-ochre-300">Tarifa orientativa</span>
@@ -3878,16 +4006,16 @@
 
         <div class="mt-2 divide-y divide-sand-200">
           ${loading ? skel : [
-            guideSection('🗺️', 'Zonas / cerros de cobertura', zonas.length ? `<div class="flex flex-wrap gap-1.5">${chipList(zonas, 'bg-moss-600/10 text-moss-700 ring-1 ring-moss-600/25')}</div>` : ''),
-            guideSection('🎓', 'Certificaciones y credenciales', certs.length ? `<ul class="space-y-1 text-sm text-soil-800">${certs.map((c) => `<li class="flex gap-2"><span class="text-moss-600">✓</span>${esc(c)}</li>`).join('')}</ul>` : ''),
-            guideSection('🗣️', 'Idiomas', langs.length ? `<div class="flex flex-wrap gap-1.5">${chipList(langs, 'bg-sand-100 text-soil-800 ring-1 ring-sand-300')}</div>` : ''),
-            guideSection('🚵', 'Disciplinas', disc.length ? `<div class="flex flex-wrap gap-1.5">${chipList(disc, 'bg-[#6b4f7d]/10 text-[#5a4169] ring-1 ring-[#6b4f7d]/25')}</div>` : ''),
+            guideSection('<i class="i i-map" aria-hidden="true"></i>', 'Zonas / cerros de cobertura', zonas.length ? `<div class="flex flex-wrap gap-1.5">${chipList(zonas, 'bg-moss-600/10 text-moss-700 ring-1 ring-moss-600/25')}</div>` : ''),
+            guideSection('<i class="i i-cap" aria-hidden="true"></i>', 'Certificaciones y credenciales', certs.length ? `<ul class="space-y-1 text-sm text-soil-800">${certs.map((c) => `<li class="flex gap-2"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span>${esc(c)}</li>`).join('')}</ul>` : ''),
+            guideSection('<i class="i i-languages" aria-hidden="true"></i>', 'Idiomas', langs.length ? `<div class="flex flex-wrap gap-1.5">${chipList(langs, 'bg-sand-100 text-soil-800 ring-1 ring-sand-300')}</div>` : ''),
+            guideSection('<i class="i i-bike" aria-hidden="true"></i>', 'Disciplinas', disc.length ? `<div class="flex flex-wrap gap-1.5">${chipList(disc, 'bg-[#6b4f7d]/10 text-[#5a4169] ring-1 ring-[#6b4f7d]/25')}</div>` : ''),
           ].join('')}
         </div>
 
         ${typeof socialBlock === 'function' ? socialBlock(p) : ''}
         <div class="mt-3">${quote}</div>
-        <button type="button" data-guide-join="ficha" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">🧭 ¿Eres guía o instructor? Regístrate gratis</button>`;
+        <button type="button" data-guide-join="ficha" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950"><i class="i i-compass" aria-hidden="true"></i> ¿Eres guía o instructor? Regístrate gratis</button>`;
     }
 
     // Cotizador: cada cambio actualiza el mensaje de WhatsApp (el gate lee el enlace al hacer clic)
@@ -3905,7 +4033,7 @@
       if (e.target.closest('[data-guide-wa]')) track('guide_quote_clicked', { ref: drawerPoint?.id });
     }, true);
 
-    // --- 🧭 Registro de guías ---
+    // --- <i class="i i-compass" aria-hidden="true"></i> Registro de guías ---
     const gjDlg = $('guideJoinDialog'), gjForm = $('guideJoinForm');
     $('gjRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
     $('gjDisc').innerHTML = Object.entries(GUIDE_DISC).map(([k, l]) => `<button type="button" class="gate-chip !py-1.5 text-[13px]" data-disc="${k}" aria-pressed="false">${l}</button>`).join('');
@@ -3918,7 +4046,7 @@
     function openGuideJoin(via) {
       if ($('guideJoinBody').hidden) { gjForm.reset(); $('gjRegion').value = 'metropolitana'; gjForm.querySelectorAll('[data-disc]').forEach((c) => c.setAttribute('aria-pressed', 'false')); }
       $('guideJoinBody').hidden = false; $('guideJoinDone').hidden = true;
-      $('guideJoinSubmit').textContent = '🧭 Crear mi perfil gratis';
+      $('guideJoinSubmit').textContent = 'Crear mi perfil gratis';
       showFormError($('gjError'), '');
       document.getElementById('dirDialog').open && document.getElementById('dirDialog').close();
       gjDlg.showModal();
@@ -3983,7 +4111,7 @@
         openWhatsApp(link);
         return showGuideDone('Se abrió WhatsApp con tu perfil para enviarlo al equipo de BIKEGRID. Te avisaremos cuando esté publicado.', link);
       }
-      $('guideJoinSubmit').textContent = '🧭 Crear mi perfil gratis';
+      $('guideJoinSubmit').textContent = 'Crear mi perfil gratis';
       showFormError(err, supabaseClient ? 'No pudimos enviar tu perfil. Inténtalo de nuevo en un rato.' : 'El registro de guías aún no está habilitado. Vuelve pronto.');
     });
     function showGuideDone(text, link) {
@@ -4019,8 +4147,8 @@
     // --- Botones de plan → WhatsApp comercial con el plan indicado ---
     const planMessage = (key) => {
       const p = PLANS[key];
-      if (key === 'auspicio') return 'Hola BIKEGRID 👋 Represento a una marca de bicis, repuestos o equipamiento y me interesan los *Auspicios y Banners Regionales*.\n• Marca: \n• Regiones de interés: \n• Contacto: ';
-      return `Hola BIKEGRID 👋 Me interesa el *${p.name}* (${p.price()}).\n• ${key === 'guia' ? 'Nombre / escuela' : 'Nombre del negocio'}: \n• Comuna: \n• ${key === 'guia' ? 'Zonas donde guío' : 'Categoría (tienda, taller, shuttle…)'}: `;
+      if (key === 'auspicio') return 'Hola BIKEGRID Represento a una marca de bicis, repuestos o equipamiento y me interesan los *Auspicios y Banners Regionales*.\n• Marca: \n• Regiones de interés: \n• Contacto: ';
+      return `Hola BIKEGRID Me interesa el *${p.name}* (${p.price()}).\n• ${key === 'guia' ? 'Nombre / escuela' : 'Nombre del negocio'}: \n• Comuna: \n• ${key === 'guia' ? 'Zonas donde guío' : 'Categoría (tienda, taller, shuttle…)'}: `;
     };
     // Sin número comercial configurado, cada plan lleva a su flujo del sitio
     function goToBusinessForm(featured) {
@@ -4092,7 +4220,7 @@
         .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')).slice(0, 3);
       box.hidden = !guides.length;
       if (!guides.length) return;
-      box.innerHTML = `<p class="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600">🧭 Guías verificados para tu viaje</p>
+      box.innerHTML = `<p class="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-soil-600"><i class="i i-compass" aria-hidden="true"></i> Guías verificados para tu viaje</p>
         <ul class="grid gap-2">${guides.map((g) => `<li class="flex items-center gap-3 rounded-xl bg-white/70 p-2.5 ring-1 ring-sand-300">
           ${typeof guideAvatar === 'function' ? guideAvatar(g, 'h-10 w-10 text-sm') : ''}
           <div class="min-w-0 flex-1"><p class="truncate text-sm font-bold text-soil-950">${esc(g.nombre)}</p><p class="truncate text-xs text-soil-600">${esc(g.comuna || REGIONES[g.region].label)}</p></div>
@@ -4170,9 +4298,9 @@
         return `
         <div class="social-locked mt-4 rounded-xl p-3.5 ring-1 ring-sand-300" aria-label="Redes sociales no verificadas">
           <div class="grid grid-cols-2 gap-2 opacity-80" aria-hidden="true">
-            <span class="ghost">🔒 🌐 Sitio web</span><span class="ghost">🔒 📸 Instagram</span>
+            <span class="ghost"><i class="i i-lock" aria-hidden="true"></i> <i class="i i-globe" aria-hidden="true"></i> Sitio web</span><span class="ghost"><i class="i i-lock" aria-hidden="true"></i> <i class="i i-instagram" aria-hidden="true"></i> Instagram</span>
           </div>
-          <p class="mt-2.5 text-sm font-semibold text-soil-700">🔒 Redes sociales y catálogo web no verificados.</p>
+          <p class="mt-2.5 text-sm font-semibold text-soil-700"><i class="i i-lock" aria-hidden="true"></i> Redes sociales y catálogo web no verificados.</p>
           <button type="button" data-claim="${esc(p.id)}" class="mt-1 text-left text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">¿Eres el dueño? Vincula tu Instagram y Web activando tu Ficha Pro</button>
         </div>`;
       }
@@ -4181,11 +4309,11 @@
       const L = socialLinks(p);
       if (!L.web && !L.ig && !L.tiktok && !L.yt && !L.trail) return '';
       const buttons = [
-        L.web ? extLink(L.web, 'social-web col-span-2', `🌐 Ver Sitio Web / Catálogo`, 'web') : '',
-        L.ig ? extLink(`https://www.instagram.com/${L.ig}/`, 'social-ig', '📸 Instagram', 'instagram') : '',
-        L.tiktok ? extLink(`https://www.tiktok.com/@${L.tiktok}`, 'social-neutral', '🎵 TikTok', 'tiktok') : '',
-        L.yt ? extLink(L.yt, 'social-neutral', '▶️ YouTube', 'youtube') : '',
-        L.trail ? extLink(L.trail, 'social-trail col-span-2', '🚵 Mapa de Pistas (Trailforks / Strava)', 'pistas') : '',
+        L.web ? extLink(L.web, 'social-web col-span-2', `<i class="i i-globe" aria-hidden="true"></i> Ver Sitio Web / Catálogo`, 'web') : '',
+        L.ig ? extLink(`https://www.instagram.com/${L.ig}/`, 'social-ig', '<i class="i i-instagram" aria-hidden="true"></i> Instagram', 'instagram') : '',
+        L.tiktok ? extLink(`https://www.tiktok.com/@${L.tiktok}`, 'social-neutral', '<i class="i i-music" aria-hidden="true"></i> TikTok', 'tiktok') : '',
+        L.yt ? extLink(L.yt, 'social-neutral', '<i class="i i-play" aria-hidden="true"></i> YouTube', 'youtube') : '',
+        L.trail ? extLink(L.trail, 'social-trail col-span-2', '<i class="i i-bike" aria-hidden="true"></i> Mapa de Pistas (Trailforks / Strava)', 'pistas') : '',
       ].filter(Boolean);
       // Si quedan en número impar, el último ocupa todo el ancho
       const small = buttons.filter((b) => !b.includes('col-span-2'));
@@ -4193,16 +4321,16 @@
       const igPreview = L.ig ? `
           <details class="group mt-2 rounded-xl bg-white/70 ring-1 ring-sand-300">
             <summary class="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-semibold text-soil-800">
-              <span>✨ Ver novedades de <span class="text-[#c13584]">@${esc(L.ig)}</span></span><span class="text-soil-600 transition group-open:rotate-180">▾</span>
+              <span><i class="i i-sparkles" aria-hidden="true"></i> Ver novedades de <span class="text-[#c13584]">@${esc(L.ig)}</span></span><span class="text-soil-600 transition group-open:rotate-180">▾</span>
             </summary>
             <div class="px-3 pb-3">
               <div class="flex items-center gap-3 rounded-lg p-2.5 text-white social-ig">
-                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20 text-lg ring-2 ring-white/60" aria-hidden="true">📸</span>
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20 text-lg ring-2 ring-white/60" aria-hidden="true"><i class="i i-instagram" aria-hidden="true"></i></span>
                 <div class="min-w-0"><p class="truncate font-bold">@${esc(L.ig)}</p><p class="text-xs text-white/85">${esc(p.nombre)} en Instagram</p></div>
               </div>
               <div class="mt-2 grid grid-cols-2 gap-2">
-                ${extLink(`https://www.instagram.com/${L.ig}/`, 'social-neutral !py-2 text-xs', '🖼️ Últimas publicaciones', 'instagram')}
-                ${extLink(`https://www.instagram.com/stories/${L.ig}/`, 'social-neutral !py-2 text-xs', '⭕ Historias de hoy', 'instagram')}
+                ${extLink(`https://www.instagram.com/${L.ig}/`, 'social-neutral !py-2 text-xs', '<i class="i i-image" aria-hidden="true"></i> Últimas publicaciones', 'instagram')}
+                ${extLink(`https://www.instagram.com/stories/${L.ig}/`, 'social-neutral !py-2 text-xs', '<i class="i i-circle" aria-hidden="true"></i> Historias de hoy', 'instagram')}
               </div>
               <p class="mt-1.5 text-[11px] text-soil-600">Se abre en la app de Instagram (o en la web).</p>
             </div>
@@ -4210,8 +4338,8 @@
       return `
         <div class="mt-4 rounded-xl bg-sand-100 p-3.5 ring-1 ring-[#d4af37]/60">
           <div class="flex items-center justify-between gap-2">
-            <p class="font-display text-base font-extrabold uppercase tracking-tight text-soil-950">🌐 Ecosistema Digital &amp; Redes</p>
-            <span class="badge-pro shrink-0 whitespace-nowrap px-1.5 py-0.5 text-[10px]">✔ Verificado</span>
+            <p class="font-display text-base font-extrabold uppercase tracking-tight text-soil-950"><i class="i i-globe" aria-hidden="true"></i> Ecosistema Digital &amp; Redes</p>
+            <span class="badge-pro shrink-0 whitespace-nowrap px-1.5 py-0.5 text-[10px]"><i class="i i-badge-check" aria-hidden="true"></i> Verificado</span>
           </div>
           <div class="mt-2.5 grid grid-cols-2 gap-2">${buttons.join('')}</div>
           ${igPreview}
@@ -4220,7 +4348,7 @@
   </script>
 
   <script>
-    // ================= 🧭 GUÍAS LOCALES: filtro rápido del encabezado =================
+    // ================= <i class="i i-compass" aria-hidden="true"></i> GUÍAS LOCALES: filtro rápido del encabezado =================
     // Filtra el mapa a guías sin mover la vista: primero cuenta los que están en la zona visible.
     function filterGuidesInView(via) {
       document.getElementById('mobileMenu')?.classList.add('hidden');
@@ -4232,12 +4360,13 @@
       const all = visiblePoints();
       const inView = all.filter((e) => bounds.contains(e.marker.getLatLng())).length;
       track('guides_filter', { via, enVista: inView, total: all.length });
-      if (inView) return toast(`🧭 ${inView} ${inView === 1 ? 'guía' : 'guías'} en la zona visible del mapa`);
+      if (inView) return toast(`${inView} ${inView === 1 ? 'guía' : 'guías'} en la zona visible del mapa`);
       if (all.length) { render(true); return toast(`No hay guías en esta zona: te mostramos ${all.length === 1 ? 'el guía' : `los ${all.length} guías`} de ${mapState.region === 'all' ? 'Chile' : REGIONES[mapState.region].label}`); }
       toast('Aún no hay guías en el mapa. ¿Eres guía? Regístrate gratis');
     }
     document.addEventListener('click', (e) => { const b = e.target.closest('[data-guides-filter]'); if (b) { e.preventDefault(); filterGuidesInView(b.dataset.guidesFilter); } });
-    // Menú móvil: "🚵 Bikeparks & Senderos" filtra el mapa; cualquier opción cierra el menú
+    document.addEventListener('click', (e) => { if (e.target.closest('[data-dir-open]')) { e.preventDefault(); dirEl.open.click(); } });
+    // Menú móvil: "<i class="i i-bike" aria-hidden="true"></i> Bikeparks & Senderos" filtra el mapa; cualquier opción cierra el menú
     document.addEventListener('click', (e) => {
       if (!e.target.closest('[data-menu-senderos]')) return;
       mapState.cat = 'senderos'; mapState.region = 'all'; regionSelect.value = 'all';
@@ -4252,7 +4381,7 @@
   </script>
 
   <script>
-    // ================= 🏷️ MARCAS QUE TRABAJA CADA FICHA =================
+    // ================= <i class="i i-tag" aria-hidden="true"></i> MARCAS QUE TRABAJA CADA FICHA =================
     // Catálogo único (supabase/marcas.sql): marcas + comercio_marcas (orden 0 = marca principal).
     // Cada punto recibe p.marcas = [{ nombre, slug, orden }] ordenadas; sin base, se usan las de los datos de respaldo.
     const brandSlug = (t) => norm(String(t || '')).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -4322,15 +4451,15 @@
       if (!p.marcas?.length) return '';
       const m = (brandFilter && brandOf(p, brandFilter)) || p.marcas[0];
       const principal = m.orden === 0;
-      return `<p class="mt-1 truncate text-[11px] font-semibold ${m.slug === brandFilter ? 'text-ochre-600' : 'text-soil-700'}" title="${esc(p.marcas.map((x) => x.nombre).join(', '))}">🏷️ ${esc(m.nombre)}${principal ? ' <span class="font-normal text-soil-600">· principal</span>' : ''}${p.marcas.length > 1 && principal ? ` <span class="font-normal text-soil-600">+${p.marcas.length - 1}</span>` : ''}</p>`;
+      return `<p class="mt-1 truncate text-[11px] font-semibold ${m.slug === brandFilter ? 'text-ochre-600' : 'text-soil-700'}" title="${esc(p.marcas.map((x) => x.nombre).join(', '))}"><i class="i i-tag" aria-hidden="true"></i> ${esc(m.nombre)}${principal ? ' <span class="font-normal text-soil-600">· principal</span>' : ''}${p.marcas.length > 1 && principal ? ` <span class="font-normal text-soil-600">+${p.marcas.length - 1}</span>` : ''}</p>`;
     }
     // Ficha: todas las marcas, la principal destacada; cada una abre el directorio filtrado
     function brandBlock(p) {
       if (!p.marcas?.length) return '';
       return `
         <div class="mt-3">
-          <p class="mb-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">🏷️ Marcas que trabaja</p>
-          <div class="flex flex-wrap gap-1.5">${p.marcas.map((m) => `<button type="button" data-brand-open="${esc(m.slug)}" class="rounded-full px-2.5 py-1 text-xs font-bold ring-1 transition ${m.orden === 0 ? 'bg-soil-950 text-sand-50 ring-soil-950 hover:bg-soil-800' : 'bg-sand-100 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${m.orden === 0 ? '★ ' : ''}${esc(m.nombre)}${m.orden === 0 ? ' <span class="font-normal text-sand-300">· principal</span>' : ''}</button>`).join('')}</div>
+          <p class="mb-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600"><i class="i i-tag" aria-hidden="true"></i> Marcas que trabaja</p>
+          <div class="flex flex-wrap gap-1.5">${p.marcas.map((m) => `<button type="button" data-brand-open="${esc(m.slug)}" class="rounded-full px-2.5 py-1 text-xs font-bold ring-1 transition ${m.orden === 0 ? 'bg-soil-950 text-sand-50 ring-soil-950 hover:bg-soil-800' : 'bg-sand-100 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${m.orden === 0 ? '<i class="i i-star" aria-hidden="true"></i> ' : ''}${esc(m.nombre)}${m.orden === 0 ? ' <span class="font-normal text-sand-300">· principal</span>' : ''}</button>`).join('')}</div>
         </div>`;
     }
 
