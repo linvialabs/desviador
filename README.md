@@ -171,3 +171,19 @@ Ejecuta [`supabase/redes.sql`](supabase/redes.sql). Agrega `website_url`, `insta
 - La configuración ahora es `window.BIKEGRID_CONFIG` en `supabase-config.js`. El nombre anterior `DESVIADOR_CONFIG` sigue funcionando.
 - **Se mantienen a propósito** las claves internas del navegador (`desviador-guardados`, `desviador-gate`, colas de envío…) y los eventos internos (`desviador:*`), para que los usuarios actuales no pierdan sus spots guardados, desbloqueos ni envíos pendientes.
 - Este repositorio y su URL de GitHub Pages siguen llamándose `desviador`. Para la marca nueva, lo ideal es un dominio propio (ej. `bikegrid.cl` o `bikegrid.app`) apuntado a GitHub Pages.
+
+## 🏷️ Marcas que trabaja cada ficha
+
+Ejecuta [`supabase/marcas.sql`](supabase/marcas.sql). Crea un **catálogo único** de marcas (`marcas`) y la relación ficha–marca (`comercio_marcas`, donde `orden 0` es la **marca principal**).
+
+- **Sin duplicados:** "Specialized", "specialized " y "SPECIALIZED" son la misma marca; la base calcula un `slug` normalizado (sin tildes ni mayúsculas) y no acepta repetidos. Cada marca nueva queda en el catálogo para reutilizarla después.
+- **Sitio público:**
+  - Cada tarjeta muestra su marca principal (🏷️ Specialized · principal).
+  - La ficha muestra todas sus marcas; al tocar una, se abre el directorio filtrado.
+  - El directorio tiene el filtro **🏷️ Marca** (autocompletado + marcas más trabajadas). Aparecen primero quienes tienen esa marca como **principal**, luego los PRO y después el resto.
+  - La búsqueda por texto también encuentra marcas.
+- **Registro:** el negocio puede indicar "Marcas que trabajas" (texto libre, en `marcas_sugeridas`). No se publica tal cual: el equipo las pasa al catálogo.
+- **Panel admin → Editar → 🏷️ Marcas:**
+  - Escribe y presiona Enter. Autocompleta desde el catálogo y reutiliza la marca si ya existe.
+  - ☆ hace principal a una marca; ✕ la quita.
+  - "Usar estas" carga las marcas sugeridas por el negocio.

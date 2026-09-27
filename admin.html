@@ -184,6 +184,15 @@
             <div><label for="e_personal" class="lbl">Busca personal <span class="font-normal text-sand-300/70">(público · Bici Jobs)</span></label><input id="e_personal" maxlength="200" placeholder="Ej: mecánico part-time" class="fld" /></div>
             <div><label for="e_descripcion" class="lbl">Descripción pública</label><textarea id="e_descripcion" rows="3" maxlength="600" class="fld resize-y"></textarea></div>
 
+            <fieldset id="e_brands" class="space-y-3 rounded-xl border border-soil-600 p-4">
+              <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-sand-200">🏷️ Marcas que trabaja · la primera es la principal</legend>
+              <p id="e_brandsNote" class="-mt-1 text-xs text-sand-300/80">Escribe y presiona Enter (o coma). Si la marca ya existe, se reutiliza; si no, se crea en el catálogo.</p>
+              <div id="e_brandChips" class="flex flex-wrap gap-1.5"></div>
+              <input id="e_brandInput" list="e_brandList" maxlength="40" autocomplete="off" placeholder="Ej: Specialized" class="fld" />
+              <datalist id="e_brandList"></datalist>
+              <p id="e_brandSuggested" class="hidden rounded-lg bg-ochre-400/10 px-3 py-2 text-xs text-ochre-300 ring-1 ring-ochre-400/30"></p>
+            </fieldset>
+
             <fieldset id="e_social" class="space-y-4 rounded-xl border border-[#d4af37]/50 p-4">
               <legend class="px-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#e2c35a]">🌐 Ecosistema digital · visible solo en fichas Pro y guías</legend>
               <p id="e_socialNote" class="-mt-1 text-xs text-sand-300/80">Pega la URL o el usuario; se valida al guardar.</p>
@@ -400,6 +409,7 @@
 
     // ================= DATOS =================
     async function loadRows(silent = false) {
+      if (!brands.catalogLoaded) { brands.catalogLoaded = true; loadBrandData(); }
       const { data, error } = await supabaseClient.rpc('admin_comercios');
       if (error) {
         if (error.code === '42501') { await supabaseClient.auth.signOut(); show('loginView'); return toast('Tu sesión no tiene permisos de administración.', true); }
@@ -559,6 +569,7 @@
           ${r.horario ? `<div><dt class="text-sand-300/70">Horario</dt><dd class="text-sand-50">${esc(r.horario)}</dd></div>` : ''}
           ${r.necesidad_personal ? `<div><dt class="text-sand-300/70">💼 Busca personal (público)</dt><dd class="text-ochre-300">${esc(r.necesidad_personal)}</dd></div>` : ''}
           ${r.categoria === 'guias' ? guideInfo(r) : ''}
+          ${r.marcas_sugeridas ? `<div><dt class="text-sand-300/70">🏷️ Marcas sugeridas</dt><dd class="text-sand-50">${esc(r.marcas_sugeridas)}</dd></div>` : ''}
         </dl>
         ${r.descripcion ? `<p class="mt-3 rounded-lg bg-soil-950/60 p-3 text-sm text-sand-200">${esc(r.descripcion)}</p>` : ''}
         ${priv ? `<dl class="mt-3 grid gap-x-6 gap-y-2 rounded-lg border border-dashed border-ochre-400/30 p-3 text-sm sm:grid-cols-2"><p class="font-mono text-[10px] font-bold uppercase tracking-wider text-ochre-300 sm:col-span-2">Privado</p>${priv}</dl>` : ''}
@@ -647,6 +658,87 @@
     fillSelect($('e_categoria'), Object.entries(CATEGORIES).map(([k, c]) => [k, c.label]));
     fillSelect($('e_region'), Object.entries(REGIONES));
 
+    // ================= 🏷️ MARCAS (supabase/marcas.sql) =================
+    const brands = { ready: false, catalog: [], byComercio: new Map(), editing: [] };
+    const brandSlug = (t) => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const cleanBrand = (t) => String(t || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+    async function loadBrandData() {
+      const [cat, rel] = await Promise.all([
+        supabaseClient.from('marcas').select('id, nombre, slug').order('nombre'),
+        supabaseClient.from('comercio_marcas').select('comercio_id, marca_id, orden').order('orden').limit(20000),
+      ]);
+      brands.ready = !cat.error && !rel.error;
+      if (!brands.ready) return;
+      brands.catalog = cat.data;
+      const byId = new Map(cat.data.map((m) => [m.id, m]));
+      brands.byComercio = new Map();
+      rel.data.forEach((r) => { const m = byId.get(r.marca_id); if (m) (brands.byComercio.get(r.comercio_id) || brands.byComercio.set(r.comercio_id, []).get(r.comercio_id)).push(m.nombre); });
+      $('e_brandList').innerHTML = cat.data.map((m) => `<option value="${esc(m.nombre)}"></option>`).join('');
+    }
+    function renderBrandChips() {
+      $('e_brandChips').innerHTML = brands.editing.length ? brands.editing.map((n, i) => `
+        <span class="inline-flex items-center gap-1 rounded-full py-1 pl-2.5 pr-1 text-xs font-bold ${i === 0 ? 'bg-ochre-400 text-soil-950' : 'bg-soil-800 text-sand-100 ring-1 ring-soil-600'}">
+          ${i === 0 ? '★ ' : `<button type="button" data-brand-main="${i}" title="Hacer principal" class="text-sand-300 hover:text-ochre-300">☆</button>`}${esc(n)}${i === 0 ? ' · principal' : ''}
+          <button type="button" data-brand-del="${i}" aria-label="Quitar ${esc(n)}" class="grid h-5 w-5 place-items-center rounded-full hover:bg-black/20">✕</button>
+        </span>`).join('') : '<span class="text-xs text-sand-300/70">Sin marcas asignadas.</span>';
+    }
+    function addBrand(raw) {
+      const name = cleanBrand(raw);
+      if (name.length < 2) return;
+      // Reusar el nombre del catálogo si ya existe (misma marca escrita distinto)
+      const existing = brands.catalog.find((m) => m.slug === brandSlug(name));
+      const final = existing ? existing.nombre : name;
+      if (!brands.editing.some((n) => brandSlug(n) === brandSlug(final))) brands.editing.push(final);
+      renderBrandChips();
+    }
+    $('e_brandInput').addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ',') return;
+      e.preventDefault();
+      addBrand($('e_brandInput').value); $('e_brandInput').value = '';
+    });
+    $('e_brandInput').addEventListener('change', () => { if (brands.catalog.some((m) => m.nombre === $('e_brandInput').value)) { addBrand($('e_brandInput').value); $('e_brandInput').value = ''; } });
+    $('e_brandChips').addEventListener('click', (e) => {
+      const del = e.target.closest('[data-brand-del]'), main = e.target.closest('[data-brand-main]');
+      if (del) brands.editing.splice(+del.dataset.brandDel, 1);
+      if (main) brands.editing.unshift(...brands.editing.splice(+main.dataset.brandMain, 1));
+      renderBrandChips();
+    });
+    $('e_brandSuggested').addEventListener('click', (e) => {
+      if (!e.target.closest('[data-use-suggested]')) return;
+      (byId(state.editingId)?.marcas_sugeridas || '').split(',').forEach(addBrand);
+    });
+    function openBrandEditor(r) {
+      $('e_brands').disabled = !brands.ready;
+      $('e_brands').classList.toggle('opacity-50', !brands.ready);
+      $('e_brandsNote').textContent = brands.ready ? 'Escribe y presiona Enter (o coma). Si la marca ya existe, se reutiliza; si no, se crea en el catálogo.' : 'Ejecuta supabase/marcas.sql en Supabase para activar las marcas.';
+      brands.editing = [...(brands.byComercio.get(r.id) || [])];
+      $('e_brandInput').value = '';
+      $('e_brandSuggested').classList.toggle('hidden', !r.marcas_sugeridas);
+      $('e_brandSuggested').innerHTML = r.marcas_sugeridas ? `Sugeridas por el negocio: <strong>${esc(r.marcas_sugeridas)}</strong> · <button type="button" data-use-suggested class="font-semibold underline">Usar estas</button>` : '';
+      renderBrandChips();
+    }
+    // Guardar: crea en el catálogo solo las marcas nuevas y reemplaza las de la ficha (en orden: 0 = principal)
+    async function saveBrands(comercioId) {
+      if (!brands.ready) return true;
+      const pending = $('e_brandInput').value.trim(); if (pending) { addBrand(pending); $('e_brandInput').value = ''; }
+      const names = brands.editing;
+      const missing = names.filter((n) => !brands.catalog.some((m) => m.slug === brandSlug(n)));
+      if (missing.length) {
+        const { error } = await supabaseClient.from('marcas').insert(missing.map((nombre) => ({ nombre })));
+        if (error && error.code !== '23505') { toast('No se guardaron las marcas: ' + error.message, true); return false; }
+        await loadBrandData();
+      }
+      const ids = names.map((n) => brands.catalog.find((m) => m.slug === brandSlug(n))?.id).filter(Boolean);
+      const del = await supabaseClient.from('comercio_marcas').delete().eq('comercio_id', comercioId);
+      if (del.error) { toast('No se guardaron las marcas: ' + del.error.message, true); return false; }
+      if (ids.length) {
+        const { error } = await supabaseClient.from('comercio_marcas').insert(ids.map((marca_id, orden) => ({ comercio_id: comercioId, marca_id, orden })));
+        if (error) { toast('No se guardaron las marcas: ' + error.message, true); return false; }
+      }
+      await loadBrandData();
+      return true;
+    }
+
     function openEdit(id) {
       const r = byId(id);
       if (!r) return;
@@ -667,6 +759,7 @@
       $('e_solicita').checked = !!r.solicita_destacado;
       $('e_amigo').checked = !!r.es_amigo_trail;
       $('e_destacado').checked = !!r.destacado;
+      openBrandEditor(r);
       // Redes: solo si la base ya tiene las columnas (supabase/redes.sql)
       const socialReady = 'website_url' in r;
       $('e_social').disabled = !socialReady;
@@ -768,7 +861,9 @@
         destacado: $('e_destacado').checked,
       };
       $('editSave').disabled = true; $('editSave').textContent = 'Guardando…';
-      const ok = await mutate(state.editingId, changes, 'Cambios guardados');
+      const editedId = state.editingId;
+      const ok = (await mutate(editedId, changes, null)) && (await saveBrands(editedId));
+      if (ok) toast('Cambios guardados');
       $('editSave').disabled = false; $('editSave').textContent = 'Guardar cambios';
       if (ok) { state.tab = changes.estado; closeEdit(); }
     });

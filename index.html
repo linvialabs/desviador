@@ -552,6 +552,10 @@
               <label for="bizStaff" class="mb-1.5 block text-sm font-semibold text-soil-800">¿Buscas personal? <span class="font-normal text-soil-600">(opcional · se publica en tu ficha y en Bici Jobs)</span></label>
               <input id="bizStaff" maxlength="200" placeholder="Ej: mecánico part-time, vendedor fin de semana" class="field" />
             </div>
+            <div>
+              <label for="bizBrands" class="mb-1.5 block text-sm font-semibold text-soil-800">🏷️ Marcas que trabajas <span class="font-normal text-soil-600">(opcional · la principal primero, separadas por coma)</span></label>
+              <input id="bizBrands" maxlength="200" list="brandList" placeholder="Ej: Specialized, Fox, Shimano" class="field" />
+            </div>
             <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
               <input id="bizFeatured" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#56743a]" />
               <span class="text-sm text-soil-700"><strong class="font-semibold text-soil-950">Quiero una ficha destacada.</strong> Te enviamos la propuesta comercial con WhatsApp directo, pin destacado y prioridad en búsquedas.</span>
@@ -638,6 +642,16 @@
         <input id="dirSearch" type="search" autocomplete="off" placeholder="Filtrar por nombre, comuna o categoría…" class="mt-3 w-full rounded-xl border-0 bg-white/70 px-4 py-2.5 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
         <!-- Filtros rápidos por categoría: scroll horizontal en móvil, en filas en pantallas grandes -->
         <div id="dirChips" class="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" role="group" aria-label="Filtrar por categoría"></div>
+        <!-- 🏷️ Filtro por marca: catálogo único de marcas -->
+        <div id="dirBrandBar" class="mt-2.5 flex items-center gap-2" hidden>
+          <label for="dirBrand" class="shrink-0 text-xs font-bold uppercase tracking-wider text-soil-600">🏷️ Marca</label>
+          <div class="relative w-40 shrink-0 sm:w-56">
+            <input id="dirBrand" list="brandList" autocomplete="off" placeholder="Specialized, Fox…" class="w-full rounded-full border-0 bg-white/70 py-1.5 pl-3 pr-8 text-sm text-ink ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
+            <button type="button" id="dirBrandClear" class="absolute right-1.5 top-1/2 hidden h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-soil-600 hover:bg-sand-200" aria-label="Quitar filtro de marca">✕</button>
+          </div>
+          <div id="dirBrandTop" class="no-scrollbar -mr-4 flex gap-1.5 overflow-x-auto pr-4 sm:mr-0 sm:pr-0" role="group" aria-label="Marcas más trabajadas"></div>
+        </div>
+        <datalist id="brandList"></datalist>
       </div>
       <div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <div id="dirGuideCta" class="mb-3 flex flex-col gap-2 rounded-xl bg-[#6b4f7d]/10 p-3 ring-1 ring-[#6b4f7d]/30 sm:flex-row sm:items-center sm:justify-between" hidden>
@@ -1342,8 +1356,8 @@
     // Puntos de RESPALDO: se usan solo si Supabase no está configurado o no responde.
     // Con Supabase activo, los puntos vienen de la tabla "comercios" (estado = 'aprobado').
     const puntosIniciales = [
-      { id: 'multibike-concepcion', nombre: 'Multibike / Specialized Concepción',   categoria: 'tiendas',  comuna: 'Concepción',            region: 'biobio',        coords: [-36.8275, -73.0503], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
-      { id: 'giant-liv-vitacura',   nombre: 'Giant / Liv Vitacura',                 categoria: 'tiendas',  comuna: 'Vitacura',              region: 'metropolitana', coords: [-33.3881, -70.5678], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      { id: 'multibike-concepcion', nombre: 'Multibike / Specialized Concepción',   categoria: 'tiendas',  comuna: 'Concepción',            region: 'biobio',        coords: [-36.8275, -73.0503], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null , marcas: ['Specialized'] },
+      { id: 'giant-liv-vitacura',   nombre: 'Giant / Liv Vitacura',                 categoria: 'tiendas',  comuna: 'Vitacura',              region: 'metropolitana', coords: [-33.3881, -70.5678], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null , marcas: ['Giant', 'Liv'] },
       { id: 'laguna-temuco',        nombre: 'Laguna Off Road / Bici Taller Temuco', categoria: 'talleres', comuna: 'Temuco',                region: 'araucania',     coords: [-38.7397, -72.5901], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
       { id: 'nevados-chillan',      nombre: 'Bikepark Nevados de Chillán',          categoria: 'senderos', comuna: 'Pinto',                 region: 'nuble',         coords: [-36.9061, -71.4111], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
       { id: 'parque-las-palmas',    nombre: 'Parque Las Palmas',                    categoria: 'senderos', comuna: 'Puchuncaví',            region: 'valparaiso',    coords: [-32.7412, -71.4015], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
@@ -1679,6 +1693,7 @@
         ${typeof trailDrawerBlock === 'function' ? trailDrawerBlock(p) : ''}
         ${jobBlock}
         ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
+        ${typeof brandBlock === 'function' ? brandBlock(p) : ''}
 
         <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
           ${row('Dirección', loading ? skel('w-40') : p.direccion ? esc(p.direccion) : 'Por confirmar', !loading && !p.direccion)}
@@ -1846,6 +1861,7 @@
             </div>
             <h3 class="mt-1.5 line-clamp-2 text-[13px] font-bold leading-snug text-soil-950">${esc(p.nombre)}</h3>
             <p class="truncate text-xs text-soil-600">${esc(p.comuna || REGIONES[p.region].label)}</p>
+            ${typeof brandTag === 'function' ? brandTag(p) : ''}
           </div>
           <div class="grid gap-1.5">
             ${proCta}
@@ -1890,7 +1906,8 @@
       const raw = dirEl.search.value.trim();
       const q = norm(raw);
       const all = sortedPoints();
-      const list = all.filter((p) => chip.test(p) && (!q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q)));
+      let list = all.filter((p) => chip.test(p) && (!q || norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label} ${typeof brandText === 'function' ? brandText(p) : ''}`).includes(q)));
+      if (typeof applyBrandFilter === 'function') list = applyBrandFilter(list); // 🏷️ marca: principales primero
 
       // Píldoras con su total (sin contar el texto, para que el número no "salte" al escribir)
       dirEl.chips.innerHTML = DIR_CHIPS.filter((c) => !c.onlyIfAny || c.id === dirChip || all.some(c.test)).map((c) => {
@@ -1900,7 +1917,7 @@
       }).join('');
 
       // Paginación: 20 fichas por tanda (PRO siempre arriba, por dirSort). Si solo cambió el estado de las fichas, se conservan las ya mostradas.
-      const sig = `${dirChip}|${q}`;
+      const sig = `${dirChip}|${q}|${typeof activeBrand === 'function' ? activeBrand() : ''}`;
       const keep = sig === dirPaged.sig ? dirPaged.shown : 0;
       dirPaged = { list, shown: 0, sig };
       dirEl.all.innerHTML = '';
@@ -1908,7 +1925,7 @@
       dirEl.empty.hidden = list.length > 0;
       dirEl.empty.textContent = `No hay ${chip.many} ${raw ? `que coincidan con "${raw}"` : 'por ahora'}.`;
       document.getElementById('dirGuideCta').hidden = dirChip !== 'guias'; // invitación a guías dentro del filtro
-      dirEl.count.textContent = `Mostrando ${list.length} ${list.length === 1 ? chip.one : chip.many}${raw ? ` para "${raw}"` : ''} en Chile`;
+      dirEl.count.textContent = `Mostrando ${list.length} ${list.length === 1 ? chip.one : chip.many}${raw ? ` para "${raw}"` : ''}${typeof brandCountText === 'function' ? brandCountText(list) : ''} en Chile`;
     }
     const DIR_PAGE = 20;
     let dirPaged = { list: [], shown: 0, sig: '' };
@@ -2022,7 +2039,7 @@
       const q = norm(searchInput.value.trim());
       if (!q) { searchHits = []; return hideResults(); }
       searchHits = puntos.filter((p) =>
-        norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label}`).includes(q))
+        norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label} ${typeof brandText === 'function' ? brandText(p) : ''}`).includes(q))
         .sort((a, b) => isPro(b) - isPro(a)); // fichas PRO primero
       resultsEl.innerHTML = searchHits.length
         ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-sand-100 focus:bg-sand-100 focus:outline-none">
@@ -3735,6 +3752,7 @@
           descripcion: body || null,
           contacto_admin: owner,
           necesidad_personal: $('bizStaff').value.trim() || null,
+          marcas_sugeridas: $('bizBrands').value.split(',').map((x) => x.trim()).filter(Boolean).join(', ').slice(0, 200) || null,
           solicita_destacado: $('bizFeatured').checked,
           // estado, es_amigo_trail y destacado NO se envían: la base de datos los fija por defecto
         };
@@ -3742,7 +3760,13 @@
         setSubmitting(true);
         try {
           // Sin .select(): el público no puede leer filas pendientes, así que no se pide la fila de vuelta
-          const { error } = await supabaseClient.from('comercios').insert([nuevoRegistro]);
+          let { error } = await supabaseClient.from('comercios').insert([nuevoRegistro]);
+          // Si la base aún no tiene la columna de marcas (supabase/marcas.sql), no se pierde el dato: va en la descripción
+          if (error && nuevoRegistro.marcas_sugeridas && /marcas_sugeridas/.test(error.message || '')) {
+            const { marcas_sugeridas: marcas, ...sinMarcas } = nuevoRegistro;
+            sinMarcas.descripcion = [sinMarcas.descripcion, `Marcas: ${marcas}`].filter(Boolean).join(' · ').slice(0, 600);
+            ({ error } = await supabaseClient.from('comercios').insert([sinMarcas]));
+          }
           if (error) throw error;
         } catch (err) {
           console.error('[BIKEGRID] Error al registrar:', err);
@@ -4225,6 +4249,127 @@
       document.getElementById('mobileMenu').classList.add('hidden');
       document.getElementById('menuBtn')?.setAttribute('aria-expanded', 'false');
     });
+  </script>
+
+  <script>
+    // ================= 🏷️ MARCAS QUE TRABAJA CADA FICHA =================
+    // Catálogo único (supabase/marcas.sql): marcas + comercio_marcas (orden 0 = marca principal).
+    // Cada punto recibe p.marcas = [{ nombre, slug, orden }] ordenadas; sin base, se usan las de los datos de respaldo.
+    const brandSlug = (t) => norm(String(t || '')).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const brandCatalog = new Map(); // slug → { nombre, slug, total, principal }
+    let brandFilter = null;         // slug activo en el directorio
+
+    const brandText = (p) => (p.marcas || []).map((m) => m.nombre).join(' ');
+    const activeBrand = () => brandFilter || '';
+    const brandOf = (p, slug) => (p.marcas || []).find((m) => m.slug === slug);
+
+    function rebuildBrandCatalog() {
+      brandCatalog.clear();
+      puntos.forEach((p) => (p.marcas || []).forEach((m) => {
+        const b = brandCatalog.get(m.slug) || { nombre: m.nombre, slug: m.slug, total: 0, principal: 0 };
+        b.total++; if (m.orden === 0) b.principal++;
+        brandCatalog.set(m.slug, b);
+      }));
+      const list = [...brandCatalog.values()].sort((a, b) => b.total - a.total || a.nombre.localeCompare(b.nombre, 'es'));
+      document.getElementById('brandList').innerHTML = [...list].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')).map((b) => `<option value="${esc(b.nombre)}"></option>`).join('');
+      document.getElementById('dirBrandBar').hidden = !list.length;
+      document.getElementById('dirBrandTop').innerHTML = list.slice(0, 10).map((b) => `<button type="button" data-brand-chip="${esc(b.slug)}" aria-pressed="${b.slug === brandFilter}" class="shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ring-1 transition ${b.slug === brandFilter ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-white/70 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${esc(b.nombre)} <span class="font-mono text-[10px] opacity-70">${b.total}</span></button>`).join('');
+    }
+
+    function setBrandsFromNames(p) {
+      if (!Array.isArray(p.marcas) || (p.marcas[0] && typeof p.marcas[0] === 'object')) return;
+      p.marcas = p.marcas.map((nombre, i) => ({ nombre, slug: brandSlug(nombre), orden: i }));
+    }
+    async function loadBrands() {
+      puntos.forEach(setBrandsFromNames);
+      if (supabaseClient && puntos.some((p) => 'detailsLoaded' in p)) {
+        const [cat, rel] = await Promise.all([
+          supabaseClient.from('marcas').select('id, nombre, slug'),
+          supabaseClient.from('comercio_marcas').select('comercio_id, marca_id, orden').order('orden').limit(20000),
+        ]);
+        if (cat.error || rel.error) return console.info('[BIKEGRID] Marcas no disponibles (¿ejecutaste supabase/marcas.sql?):', (cat.error || rel.error).message);
+        const byId = new Map(cat.data.map((m) => [m.id, m]));
+        const byPoint = new Map(puntos.map((p) => [String(p.id), p]));
+        puntos.forEach((p) => { if ('detailsLoaded' in p) p.marcas = []; });
+        rel.data.forEach((r) => {
+          const p = byPoint.get(String(r.comercio_id)), m = byId.get(r.marca_id);
+          if (p && m) p.marcas.push({ nombre: m.nombre, slug: m.slug, orden: r.orden });
+        });
+        puntos.forEach((p) => p.marcas?.sort((a, b) => a.orden - b.orden).forEach((m, i) => { m.orden = i; })); // la primera es la principal
+      }
+      rebuildBrandCatalog();
+      renderDirectory();
+      if (drawerPoint && drawer.classList.contains('is-open') && drawerPoint.categoria !== 'guias') drawerBody.innerHTML = drawerHtml(drawerPoint);
+    }
+    window.addEventListener('desviador:puntos', loadBrands);
+    if (puntos.length) loadBrands();
+
+    // Directorio: solo quienes trabajan la marca; primero los que la tienen como principal, luego PRO
+    function applyBrandFilter(list) {
+      if (!brandFilter) return list;
+      return list.filter((p) => brandOf(p, brandFilter))
+        .sort((a, b) => ((brandOf(a, brandFilter).orden === 0 ? 0 : 1) - (brandOf(b, brandFilter).orden === 0 ? 0 : 1)) || (isPro(b) - isPro(a)));
+    }
+    function brandCountText(list) {
+      if (!brandFilter) return '';
+      const b = brandCatalog.get(brandFilter);
+      const main = list.filter((p) => brandOf(p, brandFilter)?.orden === 0).length;
+      return ` que ${list.length === 1 ? 'trabaja' : 'trabajan'} ${b ? b.nombre : brandFilter}${main ? ` (${main} como marca principal)` : ''}`;
+    }
+
+    // Tarjeta: marca principal (o la marca filtrada, si no es la principal)
+    function brandTag(p) {
+      if (!p.marcas?.length) return '';
+      const m = (brandFilter && brandOf(p, brandFilter)) || p.marcas[0];
+      const principal = m.orden === 0;
+      return `<p class="mt-1 truncate text-[11px] font-semibold ${m.slug === brandFilter ? 'text-ochre-600' : 'text-soil-700'}" title="${esc(p.marcas.map((x) => x.nombre).join(', '))}">🏷️ ${esc(m.nombre)}${principal ? ' <span class="font-normal text-soil-600">· principal</span>' : ''}${p.marcas.length > 1 && principal ? ` <span class="font-normal text-soil-600">+${p.marcas.length - 1}</span>` : ''}</p>`;
+    }
+    // Ficha: todas las marcas, la principal destacada; cada una abre el directorio filtrado
+    function brandBlock(p) {
+      if (!p.marcas?.length) return '';
+      return `
+        <div class="mt-3">
+          <p class="mb-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">🏷️ Marcas que trabaja</p>
+          <div class="flex flex-wrap gap-1.5">${p.marcas.map((m) => `<button type="button" data-brand-open="${esc(m.slug)}" class="rounded-full px-2.5 py-1 text-xs font-bold ring-1 transition ${m.orden === 0 ? 'bg-soil-950 text-sand-50 ring-soil-950 hover:bg-soil-800' : 'bg-sand-100 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${m.orden === 0 ? '★ ' : ''}${esc(m.nombre)}${m.orden === 0 ? ' <span class="font-normal text-sand-300">· principal</span>' : ''}</button>`).join('')}</div>
+        </div>`;
+    }
+
+    // --- Interacción ---
+    function setBrandFilter(slug) {
+      brandFilter = slug && brandCatalog.has(slug) ? slug : null;
+      const input = document.getElementById('dirBrand');
+      input.value = brandFilter ? brandCatalog.get(brandFilter).nombre : '';
+      document.getElementById('dirBrandClear').classList.toggle('hidden', !brandFilter);
+      document.getElementById('dirBrandClear').classList.toggle('grid', !!brandFilter);
+      rebuildBrandCatalog();
+      renderDirectoryDialog();
+      dirEl.dialog.querySelector('.overflow-y-auto').scrollTop = 0;
+      if (brandFilter) track('brand_filter', { marca: brandFilter });
+    }
+    document.getElementById('dirBrand').addEventListener('change', (e) => {
+      const slug = brandSlug(e.target.value);
+      if (!slug) return setBrandFilter(null);
+      if (brandCatalog.has(slug)) return setBrandFilter(slug);
+      toast(`Aún no hay fichas que trabajen "${e.target.value.trim()}"`);
+    });
+    document.getElementById('dirBrand').addEventListener('input', (e) => { if (!e.target.value.trim() && brandFilter) setBrandFilter(null); });
+    document.getElementById('dirBrandClear').addEventListener('click', () => setBrandFilter(null));
+    document.getElementById('dirBrandTop').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-brand-chip]');
+      if (b) setBrandFilter(b.dataset.brandChip === brandFilter ? null : b.dataset.brandChip);
+    });
+    // Desde una ficha: abrir el directorio filtrado por esa marca
+    document.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-brand-open]');
+      if (!b) return;
+      closeDrawer();
+      dirEl.search.value = '';
+      dirChip = 'all';
+      dirEl.dialog.showModal();
+      setBrandFilter(b.dataset.brandOpen);
+    });
+    // Al abrir el directorio desde el botón principal se parte sin filtro de marca
+    dirEl.open.addEventListener('click', () => { if (brandFilter) setBrandFilter(null); });
   </script>
 </body>
 </html>
