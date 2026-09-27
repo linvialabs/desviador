@@ -9,7 +9,7 @@ grant usage on schema public to anon, authenticated;
 create table if not exists public.comercios (
   id                 uuid primary key default gen_random_uuid(),
   nombre_comercio    text not null check (char_length(nombre_comercio) between 3 and 80),
-  categoria          text not null check (categoria in ('talleres','tiendas','clases','senderos','tours')),
+  categoria          text not null check (categoria in ('talleres','tiendas','clases','senderos','tours','guias')),
   region             text not null check (region in ('arica','tarapaca','antofagasta','atacama','coquimbo','valparaiso','metropolitana','ohiggins','maule','nuble','biobio','araucania','losrios','loslagos','aysen','magallanes')),
   comuna             text check (char_length(comuna) <= 60),
   direccion          text check (char_length(direccion) <= 120),

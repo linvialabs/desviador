@@ -108,3 +108,15 @@ Ejecuta [`supabase/empleos.sql`](supabase/empleos.sql) en Supabase → SQL Edito
 - **📩 Postular a este Trabajo:** el postulante deja nombre, WhatsApp, email, años de experiencia, enlace a CV/LinkedIn y un mensaje. Se abre WhatsApp hacia la tienda con todo ya redactado y se guarda una copia en `postulaciones`, que solo los admins pueden leer. Si la tienda no tiene WhatsApp, la postulación queda en la base para que la hagas llegar.
 - **💼 Publicar Oferta de Trabajo** ($19.990 CLP o gratis con Plan Pro): el negocio completa el aviso y se abre el WhatsApp comercial (`SALES_WHATSAPP`) con el aviso redactado. El aviso queda en `ofertas_empleo` con estado `pendiente`. Cuando coordines el pago (o verifiques el Plan Pro, ver `pro_declarado`), cambia `estado` a `publicado`. Opcionalmente, pon `publicado_hasta` en hoy + 30 días y `destacado`, o vincula `comercio_id` a su ficha.
 - Los avisos de ejemplo solo se ven cuando no hay base de datos conectada.
+
+## Guías & Instructores
+
+Ejecuta [`supabase/guias.sql`](supabase/guias.sql) en Supabase → SQL Editor. Agrega la categoría `guias` y los campos del perfil (`foto_url`, `zonas`, `certificaciones`, `idiomas`, `disciplinas`, `tarifa`).
+
+- **Filtro 🧭 Guías & Instructores** en los accesos del mapa y en el directorio. Los pines de los guías tienen su propio color.
+- **Ficha de perfil:** foto (o iniciales), sello `✔ Guía Verificado` (todo guía aprobado), zonas de cobertura, certificaciones, idiomas, disciplinas y tarifa orientativa. Incluye un cotizador (fecha, zona, disciplina y personas) con el botón `💬 Cotizar / Reservar Salida`, que abre WhatsApp hacia el guía con todo redactado.
+- **Registro ($9.990/mes):** hay un banner en la página, en el filtro del directorio y en cada perfil. El formulario abre tu WhatsApp comercial con la solicitud y deja el perfil como ficha **pendiente** en el panel admin, con sus zonas, disciplinas, idiomas, certificaciones, tarifa y foto a la vista.
+  - Antes de aprobar: verifica credenciales (SERNATUR, primeros auxilios) y confirma el pago.
+  - Ajusta el pin con **Editar**. Se ubica en el centro de su comuna o región.
+  - Los campos del perfil se corrigen en Table Editor.
+- La foto debe ser un enlace `https://` a una imagen (por ejemplo, de su web o Instagram).

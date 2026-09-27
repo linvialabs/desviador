@@ -205,7 +205,7 @@
         <div class="topo-bg order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:gap-4 lg:bg-none lg:p-0">
           <div>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Desviador · Chile</p>
-            <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.35rem]">
+            <h1 class="mt-2 font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.35rem] lg:[@media(max-height:780px)]:text-[1.85rem]">
               El mapa técnico y directorio operativo del ciclismo en Chile
             </h1>
           </div>
@@ -336,6 +336,23 @@
         <ul id="jobList" class="grid gap-3"></ul>
 
         <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de pala o convocatoria</a>
+      </div>
+    </section>
+
+    <!-- ============ RED DE GUÍAS: CAPTACIÓN ============ -->
+    <section aria-labelledby="guideCtaTitle" class="border-b border-sand-300 bg-sand-50">
+      <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div class="relative flex flex-col gap-5 overflow-hidden rounded-2xl bg-[#3a2c45] p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
+          <div class="flex gap-4">
+            <span class="hidden h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ochre-400 text-3xl sm:grid" aria-hidden="true">🧭</span>
+            <div class="max-w-2xl">
+              <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-300">Guías &amp; Instructores</p>
+              <h2 id="guideCtaTitle" class="mt-1 font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-sand-50 [text-wrap:balance] sm:text-3xl">¿Eres guía o instructor local?</h2>
+              <p class="mt-2 text-sand-200">Súmate a la red de DESVIADOR por <strong class="text-ochre-300">$9.990/mes</strong> y recibe clientes directos a tu WhatsApp.</p>
+            </div>
+          </div>
+          <button type="button" data-guide-join="banner" class="shrink-0 rounded-xl bg-ochre-400 px-5 py-3.5 text-center font-semibold text-soil-950 shadow-lg transition hover:bg-ochre-300">🧭 Regístrate como Guía</button>
+        </div>
       </div>
     </section>
 
@@ -552,6 +569,10 @@
         <div id="dirChips" class="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" role="group" aria-label="Filtrar por categoría"></div>
       </div>
       <div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+        <div id="dirGuideCta" class="mb-3 flex flex-col gap-2 rounded-xl bg-[#6b4f7d]/10 p-3 ring-1 ring-[#6b4f7d]/30 sm:flex-row sm:items-center sm:justify-between" hidden>
+          <p class="text-sm text-soil-800"><strong class="text-soil-950">¿Eres guía o instructor local?</strong> Súmate a la red por $9.990/mes y recibe clientes directos a tu WhatsApp.</p>
+          <button type="button" data-guide-join="directorio" class="shrink-0 rounded-lg bg-[#6b4f7d] px-3.5 py-2 text-[13px] font-bold text-sand-50 hover:bg-[#5a4169]">🧭 Regístrate como Guía</button>
+        </div>
         <ul id="dirAll" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4"></ul>
         <p id="dirEmpty" class="py-10 text-center text-sm text-soil-600" hidden>Sin resultados para esa búsqueda.</p>
       </div>
@@ -876,6 +897,92 @@
     </form>
   </dialog>
 
+  <!-- ============ GUÍAS & INSTRUCTORES ============ -->
+  <dialog id="guideJoinDialog" class="w-[min(94vw,36rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="guideJoinTitle">
+    <form id="guideJoinForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
+        <div>
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-600">Red de guías DESVIADOR</p>
+          <h2 id="guideJoinTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">🧭 Regístrate como Guía</h2>
+        </div>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="guideJoinBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
+        <div class="rounded-2xl bg-[#3a2c45] p-4 text-sand-100">
+          <p class="font-display text-lg font-extrabold uppercase leading-tight text-sand-50">Tu perfil de guía por <span class="text-ochre-300">$9.990/mes</span></p>
+          <ul class="mt-2 space-y-1 text-[13px] text-sand-200">
+            <li>✓ Perfil con foto, zonas, certificaciones, idiomas y tarifa</li>
+            <li>✓ Sello <strong class="text-sand-50">Guía Verificado</strong> tras revisar tus credenciales</li>
+            <li>✓ Pin en el mapa y filtro 🧭 Guías &amp; Instructores</li>
+            <li>✓ Clientes directo a tu WhatsApp, con fecha y zona</li>
+          </ul>
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="gjName" class="block text-sm font-semibold text-soil-800">Nombre (tuyo o de tu escuela)</label>
+            <input id="gjName" maxlength="80" class="field mt-1.5" placeholder="Ej: Camila Rojas · Guía MTB" />
+          </div>
+          <div>
+            <label for="gjPhone" class="block text-sm font-semibold text-soil-800">WhatsApp para clientes</label>
+            <input id="gjPhone" type="tel" inputmode="tel" maxlength="20" class="field mt-1.5" placeholder="+56 9 1234 5678" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3.5">
+          <div>
+            <label for="gjComuna" class="block text-sm font-semibold text-soil-800">Comuna base</label>
+            <input id="gjComuna" maxlength="60" class="field mt-1.5" placeholder="Ej: Lo Barnechea" />
+          </div>
+          <div>
+            <label for="gjRegion" class="block text-sm font-semibold text-soil-800">Región</label>
+            <select id="gjRegion" class="field mt-1.5"></select>
+          </div>
+        </div>
+        <div>
+          <label for="gjZones" class="block text-sm font-semibold text-soil-800">Zonas / cerros de cobertura <span class="font-normal text-soil-600">(separadas por coma)</span></label>
+          <input id="gjZones" maxlength="300" class="field mt-1.5" placeholder="Ej: San Cristóbal, El Durazno, Nevados de Chillán" />
+        </div>
+        <fieldset>
+          <legend class="text-sm font-semibold text-soil-800">Disciplinas que manejas</legend>
+          <div id="gjDisc" class="mt-1.5 flex flex-wrap gap-2"></div>
+        </fieldset>
+        <fieldset>
+          <legend class="text-sm font-semibold text-soil-800">Idiomas</legend>
+          <div id="gjLang" class="mt-1.5 flex flex-wrap gap-2"></div>
+        </fieldset>
+        <div>
+          <label for="gjCerts" class="block text-sm font-semibold text-soil-800">Certificaciones y credenciales <span class="font-normal text-soil-600">(una por línea)</span></label>
+          <textarea id="gjCerts" rows="3" maxlength="500" class="field mt-1.5 resize-y" placeholder="WFR / Primeros Auxilios&#10;Registro SERNATUR&#10;Instructor PMBIA"></textarea>
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="gjRate" class="block text-sm font-semibold text-soil-800">Tarifa orientativa</label>
+            <input id="gjRate" maxlength="60" class="field mt-1.5" placeholder="Ej: Desde $35.000 / persona" />
+          </div>
+          <div>
+            <label for="gjPhoto" class="block text-sm font-semibold text-soil-800">Foto de perfil <span class="font-normal text-soil-600">(enlace, opcional)</span></label>
+            <input id="gjPhoto" type="url" inputmode="url" maxlength="300" class="field mt-1.5" placeholder="https://…/mi-foto.jpg" />
+          </div>
+        </div>
+        <div>
+          <label for="gjAbout" class="block text-sm font-semibold text-soil-800">Sobre tus salidas <span class="font-normal text-soil-600">(opcional)</span></label>
+          <textarea id="gjAbout" rows="2" maxlength="600" class="field mt-1.5 resize-y" placeholder="Qué tipo de salidas ofreces, niveles, duración, qué incluye…"></textarea>
+        </div>
+        <div class="hidden" aria-hidden="true"><label>Web <input id="gjWebsite" tabindex="-1" autocomplete="off" /></label></div>
+        <p class="text-xs leading-relaxed text-soil-600">Revisamos cada perfil y tus credenciales antes de publicarlo. Si no tienes una foto en línea, la coordinamos por WhatsApp.</p>
+        <p id="gjError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
+      </div>
+      <div id="guideJoinDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ochre-400 text-3xl shadow-lg">🧭</div>
+        <h3 class="mt-4 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">¡Solicitud recibida!</h3>
+        <p id="guideJoinDoneText" class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-soil-700"></p>
+        <a id="guideJoinWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true">💬</span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+      </div>
+      <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="submit" id="guideJoinSubmit" class="btn-wa-pro w-full py-3 text-sm"><span aria-hidden="true">💬</span> Enviar solicitud por WhatsApp</button>
+      </div>
+    </form>
+  </dialog>
+
   <!-- Flotante móvil del configurador -->
   <button type="button" id="tripFab" data-trip="fab" class="fixed bottom-4 right-4 z-[1500] inline-flex items-center gap-1.5 rounded-full bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-xl ring-2 ring-ochre-400/80 md:hidden" style="margin-bottom:env(safe-area-inset-bottom)">🗺️ Arma tu Salida / Viaje</button>
 
@@ -1127,6 +1234,7 @@
       senderos: { label: 'Bikeparks & Senderos', short: 'Bikepark/Sendero', color: '#56743a', icon: '<path d="M3 20l6-10 4 6 3-4 5 8H3z"/>' },
       tours:    { label: 'Shuttles & Tours',     short: 'Shuttle/Tour',     color: '#a4532f', icon: '<path d="M3 7h11l4 4h3v6H3V7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
       tiendas:  { label: 'Tiendas',              short: 'Tienda',           color: '#3f7f7a', icon: '<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>' },
+      guias:    { label: 'Guías & Instructores', short: 'Guía',             color: '#6b4f7d', icon: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2z"/>' },
     };
     const svgIcon = (cat, cls = 'h-4 w-4', stroke = 'currentColor') =>
       `<svg viewBox="0 0 24 24" class="${cls}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CATEGORIES[cat].icon}</svg>`;
@@ -1162,6 +1270,13 @@
       { id: 'parque-las-palmas',    nombre: 'Parque Las Palmas',                    categoria: 'senderos', comuna: 'Puchuncaví',            region: 'valparaiso',    coords: [-32.7412, -71.4015], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
       { id: 'huilo-huilo',          nombre: 'Huilo Huilo Outdoor Experience',       categoria: 'senderos', comuna: 'Panguipulli (Neltume)', region: 'losrios',       coords: [-39.8667, -71.9167], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
       { id: 'el-durazno',           nombre: 'El Durazno',                           categoria: 'senderos', comuna: 'Lo Barnechea',          region: 'metropolitana', coords: [-33.3486, -70.4958], verificado: true, destacado: false, direccion: null, whatsapp: null, horario: null },
+      // Guías de ejemplo: muestran cómo se ve un perfil (solo sin base de datos)
+      { id: 'guia-ejemplo-rm', nombre: 'Guía de ejemplo · Santiago', categoria: 'guias', comuna: 'Lo Barnechea', region: 'metropolitana', coords: [-33.3560, -70.5170], destacado: false, demo: true, direccion: null, whatsapp: null, horario: null,
+        descripcion: 'Salidas guiadas de enduro y e-MTB en la precordillera de Santiago. Técnica de bajada para todos los niveles.', tarifa: 'Desde $35.000 / persona', foto_url: null,
+        zonas: ['El Durazno', 'San Cristóbal', 'Farellones', 'La Parva'], certificaciones: ['WFR / Primeros Auxilios en áreas remotas', 'Registro SERNATUR', 'Instructor PMBIA Nivel 1'], idiomas: ['Español', 'English'], disciplinas: ['enduro', 'emtb', 'principiantes'] },
+      { id: 'guia-ejemplo-sur', nombre: 'Guía de ejemplo · Pucón', categoria: 'guias', comuna: 'Pucón', region: 'araucania', coords: [-39.2820, -71.9540], destacado: false, demo: true, direccion: null, whatsapp: null, horario: null,
+        descripcion: 'Rutas de gravel y enduro entre volcanes y lagos. Tours de medio día y día completo con traslado.', tarifa: 'Desde $45.000 / persona', foto_url: null,
+        zonas: ['Volcán Villarrica', 'Caburgua', 'Huerquehue'], certificaciones: ['Primeros Auxilios', 'Registro SERNATUR'], idiomas: ['Español', 'English', 'Português'], disciplinas: ['gravel', 'enduro', 'downhill'] },
     ];
 
     const NEWS = [
@@ -1347,6 +1462,7 @@
     // Dirección, WhatsApp, horario y descripción se piden al abrir la ficha (loadDetails).
     const PUBLIC_COLUMNS = 'id, nombre_comercio, categoria, region, comuna, latitud, longitud, es_amigo_trail, destacado';
     const DETAIL_COLUMNS = 'direccion, whatsapp, horario, descripcion';
+    const GUIDE_COLUMNS = 'foto_url, zonas, certificaciones, idiomas, disciplinas, tarifa'; // solo fichas de la categoría "guias" (supabase/guias.sql)
     const JOBS_COLUMN = 'necesidad_personal'; // pública desde el lanzamiento (ver SQL); si aún no hay permiso, se omite
     const fromRow = (r) => ({
       id: r.id,
@@ -1388,7 +1504,7 @@
 
     // Las fichas Pro muestran su WhatsApp en el directorio: sus detalles se piden juntos, en una sola consulta
     async function loadProDetails() {
-      const pending = puntos.filter((p) => isPro(p) && p.detailsLoaded === false);
+      const pending = puntos.filter((p) => isPro(p) && p.detailsLoaded === false && p.categoria !== 'guias'); // los guías cargan su perfil completo al abrirse
       if (!pending.length || !supabaseClient) return;
       const { data, error } = await supabaseClient.from('comercios').select(`id, ${DETAIL_COLUMNS}`).in('id', pending.map((p) => p.id));
       if (error || !data) return console.warn('[DESVIADOR] No se pudo precargar las fichas Pro:', error?.message);
@@ -1405,10 +1521,12 @@
     function loadDetails(p) {
       if (p.detailsLoaded !== false || !supabaseClient) return Promise.resolve(true);
       if (!detailRequests.has(p.id)) {
-        detailRequests.set(p.id, supabaseClient.from('comercios').select(DETAIL_COLUMNS).eq('id', p.id).maybeSingle()
+        const isGuide = p.categoria === 'guias';
+        detailRequests.set(p.id, supabaseClient.from('comercios').select(isGuide ? `${DETAIL_COLUMNS}, ${GUIDE_COLUMNS}` : DETAIL_COLUMNS).eq('id', p.id).maybeSingle()
           .then(({ data, error }) => {
             if (error || !data) throw error || new Error('ficha no encontrada');
             Object.assign(p, { direccion: data.direccion, whatsapp: data.whatsapp, horario: data.horario, descripcion: data.descripcion, detailsLoaded: true, detailsError: false });
+            if (isGuide) Object.assign(p, { foto_url: data.foto_url, zonas: data.zonas || [], certificaciones: data.certificaciones || [], idiomas: data.idiomas || [], disciplinas: data.disciplinas || [], tarifa: data.tarifa });
             return true;
           })
           .catch((err) => { console.warn('[DESVIADOR] No se pudo cargar la ficha:', err?.message); p.detailsError = true; detailRequests.delete(p.id); return false; }));
@@ -1434,6 +1552,7 @@
 
     let drawerPoint = null;
     function drawerHtml(p) {
+      if (p.categoria === 'guias' && typeof guideDrawerHtml === 'function') return guideDrawerHtml(p); // perfil de guía (módulo Guías)
       const loading = p.detailsLoaded === false && !p.detailsError;
       const failed = p.detailsLoaded === false && p.detailsError;
       const skel = (w) => `<span class="inline-block h-3.5 ${w} animate-pulse rounded bg-sand-200 align-middle" aria-hidden="true"></span>`;
@@ -1541,6 +1660,7 @@
       { cat: 'senderos', label: 'Bikeparks & Senderos' },
       { cat: 'tours',    label: 'Shuttles & Tours' },
       { cat: 'tiendas',  label: 'Tiendas' },
+      { cat: 'guias',    label: 'Guías & Instructores' },
     ];
     const scrollToMapOnMobile = () => { if (!isDesktop()) document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
 
@@ -1677,6 +1797,7 @@
       { id: 'senderos', label: '🚵 Bikeparks / Senderos',   one: 'bikepark o sendero',    many: 'bikeparks y senderos',       test: (p) => p.categoria === 'senderos' },
       { id: 'tours',    label: '🚐 Shuttles / Tours',       one: 'shuttle o tour',        many: 'shuttles y tours',           test: (p) => p.categoria === 'tours' },
       { id: 'clases',   label: '🎓 Escuelas / Clases',      one: 'escuela',               many: 'escuelas',                   test: (p) => p.categoria === 'clases' },
+      { id: 'guias',    label: '🧭 Guías & Instructores',   one: 'guía o instructor',     many: 'guías e instructores',       test: (p) => p.categoria === 'guias' },
       { id: 'saved',    label: '★ Guardados',               one: 'spot guardado',         many: 'spots guardados',            test: (p) => isSaved(p.id), onlyIfAny: true },
       { id: 'trail',    label: '⛏️ Comunidad / Paleros',    one: 'Amiga del Trail',       many: 'Amigas del Trail',           test: (p) => p.amigoTrail },
     ];
@@ -1699,6 +1820,7 @@
       dirEl.all.innerHTML = list.map(miniCard).join('');
       dirEl.empty.hidden = list.length > 0;
       dirEl.empty.textContent = `No hay ${chip.many} ${raw ? `que coincidan con "${raw}"` : 'por ahora'}.`;
+      document.getElementById('dirGuideCta').hidden = dirChip !== 'guias'; // invitación a guías dentro del filtro
       dirEl.count.textContent = `Mostrando ${list.length} ${list.length === 1 ? chip.one : chip.many}${raw ? ` para "${raw}"` : ''} en Chile`;
     }
     dirEl.chips.addEventListener('click', (e) => {
@@ -3260,6 +3382,7 @@
       showFormError(err, 'No pudimos enviar tu postulación. Inténtalo de nuevo en un rato.');
     });
     function showApplyDone(text, link) {
+      showFormError($('applyError'), '');
       $('applyBody').hidden = true; $('applyDone').hidden = false;
       $('applyDoneText').textContent = text;
       $('applyWaAgain').hidden = !link; if (link) $('applyWaAgain').href = link;
@@ -3325,6 +3448,7 @@
       showFormError(err, supabaseClient ? 'No pudimos enviar tu aviso. Inténtalo de nuevo en un rato.' : 'La publicación de avisos aún no está habilitada. Vuelve pronto.');
     });
     function showPostDone(text, link) {
+      showFormError($('pjError'), '');
       $('postJobBody').hidden = true; $('postJobDone').hidden = false;
       $('postJobDoneText').textContent = text;
       $('postJobWaAgain').hidden = !link; if (link) $('postJobWaAgain').href = link;
@@ -3533,6 +3657,199 @@
       toast(kind === 'aviso' ? 'Aviso publicado en la bolsa (vista de prueba).' : 'Dato recibido. Gracias por aportar.');
       if (kind === 'aviso') document.getElementById('comunidad').scrollIntoView({ behavior: 'smooth' });
     });
+  </script>
+
+  <script>
+    // ================= GUÍAS & INSTRUCTORES =================
+    // Perfil especial para la categoría "guias" (se engancha en drawerHtml) + registro de guías ($9.990/mes)
+    const GUIDE_DISC = { enduro: 'Enduro', gravel: 'Gravel', emtb: 'E-MTB', downhill: 'Downhill', xc: 'XC / Trail', principiantes: 'Principiantes', ruta: 'Ruta', bikepacking: 'Bikepacking' };
+    const GUIDE_LANGS = ['Español', 'English', 'Português', 'Deutsch', 'Français'];
+    const GUIDE_PRICE = '$9.990/mes';
+    const initials = (name) => String(name).replace(/[·|].*$/, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+    const safePhoto = (url) => (/^https:\/\/\S+$/i.test(url || '') ? url : '');
+
+    function guideAvatar(p, size = 'h-16 w-16 text-xl') {
+      const photo = safePhoto(p.foto_url);
+      return `<div class="relative ${size} shrink-0">
+        <div class="grid h-full w-full place-items-center rounded-full bg-[#6b4f7d] font-display font-extrabold text-sand-50 ring-2 ring-[#d4af37]" aria-hidden="true">${esc(initials(p.nombre) || '🧭')}</div>
+        ${photo ? `<img src="${esc(photo)}" alt="Foto de ${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer" class="absolute inset-0 h-full w-full rounded-full object-cover ring-2 ring-[#d4af37]" onerror="this.remove()" />` : ''}
+      </div>`;
+    }
+    const chipList = (items, cls) => items.map((t) => `<span class="rounded-full px-2.5 py-1 text-xs font-semibold ${cls}">${esc(t)}</span>`).join('');
+    const guideSection = (icon, title, body) => body ? `
+      <div class="py-3">
+        <p class="mb-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">${icon} ${title}</p>
+        ${body}
+      </div>` : '';
+
+    const guideWaText = (p, f) => [
+      `Hola ${p.nombre}, te encontré en DESVIADOR (Guías & Instructores). Quiero cotizar una salida guiada:`,
+      `• Fecha: ${f.fecha ? new Date(f.fecha + 'T12:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Por definir'}`,
+      `• Zona: ${f.zona || 'A convenir'}`,
+      f.disciplina ? `• Disciplina: ${f.disciplina}` : '',
+      `• Personas: ${f.personas}`,
+      '¿Tienes disponibilidad y cuál sería la tarifa?',
+    ].filter(Boolean).join('\n');
+    const guideWaUrl = (p, f) => `https://wa.me/${String(p.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(guideWaText(p, f))}`;
+
+    // Ficha de perfil del guía (reemplaza la ficha estándar solo para esta categoría)
+    function guideDrawerHtml(p) {
+      const loading = p.detailsLoaded === false && !p.detailsError;
+      const failed = p.detailsLoaded === false && p.detailsError;
+      const place = [p.comuna, REGIONES[p.region].label].filter(Boolean).map(esc).join(' · ');
+      const zonas = p.zonas || [], certs = p.certificaciones || [], langs = p.idiomas || [], disc = (p.disciplinas || []).map((d) => GUIDE_DISC[d] || d);
+      const skel = '<div class="space-y-2 py-3"><div class="h-4 w-2/3 animate-pulse rounded bg-sand-200"></div><div class="h-4 w-1/2 animate-pulse rounded bg-sand-200"></div></div>';
+      const today = new Date().toISOString().slice(0, 10);
+
+      const quote = loading
+        ? '<div class="h-40 animate-pulse rounded-2xl bg-sand-200" aria-label="Cargando"></div>'
+        : failed
+        ? `<p class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el perfil. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
+        : `<div class="rounded-2xl bg-sand-100 p-3.5 ring-1 ring-sand-300" data-guide-quote="${esc(p.id)}">
+            <p class="font-display text-base font-extrabold uppercase tracking-tight text-soil-950">Cotiza tu salida</p>
+            <div class="mt-2 grid grid-cols-2 gap-2">
+              <label class="text-xs font-semibold text-soil-700">Fecha deseada<input type="date" min="${today}" data-gq="fecha" class="field mt-1 !py-2 text-sm" /></label>
+              <label class="text-xs font-semibold text-soil-700">Personas<input type="number" min="1" max="30" value="2" inputmode="numeric" data-gq="personas" class="field mt-1 !py-2 text-sm" /></label>
+              <label class="text-xs font-semibold text-soil-700">Zona<select data-gq="zona" class="field mt-1 !py-2 text-sm">${zonas.map((z) => `<option>${esc(z)}</option>`).join('')}<option value="">Otra / a convenir</option></select></label>
+              <label class="text-xs font-semibold text-soil-700">Disciplina<select data-gq="disciplina" class="field mt-1 !py-2 text-sm"><option value="">Cualquiera</option>${disc.map((d) => `<option>${esc(d)}</option>`).join('')}</select></label>
+            </div>
+            ${p.whatsapp
+              ? `<a href="${guideWaUrl(p, { zona: zonas[0] || '', personas: 2 })}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" data-guide-wa class="btn-wa-pro mt-3 py-3.5 text-[15px]"><span aria-hidden="true">💬</span> Cotizar / Reservar Salida</a>`
+              : `<button type="button" data-guide-demo class="btn-wa-pro mt-3 w-full py-3.5 text-[15px]"><span aria-hidden="true">💬</span> Cotizar / Reservar Salida</button>`}
+          </div>`;
+
+      return `
+        <div class="flex items-start gap-3.5 pr-10">
+          ${guideAvatar(p)}
+          <div class="min-w-0">
+            <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-sand-50" style="background:${CATEGORIES.guias.color}">${svgIcon('guias', 'h-3 w-3')}Guía / Instructor</span>
+            <h3 id="drawerTitle" class="mt-1.5 font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
+            <p class="mt-1 text-sm text-soil-600">📍 ${place}</p>
+            <div class="mt-1.5 flex flex-wrap gap-1.5">
+              ${p.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : '<span class="badge-pro px-2 py-0.5 text-[11px]">✔ Guía Verificado</span>'}
+              ${p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2 py-0.5 text-[11px] font-bold text-sand-50">Amigo del Trail</span>' : ''}
+            </div>
+          </div>
+        </div>
+        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '★ Guardado' : '☆ Guardar spot'}</button>
+
+        ${loading ? '' : p.tarifa ? `<div class="mt-4 flex items-center justify-between gap-3 rounded-xl bg-soil-950 px-4 py-3 text-sand-50">
+          <span class="font-mono text-[10.5px] font-semibold uppercase tracking-wider text-ochre-300">Tarifa orientativa</span>
+          <strong class="text-right font-display text-lg font-extrabold uppercase leading-tight">${esc(p.tarifa)}</strong>
+        </div>` : ''}
+        ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
+
+        <div class="mt-2 divide-y divide-sand-200">
+          ${loading ? skel : [
+            guideSection('🗺️', 'Zonas / cerros de cobertura', zonas.length ? `<div class="flex flex-wrap gap-1.5">${chipList(zonas, 'bg-moss-600/10 text-moss-700 ring-1 ring-moss-600/25')}</div>` : ''),
+            guideSection('🎓', 'Certificaciones y credenciales', certs.length ? `<ul class="space-y-1 text-sm text-soil-800">${certs.map((c) => `<li class="flex gap-2"><span class="text-moss-600">✓</span>${esc(c)}</li>`).join('')}</ul>` : ''),
+            guideSection('🗣️', 'Idiomas', langs.length ? `<div class="flex flex-wrap gap-1.5">${chipList(langs, 'bg-sand-100 text-soil-800 ring-1 ring-sand-300')}</div>` : ''),
+            guideSection('🚵', 'Disciplinas', disc.length ? `<div class="flex flex-wrap gap-1.5">${chipList(disc, 'bg-[#6b4f7d]/10 text-[#5a4169] ring-1 ring-[#6b4f7d]/25')}</div>` : ''),
+          ].join('')}
+        </div>
+
+        <div class="mt-3">${quote}</div>
+        <button type="button" data-guide-join="ficha" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">🧭 ¿Eres guía o instructor? Súmate a la red</button>`;
+    }
+
+    // Cotizador: cada cambio actualiza el mensaje de WhatsApp (el gate lee el enlace al hacer clic)
+    function syncGuideQuote() {
+      const box = drawerBody.querySelector('[data-guide-quote]');
+      const a = box?.querySelector('[data-guide-wa]');
+      if (!a || !drawerPoint) return;
+      const v = (k) => box.querySelector(`[data-gq="${k}"]`).value;
+      a.href = guideWaUrl(drawerPoint, { fecha: v('fecha'), zona: v('zona'), disciplina: v('disciplina'), personas: Math.min(30, Math.max(1, parseInt(v('personas'), 10) || 1)) });
+    }
+    drawerBody.addEventListener('input', (e) => { if (e.target.closest('[data-guide-quote]')) syncGuideQuote(); });
+    drawerBody.addEventListener('change', (e) => { if (e.target.closest('[data-guide-quote]')) syncGuideQuote(); });
+    drawerBody.addEventListener('click', (e) => {
+      if (e.target.closest('[data-guide-demo]')) toast(drawerPoint?.demo ? 'Perfil de ejemplo: aquí los guías reciben cotizaciones por WhatsApp' : 'Este guía aún no tiene WhatsApp publicado');
+      if (e.target.closest('[data-guide-wa]')) track('guide_quote_clicked', { ref: drawerPoint?.id });
+    }, true);
+
+    // --- 🧭 Registro de guías ---
+    const gjDlg = $('guideJoinDialog'), gjForm = $('guideJoinForm');
+    $('gjRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
+    $('gjDisc').innerHTML = Object.entries(GUIDE_DISC).map(([k, l]) => `<button type="button" class="gate-chip !py-1.5 text-[13px]" data-disc="${k}" aria-pressed="false">${l}</button>`).join('');
+    $('gjLang').innerHTML = GUIDE_LANGS.map((l, i) => `<button type="button" class="gate-chip !py-1.5 text-[13px]" data-lang="${l}" aria-pressed="${i === 0}">${l}</button>`).join('');
+    gjForm.addEventListener('click', (e) => {
+      const chip = e.target.closest('[data-disc], [data-lang]');
+      if (chip) chip.setAttribute('aria-pressed', chip.getAttribute('aria-pressed') !== 'true');
+    });
+    gjDlg.addEventListener('click', (e) => { if (e.target === gjDlg || e.target.closest('[data-close]')) gjDlg.close(); });
+    function openGuideJoin(via) {
+      if ($('guideJoinBody').hidden) { gjForm.reset(); $('gjRegion').value = 'metropolitana'; gjForm.querySelectorAll('[data-disc]').forEach((c) => c.setAttribute('aria-pressed', 'false')); }
+      $('guideJoinBody').hidden = false; $('guideJoinDone').hidden = true;
+      $('guideJoinSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar solicitud por WhatsApp';
+      showFormError($('gjError'), '');
+      document.getElementById('dirDialog').open && document.getElementById('dirDialog').close();
+      gjDlg.showModal();
+      track('guide_join_opened', { via });
+    }
+    document.addEventListener('click', (e) => { const b = e.target.closest('[data-guide-join]'); if (b) { e.preventDefault(); openGuideJoin(b.dataset.guideJoin); } });
+
+    const splitList = (v, sep) => v.split(sep).map((x) => x.trim()).filter(Boolean);
+    function guideBaseCoords(region, comuna) {
+      const c = typeof comunaCenter === 'function' ? comunaCenter(region, comuna) : null;
+      if (c) return c;
+      const [[s, w], [n, e]] = REGIONES[region].bounds;
+      return [(s + n) / 2, (w + e) / 2]; // el equipo ajusta el pin exacto en el panel admin
+    }
+
+    gjForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!$('guideJoinDone').hidden) return gjDlg.close(); // botón "Listo"
+      const err = $('gjError');
+      const g = {
+        nombre: $('gjName').value.trim(), whatsapp: phoneCL($('gjPhone').value), comuna: $('gjComuna').value.trim(), region: $('gjRegion').value,
+        zonas: splitList($('gjZones').value, ',').slice(0, 12), certificaciones: splitList($('gjCerts').value, /\n|;/).slice(0, 10),
+        idiomas: [...gjForm.querySelectorAll('[data-lang][aria-pressed="true"]')].map((c) => c.dataset.lang),
+        disciplinas: [...gjForm.querySelectorAll('[data-disc][aria-pressed="true"]')].map((c) => c.dataset.disc),
+        tarifa: $('gjRate').value.trim(), foto_url: $('gjPhoto').value.trim(), descripcion: $('gjAbout').value.trim(),
+      };
+      if (g.nombre.length < 3) return showFormError(err, 'Escribe tu nombre o el de tu escuela.', 'gjName');
+      if (!/^\d{8,15}$/.test(g.whatsapp)) return showFormError(err, 'Revisa tu WhatsApp: ej. +56 9 1234 5678.', 'gjPhone');
+      if (g.comuna.length < 2) return showFormError(err, 'Indica tu comuna base.', 'gjComuna');
+      if (!g.zonas.length) return showFormError(err, 'Indica al menos una zona o cerro donde guías.', 'gjZones');
+      if (!g.disciplinas.length) return showFormError(err, 'Elige al menos una disciplina.');
+      if (!g.idiomas.length) return showFormError(err, 'Elige al menos un idioma.');
+      if (g.foto_url && !safePhoto(g.foto_url)) return showFormError(err, 'El enlace de la foto debe empezar con https://', 'gjPhoto');
+      if ($('gjWebsite').value) return; // bot
+      track('guide_join_sent', { region: g.region, disciplinas: g.disciplinas, idiomas: g.idiomas.length });
+
+      const [lat, lng] = guideBaseCoords(g.region, g.comuna);
+      const row = {
+        nombre_comercio: g.nombre, categoria: 'guias', region: g.region, comuna: g.comuna, latitud: +lat.toFixed(6), longitud: +lng.toFixed(6),
+        whatsapp: g.whatsapp, descripcion: g.descripcion || null, contacto_admin: `${g.nombre} · +${g.whatsapp} (registro de guía)`, solicita_destacado: true,
+        foto_url: g.foto_url || null, zonas: g.zonas, certificaciones: g.certificaciones, idiomas: g.idiomas, disciplinas: g.disciplinas, tarifa: g.tarifa || null,
+      };
+      const text = [
+        `Hola DESVIADOR, quiero sumarme a la red de Guías & Instructores (${GUIDE_PRICE}):`,
+        `• Nombre: ${g.nombre}`, `• Base: ${g.comuna}, ${REGIONES[g.region].label}`, `• Zonas: ${g.zonas.join(', ')}`,
+        `• Disciplinas: ${g.disciplinas.map((d) => GUIDE_DISC[d]).join(', ')}`, `• Idiomas: ${g.idiomas.join(', ')}`,
+        g.certificaciones.length ? `• Certificaciones: ${g.certificaciones.join('; ')}` : '', g.tarifa ? `• Tarifa: ${g.tarifa}` : '',
+        `• WhatsApp para clientes: +${g.whatsapp}`,
+      ].filter(Boolean).join('\n');
+      const admin = salesNumber();
+      const link = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(text)}` : '';
+      // El perfil queda "pendiente" en la base: al confirmar el pago y las credenciales, se aprueba desde el panel
+      const saved = supabaseClient ? queueInsert('comercios', row) : Promise.resolve(false);
+      if (link) {
+        openWhatsApp(link);
+        return showGuideDone('Se abrió WhatsApp con tu solicitud. Envíala y coordinamos el pago, la verificación de tus credenciales y tu foto de perfil.', link);
+      }
+      $('guideJoinSubmit').textContent = 'Enviando…';
+      if (await saved) return showGuideDone('Recibimos tu solicitud. Te escribiremos al WhatsApp que indicaste para coordinar el pago y verificar tus credenciales.', '');
+      $('guideJoinSubmit').innerHTML = '<span aria-hidden="true">💬</span> Enviar solicitud por WhatsApp';
+      showFormError(err, supabaseClient ? 'No pudimos enviar tu solicitud. Inténtalo de nuevo en un rato.' : 'El registro de guías aún no está habilitado. Vuelve pronto.');
+    });
+    function showGuideDone(text, link) {
+      showFormError($('gjError'), '');
+      $('guideJoinBody').hidden = true; $('guideJoinDone').hidden = false;
+      $('guideJoinDoneText').textContent = text;
+      $('guideJoinWaAgain').hidden = !link; if (link) $('guideJoinWaAgain').href = link;
+      $('guideJoinSubmit').textContent = 'Listo';
+    }
   </script>
 </body>
 </html>
