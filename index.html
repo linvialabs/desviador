@@ -197,6 +197,18 @@
     .chip-t.is-dark[aria-pressed="true"] { background: #2e7d32; color: #f6f1e7; box-shadow: none; }
     .badge-t { display: inline-flex; align-items: center; gap: .3rem; border-radius: .4rem; padding: .18rem .5rem; font-size: 11px; font-weight: 600; background: rgba(46,125,50,.07); color: #276b2b; box-shadow: inset 0 0 0 1px rgba(46,125,50,.22); }
     .badge-t.is-match { background: #2e7d32; color: #f6f1e7; box-shadow: none; }
+    /* Switch accesible (Modo Incógnito) */
+    .switch { position: relative; display: inline-flex; width: 2.75rem; height: 1.5rem; flex-shrink: 0; }
+    .switch input { position: absolute; inset: 0; z-index: 1; margin: 0; opacity: 0; cursor: pointer; }
+    .switch-track { position: absolute; inset: 0; border-radius: 9999px; background: #54473a; transition: background .2s; }
+    .switch-track::after { content: ''; position: absolute; top: .1875rem; left: .1875rem; width: 1.125rem; height: 1.125rem; border-radius: 9999px; background: #f6f1e7; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: transform .2s; }
+    .switch input:checked + .switch-track { background: #2e7d32; }
+    .switch input:checked + .switch-track::after { transform: translateX(1.25rem); }
+    .switch input:focus-visible + .switch-track { outline: 2px solid #8fd18f; outline-offset: 2px; }
+    .incog-card { box-shadow: inset 0 0 0 1px #3d3328; transition: box-shadow .2s; }
+    .incog-card.is-on { box-shadow: inset 0 0 0 1.5px #2e7d32; }
+    /* Tarjeta de candidato anónimo: sobria, sin rostro ni nombre */
+    .cand-incog { background: repeating-linear-gradient(135deg, rgba(61,51,40,.035) 0 8px, transparent 8px 16px), #fffdf8; }
     .locales-opt { background: #fffdf8; }
     .locales-opt:hover { box-shadow: inset 0 0 0 1px #54473a; }
     .locales-opt[aria-pressed="true"] { background: #e8f3e9; box-shadow: inset 0 0 0 2px #2e7d32; }
@@ -1210,10 +1222,22 @@
         <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <div id="cvBody" class="flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
+        <!-- Perfil Técnico Incógnito -->
+        <div id="cvIncogCard" class="incog-card is-on rounded-2xl bg-soil-950 p-4 text-sand-100">
+          <div class="flex items-start gap-3.5">
+            <span class="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-soil-800 text-[#8fd18f] ring-1 ring-soil-700"><i class="i i-shield text-xl" aria-hidden="true"></i></span>
+            <div class="min-w-0 flex-1">
+              <label for="cvIncognito" class="block cursor-pointer text-[13.5px] font-semibold leading-snug text-sand-50">Activar Modo Incógnito <span class="font-normal text-sand-300">(Ocultar mi nombre y tienda actual)</span></label>
+              <p id="cvIncognitoHelp" class="mt-1.5 text-[12.5px] leading-relaxed text-sand-300">Tu nombre y datos de contacto estarán protegidos. Las tiendas solo verán tus especialidades técnicas y experiencia. Podrás autorizar la entrega de tus datos cuando una propuesta te interese.</p>
+              <p id="cvIncognitoPreview" class="mt-2.5 inline-flex items-center gap-2 rounded-md bg-soil-800 px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[.14em] text-sand-200 ring-1 ring-soil-700" aria-live="polite"></p>
+            </div>
+            <span class="switch mt-1"><input id="cvIncognito" type="checkbox" role="switch" checked aria-describedby="cvIncognitoHelp" /><span class="switch-track" aria-hidden="true"></span></span>
+          </div>
+        </div>
         <fieldset class="space-y-3.5">
           <legend class="mb-3 font-mono text-[10.5px] font-semibold uppercase tracking-[.2em] text-soil-600">1 · Disponibilidad</legend>
           <div>
-            <label for="cvName" class="block text-sm font-semibold text-soil-800">Nombre completo</label>
+            <label for="cvName" class="flex items-center justify-between gap-2 text-sm font-semibold text-soil-800">Nombre completo <span data-incog-note class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-[.12em] text-brand"><i class="i i-lock" aria-hidden="true"></i>Privado</span></label>
             <input id="cvName" autocomplete="name" maxlength="80" class="field mt-1.5" placeholder="Ej: Matías Rojas" />
           </div>
           <div class="grid gap-3.5 sm:grid-cols-2">
@@ -1240,7 +1264,7 @@
               <input id="cvEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" class="field mt-1.5" placeholder="tu@correo.cl" />
             </div>
           </div>
-          <button type="button" id="cvGeo" class="inline-flex items-center gap-2 text-left text-sm font-semibold text-brand hover:text-brand-600"><i class="i i-crosshair" aria-hidden="true"></i> <span id="cvGeoText">Usar mi ubicación aproximada (mejora la búsqueda por cercanía)</span></button>
+          <button type="button" id="cvGeo" data-incog-hide class="inline-flex items-center gap-2 text-left text-sm font-semibold text-brand hover:text-brand-600"><i class="i i-crosshair" aria-hidden="true"></i> <span id="cvGeoText">Usar mi ubicación aproximada (mejora la búsqueda por cercanía)</span></button>
         </fieldset>
 
         <fieldset>
@@ -1258,8 +1282,14 @@
             </select>
           </div>
           <div>
+            <label for="cvShop" class="flex items-center justify-between gap-2 text-sm font-semibold text-soil-800"><span>Tienda o taller actual <span class="font-normal text-soil-600">(opcional)</span></span><span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-[.12em] text-brand"><i class="i i-lock" aria-hidden="true"></i>Nunca se publica</span></label>
+            <input id="cvShop" maxlength="80" class="field mt-1.5" placeholder="Ej: Bike Center Providencia" />
+            <p class="mt-1 text-xs text-soil-600">Lo usamos para no presentar tu perfil a tu empleador actual.</p>
+          </div>
+          <div>
             <label for="cvExp" class="flex justify-between text-sm font-semibold text-soil-800">Tiendas, talleres o apoyo en carreras <span class="font-mono text-xs font-normal text-soil-600"><span id="cvExpCount">0</span>/600</span></label>
             <textarea id="cvExp" rows="3" maxlength="600" class="field mt-1.5 resize-y" placeholder="Ej: 3 años en taller de Providencia (suspensiones y armado). Mecánico de apoyo en Enduro Series 2025."></textarea>
+            <p data-incog-note class="mt-1 text-xs font-semibold text-brand">Modo incógnito: describe tu experiencia sin nombrar tu tienda actual.</p>
           </div>
         </fieldset>
 
@@ -1276,7 +1306,7 @@
 
         <label for="cvConsent" class="flex cursor-pointer items-start gap-3 rounded-lg bg-brand-50 p-3 ring-1 ring-brand/25">
           <input id="cvConsent" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#2e7d32]" />
-          <span class="text-sm text-soil-700">Acepto que BIKEGRID muestre mi ficha técnica a tiendas y talleres (nombre abreviado, comuna, especialidades y experiencia).</span>
+          <span class="text-sm text-soil-700">Acepto que BIKEGRID muestre mi ficha técnica a tiendas y talleres <span id="cvConsentScope">(sin mi nombre: código de perfil, comuna, especialidades y experiencia)</span>.</span>
         </label>
         <div class="hidden" aria-hidden="true"><label>Web <input id="cvWebsite" tabindex="-1" autocomplete="off" /></label></div>
         <p id="cvError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
@@ -1293,6 +1323,72 @@
       </div>
       <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
         <button type="submit" id="cvSubmit" class="w-full rounded-xl bg-brand py-3 text-[13px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Guardar mi CV Técnico</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Solicitar entrevista / revelar datos (tiendas → candidato, con autorización del candidato) -->
+  <dialog id="revealDialog" class="w-[min(94vw,32rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="revealTitle">
+    <form id="revealForm" class="flex max-h-[92dvh] flex-col" novalidate>
+      <div class="flex items-start justify-between gap-4 border-b border-sand-300 px-5 pb-3 pt-4 sm:px-6">
+        <div class="min-w-0">
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-brand">Bici Jobs · Para tiendas</p>
+          <h2 id="revealTitle" class="font-display text-xl font-extrabold uppercase leading-tight tracking-tight text-soil-950 sm:text-2xl">Solicitar entrevista</h2>
+          <p id="revealWho" class="mt-0.5 truncate font-mono text-[12px] font-semibold uppercase tracking-[.1em] text-soil-600"></p>
+        </div>
+        <button type="button" data-close class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
+      </div>
+      <div id="revealBody" class="flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
+        <div class="flex gap-3 rounded-2xl bg-soil-950 p-4 text-sand-100">
+          <i id="revealIcon" class="i i-key mt-0.5 text-xl text-[#8fd18f]" aria-hidden="true"></i>
+          <p id="revealInfo" class="text-[13px] leading-relaxed text-sand-200"></p>
+        </div>
+        <ol class="grid grid-cols-3 gap-2 text-center font-mono text-[10px] font-semibold uppercase leading-tight tracking-[.1em] text-soil-600" aria-label="Cómo funciona">
+          <li class="rounded-lg bg-sand-100 px-2 py-2 ring-1 ring-sand-300"><span class="block text-brand">1</span>Envías tu propuesta</li>
+          <li class="rounded-lg bg-sand-100 px-2 py-2 ring-1 ring-sand-300"><span class="block text-brand">2</span>El candidato la revisa</li>
+          <li class="rounded-lg bg-sand-100 px-2 py-2 ring-1 ring-sand-300"><span class="block text-brand">3</span>Si acepta, recibes sus datos</li>
+        </ol>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="rvShop" class="block text-sm font-semibold text-soil-800">Tu tienda o taller</label>
+            <input id="rvShop" maxlength="80" class="field mt-1.5" placeholder="Ej: Taller Rueda Libre" />
+          </div>
+          <div>
+            <label for="rvCargo" class="block text-sm font-semibold text-soil-800">Cargo ofrecido</label>
+            <select id="rvCargo" class="field mt-1.5">
+              <option value="">Selecciona…</option><option value="mecanico">Mecánico</option><option value="vendedor_tecnico">Vendedor Técnico</option><option value="jefe_tienda">Jefe de Tienda</option><option value="guia_shuttle">Guía / Shuttle</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <div>
+            <label for="rvJornada" class="block text-sm font-semibold text-soil-800">Jornada</label>
+            <select id="rvJornada" class="field mt-1.5"><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="temporada">Temporada / Eventos</option></select>
+          </div>
+          <div>
+            <label for="rvSalary" class="block text-sm font-semibold text-soil-800">Rango salarial <span class="font-normal text-soil-600">(recomendado)</span></label>
+            <input id="rvSalary" maxlength="60" class="field mt-1.5" placeholder="Ej: $900.000 líquido" />
+          </div>
+        </div>
+        <div>
+          <label for="rvMsg" class="block text-sm font-semibold text-soil-800">Propuesta breve <span class="font-normal text-soil-600">(opcional)</span></label>
+          <textarea id="rvMsg" rows="2" maxlength="400" class="field mt-1.5 resize-none" placeholder="Ej: Buscamos técnico e-bike para abrir el área de servicio Bosch en la sucursal."></textarea>
+        </div>
+        <div>
+          <label for="rvPhone" class="block text-sm font-semibold text-soil-800">Tu WhatsApp</label>
+          <input id="rvPhone" type="tel" inputmode="tel" maxlength="20" class="field mt-1.5" placeholder="+56 9 1234 5678" />
+        </div>
+        <p class="text-xs text-soil-600">Una propuesta con cargo y rango salarial tiene más probabilidades de ser aceptada. El contacto con candidatos está incluido en la Ficha Pro.</p>
+        <p id="rvError" class="hidden rounded-lg bg-[#b3432b]/10 px-3 py-2 text-sm font-semibold text-[#8f3522] ring-1 ring-[#b3432b]/30" role="alert"></p>
+      </div>
+      <div id="revealDone" class="flex-1 overflow-y-auto px-5 py-8 text-center sm:px-6" hidden>
+        <div class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-brand text-2xl text-sand-50 shadow-lg"><i class="i i-check" aria-hidden="true"></i></div>
+        <h3 class="mt-3 font-display text-2xl font-extrabold uppercase leading-tight text-soil-950">Propuesta enviada</h3>
+        <p id="revealDoneText" class="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-soil-700"></p>
+        <a id="revealWaAgain" href="#" target="_blank" rel="noopener" class="btn-wa-pro mx-auto mt-5 max-w-sm px-3 py-3 text-[13px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> ¿No se abrió WhatsApp? Ábrelo aquí</a>
+      </div>
+      <div class="border-t border-sand-300 px-5 py-3 sm:px-6" style="padding-bottom:max(.75rem, env(safe-area-inset-bottom))">
+        <button type="submit" id="revealSubmit" class="w-full rounded-xl bg-brand py-3 text-[13px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Enviar propuesta</button>
       </div>
     </form>
   </dialog>
@@ -3888,6 +3984,7 @@
         let { error } = await supabaseClient.from(item.table).insert([item.row]);
         // Base sin las columnas nuevas: se guarda la versión compatible (el detalle igual va en el texto)
         if (error && item.legacy && /column|schema cache/i.test(error.message)) ({ error } = await supabaseClient.from(item.table).insert([item.legacy]));
+        if (error && error.code === '23505') error = null; // ya estaba guardada (reintento con el mismo id)
         if (error) { console.warn(`[BIKEGRID] ${item.table} sin guardar:`, error.message); left.push(item); }
       }
       writeJSON(JOBS_QUEUE_KEY, left);
@@ -3946,7 +4043,7 @@
           if (!$('applyExp').value) $('applyExp').value = cv.experiencia_anos || '';
           if (!$('applyCv').value && cv.cv_url) $('applyCv').value = cv.cv_url;
         }
-        note.innerHTML = `<i class="i i-badge-check text-lg text-brand" aria-hidden="true"></i><span class="flex-1">Se adjunta tu <strong>CV Técnico</strong>: ${cv.especialidades.length} especialidad${cv.especialidades.length === 1 ? '' : 'es'}.</span><button type="button" data-cv-open="postulacion" class="text-xs font-semibold text-brand underline underline-offset-2">Editar</button>`;
+        note.innerHTML = `<i class="i i-badge-check text-lg text-brand" aria-hidden="true"></i><span class="flex-1">Se adjunta tu <strong>CV Técnico</strong>: ${cv.especialidades.length} especialidad${cv.especialidades.length === 1 ? '' : 'es'}.${cv.incognito ? ' <span class="block text-xs text-soil-600">Tu perfil es incógnito en el buscador, pero al postular a este aviso la tienda sí verá tu nombre y contacto.</span>' : ''}</span><button type="button" data-cv-open="postulacion" class="text-xs font-semibold text-brand underline underline-offset-2">Editar</button>`;
       } else {
         note.innerHTML = `<i class="i i-user text-lg text-brand" aria-hidden="true"></i><span class="flex-1">Destaca tu postulación con tus especialidades técnicas.</span><button type="button" data-cv-open="postulacion" class="shrink-0 text-xs font-semibold text-brand underline underline-offset-2">Armar CV Técnico</button>`;
       }
@@ -4099,26 +4196,41 @@
     const CV_KEY = 'bikegrid-cv-tecnico';
     const TALENT_PAGE = 6;
     const TALENT_DEMO = !supabaseClient;
+    // Código neutro y estable de cada ficha (derivado de su id): "N° 4F2A1"
+    const profileCode = (id) => String(id).replace(/[^0-9a-f]/gi, '').slice(0, 5).toUpperCase() || '·····';
+    const SPECIALIST = { transmision: 'Transmisión', suspension: 'Suspensión', ebike: 'E-Bike', taller: 'Taller General' };
+    // Perfil incógnito: "Especialista E-Bike" si una especialidad domina, si no "Mecánico"
+    function incognitoTitle(c) {
+      const counts = {};
+      for (const k of c.especialidades || []) { const g = BADGE_INFO[k]?.group; if (g) counts[g] = (counts[g] || 0) + 1; }
+      const [top, n = 0] = Object.entries(counts).sort((x, y) => y[1] - x[1])[0] || [];
+      return n >= 2 && n * 2 >= (c.especialidades || []).length ? `Especialista ${SPECIALIST[top]}` : 'Mecánico';
+    }
+    const candidateLabel = (c) => (c.incognito ? `${incognitoTitle(c)} N° ${profileCode(c.id)}` : (c.alias_publico || `Candidato N° ${profileCode(c.id)}`));
     const nombrePublico = (n) => {
       const [a = '', b = ''] = String(n).trim().split(/\s+/);
       return `${a.charAt(0).toUpperCase()}${a.slice(1).toLowerCase()}${b ? ` ${b.charAt(0).toUpperCase()}.` : ''}`;
     };
     const TALENT_DEMO_ROWS = [
-      { id: 'demo-cv-1', nombre_publico: 'Matías R.', comuna: 'Ñuñoa', region: 'metropolitana', lat: -33.46, lng: -70.6, jornadas: ['full_time'], especialidades: ['sram_axs', 'shimano_di2', 'fox_rockshox', 'purgado_hidraulico'], experiencia_anos: '3_5', experiencia: 'Taller en Providencia: servicio de suspensiones y armado de bicis de gama alta. Mecánico de apoyo en carreras de enduro.', created_at: daysAgo(1) },
-      { id: 'demo-cv-2', nombre_publico: 'Fernanda C.', comuna: 'Las Condes', region: 'metropolitana', lat: -33.41, lng: -70.57, jornadas: ['full_time', 'part_time'], especialidades: ['ebike_bosch', 'ebike_shimano_steps', 'ebike_specialized', 'montaje'], experiencia_anos: '1_2', experiencia: 'Técnica e-bike en tienda multimarca: diagnóstico de motores, actualización de firmware y armado.', created_at: daysAgo(2) },
-      { id: 'demo-cv-3', nombre_publico: 'Diego P.', comuna: 'Viña del Mar', region: 'valparaiso', lat: -33.02, lng: -71.55, jornadas: ['part_time', 'temporada'], especialidades: ['mecanico_tradicional', 'enrayado', 'purgado_hidraulico'], experiencia_anos: '6_10', experiencia: 'Taller propio por 6 años. Enrayado a mano y restauración de bicicletas clásicas.', created_at: daysAgo(4) },
-      { id: 'demo-cv-4', nombre_publico: 'Camila S.', comuna: 'Pucón', region: 'araucania', lat: -39.27, lng: -71.98, jornadas: ['temporada'], especialidades: ['ebike_brose', 'ebike_bosch', 'mecanico_tradicional'], experiencia_anos: '3_5', experiencia: 'Guía y mecánica de flota e-MTB en operador turístico, temporadas 2023 a 2025.', created_at: daysAgo(5) },
-      { id: 'demo-cv-5', nombre_publico: 'Tomás V.', comuna: 'Concepción', region: 'biobio', lat: -36.83, lng: -73.05, jornadas: ['full_time'], especialidades: ['carbono', 'montaje', 'sram_axs', 'fox_rockshox'], experiencia_anos: 'mas_10', experiencia: 'Jefe de taller en tienda de ruta y MTB. Diagnóstico y reparación de cuadros de carbono.', created_at: daysAgo(7) },
-      { id: 'demo-cv-6', nombre_publico: 'Josefa M.', comuna: 'Puerto Varas', region: 'loslagos', lat: -41.32, lng: -72.99, jornadas: ['part_time'], especialidades: ['mecanico_tradicional', 'shimano_di2'], experiencia_anos: 'menos_1', experiencia: 'Curso de mecánica certificado y práctica en tienda local. Apoyo en Patagonia Bike Race.', created_at: daysAgo(9) },
+      { id: 'demo-cv-1', alias_publico: 'Matías R.', comuna: 'Ñuñoa', region: 'metropolitana', lat: -33.46, lng: -70.6, jornadas: ['full_time'], especialidades: ['sram_axs', 'shimano_di2', 'fox_rockshox', 'purgado_hidraulico'], experiencia_anos: '3_5', experiencia: 'Taller en Providencia: servicio de suspensiones y armado de bicis de gama alta. Mecánico de apoyo en carreras de enduro.', created_at: daysAgo(1) },
+      { id: '7c41e0a2-demo', incognito: true, alias_publico: null, comuna: 'Las Condes', region: 'metropolitana', lat: null, lng: null, jornadas: ['full_time', 'part_time'], especialidades: ['ebike_bosch', 'ebike_shimano_steps', 'ebike_specialized', 'montaje'], experiencia_anos: '1_2', experiencia: 'Técnica e-bike en tienda multimarca: diagnóstico de motores, actualización de firmware y armado.', created_at: daysAgo(2) },
+      { id: 'demo-cv-3', alias_publico: 'Diego P.', comuna: 'Viña del Mar', region: 'valparaiso', lat: -33.02, lng: -71.55, jornadas: ['part_time', 'temporada'], especialidades: ['mecanico_tradicional', 'enrayado', 'purgado_hidraulico'], experiencia_anos: '6_10', experiencia: 'Taller propio por 6 años. Enrayado a mano y restauración de bicicletas clásicas.', created_at: daysAgo(4) },
+      { id: 'demo-cv-4', alias_publico: 'Camila S.', comuna: 'Pucón', region: 'araucania', lat: -39.27, lng: -71.98, jornadas: ['temporada'], especialidades: ['ebike_brose', 'ebike_bosch', 'mecanico_tradicional'], experiencia_anos: '3_5', experiencia: 'Guía y mecánica de flota e-MTB en operador turístico, temporadas 2023 a 2025.', created_at: daysAgo(5) },
+      { id: 'b93f05d1-demo', incognito: true, alias_publico: null, comuna: 'Concepción', region: 'biobio', lat: null, lng: null, jornadas: ['full_time'], especialidades: ['carbono', 'montaje', 'sram_axs', 'fox_rockshox'], experiencia_anos: 'mas_10', experiencia: 'Jefe de taller en tienda de ruta y MTB (10+ años). Diagnóstico y reparación de cuadros de carbono.', created_at: daysAgo(7) },
+      { id: 'demo-cv-6', alias_publico: 'Josefa M.', comuna: 'Puerto Varas', region: 'loslagos', lat: -41.32, lng: -72.99, jornadas: ['part_time'], especialidades: ['mecanico_tradicional', 'shimano_di2'], experiencia_anos: 'menos_1', experiencia: 'Curso de mecánica certificado y práctica en tienda local. Apoyo en Patagonia Bike Race.', created_at: daysAgo(9) },
     ].map((c) => ({ ...c, demo: true }));
     let talent = TALENT_DEMO ? TALENT_DEMO_ROWS : [];
     const talentState = { group: '', badge: '', region: '', origin: null, radius: '', shown: TALENT_PAGE };
 
     async function loadTalent() {
       if (TALENT_DEMO) return;
-      const { data, error } = await supabaseClient.from('perfiles_tecnicos')
-        .select('id, nombre_publico, comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, created_at')
-        .order('created_at', { ascending: false }).limit(300);
+      const COLS = 'comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, created_at';
+      const query = (cols) => supabaseClient.from('perfiles_tecnicos').select(cols).order('created_at', { ascending: false }).limit(300);
+      let { data, error } = await query(`id, alias_publico, incognito, ${COLS}`);
+      if (error) { // base sin la sección "Modo incógnito" de talento.sql (ahí aún no hay perfiles incógnito)
+        ({ data, error } = await query(`id, nombre_publico, ${COLS}`));
+        data = data?.map(({ nombre_publico, ...c }) => ({ ...c, alias_publico: nombre_publico, incognito: false }));
+      }
       if (error) return console.info('[BIKEGRID] Buscador de candidatos sin datos (¿ejecutaste supabase/talento.sql?):', error.message);
       talent = data;
       renderTalent();
@@ -4160,25 +4272,52 @@
     }
 
     function candidateCard(c, { preview = false } = {}) {
-      const initials = c.nombre_publico.split(' ').map((w) => w.charAt(0)).join('').slice(0, 2).toUpperCase();
       const place = [c.comuna, REGIONES[c.region]?.label].filter(Boolean).join(', ');
       const skills = [...c.especialidades].sort((a, b) => isMatchBadge(b) - isMatchBadge(a));
+      const km = Number.isFinite(c.km) ? `${c.lat == null ? '~' : ''}${kmLabel(c.km)}` : '';
+      const badges = `<div class="mt-2.5 flex flex-wrap gap-1.5">${skills.map((k) => badgeTag(k, isMatchBadge(k))).join('')}</div>`;
+      const exp = c.experiencia ? `<p class="mt-2.5 line-clamp-2 text-[13px] leading-relaxed text-soil-700">${esc(c.experiencia)}</p>` : '';
+      const demo = c.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : '';
+
+      if (c.incognito) {
+        // Vista anónima: sin nombre ni rostro; ubicación, experiencia y especialidades en primer plano
+        const meta = [['Ubicación', `${esc(place)}${km ? ` <span class="text-brand">· a ${km}</span>` : ''}`], ['Experiencia', esc(JOB_EXP[c.experiencia_anos] || '—')], ['Jornada', esc((c.jornadas || []).map((k) => JORNADAS[k]).join(' · ') || '—')]];
+        return `
+        <article class="cand-incog flex h-full flex-col rounded-2xl p-4 ring-1 ring-soil-600/30 transition hover:ring-soil-600/60" aria-label="Perfil incógnito ${esc(candidateLabel(c))}">
+          <div class="flex items-start gap-3">
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-soil-800 text-sand-300 ring-1 ring-soil-700" aria-hidden="true"><i class="i i-shield text-xl"></i></span>
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="inline-flex items-center gap-1 rounded-md bg-soil-950 px-1.5 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-[.14em] text-sand-100"><i class="i i-lock" aria-hidden="true"></i>Incógnito</span>${demo}
+              </div>
+              <h4 class="mt-1 font-display text-lg font-extrabold uppercase leading-tight text-soil-950">${esc(incognitoTitle(c))} <span class="font-mono text-[13px] font-semibold tracking-[.08em] text-soil-600">N° ${esc(profileCode(c.id))}</span></h4>
+            </div>
+          </div>
+          <dl class="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-xl bg-sand-300 ring-1 ring-sand-300">
+            ${meta.map(([k, v]) => `<div class="bg-sand-50 px-2.5 py-2"><dt class="font-mono text-[9px] font-semibold uppercase tracking-[.16em] text-soil-600">${k}</dt><dd class="mt-0.5 text-[12.5px] font-semibold leading-snug text-soil-900">${v}</dd></div>`).join('')}
+          </dl>
+          ${badges}${exp}
+          ${preview ? '' : `<div class="mt-auto pt-3.5"><button type="button" data-talent-contact="${esc(c.id)}" class="w-full rounded-xl bg-soil-950 px-4 py-2.5 text-[11.5px] font-semibold uppercase tracking-[.1em] text-sand-50 ring-1 ring-brand/60 transition hover:bg-brand"><i class="i i-key" aria-hidden="true"></i> Solicitar Entrevista / Revelar Datos</button>
+            <p class="mt-1.5 text-center text-[11px] text-soil-600">Sus datos se entregan solo si acepta tu propuesta.</p></div>`}
+        </article>`;
+      }
+
+      const name = candidateLabel(c);
+      const initials = name.split(' ').map((w) => w.charAt(0)).join('').slice(0, 2).toUpperCase();
       return `
         <article class="flex h-full flex-col rounded-2xl bg-white/80 p-4 ring-1 ring-sand-300 transition hover:ring-soil-600/40">
           <div class="flex items-start gap-3">
             <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-soil-950 font-display text-lg font-extrabold text-sand-50" aria-hidden="true">${esc(initials)}</span>
             <div class="min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-1.5">
-                <h4 class="truncate font-display text-lg font-extrabold uppercase leading-tight text-soil-950">${esc(c.nombre_publico)}</h4>
-                ${c.demo ? '<span class="rounded-full bg-sand-200 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase text-soil-600">Ejemplo</span>' : ''}
+                <h4 class="truncate font-display text-lg font-extrabold uppercase leading-tight text-soil-950">${esc(name)}</h4>${demo}
               </div>
-              <p class="text-[13px] text-soil-600"><i class="i i-pin" aria-hidden="true"></i> ${esc(place)}${Number.isFinite(c.km) ? ` · <span class="font-semibold text-brand">a ${kmLabel(c.km)}</span>` : ''}</p>
+              <p class="text-[13px] text-soil-600"><i class="i i-pin" aria-hidden="true"></i> ${esc(place)}${km ? ` · <span class="font-semibold text-brand">a ${km}</span>` : ''}</p>
             </div>
             <span class="shrink-0 rounded-md bg-sand-100 px-2 py-1 text-right font-mono text-[10px] font-semibold uppercase leading-tight text-soil-700 ring-1 ring-sand-300">${esc(JOB_EXP[c.experiencia_anos] || '')}</span>
           </div>
           <p class="mt-2.5 flex flex-wrap gap-1">${(c.jornadas || []).map((k) => `<span class="rounded-full bg-sand-100 px-2 py-0.5 text-[11px] font-semibold text-soil-700 ring-1 ring-sand-300">${esc(JORNADAS[k] || '')}</span>`).join('')}</p>
-          <div class="mt-2 flex flex-wrap gap-1.5">${skills.map((k) => badgeTag(k, isMatchBadge(k))).join('')}</div>
-          ${c.experiencia ? `<p class="mt-2.5 line-clamp-2 text-[13px] leading-relaxed text-soil-700">${esc(c.experiencia)}</p>` : ''}
+          ${badges}${exp}
           ${preview ? '' : `<div class="mt-auto pt-3.5"><button type="button" data-talent-contact="${esc(c.id)}" class="w-full rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 transition hover:bg-brand-600"><i class="i i-message" aria-hidden="true"></i> Solicitar contacto</button></div>`}
         </article>`;
     }
@@ -4247,23 +4386,77 @@
     });
     $('talentMore').addEventListener('click', () => { talentState.shown += TALENT_PAGE; renderTalent(); });
 
-    // Contacto: lo coordina BIKEGRID (beneficio Ficha Pro). Nunca se exponen los datos del candidato.
+    // Contacto: la tienda envía una propuesta; BIKEGRID la presenta y el candidato decide si revela sus datos
+    const revealDlg = $('revealDialog'), revealForm = $('revealForm');
+    const RECRUITER_KEY = 'bikegrid-tienda-recluta';
+    let revealCand = null;
+    revealDlg.addEventListener('click', (e) => { if (e.target === revealDlg || e.target.closest('[data-close]')) revealDlg.close(); });
+    function openReveal(c) {
+      revealCand = c;
+      if (!$('revealDone').hidden || !revealDlg.dataset.ready) {
+        revealDlg.dataset.ready = '1';
+        revealForm.reset();
+        const prev = readJSON(RECRUITER_KEY, null);
+        if (prev) { $('rvShop').value = prev.tienda || ''; $('rvPhone').value = prev.whatsapp ? `+${prev.whatsapp}` : ''; }
+      }
+      $('revealTitle').textContent = c.incognito ? 'Solicitar entrevista / revelar datos' : 'Solicitar contacto';
+      $('revealWho').textContent = `${candidateLabel(c)} · ${c.comuna}`;
+      $('revealIcon').className = `i ${c.incognito ? 'i-key' : 'i-message'} mt-0.5 text-xl text-[#8fd18f]`;
+      $('revealInfo').textContent = c.incognito
+        ? 'Perfil incógnito: BIKEGRID le presenta tu propuesta al candidato sin revelar quién es. Si le interesa, autoriza la entrega de su nombre y contacto y te los enviamos.'
+        : 'BIKEGRID le presenta tu propuesta al candidato y te conecta con él por WhatsApp si confirma su interés.';
+      const first = [...new Set((c.especialidades || []).map((k) => BADGE_INFO[k]?.group))][0];
+      if (!$('rvCargo').value) $('rvCargo').value = first === 'transmision' || first === 'suspension' || first === 'ebike' || first === 'taller' ? 'mecanico' : '';
+      $('revealBody').hidden = false; $('revealDone').hidden = true;
+      $('revealSubmit').textContent = 'Enviar propuesta';
+      showFormError($('rvError'), '');
+      revealDlg.showModal();
+      track('talent_contact', { ref: c.id, incognito: !!c.incognito, badge: talentState.badge || null, grupo: talentState.group || null });
+    }
     $('talentList').addEventListener('click', (e) => {
       const b = e.target.closest('[data-talent-contact]'); if (!b) return;
-      const c = talent.find((x) => String(x.id) === b.dataset.talentContact); if (!c) return;
-      track('talent_contact', { ref: c.id, badge: talentState.badge || null, grupo: talentState.group || null });
-      if (c.demo) return toast('Candidato de ejemplo: aquí verás las fichas técnicas reales');
-      const admin = salesNumber();
-      if (!admin) return toast('Escríbenos para contactar candidatos: pronto habilitamos el contacto directo');
-      const text = [
-        `Hola BIKEGRID. Quiero contactar al candidato *${c.nombre_publico}* (ref. ${String(c.id).slice(0, 8)}) de ${c.comuna}.`,
-        `• Especialidades: ${c.especialidades.map((k) => BADGE_INFO[k]?.card).filter(Boolean).join(', ')}`,
-        `• Disponibilidad: ${(c.jornadas || []).map((k) => JORNADAS[k]).join(', ')}`,
-        '• Mi tienda / taller: ',
-        '• Cargo que busco: ',
-      ].join('\n');
-      openWhatsApp(`https://wa.me/${admin}?text=${encodeURIComponent(text)}`);
+      const c = talent.find((x) => String(x.id) === b.dataset.talentContact);
+      if (c) openReveal(c);
     });
+    const revealWaText = (c, r) => [
+      `Hola BIKEGRID. Quiero ${c.incognito ? 'solicitar entrevista al perfil incógnito' : 'contactar al candidato'} *${candidateLabel(c)}* (ref. ${profileCode(c.id)}) de ${c.comuna}.`,
+      `• Especialidades: ${(c.especialidades || []).map((k) => BADGE_INFO[k]?.card).filter(Boolean).join(', ')}`,
+      `• Mi tienda / taller: ${r.tienda}`,
+      `• Cargo ofrecido: ${JOB_CARGOS[r.cargo].label} · ${JORNADAS[r.jornada]}`,
+      r.sueldo ? `• Rango salarial: ${r.sueldo}` : '',
+      r.mensaje ? `• Propuesta: ${r.mensaje}` : '',
+      `• Mi WhatsApp: +${r.whatsapp}`,
+    ].filter(Boolean).join('\n');
+    revealForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!$('revealDone').hidden) return revealDlg.close(); // botón "Listo"
+      const err = $('rvError'), c = revealCand;
+      const r = { tienda: $('rvShop').value.trim(), cargo: $('rvCargo').value, jornada: $('rvJornada').value, sueldo: $('rvSalary').value.trim() || null, mensaje: $('rvMsg').value.trim() || null, whatsapp: phoneCL($('rvPhone').value) };
+      if (r.tienda.length < 2) return showFormError(err, 'Escribe el nombre de tu tienda o taller.', 'rvShop');
+      if (!r.cargo) return showFormError(err, 'Elige el cargo que ofreces.', 'rvCargo');
+      if (!/^\d{8,15}$/.test(r.whatsapp)) return showFormError(err, 'Revisa tu WhatsApp: ej. +56 9 1234 5678.', 'rvPhone');
+      showFormError(err, '');
+      writeJSON(RECRUITER_KEY, { tienda: r.tienda, whatsapp: r.whatsapp });
+      track('talent_reveal_sent', { ref: c.id, incognito: !!c.incognito, cargo: r.cargo, jornada: r.jornada, sueldo: !!r.sueldo });
+      if (c.demo) { revealDlg.close(); return toast('Candidato de ejemplo: aquí verás las fichas técnicas reales'); }
+      const admin = salesNumber();
+      const link = admin ? `https://wa.me/${admin}?text=${encodeURIComponent(revealWaText(c, r))}` : '';
+      const saved = supabaseClient ? queueInsert('solicitudes_entrevista', { perfil_id: c.id, ...r }) : Promise.resolve(false);
+      const next = c.incognito
+        ? 'Presentaremos tu propuesta al candidato. Si la autoriza, te enviamos su nombre y contacto por WhatsApp.'
+        : 'Presentaremos tu propuesta al candidato y te conectaremos por WhatsApp si confirma su interés.';
+      if (link) { openWhatsApp(link); return showRevealDone(`Se abrió WhatsApp con tu propuesta. ${next}`, link); }
+      $('revealSubmit').textContent = 'Enviando…';
+      if (await saved) return showRevealDone(`Recibimos tu propuesta. ${next}`, '');
+      $('revealSubmit').textContent = 'Enviar propuesta';
+      showFormError(err, 'No pudimos enviar tu propuesta. Inténtalo de nuevo en un rato.');
+    });
+    function showRevealDone(text, link) {
+      $('revealBody').hidden = true; $('revealDone').hidden = false;
+      $('revealDoneText').textContent = text;
+      $('revealWaAgain').hidden = !link; if (link) $('revealWaAgain').href = link;
+      $('revealSubmit').textContent = 'Listo';
+    }
 
     // --- CV Técnico Ciclista ---
     const cvDlg = $('cvDialog'), cvForm = $('cvForm');
@@ -4272,7 +4465,22 @@
     $('cvRegion').innerHTML = Object.entries(REGIONES).map(([k, r]) => `<option value="${k}"${k === 'metropolitana' ? ' selected' : ''}>${r.label}</option>`).join('');
     cvDlg.addEventListener('click', (e) => { if (e.target === cvDlg || e.target.closest('[data-close]')) cvDlg.close(); });
     const cvBadgeCount = () => { const n = pressed(cvDlg, 'data-cv-badge').length; $('cvBadgeCount').textContent = n ? `${n} seleccionada${n === 1 ? '' : 's'}` : ''; };
-    cvDlg.addEventListener('chipchange', cvBadgeCount);
+    // Modo incógnito: vista previa del código y campos que se ocultan
+    function syncIncognito() {
+      const on = $('cvIncognito').checked;
+      $('cvIncogCard').classList.toggle('is-on', on);
+      cvDlg.querySelectorAll('[data-incog-note]').forEach((el) => { el.hidden = !on; });
+      cvDlg.querySelectorAll('[data-incog-hide]').forEach((el) => { el.hidden = on; });
+      $('cvConsentScope').textContent = on ? '(sin mi nombre: código de perfil, comuna, especialidades y experiencia)' : '(nombre abreviado, comuna, especialidades y experiencia)';
+      const title = incognitoTitle({ especialidades: pressed(cvDlg, 'data-cv-badge') });
+      $('cvIncognitoPreview').innerHTML = on
+        ? `<i class="i i-lock" aria-hidden="true"></i>Las tiendas verán: ${esc(title)} N° ${esc(profileCode(cvDraftId))}`
+        : `<i class="i i-user" aria-hidden="true"></i>Las tiendas verán: ${esc(nombrePublico($('cvName').value) || 'tu nombre abreviado')}`;
+    }
+    let cvDraftId = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, () => (Math.random() * 16 | 0).toString(16));
+    $('cvIncognito').addEventListener('change', () => { syncIncognito(); track('cv_incognito_toggle', { on: $('cvIncognito').checked }); });
+    $('cvName').addEventListener('input', () => { if (!$('cvIncognito').checked) syncIncognito(); });
+    cvDlg.addEventListener('chipchange', () => { cvBadgeCount(); syncIncognito(); });
     $('cvExp').addEventListener('input', (e) => { $('cvExpCount').textContent = e.target.value.length; });
 
     function setCvFile(file) {
@@ -4321,6 +4529,9 @@
         $('cvEmail').value = saved.email || gate?.email || '';
         $('cvYears').value = saved.experiencia_anos || '';
         $('cvExp').value = saved.experiencia || '';
+        $('cvShop').value = saved.tienda_actual || '';
+        $('cvIncognito').checked = saved.incognito ?? true; // privado por defecto
+        cvDraftId = crypto.randomUUID ? crypto.randomUUID() : cvDraftId;
         if (saved.cv_url) { $('cvLink').value = saved.cv_url; $('cvLink').hidden = false; }
         if (saved.lat != null) { cvGeo = { lat: saved.lat, lng: saved.lng }; $('cvGeoText').textContent = 'Ubicación aproximada guardada (±1 km)'; }
         setPressed(cvDlg, 'data-cv-badge', saved.especialidades);
@@ -4328,6 +4539,7 @@
       }
       $('cvExpCount').textContent = $('cvExp').value.length;
       cvBadgeCount();
+      syncIncognito();
       $('cvBody').hidden = false; $('cvDone').hidden = true;
       $('cvSubmit').textContent = 'Guardar mi CV Técnico';
       showFormError($('cvError'), '');
@@ -4338,7 +4550,8 @@
 
     const cvWaText = (d) => [
       'Hola BIKEGRID. Quiero sumar mi CV Técnico a Bici Jobs:',
-      `• Nombre: ${d.nombre}`,
+      `• Nombre: ${d.nombre}${d.incognito ? ' (Modo incógnito: no mostrar mi nombre ni mi tienda actual)' : ''}`,
+      d.tienda_actual ? `• Tienda actual (privado): ${d.tienda_actual}` : '',
       `• Comuna: ${d.comuna}, ${REGIONES[d.region].label}`,
       `• Modalidad: ${d.jornadas.map((k) => JORNADAS[k]).join(', ')}`,
       `• Especialidades: ${d.especialidades.map((k) => BADGE_INFO[k].card).join(', ')}`,
@@ -4356,7 +4569,9 @@
         jornadas: pressed(cvDlg, 'data-cv-jornada'), telefono: phoneCL($('cvPhone').value), email: $('cvEmail').value.trim().toLowerCase(),
         especialidades: pressed(cvDlg, 'data-cv-badge'), experiencia_anos: $('cvYears').value, experiencia: $('cvExp').value.trim() || null,
         cv_url: $('cvLink').hidden ? null : ($('cvLink').value.trim() || null), lat: cvGeo?.lat ?? null, lng: cvGeo?.lng ?? null,
+        incognito: $('cvIncognito').checked, tienda_actual: $('cvShop').value.trim() || null,
       };
+      if (d.incognito) { d.lat = null; d.lng = null; } // incógnito: la cercanía se calcula con el centro de la comuna
       if (d.nombre.length < 2) return showFormError(err, 'Escribe tu nombre.', 'cvName');
       if (d.comuna.length < 2) return showFormError(err, 'Indica tu comuna o ciudad.', 'cvComuna');
       if (!d.jornadas.length) return showFormError(err, 'Elige al menos una modalidad: Full-time, Part-time o Temporada.');
@@ -4365,15 +4580,18 @@
       if (!d.especialidades.length) return showFormError(err, 'Marca al menos una especialización técnica.');
       if (!d.experiencia_anos) return showFormError(err, 'Indica tus años de experiencia en el rubro.', 'cvYears');
       if (d.cv_url && !/^https:\/\/\S+\.\S+/.test(d.cv_url)) return showFormError(err, 'El enlace al CV debe empezar con https://', 'cvLink');
+      if (d.incognito && d.tienda_actual && d.experiencia && norm(d.experiencia).includes(norm(d.tienda_actual)))
+        return showFormError(err, 'Modo incógnito: tu experiencia menciona tu tienda actual. Descríbela sin nombrarla.', 'cvExp');
       if (!$('cvConsent').checked) return showFormError(err, 'Para aparecer en el buscador de tiendas, acepta que mostremos tu ficha técnica.', 'cvConsent');
       if ($('cvWebsite').value) return; // bot
       showFormError(err, '');
 
       // Copia local (sin el PDF) para completar postulaciones y editar la ficha después
-      writeJSON(CV_KEY, { ...d, hasPdf: !!cvFile, savedAt: new Date().toISOString() });
+      const id = cvDraftId;
+      writeJSON(CV_KEY, { ...d, id, hasPdf: !!cvFile, savedAt: new Date().toISOString() });
       unlockGateWith(d.email);
       document.dispatchEvent(new CustomEvent('bikegrid:cv'));
-      track('cv_submitted', { especialidades: d.especialidades.length, grupos: [...new Set(d.especialidades.map((k) => BADGE_INFO[k].group))].join(','), jornadas: d.jornadas.join(','), pdf: !!cvFile, link: !!d.cv_url, gps: d.lat != null, region: d.region });
+      track('cv_submitted', { incognito: d.incognito, especialidades: d.especialidades.length, grupos: [...new Set(d.especialidades.map((k) => BADGE_INFO[k].group))].join(','), jornadas: d.jornadas.join(','), pdf: !!cvFile, link: !!d.cv_url, gps: d.lat != null, region: d.region });
 
       if (!supabaseClient) {
         const admin = salesNumber();
@@ -4385,7 +4603,6 @@
       $('cvSubmit').textContent = 'Guardando…';
       let cv_path = null;
       if (cvFile) {
-        const id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
         const { error } = await supabaseClient.storage.from('cvs-tecnicos').upload(`${id}.pdf`, cvFile, { contentType: 'application/pdf', upsert: false });
         if (error) {
           $('cvSubmit').textContent = 'Guardar mi CV Técnico';
@@ -4394,7 +4611,9 @@
         }
         cv_path = `${id}.pdf`;
       }
-      const ok = await queueInsert('perfiles_tecnicos', { ...d, cv_path });
+      // Sin versión "compatible": si la base aún no soporta incógnito, la ficha espera en cola antes que exponer el nombre
+      const ok = await queueInsert('perfiles_tecnicos', { id, ...d, cv_path });
+      cvDraftId = crypto.randomUUID ? crypto.randomUUID() : cvDraftId; // la próxima edición es una ficha nueva
       showCvDone(d, ok
         ? 'Tu ficha quedó en revisión y aparecerá en el buscador de tiendas en menos de 24 horas hábiles. Al postular a un aviso, tus especialidades se adjuntan solas.'
         : 'Guardamos tu ficha en este dispositivo y la enviaremos automáticamente en tu próxima visita.', '');
@@ -4402,7 +4621,7 @@
     function showCvDone(d, text, link) {
       $('cvBody').hidden = true; $('cvDone').hidden = false;
       $('cvDoneText').textContent = text;
-      $('cvPreview').innerHTML = candidateCard({ ...d, nombre_publico: nombrePublico(d.nombre) }, { preview: true });
+      $('cvPreview').innerHTML = candidateCard({ ...d, id: readJSON(CV_KEY, {})?.id || cvDraftId, alias_publico: d.incognito ? null : nombrePublico(d.nombre) }, { preview: true });
       $('cvWaAgain').hidden = !link; if (link) $('cvWaAgain').href = link;
       $('cvSubmit').textContent = 'Listo';
     }

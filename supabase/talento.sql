@@ -32,18 +32,34 @@ create table if not exists public.perfiles_tecnicos (
 create index if not exists perfiles_tecnicos_estado_idx on public.perfiles_tecnicos (estado, created_at desc);
 create index if not exists perfiles_tecnicos_especialidades_idx on public.perfiles_tecnicos using gin (especialidades);
 
+-- Modo incógnito: sin nombre público ni ubicación GPS; las tiendas ven "Mecánico N° 4F2A1" (código derivado del id).
+-- tienda_actual es SIEMPRE privada (solo admins): sirve para no presentar el perfil a su propio empleador.
+alter table public.perfiles_tecnicos add column if not exists incognito boolean not null default false;
+alter table public.perfiles_tecnicos add column if not exists tienda_actual text check (char_length(tienda_actual) <= 80);
+alter table public.perfiles_tecnicos add column if not exists alias_publico text generated always as (
+  case when incognito then null else
+    initcap(split_part(regexp_replace(btrim(nombre), '\s+', ' ', 'g'), ' ', 1))
+    || coalesce(' ' || upper(nullif(left(split_part(regexp_replace(btrim(nombre), '\s+', ' ', 'g'), ' ', 2), 1), '')) || '.', '')
+  end) stored;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'perfiles_incognito_sin_gps') then
+    alter table public.perfiles_tecnicos add constraint perfiles_incognito_sin_gps check (not incognito or (lat is null and lng is null));
+  end if;
+end $$;
+
 alter table public.perfiles_tecnicos enable row level security;
 revoke all on public.perfiles_tecnicos from anon, authenticated;
 
--- Visitantes: solo fichas publicadas y solo columnas no sensibles
-grant select (id, nombre_publico, comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, created_at)
+-- Visitantes: solo fichas publicadas y solo columnas no sensibles.
+-- alias_publico es null en perfiles incógnito; nombre_publico (siempre calculado) ya NO es visible para el público.
+grant select (id, alias_publico, incognito, comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, created_at)
   on public.perfiles_tecnicos to anon;
 drop policy if exists "Fichas técnicas publicadas" on public.perfiles_tecnicos;
 create policy "Fichas técnicas publicadas" on public.perfiles_tecnicos for select to anon
   using (estado = 'publicado');
 
--- Cualquiera puede enviar su ficha; siempre queda pendiente
-grant insert (nombre, telefono, email, comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, cv_url, cv_path)
+-- Cualquiera puede enviar su ficha; siempre queda pendiente. El id lo genera la web (así la ficha conoce su código N°).
+grant insert (id, nombre, telefono, email, comuna, region, lat, lng, jornadas, especialidades, experiencia_anos, experiencia, cv_url, cv_path, incognito, tienda_actual)
   on public.perfiles_tecnicos to anon, authenticated;
 drop policy if exists "Envío público de fichas técnicas" on public.perfiles_tecnicos;
 create policy "Envío público de fichas técnicas" on public.perfiles_tecnicos for insert to anon, authenticated
@@ -73,3 +89,34 @@ create policy "Admins leen CV técnicos" on storage.objects for select to authen
 drop policy if exists "Admins borran CV técnicos" on storage.objects;
 create policy "Admins borran CV técnicos" on storage.objects for delete to authenticated
   using (bucket_id = 'cvs-tecnicos' and public.is_admin());
+
+-- ============ 3. Solicitudes de entrevista / revelado de datos ============
+-- La tienda envía una propuesta concreta. BIKEGRID se la presenta al candidato y solo con su autorización
+-- entrega nombre y contacto (estado 'autorizada'). Datos solo para admins.
+create table if not exists public.solicitudes_entrevista (
+  id          uuid primary key default gen_random_uuid(),
+  perfil_id   uuid not null references public.perfiles_tecnicos(id) on delete cascade,
+  tienda      text not null check (char_length(tienda) between 2 and 80),
+  cargo       text not null check (cargo in ('mecanico','vendedor_tecnico','jefe_tienda','guia_shuttle')),
+  jornada     text check (jornada in ('full_time','part_time','temporada')),
+  sueldo      text check (char_length(sueldo) <= 60),
+  mensaje     text check (char_length(mensaje) <= 400),
+  whatsapp    text not null check (whatsapp ~ '^[0-9]{8,15}$'),
+  estado      text not null default 'pendiente' check (estado in ('pendiente','autorizada','rechazada')),
+  created_at  timestamptz not null default now()
+);
+create index if not exists solicitudes_entrevista_created_idx on public.solicitudes_entrevista (created_at desc);
+
+alter table public.solicitudes_entrevista enable row level security;
+revoke all on public.solicitudes_entrevista from anon, authenticated;
+grant insert (perfil_id, tienda, cargo, jornada, sueldo, mensaje, whatsapp) on public.solicitudes_entrevista to anon, authenticated;
+drop policy if exists "Solicitud pública de entrevista" on public.solicitudes_entrevista;
+create policy "Solicitud pública de entrevista" on public.solicitudes_entrevista for insert to anon, authenticated
+  with check (estado = 'pendiente');
+grant select, update, delete on public.solicitudes_entrevista to authenticated;
+drop policy if exists "Admins leen solicitudes" on public.solicitudes_entrevista;
+create policy "Admins leen solicitudes" on public.solicitudes_entrevista for select to authenticated using (public.is_admin());
+drop policy if exists "Admins editan solicitudes" on public.solicitudes_entrevista;
+create policy "Admins editan solicitudes" on public.solicitudes_entrevista for update to authenticated using (public.is_admin()) with check (public.is_admin());
+drop policy if exists "Admins borran solicitudes" on public.solicitudes_entrevista;
+create policy "Admins borran solicitudes" on public.solicitudes_entrevista for delete to authenticated using (public.is_admin());

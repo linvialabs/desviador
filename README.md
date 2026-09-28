@@ -122,6 +122,15 @@ Ejecuta [`supabase/talento.sql`](supabase/talento.sql) (tabla `perfiles_tecnicos
   - La distancia usa la ubicación aproximada del postulante si la compartió (redondeada a ±1 km) o, si no, el centro de su comuna.
   - El público solo ve nombre abreviado ("Matías R."), comuna, modalidad, especialidades y experiencia. Teléfono, email y CV nunca salen de la base.
   - "Solicitar contacto" abre WhatsApp comercial con la referencia del candidato: el contacto lo coordinas tú, y es un beneficio de la Ficha Pro.
+- **Perfil Técnico Incógnito (Modo Anónimo):** switch destacado al inicio del CV Técnico, **activado por defecto**: "Activar Modo Incógnito (Ocultar mi nombre y tienda actual)".
+  - En modo incógnito la tienda ve "Especialista E-Bike N° 4F2A1" (o "Mecánico N° …" si no domina una especialidad) con ubicación, años de experiencia, jornada y especialidades, pero nunca el nombre.
+  - **Protección en la base, no solo en pantalla:** el nombre público es la columna `alias_publico`, que queda en `null` si el perfil es incógnito. `nombre_publico` dejó de ser legible para el público. Un perfil incógnito no guarda ubicación GPS (lo impide la restricción `perfiles_incognito_sin_gps`); la cercanía usa el centro de su comuna.
+  - "Tienda o taller actual" es un campo **siempre privado**. Sirve para no presentar el perfil a su propio empleador, y el formulario avisa si la experiencia menciona esa tienda.
+  - El código N° sale del `id` de la ficha y es estable: úsalo para identificar al candidato en Table Editor.
+- **Solicitar Entrevista / Revelar Datos:** la tienda envía una propuesta (tienda, cargo, jornada, rango salarial, mensaje y WhatsApp). Se guarda en `solicitudes_entrevista` (solo admins) y se abre tu WhatsApp comercial con la referencia N°.
+  - Flujo: le presentas la propuesta al candidato y, si la autoriza, cambias `estado` a `autorizada` y le envías a la tienda nombre y contacto. Si no, `rechazada`.
+  - En perfiles públicos, el mismo flujo aparece como "Solicitar contacto".
+  - Métricas: `cv_incognito_toggle`, `talent_contact` (con `incognito`) y `talent_reveal_sent`.
 - **Publicar vacante (estandarizado):** cargo (Mecánico, Vendedor Técnico, Jefe de Tienda, Guía / Shuttle), especialidad opcional, jornada, sucursal y ubicación, requisitos clave en chips, más otros requisitos y responsabilidades. Las tarjetas muestran el cargo, la jornada, la sucursal y los requisitos clave.
   - Si aún no ejecutas la sección 3 de `empleos.sql`, la web guarda la vacante sin las columnas nuevas (el detalle igual queda en `puesto` y `requisitos`).
 - Métricas: `cv_opened`, `cv_submitted`, `talent_filter`, `talent_contact`, `job_post_sent` (con cargo, jornada y cantidad de requisitos).
