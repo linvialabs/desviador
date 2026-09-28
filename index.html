@@ -184,6 +184,10 @@
 
     /* Navegación: mayúsculas con espaciado */
     .navlink { position: relative; white-space: nowrap; transition: color .15s ease; }
+    /* Módulos sin contenido real todavía: se marcan, no se venden como llenos */
+    .soon-badge { display: inline-flex; align-items: center; border-radius: 9999px; padding: .12rem .45rem; font: 600 9px/1.2 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; vertical-align: middle; background: rgba(212,175,55,.16); color: #9c6f22; box-shadow: inset 0 0 0 1px rgba(212,175,55,.5); }
+    .soon-badge.is-dark { color: #e8c27a; }
+    .soon-badge[hidden] { display: none; }
     .navlink:hover, .navlink:focus-visible { color: #f6f1e7; }
     .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #2e7d32; transform: scaleX(0); transition: transform .2s ease; }
     .navlink:hover::after { transform: scaleX(1); }
@@ -290,6 +294,7 @@
     .i-shield { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z%22/%3E%3Cpath d=%22m9 12 2 2 4-4%22/%3E%3C/svg%3E"); }
     .i-crosshair { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22/%3E%3Cpath d=%22M22 12h-4M6 12H2M12 6V2M12 22v-4%22/%3E%3C/svg%3E"); }
     .i-users { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2%22/%3E%3Ccircle cx=%229%22 cy=%227%22 r=%224%22/%3E%3Cpath d=%22M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75%22/%3E%3C/svg%3E"); }
+    .i-phone { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z%22/%3E%3C/svg%3E"); }
     .i-cog { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%223%22/%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%227%22/%3E%3Cpath d=%22M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12%22/%3E%3C/svg%3E"); }
     .i-droplet { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z%22/%3E%3C/svg%3E"); }
     .i-battery { --i: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect width=%2216%22 height=%2210%22 x=%222%22 y=%227%22 rx=%222%22/%3E%3Cpath d=%22M22 11v2%22/%3E%3Cpath d=%22m10 9-2 3h4l-2 3%22/%3E%3C/svg%3E"); }
@@ -324,7 +329,7 @@
         <div class="hidden items-center gap-4 pr-4 text-[11px] font-semibold uppercase tracking-[.12em] text-sand-300 lg:flex xl:gap-7 xl:pr-5 xl:text-[11.5px] xl:tracking-[.14em]">
           <a href="#inicio" class="navlink">Mapa</a>
           <button type="button" data-trail-view class="navlink uppercase tracking-[.14em]">Estado de pistas</button>
-          <a href="#comunidad" class="navlink">Bici Jobs</a>
+          <a href="#comunidad" class="navlink">Bici Jobs<span data-soon="jobs" class="soon-badge is-dark ml-1.5" hidden>Próximamente</span></a>
           <button type="button" data-dir-open class="navlink uppercase tracking-[.14em]">Directorio Pro</button>
         </div>
         <div class="flex items-center gap-2 lg:border-l lg:border-soil-700 lg:pl-4 xl:pl-5">
@@ -346,7 +351,7 @@
       <p class="pb-1 pt-4 font-mono text-[10px] font-semibold uppercase tracking-[.2em] text-sand-300/60">Navegación</p>
       <a href="#inicio" class="mnav"><i class="i i-pin" aria-hidden="true"></i>Mapa</a>
       <button type="button" data-trail-view class="mnav"><span class="grid w-[1.05rem] place-items-center"><i class="led led-green" aria-hidden="true"></i></span>Estado de pistas</button>
-      <a href="#comunidad" class="mnav"><i class="i i-briefcase" aria-hidden="true"></i>Bici Jobs</a>
+      <a href="#comunidad" class="mnav"><i class="i i-briefcase" aria-hidden="true"></i>Bici Jobs<span data-soon="jobs" class="soon-badge is-dark ml-auto" hidden>Próximamente</span></a>
       <button type="button" data-dir-open class="mnav"><i class="i i-badge-check" aria-hidden="true"></i>Directorio Pro</button>
       <p class="pb-1 pt-5 font-mono text-[10px] font-semibold uppercase tracking-[.2em] text-sand-300/60">Utilidades</p>
       <button type="button" data-sos="menu" class="mnav !text-[#f0a48f]"><i class="i i-siren" aria-hidden="true"></i>Repuesto / taller de urgencia</button>
@@ -364,7 +369,7 @@
     <div class="ad-grid" aria-hidden="true"></div>
     <div data-ad-creative class="mx-auto flex max-h-20 min-h-[52px] max-w-[1600px] items-center gap-3 px-4 py-2 sm:h-16 sm:px-6">
       <svg viewBox="0 0 32 32" class="h-7 w-7 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
-      <p class="ad-text line-clamp-2 font-mono text-[10px] font-semibold uppercase leading-snug tracking-[.16em] sm:text-[11.5px] sm:tracking-[.2em]"><strong>BIKEGRID ADVERTISING</strong><span class="hidden sm:inline"> — Espacio Oficial para Marcas, Distribuidoras y Eventos</span><span class="block sm:hidden">Marcas · Distribuidoras · Eventos</span></p>
+      <p class="ad-text line-clamp-2 font-mono text-[10px] font-semibold uppercase leading-snug tracking-[.16em] sm:text-[11.5px] sm:tracking-[.2em]"><strong>Espacio disponible</strong><span class="hidden sm:inline"> · marcas, distribuidoras y eventos</span></p>
       <span class="ad-label ml-auto hidden md:inline">Publicidad</span>
       <button type="button" data-plan="auspicio" data-ad-cta="top" class="ml-auto shrink-0 rounded-full px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-brand/70 transition hover:bg-brand md:ml-0">Anúnciate</button>
     </div>
@@ -475,29 +480,11 @@
             <div class="max-w-2xl">
               <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para negocios · Tiendas, talleres y servicios</p>
               <h2 id="b2bTitle" class="mt-1 font-display text-3xl font-extrabold uppercase leading-tight tracking-tight text-sand-50">Activa tu Ficha Pro</h2>
-              <p class="mt-2 text-sand-300">Convierte tu ficha en un canal de clientes, talento y reputación local.</p>
-              <p class="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[.14em] text-sand-300">$19.990/mes por local · 2° local + $9.990 · <a href="#multilocal" class="text-ochre-300 underline underline-offset-2">Enterprise 3+ locales</a></p>
+              <p class="mt-2 text-sand-300">Pin destacado, sello verificado, WhatsApp directo y prioridad en urgencias. Desde $19.990/mes por local. <a href="#anunciate" class="font-semibold text-ochre-300 underline underline-offset-2">Ver planes</a></p>
             </div>
             <div class="flex shrink-0 flex-col gap-2 sm:flex-row">
               <button type="button" data-plan="pro" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#d4af37] px-5 py-3 text-sm font-extrabold uppercase tracking-[.1em] text-soil-950 shadow-lg transition hover:bg-[#e2c35a]"><i class="i i-badge-check" aria-hidden="true"></i> Activa tu Ficha Pro</button>
               <a href="#registrar" data-register="negocio" class="rounded-xl px-5 py-3 text-center text-sm font-semibold uppercase tracking-[.1em] text-sand-100 ring-1 ring-sand-300/40 transition hover:bg-soil-800">Registrar gratis</a>
-            </div>
-          </div>
-          <div class="mt-6 grid gap-3 md:grid-cols-3">
-            <div class="rounded-xl bg-soil-800/80 p-4 ring-1 ring-soil-700">
-              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand/20 text-[#8fd18f] ring-1 ring-brand/50"><i class="i i-crosshair text-lg" aria-hidden="true"></i></span>
-              <p class="mt-3 text-[13px] font-semibold uppercase tracking-[.1em] text-sand-50">Visibilidad GPS de Urgencias &amp; Repuestos</p>
-              <p class="mt-1 text-sm leading-relaxed text-sand-300">Canaliza riders que necesitan solución inmediata el fin de semana.</p>
-            </div>
-            <div class="rounded-xl bg-soil-800/80 p-4 ring-1 ring-soil-700">
-              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand/20 text-[#8fd18f] ring-1 ring-brand/50"><i class="i i-briefcase text-lg" aria-hidden="true"></i></span>
-              <p class="mt-3 text-[13px] font-semibold uppercase tracking-[.1em] text-sand-50">Bici Jobs Ilimitado</p>
-              <p class="mt-1 text-sm leading-relaxed text-sand-300">Publicación directa de ofertas para mecánicos, vendedores y personal especializado.</p>
-            </div>
-            <div class="rounded-xl bg-soil-800/80 p-4 ring-1 ring-soil-700">
-              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand/20 text-[#8fd18f] ring-1 ring-brand/50"><i class="i i-sprout text-lg" aria-hidden="true"></i></span>
-              <p class="mt-3 text-[13px] font-semibold uppercase tracking-[.1em] text-sand-50">Sello Trail Care</p>
-              <p class="mt-1 text-sm leading-relaxed text-sand-300">Validación y prestigio comunitario al apoyar los senderos locales.</p>
             </div>
           </div>
         </div>
@@ -511,7 +498,6 @@
           <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Tech</p>
           <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Últimas noticias</h2>
         </div>
-        <a href="#" class="shrink-0 text-sm font-semibold text-moss-700 hover:text-moss-600">Ver archivo →</a>
       </div>
 
       <div id="newsGrid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
@@ -528,7 +514,7 @@
             <div class="mt-4 flex flex-wrap gap-2">
               <button type="button" data-cv-open="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-brand-600"><i class="i i-user" aria-hidden="true"></i> Arma tu CV Técnico</button>
               <button type="button" data-post-job="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Vacante</button>
-              <a href="#talento" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-soil-800 ring-1 ring-soil-600/40 transition hover:bg-sand-50"><i class="i i-users" aria-hidden="true"></i> Buscar candidatos</a>
+              <a href="#talento" data-soon-hide="talento" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-soil-800 ring-1 ring-soil-600/40 transition hover:bg-sand-50"><i class="i i-users" aria-hidden="true"></i> Buscar candidatos</a>
             </div>
           </div>
           <div id="jobTabs" class="no-scrollbar -mx-4 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
@@ -543,18 +529,18 @@
           <div class="flex flex-col gap-4 bg-soil-950 px-5 py-5 text-sand-100 sm:px-6 md:flex-row md:items-end md:justify-between">
             <div>
               <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.22em] text-[#8fd18f]">Para tiendas y talleres · Reclutamiento</p>
-              <h3 id="talentTitle" class="mt-1 flex items-center gap-2.5 font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-3xl"><i class="i i-users text-[.85em] text-[#8fd18f]" aria-hidden="true"></i>Talento técnico disponible</h3>
+              <h3 id="talentTitle" class="mt-1 flex items-center gap-2.5 font-display text-2xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-3xl"><i class="i i-users text-[.85em] text-[#8fd18f]" aria-hidden="true"></i>Talento técnico disponible<span data-soon="talento" class="soon-badge is-dark font-sans" hidden>Próximamente</span></h3>
               <p class="mt-1 max-w-xl text-sm text-sand-300">Filtra candidatos por especialidad y cercanía. El contacto se coordina con BIKEGRID y está incluido en la Ficha Pro.</p>
             </div>
             <button type="button" data-post-job="talento" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 transition hover:bg-brand-600"><i class="i i-briefcase" aria-hidden="true"></i> Publicar vacante</button>
           </div>
           <div class="space-y-4 px-5 py-5 sm:px-6">
-            <div>
+            <div data-talent-filter>
               <p class="flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-600"><i class="i i-filter" aria-hidden="true"></i>Especialidad técnica</p>
               <div id="talentGroups" class="no-scrollbar -mx-5 mt-2 flex gap-1.5 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filtrar candidatos por especialidad"></div>
               <div id="talentBadges" class="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Especialidad específica" hidden></div>
             </div>
-            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+            <div data-talent-filter class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
               <div class="sm:w-56">
                 <label for="talentRegion" class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-600">Región</label>
                 <select id="talentRegion" class="field mt-1.5"></select>
@@ -570,26 +556,10 @@
             </div>
             <ul id="talentList" class="grid gap-3 md:grid-cols-2"></ul>
             <button type="button" id="talentMore" class="w-full rounded-xl py-3 text-[12px] font-semibold uppercase tracking-[.12em] text-soil-800 ring-1 ring-sand-300 transition hover:bg-sand-100" hidden>Ver más candidatos</button>
-            <p class="border-t border-sand-300 pt-4 text-sm text-soil-600">¿Eres mecánico, vendedor técnico o guía? <button type="button" data-cv-open="talento" class="font-semibold text-brand underline underline-offset-2 hover:text-brand-600">Arma tu CV Técnico</button> y aparece en este buscador.</p>
+            <p data-talent-filter class="border-t border-sand-300 pt-4 text-sm text-soil-600">¿Eres mecánico, vendedor técnico o guía? <button type="button" data-cv-open="talento" class="font-semibold text-brand underline underline-offset-2 hover:text-brand-600">Arma tu CV Técnico</button> y aparece en este buscador.</p>
           </div>
         </div>
 
-        <!-- Programa institucional Trail Care -->
-        <article class="relative mt-10 overflow-hidden rounded-2xl bg-soil-950 p-6 text-sand-100 shadow-xl sm:p-8" aria-labelledby="trailCareTitle">
-          <div class="absolute inset-y-0 left-0 w-1.5 bg-brand" aria-hidden="true"></div>
-          <div class="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
-          <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div class="flex gap-4">
-              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand text-sand-50 shadow-lg"><i class="i i-sprout text-2xl" aria-hidden="true"></i></span>
-              <div class="max-w-2xl">
-                <h3 id="trailCareTitle" class="font-mono text-xs font-semibold uppercase tracking-[.24em] text-[#8fd18f]">Programa BIKEGRID Trail Care</h3>
-                <p class="mt-2 text-lg leading-relaxed text-sand-50 sm:text-xl">El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
-                <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs font-semibold uppercase tracking-[.14em] text-sand-300"><span class="inline-flex items-center gap-1.5"><i class="i i-shovel" aria-hidden="true"></i>Herramientas</span><span class="inline-flex items-center gap-1.5"><i class="i i-package" aria-hidden="true"></i>Insumos</span><span class="inline-flex items-center gap-1.5"><i class="i i-mountain" aria-hidden="true"></i>Senderos locales</span></p>
-              </div>
-            </div>
-            <a href="#anunciate" class="shrink-0 rounded-xl px-5 py-3 text-center text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-800">Ver Ficha Pro</a>
-          </div>
-        </article>
       </div>
     </section>
 
@@ -671,7 +641,7 @@
               <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Ecosistema digital: tu web, Instagram, TikTok/YouTube y mapa de pistas en la ficha</li>
             </ul>
             <button type="button" data-plan="pro" class="mt-6 rounded-xl bg-[#d4af37] py-3.5 text-center text-sm font-extrabold text-soil-950 shadow-lg transition hover:bg-[#e2c35a]">Sumar mi Tienda Pro</button>
-            <p class="mt-2 text-center text-xs text-sand-300">Primero en el directorio de tu zona desde el día 1 · <i class="i i-sprout" aria-hidden="true"></i> 10% va a Trail Care.</p>
+            <p class="mt-2 text-center text-xs text-sand-300">Primero en el directorio de tu zona desde el día 1.</p>
           </article>
         </div>
 
@@ -701,7 +671,22 @@
           </div>
         </div>
 
-        <p class="mt-8 rounded-2xl bg-moss-600/15 px-5 py-4 text-sm text-sand-100 ring-1 ring-moss-500/40"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
+        <!-- Programa Trail Care: único lugar donde se explica el 10% -->
+        <article id="trailcare" class="relative mt-8 scroll-mt-20 overflow-hidden rounded-2xl bg-soil-950 p-6 text-sand-100 shadow-xl sm:p-8" aria-labelledby="trailCareTitle">
+          <div class="absolute inset-y-0 left-0 w-1.5 bg-brand" aria-hidden="true"></div>
+          <div class="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
+          <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div class="flex gap-4">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand text-sand-50 shadow-lg"><i class="i i-sprout text-2xl" aria-hidden="true"></i></span>
+              <div class="max-w-2xl">
+                <h3 id="trailCareTitle" class="font-mono text-xs font-semibold uppercase tracking-[.24em] text-[#8fd18f]">Programa BIKEGRID Trail Care</h3>
+                <p class="mt-2 text-lg leading-relaxed text-sand-50 sm:text-xl">El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
+                <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs font-semibold uppercase tracking-[.14em] text-sand-300"><span class="inline-flex items-center gap-1.5"><i class="i i-shovel" aria-hidden="true"></i>Herramientas</span><span class="inline-flex items-center gap-1.5"><i class="i i-package" aria-hidden="true"></i>Insumos</span><span class="inline-flex items-center gap-1.5"><i class="i i-mountain" aria-hidden="true"></i>Senderos locales</span></p>
+              </div>
+            </div>
+            <button type="button" data-plan="pro" class="shrink-0 rounded-xl px-5 py-3 text-center text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-800">Activa tu Ficha Pro</button>
+          </div>
+        </article>
 
         <!-- Auspiciadores & marcas -->
         <div class="mt-10 flex flex-col gap-4 rounded-2xl bg-gradient-to-r from-soil-950 to-[#3a2c20] p-6 ring-1 ring-ochre-400/40 sm:p-7 md:flex-row md:items-center md:justify-between">
@@ -873,8 +858,8 @@
       <span class="ad-label">Publicidad</span>
       <div class="flex flex-col items-center gap-4">
         <svg viewBox="0 0 32 32" class="h-14 w-14 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
-        <p class="ad-text font-display text-2xl font-extrabold uppercase leading-[1.05] tracking-tight">Posiciona tu tienda</p>
-        <p class="text-[12px] leading-relaxed text-sand-300">Conecta con la comunidad de riders en tiempo real</p>
+        <p class="ad-text font-display text-2xl font-extrabold uppercase leading-[1.05] tracking-tight">Espacio disponible</p>
+        <p class="text-[12px] leading-relaxed text-sand-300">Posiciona tu tienda ante riders de tu zona</p>
       </div>
       <button type="button" data-plan="pro" data-ad-cta="rail-left" class="w-full rounded-lg bg-brand px-2 py-2 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Activa tu Ficha Pro</button>
     </div>
@@ -885,8 +870,8 @@
       <span class="ad-label">Publicidad</span>
       <div class="flex flex-col items-center gap-4">
         <svg viewBox="0 0 32 32" class="h-14 w-14 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
-        <p class="ad-text font-display text-2xl font-extrabold uppercase leading-[1.05] tracking-tight">Posiciona tu tienda</p>
-        <p class="text-[12px] leading-relaxed text-sand-300">Conecta con la comunidad de riders en tiempo real</p>
+        <p class="ad-text font-display text-2xl font-extrabold uppercase leading-[1.05] tracking-tight">Espacio disponible</p>
+        <p class="text-[12px] leading-relaxed text-sand-300">Posiciona tu tienda ante riders de tu zona</p>
       </div>
       <button type="button" data-plan="auspicio" data-ad-cta="rail-right" class="w-full rounded-lg bg-brand px-2 py-2 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Anúnciate aquí</button>
     </div>
@@ -897,7 +882,7 @@
     <div class="ad-grid" aria-hidden="true"></div>
     <div data-ad-creative class="mx-auto flex min-h-[56px] max-w-6xl items-center gap-3 px-4 py-2.5 sm:px-6">
       <svg viewBox="0 0 32 32" class="h-6 w-6 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
-      <p class="ad-text line-clamp-2 font-mono text-[10px] font-semibold uppercase leading-snug tracking-[.16em] sm:text-[11px] sm:tracking-[.2em]"><strong>BIKEGRID PARTNERS</strong> — Espacio para cierres de campaña y marcas sponsor</p>
+      <p class="ad-text line-clamp-2 font-mono text-[10px] font-semibold uppercase leading-snug tracking-[.16em] sm:text-[11px] sm:tracking-[.2em]"><strong>Espacio disponible</strong><span class="hidden sm:inline"> · sponsors y cierres de campaña</span></p>
       <span class="ad-label ml-auto hidden md:inline">Publicidad</span>
       <button type="button" data-plan="auspicio" data-ad-cta="footer" class="ml-auto shrink-0 rounded-full px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 ring-1 ring-brand/70 transition hover:bg-brand md:ml-0">Auspicia</button>
     </div>
@@ -908,7 +893,7 @@
       <div>
         <a href="#inicio" class="inline-flex items-center gap-2.5" aria-label="BIKEGRID, inicio"><svg viewBox="0 0 32 32" class="h-9 w-9 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#2e7d32"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#f6f1e7" stroke-width="1.2" stroke-linecap="round" opacity=".55"/><g fill="#f6f1e7"><circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="24" cy="8" r="1.7"/><circle cx="8" cy="16" r="1.7"/><circle cx="24" cy="16" r="1.7"/><circle cx="8" cy="24" r="1.7"/><circle cx="16" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#f6f1e7" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#f6f1e7" stroke-width="1.6"/><circle cx="16" cy="16" r="1.4" fill="#f6f1e7"/></svg><span class="font-display text-2xl uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span></a>
         <p class="mt-3 max-w-xs text-sand-300">BIKEGRID — La red global de servicios, mapas y comunidad del pedal.</p>
-        <p class="mt-3 inline-flex items-center gap-2 text-xs text-[#8fd18f]"><i class="i i-sprout" aria-hidden="true"></i>Programa Trail Care: 10% de Ficha Pro a los senderos</p>
+        <a href="#trailcare" class="mt-3 inline-flex items-center gap-2 text-xs text-[#8fd18f] hover:underline"><i class="i i-sprout" aria-hidden="true"></i>Programa Trail Care</a>
         <button type="button" id="privacyLink" class="mt-4 block text-xs text-sand-300/70 underline-offset-4 hover:text-sand-50 hover:underline">Privacidad &amp; Seguridad</button>
       </div>
       <nav class="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4" aria-label="Pie de página">
@@ -1009,7 +994,6 @@
         <a id="claimWhatsApp" href="#" target="_blank" rel="noopener" class="btn-wa-pro py-3.5 text-[15px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Escribir por WhatsApp</a>
         <a id="claimForm" href="#registrar" class="rounded-xl bg-soil-950 py-3 text-center text-sm font-semibold text-sand-50 transition hover:bg-soil-800">Enviar solicitud por formulario</a>
       </div>
-      <p class="mt-4 rounded-lg bg-moss-600/10 px-3 py-2 text-xs leading-relaxed text-moss-700 ring-1 ring-moss-600/25"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
       <p class="mt-3 text-center text-xs text-soil-600"><a href="#anunciate" data-close-claim class="font-semibold text-moss-700 underline underline-offset-2">Ver planes y tarifas</a> · Para ciclistas, BIKEGRID es gratis.</p>
     </div>
   </dialog>
@@ -1018,8 +1002,8 @@
   <dialog id="gateDialog" class="w-[min(92vw,26rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="gateTitle" aria-describedby="gateSubtitle">
     <form id="gateForm" class="space-y-4 p-6" novalidate>
       <div>
-        <h2 id="gateTitle" class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-soil-950">Desbloqueá el contacto</h2>
-        <p id="gateSubtitle" class="mt-1 text-sm leading-relaxed text-soil-700">El mapa es gratis. Dejá tu correo para ver WhatsApp y guardar spots.</p>
+        <h2 id="gateTitle" class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-soil-950">Desbloquea el contacto</h2>
+        <p id="gateSubtitle" class="mt-1 text-sm leading-relaxed text-soil-700">El mapa es gratis. Deja tu correo para ver WhatsApp y guardar spots.</p>
       </div>
       <div>
         <label for="gateEmail" class="mb-1.5 block text-sm font-semibold text-soil-800">Email</label>
@@ -1028,7 +1012,7 @@
         <p id="gateEmailError" class="mt-1.5 text-sm font-medium text-red-800" hidden></p>
       </div>
       <fieldset aria-describedby="gateChipsError">
-        <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué pedaleás?</legend>
+        <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué pedaleas?</legend>
         <div id="gateChips" class="flex flex-wrap gap-2">
           <button type="button" data-interest="mtb_enduro" aria-pressed="false" class="gate-chip">MTB / Enduro</button>
           <button type="button" data-interest="ebike" aria-pressed="false" class="gate-chip">e-bike</button>
@@ -1044,7 +1028,7 @@
       <div class="text-center">
         <button type="button" id="gateDismiss" class="text-sm font-semibold text-soil-700 underline-offset-4 hover:text-soil-950 hover:underline">Seguir explorando el mapa</button>
       </div>
-      <p class="text-center font-mono text-[11px] text-soil-600">No spam. Solo novedades y spots útiles.</p>
+      <p class="text-center font-mono text-[11px] text-soil-600">Sin spam. Solo novedades y spots útiles.</p>
     </form>
   </dialog>
 
@@ -1059,7 +1043,7 @@
         <p><strong class="text-soil-950">Qué publicamos de cada negocio:</strong> nombre, categoría, ubicación, comuna, dirección, WhatsApp, horario, descripción y, si lo indica, qué personal busca.</p>
         <p><strong class="text-soil-950">Qué no publicamos:</strong> el contacto del dueño que se deja en el registro. Solo lo ve el equipo editorial para verificar la ficha.</p>
         <p><strong class="text-soil-950">Cómo lo protegemos:</strong> las fichas se guardan en una base de datos con reglas de acceso. Cualquiera puede enviar una solicitud, pero solo el equipo editorial puede aprobar, editar o eliminar fichas.</p>
-        <p><strong class="text-soil-950">Tu correo:</strong> si desbloqueás el contacto, guardamos tu correo y lo que pedaleás para enviarte novedades y spots útiles. No lo publicamos ni lo vendemos, y podés pedir que lo borremos.</p>
+        <p><strong class="text-soil-950">Tu correo:</strong> si desbloqueas el contacto, guardamos tu correo y lo que pedaleas para enviarte novedades y spots útiles. No lo publicamos ni lo vendemos, y puedes pedir que lo borremos.</p>
         <p><strong class="text-soil-950">Estadísticas de fichas:</strong> contamos de forma anónima las visitas y los clics (WhatsApp, "Cómo llegar") que recibe cada ficha, para entregar informes a los negocios. No guardamos quién hizo el clic.</p>
         <p><strong class="text-soil-950">En tu navegador:</strong> no usamos cookies de seguimiento; recordamos la capa de mapa, tus spots guardados y si ya desbloqueaste el contacto. El mapa y las tipografías se cargan desde servicios externos (Esri, Google Fonts).</p>
         <p><strong class="text-soil-950">Corregir o eliminar una ficha:</strong> <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 underline" id="privacyContact">envíanos un dato</a> con el nombre del negocio y lo revisamos.</p>
@@ -2087,11 +2071,16 @@
       if (!supabaseClient) return useFallback();
       try {
         const query = (cols) => supabaseClient.from('comercios').select(cols).eq('estado', 'aprobado').order('destacado', { ascending: false });
-        let { data: filas, error } = await query(`${PUBLIC_COLUMNS}, ${JOBS_COLUMN}`);
-        if (error && (error.code === '42501' || /permission denied/i.test(error.message))) {
+        // Si la columna aún no es pública, se recuerda 12 h para no repetir el 401/403 en cada visita
+        const NO_JOBS_KEY = 'bikegrid-sin-necesidad';
+        let skipJobs = false;
+        try { skipJobs = Date.now() - (Number(localStorage.getItem(NO_JOBS_KEY)) || 0) < 12 * 3600e3; } catch (e) {}
+        let { data: filas, error } = await query(skipJobs ? PUBLIC_COLUMNS : `${PUBLIC_COLUMNS}, ${JOBS_COLUMN}`);
+        if (error && !skipJobs && (error.code === '42501' || /permission denied/i.test(error.message))) {
           console.info('[BIKEGRID] "necesidad_personal" aún no es pública: ejecuta el grant del SQL. El mapa carga sin Bici Jobs.');
+          try { localStorage.setItem(NO_JOBS_KEY, String(Date.now())); } catch (e) {}
           ({ data: filas, error } = await query(PUBLIC_COLUMNS));
-        }
+        } else if (!error && !skipJobs) { try { localStorage.removeItem(NO_JOBS_KEY); } catch (e) {} }
         if (error) return useFallback(error.message);
         document.getElementById('dataSourceTag').textContent = '';
         setPoints(filas.map(fromRow).filter(isValidPoint));
@@ -2140,7 +2129,19 @@
 
     const directionsUrl = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.coords[0]},${p.coords[1]}`;
     const searchUrl = (p) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.nombre} ${p.comuna}`)}`;
-    const waUrl = (p, text = 'Hola, los vi en el mapa de BIKEGRID y quería consultar por ') => `https://wa.me/${String(p.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
+    // Número publicado del negocio (columna whatsapp). Solo los celulares chilenos (569…) o números extranjeros
+    // se ofrecen como WhatsApp; un fijo chileno (56 2…, 56 32…) se ofrece como "Llamar". Nunca se inventa un número.
+    const phoneDigits = (p) => {
+      const d = String(p.whatsapp || '').replace(/\D/g, '');
+      return /^9\d{8}$/.test(d) || /^[2-8]\d{7,8}$/.test(d) ? `56${d}` : d; // sin código de país
+    };
+    const contactKind = (p) => {
+      const d = phoneDigits(p);
+      if (!/^\d{8,15}$/.test(d)) return 'none';
+      return d.startsWith('56') && !d.startsWith('569') ? 'telefono' : 'whatsapp';
+    };
+    const telUrl = (p) => `tel:+${phoneDigits(p)}`;
+    const waUrl = (p, text = 'Hola, los vi en el mapa de BIKEGRID y quería consultar por ') => `https://wa.me/${phoneDigits(p)}?text=${encodeURIComponent(text)}`;
     const WA_ICON = '<svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.1.3.7 1.1 1.4 1.8.9.8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
 
     function setSelected(id) {
@@ -2168,18 +2169,21 @@
           <dd class="text-sm ${missing ? 'text-soil-600/80 italic' : 'text-ink'}">${value}</dd>
         </div>`;
 
+      const kind = loading || failed ? null : contactKind(p);
       const contactBlock = loading
         ? `<div class="h-[52px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
         : failed
         ? `<p class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el contacto. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
-        : p.whatsapp && isPro(p)
+        : kind === 'whatsapp' && isPro(p)
         ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro py-3.5 text-[15px]"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Contactar por WhatsApp</a>`
-        : p.whatsapp
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
-        : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
-             <strong class="block text-soil-950">¿Es tu negocio?</strong>
-             Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-ochre-600">→</span>
-           </a>`;
+        : kind === 'whatsapp'
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} WhatsApp</a>`
+        : kind === 'telefono'
+        ? `<a href="${telUrl(p)}" data-gate="llamar" data-ref="${esc(p.id)}" class="${isPro(p) ? 'btn-wa-pro py-3.5 text-[15px]' : 'flex items-center justify-center gap-2 rounded-xl bg-soil-950 py-3.5 font-semibold text-sand-50 shadow-sm transition hover:bg-soil-800'}"><i class="i i-phone" aria-hidden="true"></i> Llamar</a>`
+        : `<div class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">
+             <p class="font-semibold text-soil-900">Sin WhatsApp aún</p>
+             <p class="mt-0.5">Usa "Cómo llegar" o búscalo en Google.${isPro(p) ? '' : ` <button type="button" data-claim="${esc(p.id)}" class="font-semibold text-moss-700 underline underline-offset-2">¿Eres el dueño? Activa tu ficha</button>`}</p>
+           </div>`;
 
       // Alerta Bici Jobs: el negocio busca personal
       const jobBlock = p.necesidad ? `
@@ -2202,8 +2206,8 @@
         ${typeof brandBlock === 'function' ? brandBlock(p) : ''}
 
         <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
-          ${row('Dirección', loading ? skel('w-40') : p.direccion ? esc(p.direccion) : 'Por confirmar', !loading && !p.direccion)}
-          ${row('Horario', loading ? skel('w-28') : p.horario ? esc(p.horario) : 'Por confirmar', !loading && !p.horario)}
+          ${loading ? row('Dirección', skel('w-40')) : p.direccion ? row('Dirección', esc(p.direccion)) : ''}
+          ${loading ? row('Horario', skel('w-28')) : p.horario ? row('Horario', esc(p.horario)) : ''}
           ${row('Coordenadas', `<span class="font-mono text-xs tabular-nums">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</span>`)}
         </dl>
 
@@ -2212,13 +2216,13 @@
         <div class="mt-5 grid gap-2.5">
           ${contactBlock}
           <div class="grid grid-cols-2 gap-2.5">
-            <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'}">
+            <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${kind && kind !== 'none' ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'}">
               <span aria-hidden="true"><i class="i i-pin" aria-hidden="true"></i></span> Cómo llegar
             </a>
             <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
           </div>
         </div>
-        ${isPro(p) ? '' : `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 transition hover:text-soil-950"><i class="i i-key" aria-hidden="true"></i> ¿Eres el dueño? Activa tu Ficha Pro</button>`}`;
+        ${isPro(p) || kind === 'none' ? '' : `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 transition hover:text-soil-950"><i class="i i-key" aria-hidden="true"></i> ¿Eres el dueño? Activa tu Ficha Pro</button>`}`;
     }
 
     function openDrawer(p) {
@@ -2354,8 +2358,11 @@
       const c = CATEGORIES[p.categoria];
       const pro = isPro(p);
       // Pro: WhatsApp destacado (sus detalles llegan con loadProDetails); si aún no llega, abre la ficha
-      const proCta = !pro ? '' : p.whatsapp
+      const proKind = pro ? contactKind(p) : 'none';
+      const proCta = proKind === 'whatsapp'
         ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro px-1 py-1.5 text-xs leading-tight"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Contactar por WhatsApp</a>`
+        : proKind === 'telefono'
+        ? `<a href="${telUrl(p)}" data-gate="llamar" data-ref="${esc(p.id)}" class="btn-wa-pro px-1 py-1.5 text-xs leading-tight"><i class="i i-phone" aria-hidden="true"></i> Llamar</a>`
         : '';
       return `<li>
         <article class="${pro ? 'ficha-pro' : 'ring-1 ring-sand-300 hover:ring-soil-600/50 bg-sand-50'} flex h-full flex-col justify-between gap-2.5 rounded-xl p-3 shadow-sm transition">
@@ -2401,7 +2408,7 @@
       { id: 'senderos', label: '<i class="i i-bike" aria-hidden="true"></i> Bikeparks / Senderos',   one: 'bikepark o sendero',    many: 'bikeparks y senderos',       test: (p) => p.categoria === 'senderos' },
       { id: 'tours',    label: '<i class="i i-bus" aria-hidden="true"></i> Shuttles / Tours',       one: 'shuttle o tour',        many: 'shuttles y tours',           test: (p) => p.categoria === 'tours' },
       { id: 'clases',   label: '<i class="i i-cap" aria-hidden="true"></i> Escuelas / Clases',      one: 'escuela',               many: 'escuelas',                   test: (p) => p.categoria === 'clases' },
-      { id: 'guias',    label: '<i class="i i-compass" aria-hidden="true"></i> Guías & Instructores',   one: 'guía o instructor',     many: 'guías e instructores',       test: (p) => p.categoria === 'guias' },
+      { id: 'guias',    label: '<i class="i i-compass" aria-hidden="true"></i> Guías & Instructores',   one: 'guía o instructor',     many: 'guías e instructores',       test: (p) => p.categoria === 'guias', onlyIfAny: true },
       { id: 'saved',    label: '<i class="i i-star" aria-hidden="true"></i> Guardados',               one: 'spot guardado',         many: 'spots guardados',            test: (p) => isSaved(p.id), onlyIfAny: true },
       { id: 'trail',    label: '<i class="i i-shovel" aria-hidden="true"></i> Comunidad / Paleros',    one: 'Amiga del Trail',       many: 'Amigas del Trail',           test: (p) => p.amigoTrail },
     ];
@@ -2656,7 +2663,7 @@
       const action = { type: el.dataset.gate, url: el.getAttribute('href'), ref: el.dataset.ref || null };
       if (isUnlocked()) {
         if (action.type === 'guardar') { toast(runSave(action.ref) ? 'Spot guardado ' : 'Spot quitado de guardados'); }
-        else track('whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref }); // el enlace se abre normal
+        else track(action.type === 'llamar' ? 'call_clicked_after_unlock' : 'whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref }); // el enlace se abre normal
         return;
       }
       e.preventDefault();
@@ -2672,8 +2679,24 @@
     const selectedInterests = () => [...gate.chips.querySelectorAll('[aria-pressed="true"]')].map((b) => b.dataset.interest);
     function showErr(el, input, msg) { el.textContent = msg; el.hidden = !msg; if (input) input.setAttribute('aria-invalid', !!msg); }
 
+    // El texto del gate nunca promete un WhatsApp que la ficha no tiene
+    const GATE_COPY = {
+      whatsapp: ['Desbloquea el contacto', 'El mapa es gratis. Deja tu correo para ver WhatsApp y guardar spots.'],
+      llamar:   ['Desbloquea el contacto', 'El mapa es gratis. Deja tu correo para ver el teléfono y guardar spots.'],
+      generico: ['Guarda tus spots', 'Deja tu correo para guardar spots y contactar cuando haya WhatsApp.'],
+    };
+    function gateCopyFor(action) {
+      if (action.type === 'whatsapp' || action.type === 'postular') return GATE_COPY.whatsapp;
+      if (action.type === 'llamar') return GATE_COPY.llamar;
+      const p = typeof puntos !== 'undefined' && action.ref ? puntos.find((x) => String(x.id) === String(action.ref)) : null;
+      const kind = p && p.detailsLoaded !== false ? contactKind(p) : 'none'; // sin detalles cargados, no se promete nada
+      return kind === 'whatsapp' ? GATE_COPY.whatsapp : kind === 'telefono' ? GATE_COPY.llamar : GATE_COPY.generico;
+    }
     function openGate(action) {
       pendingAction = action;
+      const [title, sub] = gateCopyFor(action);
+      document.getElementById('gateTitle').textContent = title;
+      document.getElementById('gateSubtitle').textContent = sub;
       showErr(gate.emailErr, gate.email, ''); showErr(gate.chipsErr, null, '');
       const prev = readJSON(GATE_KEY, null);
       if (prev?.email && !gate.email.value) gate.email.value = prev.email; // versión vieja: sugerir su correo
@@ -2704,8 +2727,8 @@
       const email = gate.email.value.trim().toLowerCase();
       const intereses = selectedInterests();
       let ok = true;
-      if (!EMAIL_RE.test(email) || email.length > 254) { showErr(gate.emailErr, gate.email, 'Revisá el correo: debe tener el formato nombre@dominio.cl'); ok = false; }
-      if (!intereses.length) { showErr(gate.chipsErr, null, 'Elegí al menos una opción.'); ok = false; }
+      if (!EMAIL_RE.test(email) || email.length > 254) { showErr(gate.emailErr, gate.email, 'Revisa el correo: debe tener el formato nombre@dominio.cl'); ok = false; }
+      if (!intereses.length) { showErr(gate.chipsErr, null, 'Elige al menos una opción.'); ok = false; }
       if (!ok) return (gate.email.getAttribute('aria-invalid') === 'true' ? gate.email : gate.chips.querySelector('button')).focus();
       if (document.getElementById('gateWebsite').value) return; // bot
 
@@ -2727,6 +2750,9 @@
       if (action.type === 'whatsapp' || action.type === 'postular') {
         track('whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref, justUnlocked: true });
         openWhatsApp(action.url);
+      } else if (action.type === 'llamar') {
+        track('call_clicked_after_unlock', { ref: action.ref, justUnlocked: true });
+        window.location.href = action.url; // tel: dentro del mismo gesto
       } else if (action.type === 'guardar') {
         runSave(action.ref);
         setTimeout(() => toast('Listo · spot guardado '), 400);
@@ -3192,13 +3218,21 @@
     try { Object.keys(localStorage).filter((k) => k.startsWith(CLIMA_KEY)).forEach((k) => { const c = readJSON(k, null); if (!c || Date.now() - c.t > CLIMA_TTL_MS) localStorage.removeItem(k); }); } catch (e) {}
 
     // Varias coordenadas → una llamada por lote de hasta 50; lo que está en caché no se vuelve a pedir
+    // Si Open-Meteo limita (429) o falla, se pausa 30 min: el semáforo sigue con reportes y caché, sin romper la UI
+    const CLIMA_PAUSE_KEY = 'bikegrid-clima-pausa';
     async function obtenerClimaCerros(coords) {
       const out = new Map(), missing = [];
       coords.forEach(([lat, lng]) => { const c = climaFromCache(lat, lng); if (c) out.set(climaKey(lat, lng), c); else missing.push([lat, lng]); });
+      if (Date.now() < (Number(readJSON(CLIMA_PAUSE_KEY, 0)) || 0)) return out;
       for (let i = 0; i < missing.length; i += CLIMA_BATCH) {
         const batch = missing.slice(i, i + CLIMA_BATCH);
         try {
           const res = await fetch(climaUrl(batch.map((c) => c[0]).join(','), batch.map((c) => c[1]).join(',')));
+          if (res.status === 429 || res.status >= 500) {
+            writeJSON(CLIMA_PAUSE_KEY, Date.now() + 30 * 60e3);
+            console.info(`[BIKEGRID] Open-Meteo respondió ${res.status}: clima en pausa 30 min.`);
+            break;
+          }
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const json = await res.json();
           (Array.isArray(json) ? json : [json]).forEach((d, j) => {
@@ -3286,6 +3320,11 @@
       (window.requestIdleCallback || ((fn) => setTimeout(fn, 600)))(() => loadClimaStatus(), { timeout: 2000 });
     }
     window.addEventListener('desviador:puntos', loadTrailStatus);
+    // Accesos a Guías solo cuando hay perfiles publicados (el banner de registro de guías se mantiene)
+    window.addEventListener('desviador:puntos', () => {
+      const hayGuias = puntos.some((p) => p.categoria === 'guias');
+      document.querySelectorAll('[data-guides-filter], .shortcut[data-cat="guias"]').forEach((el) => { el.hidden = !hayGuias; });
+    });
     loadTrailStatus(); // por si los puntos ya estaban cargados (modo respaldo)
 
     // --- Modal de reporte ---
@@ -3868,9 +3907,18 @@
       return [...JOBS.filter((j) => j.isNew), ...work, ...communityJobs().filter((j) => !j.isNew)];
     };
 
+    // Módulos sin ítems reales: badge "Próximamente" y sin contadores en 0
+    function syncSoon() {
+      const realJobs = JOB_DEMO ? 0 : offerJobs().length + mapJobs().length;
+      const realTalent = typeof talent === 'undefined' || TALENT_DEMO ? 0 : talent.length;
+      document.querySelectorAll('[data-soon="jobs"]').forEach((el) => { el.hidden = realJobs > 0; });
+      document.querySelectorAll('[data-soon="talento"]').forEach((el) => { el.hidden = realTalent > 0; });
+      document.querySelectorAll('[data-soon-hide="talento"]').forEach((el) => { el.hidden = realTalent === 0; });
+    }
     function renderJobTabs() {
       const list = allJobs();
-      const tabs = [['all', 'Todos', list.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, list.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter || k === 'trabajo')];
+      jobTabsEl.hidden = list.length === 0;
+      const tabs = [['all', 'Todos', list.length], ...Object.entries(JOB_TYPES).map(([k, t]) => [k, t.tab, list.filter((j) => j.type === k).length]).filter(([k, , n]) => n > 0 || k === jobFilter)];
       jobTabsEl.innerHTML = tabs.map(([k, label, n]) => `
         <button type="button" role="tab" data-type="${k}" aria-selected="${k === jobFilter}"
           class="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${k === jobFilter ? 'bg-soil-950 text-sand-50' : 'bg-sand-50 text-soil-800 ring-1 ring-sand-300 hover:ring-soil-600'}">
@@ -3952,11 +4000,12 @@
 
     function renderJobs() {
       renderJobTabs();
+      syncSoon();
       const items = allJobs().filter((j) => jobFilter === 'all' || j.type === jobFilter);
       const hasWork = items.some((j) => j.type === 'trabajo');
       const empty = `<li class="rounded-2xl border border-dashed border-sand-300 p-6 text-center">
-          <p class="font-semibold text-soil-950">${jobFilter === 'trabajo' || jobFilter === 'all' ? 'Aún no hay ofertas de trabajo publicadas.' : 'No hay avisos en esta categoría todavía.'}</p>
-          <p class="mt-1 text-sm text-soil-600">¿Tu taller o tienda busca personal? Publica tu aviso y recibe postulaciones por WhatsApp.</p>
+          <p class="font-semibold text-soil-950">${jobFilter === 'trabajo' || jobFilter === 'all' ? 'Bici Jobs está partiendo: aún no hay ofertas publicadas.' : 'No hay avisos en esta categoría todavía.'}</p>
+          <p class="mt-1 text-sm text-soil-600">¿Tu taller o tienda busca personal? Publica el primer aviso y recibe postulaciones por WhatsApp.</p>
           <button type="button" data-post-job="vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Oferta de Trabajo</button>
         </li>`;
       jobListEl.innerHTML = items.length
@@ -4333,6 +4382,23 @@
         `<button type="button" class="chip-t !bg-transparent !py-1.5 text-[12px]" data-tbadge="${k}" aria-pressed="${talentState.badge === k}"><i class="i i-check chip-tick" aria-hidden="true"></i>${label}</button>`).join('') : '';
     }
     function renderTalent() {
+      syncSoon();
+      const empty = !TALENT_DEMO && talent.length === 0;
+      document.querySelectorAll('[data-talent-filter]').forEach((el) => { el.hidden = empty; });
+      $('talentCount').hidden = empty;
+      if (empty) {
+        $('talentMore').hidden = true;
+        $('talentList').innerHTML = `
+        <li class="rounded-2xl border border-dashed border-sand-300 p-6 text-center md:col-span-2">
+          <p class="font-semibold text-soil-950">Estamos sumando las primeras fichas técnicas.</p>
+          <p class="mx-auto mt-1 max-w-lg text-sm text-soil-600">Si eres mecánico, vendedor técnico o guía, arma tu CV Técnico para aparecer entre los primeros. Si buscas personal, publica tu vacante.</p>
+          <div class="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
+            <button type="button" data-cv-open="talento-vacio" class="rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 hover:bg-brand-600"><i class="i i-user" aria-hidden="true"></i> Arma tu CV Técnico</button>
+            <button type="button" data-post-job="talento-vacio" class="rounded-xl bg-soil-950 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar vacante</button>
+          </div>
+        </li>`;
+        return;
+      }
       renderTalentFilters();
       const list = filteredTalent();
       const shown = list.slice(0, talentState.shown);
@@ -5202,13 +5268,7 @@
     function socialBlock(p) {
       if (!hasDigitalPlan(p)) {
         return `
-        <div class="social-locked mt-4 rounded-xl p-3.5 ring-1 ring-sand-300" aria-label="Redes sociales no verificadas">
-          <div class="grid grid-cols-2 gap-2 opacity-80" aria-hidden="true">
-            <span class="ghost"><i class="i i-lock" aria-hidden="true"></i> <i class="i i-globe" aria-hidden="true"></i> Sitio web</span><span class="ghost"><i class="i i-lock" aria-hidden="true"></i> <i class="i i-instagram" aria-hidden="true"></i> Instagram</span>
-          </div>
-          <p class="mt-2.5 text-sm font-semibold text-soil-700"><i class="i i-lock" aria-hidden="true"></i> Redes sociales y catálogo web no verificados.</p>
-          <button type="button" data-claim="${esc(p.id)}" class="mt-1 text-left text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">¿Eres el dueño? Vincula tu Instagram y Web activando tu Ficha Pro</button>
-        </div>`;
+        <p class="mt-3 flex items-center gap-1.5 text-xs text-soil-600"><i class="i i-lock" aria-hidden="true"></i> Web e Instagram se muestran en fichas verificadas.</p>`;
       }
       loadSocial(p);
       if (!p.socialLoaded) return `<div class="mt-4 h-24 animate-pulse rounded-xl bg-sand-200" aria-label="Cargando redes"></div>`;
