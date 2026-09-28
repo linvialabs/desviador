@@ -12,6 +12,18 @@ Página estática en un solo archivo (`index.html`), hecha con Tailwind CSS (CDN
 
 **Sitio:** https://linvialabs.github.io/desviador/
 
+## Español de Chile y UX de confianza
+
+- **Español de Chile (tuteo):** el gate, la nota de privacidad y los errores ya no usan voseo ("Desbloquea el contacto", "Deja tu correo", "¿Qué pedaleas?", "Sin spam").
+- **El gate promete solo lo que la ficha tiene:** un celular chileno (569…) o un número extranjero muestra **WhatsApp**; un fijo chileno (56 2…, 56 32…) muestra **Llamar** (`tel:`). Los dos van con el mismo desbloqueo por correo (`localStorage`, sin contraseña). Sin número, la ficha dice "Sin WhatsApp aún" con "¿Eres el dueño? Activa tu ficha", y el gate de Guardar usa un texto genérico.
+- **Datos incompletos sin ruido:** las filas de horario y dirección vacías se ocultan (antes decían "Por confirmar"). "Redes y web no verificadas" quedó en una sola línea discreta. Nunca se inventan números, coordenadas ni horarios.
+- **Vacíos honestos:** Bici Jobs lleva el badge "Próximamente" en el menú mientras no haya avisos reales, sin pestañas en 0. El buscador de candidatos muestra un estado vacío con CTA en vez de filtros en 0. Los accesos a Guías se ocultan hasta que exista el primer perfil. Se quitó el enlace muerto "Ver archivo", y los espacios publicitarios dicen "Espacio disponible".
+- **Home más liviana:** el programa Trail Care (10%) se explica en un solo lugar (Planes, `#trailcare`) y el banner Ficha Pro de la home quedó compacto, con un CTA. Los precios no cambian.
+
+**Consola en producción:** los 404 de `leads`, `ofertas_empleo`, `perfiles_tecnicos`, `eventos_ficha`, `marcas`, `comercio_marcas` y `reportes_pista` significan que esos SQL aún no se ejecutan. Mientras no exista `leads`, los correos del gate quedan en cola en el navegador de cada visitante. El 401/403 de `comercios` es el `grant` pendiente de `necesidad_personal`; la web lo recuerda por 12 h para no repetirlo. Si Open-Meteo responde 429 o 5xx, el clima se pausa 30 min sin romper la UI.
+
+**Tailwind CDN:** el sitio usa `cdn.tailwindcss.com`, que avisa en la consola que no es para producción. Funciona igual. Pasar a un CSS compilado (Tailwind CLI) queda para otro PR.
+
 ## Editar los puntos del mapa
 
 En `index.html`, busca `const puntosIniciales = [` y agrega objetos con este formato:
@@ -48,7 +60,7 @@ Solo los usuarios de la tabla `admins` pueden ver datos privados, aprobar, edita
 
 ## Leads del gate de contacto (correo + qué pedalea)
 
-El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular** y **Guardar spot** piden una vez correo + "¿Qué pedaleás?". Tras completarlo, el navegador queda desbloqueado (`localStorage` → `desviador-gate`) y la acción se ejecuta.
+El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp / Llamar**, **Postular** y **Guardar spot** piden una vez correo + "¿Qué pedaleas?". Tras completarlo, el navegador queda desbloqueado (`localStorage` → `desviador-gate`) y la acción se ejecuta.
 
 **Destino de los leads (configurar una vez):**
 
