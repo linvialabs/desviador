@@ -1,6 +1,10 @@
 # Plan del segundo PR: URL propia y salida del CDN
 
-Este documento es solo un plan. No cambia el sitio. El PR `producto-v1` no lo implementa.
+La parte de URLs propias está implementada en el draft que sale de `producto-v1` (script sin red, muestra local, sitemap). Salir del CDN de Tailwind sigue para un tercer PR. Este archivo no enciende ningún workflow.
+
+### Decisión pendiente: workflow
+
+No hay archivo en `.github/workflows`. Si Nicolás lo pide, el workflow solo debe usar `workflow_dispatch`, correr `node scripts/generar-paginas.mjs` y no desplegar ni escuchar pushes a `main`. Publicar el HTML generado a GitHub Pages sigue siendo un OK aparte.
 
 El orden es el que pidió Nicolás: primero una URL propia por tienda y por comuna, después salir del CDN de Tailwind.
 

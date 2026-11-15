@@ -49,6 +49,12 @@ La bajada, bajo el titular y en la meta description, es: «Tiendas, talleres y c
 
 **Esta rama no se publica sola.** GitHub Pages sigue sirviendo `main`. Hace falta el número de WhatsApp comercial, la revisión de Nicolás en el celular y su OK explícito.
 
+## Páginas por tienda y por comuna
+
+`node scripts/generar-paginas.mjs` lee `datos/fichas-muestra.json` (sin red y sin Supabase) y escribe `tienda/<slug>/index.html`, `comuna/<slug>/index.html` y `sitemap.xml`. Las URLs canónicas usan la base `https://linvialabs.github.io/desviador/`. Los enlaces entre páginas son relativos, así que también se ven en un servidor local.
+
+Volver a correr el script reemplaza esas carpetas. Borrar `tienda/`, `comuna/`, `sitemap.xml` y `scripts/generar-paginas.mjs` deja la portada igual. Un workflow de Actions que lo corra solo queda propuesto: no está en `.github/workflows` y no publica.
+
 ## Editar los puntos del mapa
 
 En `index.html`, busca `const puntosIniciales = [` y agrega objetos con este formato:

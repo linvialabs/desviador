@@ -1,0 +1,63 @@
+{
+  "origen": "Muestra local. Son los puntos de respaldo de index.html, sin las fichas marcadas como ejemplo. No es una lectura de Supabase.",
+  "fichas": [
+    {
+      "id": "multibike-concepcion",
+      "nombre": "Multibike / Specialized Concepción",
+      "categoria": "tiendas",
+      "comuna": "Concepción",
+      "region": "biobio",
+      "coords": [-36.8275, -73.0503],
+      "marcas": ["Specialized"]
+    },
+    {
+      "id": "giant-liv-vitacura",
+      "nombre": "Giant / Liv Vitacura",
+      "categoria": "tiendas",
+      "comuna": "Vitacura",
+      "region": "metropolitana",
+      "coords": [-33.3881, -70.5678],
+      "marcas": ["Giant", "Liv"]
+    },
+    {
+      "id": "laguna-temuco",
+      "nombre": "Laguna Off Road / Bici Taller Temuco",
+      "categoria": "talleres",
+      "comuna": "Temuco",
+      "region": "araucania",
+      "coords": [-38.7397, -72.5901]
+    },
+    {
+      "id": "nevados-chillan",
+      "nombre": "Bikepark Nevados de Chillán",
+      "categoria": "senderos",
+      "comuna": "Pinto",
+      "region": "nuble",
+      "coords": [-36.9061, -71.4111]
+    },
+    {
+      "id": "parque-las-palmas",
+      "nombre": "Parque Las Palmas",
+      "categoria": "senderos",
+      "comuna": "Puchuncaví",
+      "region": "valparaiso",
+      "coords": [-32.7412, -71.4015]
+    },
+    {
+      "id": "huilo-huilo",
+      "nombre": "Huilo Huilo Outdoor Experience",
+      "categoria": "senderos",
+      "comuna": "Panguipulli (Neltume)",
+      "region": "losrios",
+      "coords": [-39.8667, -71.9167]
+    },
+    {
+      "id": "el-durazno",
+      "nombre": "El Durazno",
+      "categoria": "senderos",
+      "comuna": "Lo Barnechea",
+      "region": "metropolitana",
+      "coords": [-33.3486, -70.4958]
+    }
+  ]
+}
