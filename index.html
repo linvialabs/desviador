@@ -4,13 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>BIKEGRID — Encuentra tienda, taller y cerro cerca de ti</title>
-  <meta name="description" content="BIKEGRID: encuentra tienda, taller o cerro cerca de ti en Chile. Las tiendas aparecen en el mapa y ven cuántos ciclistas las contactaron." />
+  <meta name="description" content="Tiendas, talleres y cerros de Chile, en un mapa." />
   <meta name="application-name" content="BIKEGRID" />
   <meta property="og:site_name" content="BIKEGRID" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="BIKEGRID — Encuentra tienda, taller y cerro cerca de ti" />
-  <meta property="og:description" content="Tiendas, talleres y cerros de Chile en un solo mapa. Si tienes un negocio, aquí te encuentran y ves los clics a tu WhatsApp." />
+  <meta property="og:description" content="Tiendas, talleres y cerros de Chile, en un mapa." />
   <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="Tiendas, talleres y cerros de Chile, en un mapa." />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%232e7d32%22/%3E%3Cpath d=%22M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.2%22 stroke-linecap=%22round%22 opacity=%22.55%22/%3E%3Cg fill=%22%23f6f1e7%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2224%22 r=%221.7%22/%3E%3C/g%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225.9%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.7%22 stroke-dasharray=%221.55 1.54%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%224.3%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.6%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%221.4%22 fill=%22%23f6f1e7%22/%3E%3C/svg%3E" />
   <meta name="theme-color" content="#15120e" />
 
@@ -74,7 +75,7 @@
       publicidad: false,          // los 4 espacios son placeholders sin anunciante
       planificador: false,        // planificador de viaje (4 pasos)
       planificadorFab: false,     // botón flotante del planificador en el celular
-      shuttle: false,             // cupos shuttle: no se pudo verificar que haya salidas publicadas
+      shuttle: false,             // Nicolás, 15-11-2026: sigue apagado. Aunque pase a true, la bolsa solo aparece con 3 o más salidas reales y fecha futura.
       talentoTecnico: false,      // CV técnico, modo incógnito y solicitud de entrevista
       planesExtendidos: false,    // 2° local, Enterprise, Guía PRO y auspicios (siguen en "Otros planes")
       registroExtendido: false,   // campos extra del formulario (mapa, dueño, avisos, datos)
@@ -111,7 +112,11 @@
       #inicio > .isolate { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
       #inicio #map { height: auto; min-height: 0; flex: 1 1 auto; }
       #heroCopy h1 { font-size: 1.28rem; line-height: 1.05; }
+      #heroCopy { gap: 0.4rem; padding-top: 0.55rem; padding-bottom: 0.45rem; }
+      #bajada { font-size: 0.8125rem; line-height: 1.25; margin-top: 0.15rem; }
     }
+    /* Cupos shuttle: el interruptor no basta. Hace falta html.shuttle-listo (3 salidas reales con fecha futura). */
+    html:not(.shuttle-listo) [data-feature~="shuttle"] { display: none !important; }
     #pickMap { height: 14rem; width: 100%; }
 
     /* Curvas de nivel de fondo en el panel del hero */
@@ -367,7 +372,7 @@
         <span data-feature="navExtendida" class="contents">
           <button type="button" data-dir-open class="navlink uppercase tracking-[.14em]">Directorio completo</button>
           <button type="button" data-guides-filter="header" aria-pressed="false" class="icon-btn" aria-label="Guías locales en el mapa" title="Guías locales"><i class="i i-compass" aria-hidden="true"></i></button>
-          <button type="button" data-shuttle="header" class="icon-btn" aria-label="Cupos shuttle" title="Cupos shuttle"><i class="i i-bus" aria-hidden="true"></i></button>
+          <button type="button" data-shuttle="header" data-feature="shuttle" class="icon-btn" aria-label="Cupos shuttle" title="Cupos shuttle"><i class="i i-bus" aria-hidden="true"></i></button>
           <button type="button" data-sos="header" aria-label="Urgencia" class="sos-btn inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[11.5px] font-semibold uppercase tracking-[.12em]"><i class="i i-siren" aria-hidden="true"></i> Urgencia</button>
           <button type="button" data-trip="header" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 py-1.5 text-[11.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600"><i class="i i-map" aria-hidden="true"></i> Arma tu salida</button>
         </span>
@@ -389,7 +394,7 @@
         <button type="button" data-dir-open class="mnav"><i class="i i-badge-check" aria-hidden="true"></i>Directorio completo</button>
         <button type="button" data-sos="menu" class="mnav !text-[#f0a48f]"><i class="i i-siren" aria-hidden="true"></i>Urgencia</button>
         <button type="button" data-guides-filter="menu" class="mnav"><i class="i i-compass" aria-hidden="true"></i>Guías locales</button>
-        <button type="button" data-shuttle="menu" class="mnav"><i class="i i-bus" aria-hidden="true"></i>Cupos shuttle</button>
+        <button type="button" data-shuttle="menu" data-feature="shuttle" class="mnav"><i class="i i-bus" aria-hidden="true"></i>Cupos shuttle</button>
         <button type="button" data-menu-senderos class="mnav"><i class="i i-mountain" aria-hidden="true"></i>Bikeparks y senderos</button>
         <a href="#noticias" class="mnav"><i class="i i-activity" aria-hidden="true"></i>Noticias</a>
         <button type="button" data-trip="menu" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-brand py-3 text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50"><i class="i i-map" aria-hidden="true"></i>Arma tu salida</button>
@@ -415,9 +420,12 @@
       <!-- Panel izquierdo (en móvil se parte: arriba y abajo del mapa) -->
       <div class="topo-bg contents lg:flex lg:flex-col lg:gap-4 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:pb-0 lg:pt-6">
         <div id="heroCopy" class="topo-bg order-1 flex flex-col gap-2.5 px-4 pb-3 pt-3 sm:px-6 lg:gap-3 lg:bg-none lg:p-0">
-          <h1 class="font-display text-[1.7rem] font-extrabold uppercase leading-[1.02] tracking-tight text-soil-950 [text-wrap:balance] sm:text-4xl lg:text-[2.15rem]">
-            Encuentra tienda, taller y cerro cerca de ti
-          </h1>
+          <div>
+            <h1 class="font-display text-[1.7rem] font-extrabold uppercase leading-[1.02] tracking-tight text-soil-950 [text-wrap:balance] sm:text-4xl lg:text-[2.15rem]">
+              Encuentra tienda, taller y cerro cerca de ti
+            </h1>
+            <p id="bajada" class="mt-1 text-sm leading-snug text-soil-700 [text-wrap:balance]">Tiendas, talleres y cerros de Chile, en un mapa.</p>
+          </div>
 
           <!-- Búsqueda: qué + dónde -->
           <div class="relative" id="searchWrap">
@@ -3515,16 +3523,24 @@
       ];
     }
 
+    const SHUTTLE_MIN_REALES = 3;
+    const salidasRealesFuturas = () => shuttles.filter((s) => !s.demo && new Date(s.sale_at) > Date.now());
+    const shuttlePuedeMostrarse = () => window.BIKEGRID_CONFIG?.FEATURES?.shuttle === true && salidasRealesFuturas().length >= SHUTTLE_MIN_REALES;
+    function syncShuttleVisibility() {
+      document.documentElement.classList.toggle('shuttle-listo', shuttlePuedeMostrarse());
+    }
+
     async function loadShuttles() {
       if (Date.now() - shuttleLoadedAt < 120e3) return; // refresca cada 2 min como máximo
       shuttleError = null;
-      if (!supabaseClient) { shuttles = demoShuttles(); shuttleDemo = true; shuttleLoadedAt = Date.now(); return; }
+      if (!supabaseClient) { shuttles = demoShuttles(); shuttleDemo = true; shuttleLoadedAt = Date.now(); syncShuttleVisibility(); return; }
       shuttleBody.innerHTML = '<div class="grid gap-3">' + '<div class="h-36 animate-pulse rounded-2xl bg-sand-200"></div>'.repeat(3) + '</div>';
       const { data, error } = await supabaseClient.from('salidas_shuttle')
         .select('id, operador, destino, region, punto_encuentro, sale_at, cupos_total, cupos_disponibles, precio, whatsapp, notas')
         .gte('sale_at', hoursAgo(1)).order('sale_at', { ascending: true }).limit(100);
       if (error) { shuttleError = error.message; shuttles = []; console.info('[BIKEGRID] Bolsa de shuttles sin datos (¿ejecutaste supabase/utilidades.sql?):', error.message); }
-      else { shuttles = data; shuttleLoadedAt = Date.now(); }
+      else { shuttles = data; shuttleDemo = false; shuttleLoadedAt = Date.now(); }
+      syncShuttleVisibility();
     }
 
     const shuttleWaText = (s, n) => `Hola ${s.operador}, vi en BIKEGRID la salida de shuttle a ${s.destino} el ${clDate(s.sale_at, { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')} a las ${clDate(s.sale_at, { hour: '2-digit', minute: '2-digit', hour12: false })}${s.punto_encuentro ? ` (salida desde ${s.punto_encuentro})` : ''}. ${s.cupos_disponibles > 0 ? `Quiero reservar ${n} ${n === 1 ? 'cupo' : 'cupos'}. ¿Está disponible?` : '¿Me anotas en lista de espera?'}`;
@@ -3605,12 +3621,16 @@
 
     async function openShuttles(via) {
       closeMobileMenu();
+      await loadShuttles();
+      syncShuttleVisibility();
+      // Nicolás, 15-11-2026: la bolsa no se abre con ejemplos ni con menos de 3 salidas reales futuras.
+      if (!shuttlePuedeMostrarse()) return;
       if (document.getElementById('dirDialog').open) document.getElementById('dirDialog').close();
       shuttleDlg.showModal();
       track('shuttle_opened', { via });
-      await loadShuttles();
       renderShuttles();
     }
+    if (window.BIKEGRID_CONFIG?.FEATURES?.shuttle === true) loadShuttles();
     shuttleChipsEl.addEventListener('click', (e) => {
       const b = e.target.closest('[data-shuttle-chip]');
       if (!b) return;

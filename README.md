@@ -12,17 +12,17 @@ La portada le dice al ciclista dónde encontrar tienda, taller o cerro, y a la t
 
 | Interruptor | Por defecto | Qué vuelve a mostrar |
 |---|---|---|
-| `noticias` | `false` | Sección de noticias (textos fijos del repo; no están verificadas como reales y recientes) |
+| `noticias` | `false` | Sección de noticias. Decisión de Nicolás del 15-11-2026: siguen ocultas. |
 | `publicidad` | `false` | Los 4 espacios publicitarios |
 | `planificador` | `false` | Planificador de viaje |
 | `planificadorFab` | `false` | Botón flotante del planificador en el celular |
-| `shuttle` | `false` | Cupos shuttle (no se verificó que haya salidas publicadas) |
+| `shuttle` | `false` | Cupos shuttle. Sigue apagado. Aunque lo pongas en `true`, la bolsa solo aparece si hay al menos 3 salidas reales con fecha futura. |
 | `talentoTecnico` | `false` | CV técnico, modo incógnito, solicitud de entrevista y buscador de candidatos |
 | `planesExtendidos` | `false` | Tarjetas de 2° local, Enterprise, Guía PRO y auspicios |
 | `registroExtendido` | `false` | Campos extra del formulario (mapa, dueño, horario, avisos y datos) |
 | `bannerFichaPro` | `false` | Franja duplicada "Activa tu Ficha Pro" |
-| `bannerGuias` | `false` | Franja para registrarse como guía |
-| `trailCare` | `false` | Texto del 10% de Ficha Pro a los senderos |
+| `bannerGuias` | `false` | Franja para registrarse como guía. Decisión del 15-11-2026: sigue oculta. |
+| `trailCare` | `false` | Texto del 10% de Ficha Pro a los senderos. Decisión del 15-11-2026: sigue oculto. |
 | `navExtendida` | `false` | Accesos extra del menú |
 | `fichaDetalleExtra` | `false` | Dirección, coordenadas y "Ver en Google" en la ficha |
 | `ctaFichaProAntigua` | `false` | Botón largo "Activa tu Ficha Pro" al pie de la ficha gratis |
@@ -35,7 +35,17 @@ Para tiendas hay dos planes a la vista: Gratis y Pro a **$19.990/mes** (el mismo
 
 El WhatsApp de una ficha se abre directo. El correo queda solo para "Guardar spot". El clic sigue yendo a `eventos_ficha`.
 
-**Esta rama no se publica sola.** GitHub Pages sigue sirviendo `main` hasta que Nicolás lo confirme.
+La bajada, bajo el titular y en la meta description, es: «Tiendas, talleres y cerros de Chile, en un mapa.»
+
+### Cupos shuttle
+
+`shuttle` queda en `false`. La regla, reversible, está en el código (`shuttlePuedeMostrarse`): la bolsa y sus botones solo pueden mostrarse si el interruptor está en `true` **y** Supabase devuelve al menos 3 salidas reales (`salidas_shuttle`, sin marca de ejemplo) con `sale_at` en el futuro. Los ejemplos no cuentan. Si falta alguna de las dos condiciones, la sección sigue oculta y el diálogo no se abre.
+
+### WhatsApp comercial, requisito antes de publicar
+
+`SALES_WHATSAPP` en [`supabase-config.js`](supabase-config.js) está vacío a propósito. Nicolás va a entregar un número dedicado. Hasta entonces, «Otros planes» y el plan Pro usan el formulario. **No publiques sin ese número.**
+
+**Esta rama no se publica sola.** GitHub Pages sigue sirviendo `main`. Hace falta el número de WhatsApp comercial, la revisión de Nicolás en el celular y su OK explícito.
 
 ## Editar los puntos del mapa
 
