@@ -51,9 +51,22 @@ La bajada, bajo el titular y en la meta description, es: «Tiendas, talleres y c
 
 ## Páginas por tienda y por comuna
 
-`node scripts/generar-paginas.mjs` lee `datos/fichas-muestra.json` (sin red y sin Supabase) y escribe `tienda/<slug>/index.html`, `comuna/<slug>/index.html` y `sitemap.xml`. Las URLs canónicas usan la base `https://linvialabs.github.io/desviador/`. Los enlaces entre páginas son relativos, así que también se ven en un servidor local.
+`node scripts/generar-paginas.mjs` lee Supabase en solo lectura y escribe `tienda/<slug>/index.html`, `comuna/<slug>/index.html`, `sitemap.xml` y `datos/ultimo-manifiesto.json`.
 
-Volver a correr el script reemplaza esas carpetas. Borrar `tienda/`, `comuna/`, `sitemap.xml` y `scripts/generar-paginas.mjs` deja la portada igual. Un workflow de Actions que lo corra solo queda propuesto: no está en `.github/workflows` y no publica.
+**Filtro:** tabla `comercios`, columna `estado`, valor `aprobado`. Es el mismo criterio que el mapa (`eq('estado', 'aprobado')`). No entran pendientes, rechazadas ni fichas de ejemplo. La consulta es un SELECT por REST (`/rest/v1/comercios?estado=eq.aprobado`). No escribe en la base.
+
+**Salvaguarda:** si la consulta falla, devuelve 0 fichas o trae menos del 80% de las fichas de `datos/ultimo-manifiesto.json`, el script termina con error y no borra ni reescribe `tienda/`, `comuna/` ni `sitemap.xml`. `--forzar` salta esa comparación a mano. `--muestra` usa `datos/fichas-muestra.json` y no abre la red; el modo por defecto es Supabase.
+
+Las URLs canónicas usan `https://linvialabs.github.io/desviador/`. Los enlaces entre páginas son relativos.
+
+**Secrets o variables del repo** para el workflow manual (Actions → Generar páginas). No están creados en el repo; hay que agregarlos:
+
+- `SUPABASE_URL` — la Project URL pública (la misma de `supabase-config.js`)
+- `SUPABASE_ANON_KEY` — la anon key pública, nunca la `service_role`
+
+Pueden ser secrets o variables de Actions, con esos nombres. El workflow está en `.github/workflows/generar-paginas.yml`, solo con `workflow_dispatch`. No corre en push ni en un horario. Si la rama elegida es `main`, se detiene. Si hay cambios, abre un PR hacia la rama desde la que lo disparaste. No fusiona y no despliega Pages.
+
+Para probar sin red: `node scripts/generar-paginas.mjs --muestra`.
 
 ## Editar los puntos del mapa
 

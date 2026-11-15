@@ -1,0 +1,69 @@
+# Genera las páginas de tienda y comuna y, si hay cambios, abre un PR.
+# Solo se dispara a mano (workflow_dispatch). No escucha push, pull_request ni schedule.
+# No hace push a main, no despliega GitHub Pages y no fusiona.
+#
+name: Generar páginas
+
+on:
+  workflow_dispatch:
+  # Schedule semanal, desactivado. Descomenta las dos líneas siguientes para activarlo.
+  # Sigue sin correr en main: el paso "Rechazar main" corta la corrida si la rama es main.
+  # schedule:
+  #   - cron: '0 12 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rechazar main
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Este workflow no corre sobre main y no publica Pages."
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Generar páginas
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL != '' && secrets.SUPABASE_URL || vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY != '' && secrets.SUPABASE_ANON_KEY || vars.SUPABASE_ANON_KEY }}
+        run: node scripts/generar-paginas.mjs
+
+      - name: Abrir un PR si hay cambios
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          base="${GITHUB_REF_NAME}"
+          if [ "$base" = "main" ]; then
+            echo "No se abre un PR con base main."
+            exit 1
+          fi
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Sin cambios."
+            exit 0
+          fi
+          rama="paginas-generadas-$(date -u +%Y%m%d%H%M)"
+          if [ "$rama" = "main" ]; then
+            echo "Nombre de rama inválido."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$rama"
+          git add tienda comuna sitemap.xml datos/ultimo-manifiesto.json
+          git commit -m "chore: regenerar páginas de tiendas y comunas"
+          git push origin "$rama"
+          gh pr create \
+            --base "$base" \
+            --head "$rama" \
+            --title "Páginas regeneradas desde Supabase" \
+            --body "Borrador generado a mano por el workflow Generar páginas. No fusiona, no toca main y no despliega GitHub Pages. Revisa el diff antes de juntarlo con \`$base\`."

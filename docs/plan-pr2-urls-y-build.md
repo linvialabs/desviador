@@ -1,10 +1,8 @@
 # Plan del segundo PR: URL propia y salida del CDN
 
-La parte de URLs propias está implementada en el draft que sale de `producto-v1` (script sin red, muestra local, sitemap). Salir del CDN de Tailwind sigue para un tercer PR. Este archivo no enciende ningún workflow.
+La parte de URLs propias está en el draft con base `producto-v1`. El generador, por defecto, lee Supabase en solo lectura (`comercios.estado = aprobado`) y tiene salvaguarda contra una caída brusca. `--muestra` sigue sirviendo para probar sin red. El workflow manual está en `.github/workflows/generar-paginas.yml` (`workflow_dispatch` solamente). No despliega Pages ni toca `main`. Salir del CDN de Tailwind sigue para un tercer PR.
 
-### Decisión pendiente: workflow
-
-No hay archivo en `.github/workflows`. Si Nicolás lo pide, el workflow solo debe usar `workflow_dispatch`, correr `node scripts/generar-paginas.mjs` y no desplegar ni escuchar pushes a `main`. Publicar el HTML generado a GitHub Pages sigue siendo un OK aparte.
+Publicar el HTML generado a GitHub Pages sigue siendo un OK aparte de Nicolás.
 
 El orden es el que pidió Nicolás: primero una URL propia por tienda y por comuna, después salir del CDN de Tailwind.
 
