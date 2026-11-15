@@ -8,7 +8,9 @@ window.BIKEGRID_CONFIG = {
   // Opcional: respaldo para los leads del gate (correo + qué pedalea) si Supabase falla.
   // Ej: endpoint de Formspree (https://formspree.io/f/xxxx) o Google Apps Script. Vacío = solo Supabase.
   LEADS_WEBHOOK_URL: '',
-  // WhatsApp comercial de BIKEGRID para "Activa tu Ficha Pro" (solo dígitos, con 56). Vacío = se usa el formulario.
+  // WhatsApp comercial de BIKEGRID. REQUISITO ANTES DE PUBLICAR.
+  // Nicolás entregará un número dedicado (solo dígitos, con 56; ejemplo 56912345678).
+  // Queda vacío a propósito (15-11-2026): «Otros planes» y el plan Pro usan el formulario hasta que esté este número.
   SALES_WHATSAPP: '',
   // Opcional: webhook (Make / n8n / Apps Script) que recibe cada plan de "Arma tu Salida / Viaje" como JSON.
   TRIP_WEBHOOK_URL: '',

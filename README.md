@@ -2,15 +2,52 @@
 
 Ciclismo independiente y técnico en Chile.
 
-Página estática en un solo archivo (`index.html`), hecha con Tailwind CSS (CDN) y Leaflet.js:
+Página estática en un solo archivo (`index.html`), hecha con Tailwind CSS (CDN) y Leaflet.js.
 
-- Portada con el mapa como protagonista: búsqueda, accesos directos ("¿Qué buscas hoy?"), filtro por zona y ficha lateral de cada lugar
-- Últimas noticias / Tech con etiquetas y tiempo de lectura
-- Bolsa de empleo y convocatorias de paleros
-- Anúnciate: ficha básica gratis y ficha destacada
-- Formulario para registrar negocios (se guarda en Supabase y queda pendiente de revisión), publicar avisos o enviar datos (estos dos aún no se guardan)
+**Sitio publicado (rama `main`):** https://linvialabs.github.io/desviador/
 
-**Sitio:** https://linvialabs.github.io/desviador/
+## Producto v1 (rama `producto-v1`)
+
+La portada le dice al ciclista dónde encontrar tienda, taller o cerro, y a la tienda cómo aparecer y ver los contactos. Lo que sale de la vista no se borra: se apaga en `window.BIKEGRID_CONFIG.FEATURES` (en `index.html`, justo después de `supabase-config.js`). Poner el valor en `true` lo devuelve.
+
+| Interruptor | Por defecto | Qué vuelve a mostrar |
+|---|---|---|
+| `noticias` | `false` | Sección de noticias. Decisión de Nicolás del 15-11-2026: siguen ocultas. |
+| `publicidad` | `false` | Los 4 espacios publicitarios |
+| `planificador` | `false` | Planificador de viaje |
+| `planificadorFab` | `false` | Botón flotante del planificador en el celular |
+| `shuttle` | `false` | Cupos shuttle. Sigue apagado. Aunque lo pongas en `true`, la bolsa solo aparece si hay al menos 3 salidas reales con fecha futura. |
+| `talentoTecnico` | `false` | CV técnico, modo incógnito, solicitud de entrevista y buscador de candidatos |
+| `planesExtendidos` | `false` | Tarjetas de 2° local, Enterprise, Guía PRO y auspicios |
+| `registroExtendido` | `false` | Campos extra del formulario (mapa, dueño, horario, avisos y datos) |
+| `bannerFichaPro` | `false` | Franja duplicada "Activa tu Ficha Pro" |
+| `bannerGuias` | `false` | Franja para registrarse como guía. Decisión del 15-11-2026: sigue oculta. |
+| `trailCare` | `false` | Texto del 10% de Ficha Pro a los senderos. Decisión del 15-11-2026: sigue oculto. |
+| `navExtendida` | `false` | Accesos extra del menú |
+| `fichaDetalleExtra` | `false` | Dirección, coordenadas y "Ver en Google" en la ficha |
+| `ctaFichaProAntigua` | `false` | Botón largo "Activa tu Ficha Pro" al pie de la ficha gratis |
+| `jornadasSenderos` | `false` | Enlace para publicar una jornada de mantención |
+| `atajos` | `true` | Accesos "¿Qué buscas hoy?" debajo del mapa |
+
+Navegación visible: Mapa · Estado de cerros · Empleos · Para tiendas. El nombre del listado es **Directorio completo**. El botón del mapa se llama **Urgencia**.
+
+Si enciendes `navExtendida`, «Arma tu salida» sigue oculto mientras `planificador` esté en `false`, y el enlace Noticias del menú sigue oculto mientras `noticias` esté en `false`. Cada botón lleva su propio `data-feature`.
+
+Para tiendas hay dos planes a la vista: Gratis y Pro a **$19.990/mes** (el mismo precio que ya tenía el plan). Segundo local, Enterprise, Guía PRO y auspicios quedan en "Otros planes". El formulario de registro pide nombre, tipo, comuna, WhatsApp, marcas y web o Instagram. El pin se ubica en el centro de la comuna; si la comuna no está en la lista, se pide marcar el mapa.
+
+El WhatsApp de una ficha se abre directo. El correo queda solo para "Guardar spot". El clic sigue yendo a `eventos_ficha`.
+
+La bajada, bajo el titular y en la meta description, es: «Tiendas, talleres y cerros de Chile, en un mapa.»
+
+### Cupos shuttle
+
+`shuttle` queda en `false`. La regla, reversible, está en el código (`shuttlePuedeMostrarse`): la bolsa y sus botones solo pueden mostrarse si el interruptor está en `true` **y** Supabase devuelve al menos 3 salidas reales (`salidas_shuttle`, sin marca de ejemplo) con `sale_at` en el futuro. Los ejemplos no cuentan. Si falta alguna de las dos condiciones, la sección sigue oculta y el diálogo no se abre.
+
+### WhatsApp comercial, requisito antes de publicar
+
+`SALES_WHATSAPP` en [`supabase-config.js`](supabase-config.js) está vacío a propósito. Nicolás va a entregar un número dedicado. Hasta entonces, «Otros planes» y el plan Pro usan el formulario. **No publiques sin ese número.**
+
+**Esta rama no se publica sola.** GitHub Pages sigue sirviendo `main`. Hace falta el número de WhatsApp comercial, la revisión de Nicolás en el celular y su OK explícito.
 
 ## Editar los puntos del mapa
 
@@ -21,7 +58,7 @@ En `index.html`, busca `const puntosIniciales = [` y agrega objetos con este for
   verificado: true, destacado: false, direccion: 'Av. Ejemplo 123', whatsapp: '569XXXXXXXX', horario: 'Lun a Vie 10:00–19:00' },
 ```
 
-Si `whatsapp` tiene número, la ficha muestra el botón "WhatsApp directo". Lo que dejes en `null` aparece como "Por confirmar".
+Si `whatsapp` tiene número, la ficha muestra el botón "WhatsApp". Lo que falte (horario, marcas, abierto/cerrado) se omite: no se muestra "Por confirmar".
 
 Categorías: `tiendas`, `talleres`, `clases`, `senderos`, `tours`.
 Regiones: `valparaiso`, `metropolitana`, `nuble`, `biobio`, `araucania`, `losrios` (se definen en `REGIONES`).
@@ -48,7 +85,7 @@ Solo los usuarios de la tabla `admins` pueden ver datos privados, aprobar, edita
 
 ## Leads del gate de contacto (correo + qué pedalea)
 
-El mapa, los pines y las fichas se ven sin cuenta. Solo **WhatsApp**, **Postular** y **Guardar spot** piden una vez correo + "¿Qué pedaleás?". Tras completarlo, el navegador queda desbloqueado (`localStorage` → `desviador-gate`) y la acción se ejecuta.
+El mapa, los pines y las fichas se ven sin cuenta. **WhatsApp** abre directo y el clic se anota en `eventos_ficha`. Solo **Guardar spot** pide una vez correo + "¿Qué pedaleas?". Tras completarlo, el navegador queda desbloqueado (`localStorage` → `desviador-gate`).
 
 **Destino de los leads (configurar una vez):**
 
