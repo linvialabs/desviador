@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>BIKEGRID — La red global de servicios, mapas y comunidad del pedal.</title>
-  <meta name="description" content="BIKEGRID: mapa y directorio de talleres, tiendas, bikeparks, guías y shuttles, semáforo de cerros, Bici Jobs y comunidad ciclista. Partimos en Chile." />
+  <title>BIKEGRID — Encuentra tienda, taller y cerro cerca de ti</title>
+  <meta name="description" content="BIKEGRID: encuentra tienda, taller o cerro cerca de ti en Chile. Las tiendas aparecen en el mapa y ven cuántos ciclistas las contactaron." />
   <meta name="application-name" content="BIKEGRID" />
   <meta property="og:site_name" content="BIKEGRID" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="BIKEGRID — La red global de servicios, mapas y comunidad del pedal." />
-  <meta property="og:description" content="Talleres, tiendas, bikeparks, guías y shuttles en un solo mapa. Semáforo de cerros, Bici Jobs y comunidad del pedal." />
+  <meta property="og:title" content="BIKEGRID — Encuentra tienda, taller y cerro cerca de ti" />
+  <meta property="og:description" content="Tiendas, talleres y cerros de Chile en un solo mapa. Si tienes un negocio, aquí te encuentran y ves los clics a tu WhatsApp." />
   <meta name="twitter:card" content="summary" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%232e7d32%22/%3E%3Cpath d=%22M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.2%22 stroke-linecap=%22round%22 opacity=%22.55%22/%3E%3Cg fill=%22%23f6f1e7%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%228%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2216%22 r=%221.7%22/%3E%3Ccircle cx=%228%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2216%22 cy=%2224%22 r=%221.7%22/%3E%3Ccircle cx=%2224%22 cy=%2224%22 r=%221.7%22/%3E%3C/g%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%225.9%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.7%22 stroke-dasharray=%221.55 1.54%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%224.3%22 fill=%22none%22 stroke=%22%23f6f1e7%22 stroke-width=%221.6%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%221.4%22 fill=%22%23f6f1e7%22/%3E%3C/svg%3E" />
   <meta name="theme-color" content="#15120e" />
@@ -66,6 +66,36 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
   <!-- Credenciales compartidas con admin.html -->
   <script src="supabase-config.js"></script>
+  <!-- Interruptores de producto. true los vuelve a mostrar. No borra funciones. -->
+  <script>
+    window.BIKEGRID_CONFIG = window.BIKEGRID_CONFIG || window.DESVIADOR_CONFIG || {};
+    window.BIKEGRID_CONFIG.FEATURES = Object.assign({
+      noticias: false,            // textos fijos del repo; no se pudo verificar que sean noticias reales y recientes
+      publicidad: false,          // los 4 espacios son placeholders sin anunciante
+      planificador: false,        // planificador de viaje (4 pasos)
+      planificadorFab: false,     // botón flotante del planificador en el celular
+      shuttle: false,             // cupos shuttle: no se pudo verificar que haya salidas publicadas
+      talentoTecnico: false,      // CV técnico, modo incógnito y solicitud de entrevista
+      planesExtendidos: false,    // 2° local, Enterprise, Guía PRO y auspicios (siguen en "Otros planes")
+      registroExtendido: false,   // campos extra del formulario (mapa, dueño, avisos, datos)
+      bannerFichaPro: false,      // franja duplicada "Activa tu Ficha Pro" sobre las noticias
+      bannerGuias: false,         // franja de captación de guías, fuera de la oferta de 2 planes
+      trailCare: false,           // el 10% a senderos no es uno de los 3 beneficios de Pro
+      navExtendida: false,        // guías, shuttle, planificador, tech y directorio en el menú
+      fichaDetalleExtra: false,   // dirección, coordenadas y "Ver en Google" bajo la ficha
+      ctaFichaProAntigua: false,  // botón largo "Activa tu Ficha Pro" al pie de la ficha gratis
+      jornadasSenderos: false,    // enlace a publicar jornada de mantención dentro de Empleos
+      atajos: true,               // accesos "qué buscas" debajo del mapa
+    }, window.BIKEGRID_CONFIG.FEATURES || {});
+    (function () {
+      const F = window.BIKEGRID_CONFIG.FEATURES;
+      const css = Object.keys(F).filter((k) => !F[k]).map((k) => `[data-feature~="${k}"]{display:none !important}`).join('');
+      const s = document.createElement('style');
+      s.id = 'bg-features';
+      s.textContent = css;
+      document.head.appendChild(s);
+    })();
+  </script>
 
   <style>
     html, body { background: #f6f1e7; color: #241f19; }
@@ -74,6 +104,14 @@
     /* Altura del mapa en CSS propio: no depende de que Tailwind cargue */
     #map { height: 62vh; min-height: 420px; width: 100%; }
     @media (min-width: 1024px) { #map { height: 100%; min-height: 0; } }
+    /* Portada: titular, buscador y mapa caben en la primera pantalla del celular */
+    @media (max-width: 1023px) {
+      #inicio { height: calc(100dvh - 3.5rem); max-height: calc(100dvh - 3.5rem); }
+      #heroCopy { position: relative; z-index: 20; }
+      #inicio > .isolate { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+      #inicio #map { height: auto; min-height: 0; flex: 1 1 auto; }
+      #heroCopy h1 { font-size: 1.28rem; line-height: 1.05; }
+    }
     #pickMap { height: 14rem; width: 100%; }
 
     /* Curvas de nivel de fondo en el panel del hero */
@@ -179,6 +217,7 @@
     @media (min-width: 1280px) {
       .ad-rail.is-on { display: flex; }
       .has-rails .mx-auto.max-w-6xl { max-width: min(72rem, calc(100vw - 400px)); } /* deja espacio a los rieles */
+      body:not(.con-publicidad) .has-rails .mx-auto.max-w-6xl { max-width: 72rem; }
     }
     @media (max-width: 768px) { .ad-rail { display: none !important; } }
 
@@ -320,23 +359,21 @@
         <span class="font-display text-[1.45rem] uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span>
       </a>
 
-      <nav class="hidden items-center md:flex" aria-label="Principal">
-        <div class="hidden items-center gap-4 pr-4 text-[11px] font-semibold uppercase tracking-[.12em] text-sand-300 lg:flex xl:gap-7 xl:pr-5 xl:text-[11.5px] xl:tracking-[.14em]">
-          <a href="#inicio" class="navlink">Mapa</a>
-          <button type="button" data-trail-view class="navlink uppercase tracking-[.14em]">Estado de pistas</button>
-          <a href="#comunidad" class="navlink">Bici Jobs</a>
-          <button type="button" data-dir-open class="navlink uppercase tracking-[.14em]">Directorio Pro</button>
-        </div>
-        <div class="flex items-center gap-2 lg:border-l lg:border-soil-700 lg:pl-4 xl:pl-5">
+      <nav class="hidden items-center gap-4 text-[11px] font-semibold uppercase tracking-[.14em] text-sand-300 md:flex lg:gap-7 lg:text-[11.5px]" aria-label="Principal">
+        <a href="#inicio" class="navlink">Mapa</a>
+        <button type="button" data-trail-view class="navlink uppercase tracking-[.14em]">Estado de cerros</button>
+        <a href="#comunidad" class="navlink">Empleos</a>
+        <a href="#anunciate" class="navlink">Para tiendas</a>
+        <span data-feature="navExtendida" class="contents">
+          <button type="button" data-dir-open class="navlink uppercase tracking-[.14em]">Directorio completo</button>
           <button type="button" data-guides-filter="header" aria-pressed="false" class="icon-btn" aria-label="Guías locales en el mapa" title="Guías locales"><i class="i i-compass" aria-hidden="true"></i></button>
           <button type="button" data-shuttle="header" class="icon-btn" aria-label="Cupos shuttle" title="Cupos shuttle"><i class="i i-bus" aria-hidden="true"></i></button>
-          <button type="button" data-sos="header" aria-label="Repuesto o taller de urgencia" class="sos-btn inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 xl:px-3.5 text-[11.5px] font-semibold uppercase tracking-[.12em]"><i class="i i-siren" aria-hidden="true"></i><span class="hidden xl:inline">Urgencia</span></button>
-          <button type="button" data-trip="header" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 py-1.5 text-[11.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600"><i class="i i-map" aria-hidden="true"></i><span class="hidden xl:inline">Arma tu salida</span><span class="xl:hidden">Salida</span></button>
-        </div>
+          <button type="button" data-sos="header" aria-label="Urgencia" class="sos-btn inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[11.5px] font-semibold uppercase tracking-[.12em]"><i class="i i-siren" aria-hidden="true"></i> Urgencia</button>
+          <button type="button" data-trip="header" class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 py-1.5 text-[11.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600"><i class="i i-map" aria-hidden="true"></i> Arma tu salida</button>
+        </span>
       </nav>
 
       <div class="flex items-center gap-2 md:hidden">
-      <button type="button" data-sos="header-movil" class="sos-btn inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[.1em]" aria-label="Repuesto o taller de urgencia"><i class="i i-siren" aria-hidden="true"></i> Urgencia</button>
       <button id="menuBtn" class="rounded-md p-2 text-sand-100 ring-1 ring-soil-600 md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
       </button>
@@ -345,22 +382,23 @@
     <nav id="mobileMenu" class="hidden max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-t border-soil-700 px-4 pb-4 md:hidden" aria-label="Móvil">
       <p class="pb-1 pt-4 font-mono text-[10px] font-semibold uppercase tracking-[.2em] text-sand-300/60">Navegación</p>
       <a href="#inicio" class="mnav"><i class="i i-pin" aria-hidden="true"></i>Mapa</a>
-      <button type="button" data-trail-view class="mnav"><span class="grid w-[1.05rem] place-items-center"><i class="led led-green" aria-hidden="true"></i></span>Estado de pistas</button>
-      <a href="#comunidad" class="mnav"><i class="i i-briefcase" aria-hidden="true"></i>Bici Jobs</a>
-      <button type="button" data-dir-open class="mnav"><i class="i i-badge-check" aria-hidden="true"></i>Directorio Pro</button>
-      <p class="pb-1 pt-5 font-mono text-[10px] font-semibold uppercase tracking-[.2em] text-sand-300/60">Utilidades</p>
-      <button type="button" data-sos="menu" class="mnav !text-[#f0a48f]"><i class="i i-siren" aria-hidden="true"></i>Repuesto / taller de urgencia</button>
-      <button type="button" data-guides-filter="menu" class="mnav"><i class="i i-compass" aria-hidden="true"></i>Guías locales</button>
-      <button type="button" data-shuttle="menu" class="mnav"><i class="i i-bus" aria-hidden="true"></i>Cupos shuttle</button>
-      <button type="button" data-menu-senderos class="mnav"><i class="i i-mountain" aria-hidden="true"></i>Bikeparks &amp; senderos</button>
-      <a href="#anunciate" class="mnav !text-ochre-300"><i class="i i-badge-check" aria-hidden="true"></i>Planes para negocios</a>
-      <a href="#noticias" class="mnav"><i class="i i-activity" aria-hidden="true"></i>Tech</a>
-      <button type="button" data-trip="menu" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-brand py-3 text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50"><i class="i i-map" aria-hidden="true"></i>Arma tu salida / viaje</button>
+      <button type="button" data-trail-view class="mnav"><span class="grid w-[1.05rem] place-items-center"><i class="led led-green" aria-hidden="true"></i></span>Estado de cerros</button>
+      <a href="#comunidad" class="mnav"><i class="i i-briefcase" aria-hidden="true"></i>Empleos</a>
+      <a href="#anunciate" class="mnav"><i class="i i-store" aria-hidden="true"></i>Para tiendas</a>
+      <div data-feature="navExtendida">
+        <button type="button" data-dir-open class="mnav"><i class="i i-badge-check" aria-hidden="true"></i>Directorio completo</button>
+        <button type="button" data-sos="menu" class="mnav !text-[#f0a48f]"><i class="i i-siren" aria-hidden="true"></i>Urgencia</button>
+        <button type="button" data-guides-filter="menu" class="mnav"><i class="i i-compass" aria-hidden="true"></i>Guías locales</button>
+        <button type="button" data-shuttle="menu" class="mnav"><i class="i i-bus" aria-hidden="true"></i>Cupos shuttle</button>
+        <button type="button" data-menu-senderos class="mnav"><i class="i i-mountain" aria-hidden="true"></i>Bikeparks y senderos</button>
+        <a href="#noticias" class="mnav"><i class="i i-activity" aria-hidden="true"></i>Noticias</a>
+        <button type="button" data-trip="menu" class="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-brand py-3 text-[12px] font-semibold uppercase tracking-[.12em] text-sand-50"><i class="i i-map" aria-hidden="true"></i>Arma tu salida</button>
+      </div>
     </nav>
   </header>
 
   <!-- ============ PUBLICIDAD: LEADERBOARD SUPERIOR ============ -->
-  <aside class="ad-slot ad-shimmer border-b border-soil-700" data-ad-slot="top" aria-label="Espacio publicitario">
+  <aside class="ad-slot ad-shimmer border-b border-soil-700" data-ad-slot="top" data-feature="publicidad" aria-label="Espacio publicitario">
     <div class="ad-grid" aria-hidden="true"></div>
     <div data-ad-creative class="mx-auto flex max-h-20 min-h-[52px] max-w-[1600px] items-center gap-3 px-4 py-2 sm:h-16 sm:px-6">
       <svg viewBox="0 0 32 32" class="h-7 w-7 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
@@ -372,51 +410,37 @@
 
   <main class="has-rails">
     <!-- ============ HERO: MAPA PROTAGONISTA ============ -->
-    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-sand-300 lg:grid lg:h-[calc(100vh-3.5rem-4rem)] lg:min-h-[640px] lg:grid-cols-[420px_1fr]">
+    <section id="inicio" class="flex scroll-mt-14 flex-col border-b border-sand-300 lg:grid lg:h-[calc(100dvh-3.5rem)] lg:min-h-[560px] lg:grid-cols-[420px_1fr]">
 
       <!-- Panel izquierdo (en móvil se parte: arriba y abajo del mapa) -->
       <div class="topo-bg contents lg:flex lg:flex-col lg:gap-4 lg:overflow-y-auto lg:border-r lg:border-sand-300 lg:px-6 lg:pb-0 lg:pt-6">
-        <div class="topo-bg order-1 flex flex-col gap-5 px-4 pb-5 pt-5 sm:px-6 lg:gap-4 lg:bg-none lg:p-0">
-          <div>
-            <h1 class="font-display text-[2rem] font-extrabold uppercase leading-[.95] tracking-tight text-soil-950 [text-wrap:balance] sm:text-5xl lg:text-[2.35rem] lg:[@media(max-height:780px)]:text-[1.85rem]">
-              <span class="mb-2 block font-mono text-[11px] font-semibold tracking-[.2em] text-moss-600">BIKEGRID —</span>
-              La red global de servicios, mapas y comunidad del pedal.
-            </h1>
-          </div>
+        <div id="heroCopy" class="topo-bg order-1 flex flex-col gap-2.5 px-4 pb-3 pt-3 sm:px-6 lg:gap-3 lg:bg-none lg:p-0">
+          <h1 class="font-display text-[1.7rem] font-extrabold uppercase leading-[1.02] tracking-tight text-soil-950 [text-wrap:balance] sm:text-4xl lg:text-[2.15rem]">
+            Encuentra tienda, taller y cerro cerca de ti
+          </h1>
 
-          <!-- Búsqueda -->
+          <!-- Búsqueda: qué + dónde -->
           <div class="relative" id="searchWrap">
-            <label for="search" class="sr-only">Buscar en el mapa</label>
-            <svg class="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-soil-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="search" type="search" autocomplete="off" placeholder="Busca un lugar, comuna o región…"
-              class="w-full rounded-xl border-0 bg-sand-50 py-3.5 pl-11 pr-4 text-[15px] text-ink placeholder-soil-600/70 shadow-sm ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600"
-              role="combobox" aria-expanded="false" aria-controls="searchResults" />
+            <div class="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2">
+              <div class="relative">
+                <label for="search" class="sr-only">Qué buscas</label>
+                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-soil-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input id="search" type="search" autocomplete="off" placeholder="Qué buscas"
+                  class="w-full rounded-xl border-0 bg-sand-50 py-2.5 pl-9 pr-3 text-[15px] text-ink placeholder-soil-600/70 shadow-sm ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600"
+                  role="combobox" aria-expanded="false" aria-controls="searchResults" />
+              </div>
+              <div class="relative">
+                <label for="searchWhere" class="sr-only">Dónde</label>
+                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-soil-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                <input id="searchWhere" type="search" autocomplete="off" placeholder="Dónde"
+                  class="w-full rounded-xl border-0 bg-sand-50 py-2.5 pl-9 pr-3 text-[15px] text-ink placeholder-soil-600/70 shadow-sm ring-1 ring-sand-300 focus:outline-none focus:ring-2 focus:ring-moss-600" />
+              </div>
+            </div>
             <ul id="searchResults" role="listbox" class="absolute inset-x-0 top-full z-20 mt-2 hidden max-h-72 overflow-y-auto rounded-xl bg-sand-50 py-1 shadow-2xl ring-1 ring-sand-300"></ul>
           </div>
-
-          <!-- Accesos directos -->
-          <div>
-            <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">¿Qué buscas hoy?</p>
-            <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
-            <!-- En escritorio estos dos accesos viven en el encabezado -->
-            <div id="utilRow" class="mt-2.5 grid grid-cols-[1.35fr_1fr] gap-2 sm:flex sm:flex-wrap lg:hidden" role="group" aria-label="Utilidades del día">
-              <button type="button" data-sos="hero" class="util-chip sos-btn justify-center text-center leading-tight shadow-sm"><i class="i i-siren" aria-hidden="true"></i> Repuesto / Taller de Urgencia</button>
-              <button type="button" data-shuttle="hero" class="util-chip justify-center bg-soil-950 text-sand-50 shadow-sm hover:bg-soil-800"><i class="i i-bus" aria-hidden="true"></i> Cupos Shuttle</button>
-            </div>
-          </div>
-
+          <a href="#anunciate" class="inline-flex w-full items-center justify-center rounded-xl px-4 py-2 text-[13px] font-semibold text-soil-800 ring-1 ring-soil-600/30 transition hover:bg-sand-50 lg:w-auto">Soy tienda o taller</a>
         </div>
 
-        <!-- Destacados + métricas: en escritorio bajo "¿Qué buscas hoy?"; en móvil, debajo del mapa -->
-        <div id="featured" class="order-3 bg-sand-100 px-4 pb-6 pt-5 sm:px-6 lg:border-t lg:border-sand-300 lg:bg-transparent lg:p-0 lg:pt-4" hidden>
-          <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">Destacados</p>
-          <div id="dirStats" class="mb-3 flex flex-wrap gap-1.5" aria-label="Resumen del directorio"></div>
-          <ul id="dirTop" class="grid grid-cols-2 gap-2.5"></ul>
-          <!-- En escritorio queda fijo al pie de la columna aunque haya scroll -->
-          <div class="mt-4 lg:sticky lg:bottom-0 lg:-mx-6 lg:bg-gradient-to-t lg:from-sand-100 lg:from-70% lg:to-transparent lg:px-6 lg:pb-3 lg:pt-3">
-            <button id="dirOpen" type="button" class="w-full rounded-xl bg-soil-950 px-4 py-3 text-sm font-semibold text-sand-50 transition hover:bg-soil-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400" aria-haspopup="dialog" aria-controls="dirDialog"></button>
-          </div>
-        </div>
       </div>
 
       <!-- Mapa -->
@@ -463,12 +487,31 @@
           <button id="locateBtn" type="button" class="grid h-10 w-10 place-items-center rounded-xl bg-sand-50 text-soil-950 shadow-xl ring-1 ring-sand-300 transition hover:bg-sand-100" aria-label="Centrar en mi ubicación" title="Mi ubicación">
             <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
           </button>
+          <button type="button" data-sos="mapa" class="sos-btn inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2.5 text-sm font-bold shadow-xl" aria-label="Urgencia"><i class="i i-siren" aria-hidden="true"></i> Urgencia</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atajos debajo del pliegue: el mapa sigue siendo la portada -->
+    <section id="atajos" data-feature="atajos" class="border-b border-sand-300 bg-sand-100">
+      <div class="mx-auto max-w-6xl px-4 py-5 sm:px-6">
+        <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">¿Qué buscas hoy?</p>
+        <div id="shortcuts" class="flex flex-wrap gap-2" role="group" aria-label="Accesos directos del mapa"></div>
+        <div id="utilRow" class="mt-2.5 flex flex-wrap gap-2" role="group" aria-label="Utilidades del día">
+          <button type="button" data-shuttle="hero" data-feature="shuttle" class="util-chip justify-center bg-soil-950 text-sand-50 shadow-sm hover:bg-soil-800"><i class="i i-bus" aria-hidden="true"></i> Cupos shuttle</button>
+          <button type="button" data-trip="atajos" data-feature="planificador" class="util-chip justify-center bg-brand text-sand-50 shadow-sm hover:bg-brand-600"><i class="i i-map" aria-hidden="true"></i> Arma tu salida</button>
+        </div>
+        <div id="featured" class="pt-5" hidden>
+          <p class="mb-2.5 font-display text-sm font-bold uppercase tracking-wider text-soil-800">Destacados</p>
+          <div id="dirStats" class="mb-3 flex flex-wrap gap-1.5" aria-label="Resumen del directorio"></div>
+          <ul id="dirTop" class="grid grid-cols-2 gap-2.5 sm:grid-cols-4"></ul>
+          <button id="dirOpen" type="button" class="mt-4 w-full rounded-xl bg-soil-950 px-4 py-3 text-sm font-semibold text-sand-50 transition hover:bg-soil-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-ochre-400 sm:w-auto" aria-haspopup="dialog" aria-controls="dirDialog">Ver el directorio completo</button>
         </div>
       </div>
     </section>
 
     <!-- ============ CAPTACIÓN B2B: RECLAMA TU TIENDA ============ -->
-    <section aria-labelledby="b2bTitle" class="border-b border-sand-300 bg-sand-100">
+    <section aria-labelledby="b2bTitle" data-feature="bannerFichaPro" class="border-b border-sand-300 bg-sand-100">
       <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div class="rounded-2xl bg-soil-900 p-6 sm:p-8">
           <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
@@ -505,7 +548,7 @@
     </section>
 
     <!-- ============ ÚLTIMAS NOTICIAS / TECH ============ -->
-    <section id="noticias" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
+    <section id="noticias" data-feature="noticias" class="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6">
       <div class="mb-8 flex items-end justify-between gap-4 border-b-2 border-soil-950 pb-3">
         <div>
           <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Tech</p>
@@ -522,13 +565,14 @@
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="mb-6 flex flex-col gap-5">
           <div class="min-w-0 flex-1">
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-brand">Empleo &amp; comunidad</p>
-            <h2 id="jobsTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl"><span class="flex items-center gap-3"><i class="i i-briefcase text-[.8em] text-brand" aria-hidden="true"></i>Bici Jobs</span><span class="mt-1 block max-w-2xl text-lg leading-snug text-soil-700 [text-wrap:balance] sm:text-2xl">— Reclutamiento Técnico y Talento para la Industria Ciclista.</span></h2>
-            <p class="mt-2 max-w-xl text-sm text-soil-600">Conectamos tiendas y talleres con mecánicos certificados, especialistas en <span class="whitespace-nowrap">E-Bikes</span> y personal de retail.</p>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-brand">Empleos</p>
+            <h2 id="jobsTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Empleos en tiendas y talleres</h2>
+            <p class="mt-2 max-w-xl text-sm text-soil-600">Mira las ofertas publicadas o deja la tuya. Si no hay ninguna, puedes publicar la primera gratis.</p>
             <div class="mt-4 flex flex-wrap gap-2">
-              <button type="button" data-cv-open="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-brand-600"><i class="i i-user" aria-hidden="true"></i> Arma tu CV Técnico</button>
-              <button type="button" data-post-job="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Vacante</button>
-              <a href="#talento" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-soil-800 ring-1 ring-soil-600/40 transition hover:bg-sand-50"><i class="i i-users" aria-hidden="true"></i> Buscar candidatos</a>
+              <a href="#jobList" class="inline-flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-brand-600"><i class="i i-briefcase" aria-hidden="true"></i> Ver ofertas</a>
+              <button type="button" data-post-job="encabezado" class="inline-flex items-center gap-2 rounded-xl bg-soil-950 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-sand-50 shadow-sm transition hover:bg-soil-800"><i class="i i-megaphone" aria-hidden="true"></i> Publicar oferta</button>
+              <button type="button" data-cv-open="encabezado" data-feature="talentoTecnico" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-soil-800 ring-1 ring-soil-600/40"><i class="i i-user" aria-hidden="true"></i> Arma tu CV Técnico</button>
+              <a href="#talento" data-feature="talentoTecnico" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[.1em] text-soil-800 ring-1 ring-soil-600/40"><i class="i i-users" aria-hidden="true"></i> Buscar candidatos</a>
             </div>
           </div>
           <div id="jobTabs" class="no-scrollbar -mx-4 flex gap-1.5 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0" role="tablist" aria-label="Filtrar avisos"></div>
@@ -536,10 +580,10 @@
 
         <ul id="jobList" class="grid gap-3"></ul>
 
-        <a href="#registrar" data-register="aviso" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de mantención de senderos</a>
+        <a href="#registrar" data-register="aviso" data-feature="jornadasSenderos" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-moss-700 hover:text-moss-600">+ Publicar una jornada de mantención de senderos</a>
 
         <!-- Reclutamiento para tiendas (B2B): buscador de candidatos por especialidad y cercanía -->
-        <div id="talento" class="mt-10 scroll-mt-20 overflow-hidden rounded-2xl bg-sand-50 shadow-sm ring-1 ring-sand-300" role="region" aria-labelledby="talentTitle">
+        <div id="talento" data-feature="talentoTecnico" class="mt-10 scroll-mt-20 overflow-hidden rounded-2xl bg-sand-50 shadow-sm ring-1 ring-sand-300" role="region" aria-labelledby="talentTitle">
           <div class="flex flex-col gap-4 bg-soil-950 px-5 py-5 text-sand-100 sm:px-6 md:flex-row md:items-end md:justify-between">
             <div>
               <p class="font-mono text-[10.5px] font-semibold uppercase tracking-[.22em] text-[#8fd18f]">Para tiendas y talleres · Reclutamiento</p>
@@ -575,7 +619,7 @@
         </div>
 
         <!-- Programa institucional Trail Care -->
-        <article class="relative mt-10 overflow-hidden rounded-2xl bg-soil-950 p-6 text-sand-100 shadow-xl sm:p-8" aria-labelledby="trailCareTitle">
+        <article data-feature="trailCare" class="relative mt-10 overflow-hidden rounded-2xl bg-soil-950 p-6 text-sand-100 shadow-xl sm:p-8" aria-labelledby="trailCareTitle">
           <div class="absolute inset-y-0 left-0 w-1.5 bg-brand" aria-hidden="true"></div>
           <div class="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
           <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -594,7 +638,7 @@
     </section>
 
     <!-- ============ RED DE GUÍAS: CAPTACIÓN ============ -->
-    <section aria-labelledby="guideCtaTitle" class="border-b border-sand-300 bg-sand-50">
+    <section aria-labelledby="guideCtaTitle" data-feature="bannerGuias" class="border-b border-sand-300 bg-sand-50">
       <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div class="relative flex flex-col gap-5 overflow-hidden rounded-2xl bg-[#3a2c45] p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
           <div class="flex gap-4">
@@ -615,14 +659,34 @@
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div class="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div class="max-w-2xl">
-            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Anúnciate · Planes y tarifas</p>
-            <h2 id="plansTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-4xl"><i class="i i-wrench" aria-hidden="true"></i> Ficha Pro / Tiendas &amp; Servicios</h2>
-            <p class="mt-2 text-sand-300">Tiendas, talleres, shuttles y guías: aparece donde los ciclistas buscan dónde reparar, comprar, rodar y contratar.</p>
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-ochre-400">Para tiendas</p>
+            <h2 id="plansTitle" class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-sand-50 sm:text-4xl">Para tiendas</h2>
+            <p class="mt-2 text-sand-300">Aquí te encuentran los ciclistas de tu comuna y ves cuántos abrieron tu ficha y tocaron tu WhatsApp.</p>
           </div>
-
         </div>
 
-        <div class="grid items-stretch gap-4 lg:grid-cols-3">
+        <div class="grid items-stretch gap-4 md:grid-cols-2">
+          <article class="flex flex-col rounded-2xl border border-soil-700 bg-soil-800 p-6">
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-sand-300">Gratis</p>
+            <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-4xl font-extrabold text-sand-50">$0</span></p>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-sand-200">Tu tienda o taller aparece en el mapa, con WhatsApp, marcas y horario.</p>
+            <a href="#registrar" data-register="negocio" class="mt-6 rounded-xl py-3 text-center text-sm font-bold text-sand-50 ring-1 ring-sand-300/40 transition hover:bg-soil-700">Registrar gratis</a>
+          </article>
+          <article class="relative flex flex-col rounded-2xl border-2 border-[#d4af37] bg-soil-800 p-6 shadow-[0_0_0_4px_rgba(212,175,55,.12)]">
+            <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-300">Pro</p>
+            <p class="mt-2 flex items-baseline gap-1.5"><span id="proPrice" class="font-display text-4xl font-extrabold text-sand-50">$19.990</span><span class="text-sm text-sand-300">/ mes</span></p>
+            <ul class="mt-5 flex-1 space-y-3 text-sm text-sand-100">
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Apareces primero en tu comuna.</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Informe mensual de visitas y clics a tu WhatsApp.</li>
+              <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Avisos de empleo incluidos.</li>
+            </ul>
+            <button type="button" data-plan="pro" class="mt-6 rounded-xl bg-[#d4af37] py-3.5 text-center text-sm font-extrabold text-soil-950 transition hover:bg-[#e2c35a]">Quiero el plan Pro</button>
+          </article>
+        </div>
+        <p class="mt-5 text-center text-sm text-sand-300">¿Segundo local, varias sucursales, Guía PRO o auspicios? <button type="button" data-plan="otros" class="font-semibold text-ochre-300 underline underline-offset-2">Otros planes</button></p>
+
+        <div data-feature="planesExtendidos">
+        <div class="mt-10 grid items-stretch gap-4 lg:grid-cols-3">
           <!-- Plan Gratis -->
           <article class="flex flex-col rounded-2xl border border-soil-700 bg-soil-800 p-6">
             <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-sand-300">Plan Gratis · Ficha básica</p>
@@ -659,7 +723,7 @@
           <article class="relative flex flex-col rounded-2xl border-2 border-[#d4af37] bg-soil-800 p-6 shadow-[0_0_0_6px_rgba(212,175,55,.12),0_20px_40px_rgba(0,0,0,.35)] lg:-my-3 lg:py-9">
             <span class="absolute -top-3 left-6 rounded-full bg-[#d4af37] px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-soil-950"><i class="i i-star" aria-hidden="true"></i> El más popular</span>
             <p class="font-mono text-[11px] font-semibold uppercase tracking-wider text-ochre-300">Plan Tienda / Taller PRO</p>
-            <p class="mt-2 flex items-baseline gap-1.5"><span id="proPrice" class="font-display text-4xl font-extrabold text-sand-50">$19.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
+            <p class="mt-2 flex items-baseline gap-1.5"><span class="font-display text-4xl font-extrabold text-sand-50">$19.990</span><span class="text-sm text-sand-300">CLP / mes</span></p>
             <p class="mt-1 text-sm text-sand-300">Por local · 2° local <strong class="text-sand-50">+ $9.990</strong> · 3 o más: <a href="#multilocal" class="font-semibold text-ochre-300 underline underline-offset-2">Plan Enterprise</a></p>
             <ul class="mt-5 flex-1 space-y-2.5 text-sm text-sand-200">
               <li class="flex gap-3"><span class="text-[#d4af37]"><i class="i i-check" aria-hidden="true"></i></span> Pin Dorado destacado en el mapa</li>
@@ -713,6 +777,7 @@
           <button type="button" data-plan="auspicio" class="shrink-0 rounded-xl bg-sand-50 px-5 py-3.5 text-center text-sm font-bold text-soil-950 shadow-lg transition hover:bg-white">Contactar para Auspicios y Banners Regionales</button>
         </div>
         <p class="mt-5 text-center text-xs text-sand-300/80">Cada botón abre WhatsApp con el plan ya indicado: coordinamos la activación contigo.</p>
+        </div>
       </div>
     </section>
 
@@ -720,14 +785,13 @@
     <section id="registrar" class="scroll-mt-16">
       <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.25fr]">
         <div>
-          <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Participa</p>
-          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Registra tu negocio o envía un dato</h2>
-          <p class="mt-3 text-soil-600">Suma tu taller, tienda o escuela al mapa, publica un aviso para la comunidad o avísanos de un sendero cerrado o un dato que corregir.</p>
+          <p class="font-mono text-[11px] font-semibold uppercase tracking-[.2em] text-moss-600">Para tiendas</p>
+          <h2 class="mt-1 font-display text-3xl font-extrabold uppercase tracking-tight text-soil-950 sm:text-4xl">Registra tu negocio</h2>
+          <p class="mt-3 text-soil-600">Con estos datos te publicamos en el mapa. Revisamos la ficha antes de mostrarla.</p>
           <ul class="mt-6 space-y-3 text-sm text-soil-600">
             <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> Revisamos cada ficha antes de publicarla en el mapa.</li>
-            <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> Te contactamos para confirmar ubicación y datos.</li>
-            <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> Los avisos de trabajo y voluntariado se publican en la bolsa.</li>
-            <li class="flex gap-3"><span class="text-ochre-500"><i class="i i-star" aria-hidden="true"></i></span> <span><strong class="text-soil-950">¿Tu negocio ya aparece en el mapa?</strong> Regístralo con el mismo nombre: verificamos que eres el dueño y te damos el control de la ficha.</span></li>
+            <li class="flex gap-3"><span class="text-moss-600"><i class="i i-check" aria-hidden="true"></i></span> El pin queda en el centro de tu comuna. Si hace falta, lo ajustamos contigo.</li>
+            <li class="flex gap-3"><span class="text-ochre-500"><i class="i i-star" aria-hidden="true"></i></span> <span><strong class="text-soil-950">¿Tu negocio ya aparece?</strong> Usa el mismo nombre y lo reclamas gratis.</span></li>
           </ul>
         </div>
 
@@ -737,7 +801,7 @@
             <p class="mt-1 text-sm text-soil-700">Tu tienda/proyecto ha sido enviado a revisión por el equipo editorial de BIKEGRID y aparecerá en el mapa tras la verificación.</p>
           </div>
         <form id="mainForm" class="space-y-4 rounded-2xl border border-sand-300 bg-white/60 p-5 shadow-sm sm:p-6" novalidate>
-          <fieldset>
+          <fieldset class="reg-extra">
             <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué quieres hacer?</legend>
             <div class="grid gap-2 text-sm sm:grid-cols-3">
               <label class="cursor-pointer">
@@ -766,7 +830,7 @@
                 <label for="bizCat" class="mb-1.5 block text-sm font-semibold text-soil-800">Categoría</label>
                 <select id="bizCat" class="field"></select>
               </div>
-              <div>
+              <div class="reg-extra">
                 <label for="bizRegion" class="mb-1.5 block text-sm font-semibold text-soil-800">Región</label>
                 <select id="bizRegion" class="field"></select>
               </div>
@@ -776,12 +840,12 @@
                 <label for="bizComuna" class="mb-1.5 block text-sm font-semibold text-soil-800">Comuna</label>
                 <input id="bizComuna" maxlength="60" placeholder="Ej: Ñuñoa" class="field" />
               </div>
-              <div>
+              <div class="reg-extra">
                 <label for="bizAddress" class="mb-1.5 block text-sm font-semibold text-soil-800">Dirección <span class="font-normal text-soil-600">(opcional)</span></label>
                 <input id="bizAddress" maxlength="120" placeholder="Calle y número" class="field" />
               </div>
             </div>
-            <div>
+            <div id="pickBlock" class="reg-extra">
               <div class="mb-1.5 flex items-end justify-between gap-3">
                 <span id="pickLabel" class="block text-sm font-semibold text-soil-800">Ubicación en el mapa</span>
                 <button type="button" id="pickLocate" class="text-xs font-semibold text-moss-700 underline-offset-4 hover:underline">Usar mi ubicación</button>
@@ -794,24 +858,28 @@
                 <label for="bizPhone" class="mb-1.5 block text-sm font-semibold text-soil-800">WhatsApp del negocio <span class="font-normal text-soil-600">(se muestra en la ficha)</span></label>
                 <input id="bizPhone" type="tel" inputmode="tel" maxlength="20" placeholder="+56 9 1234 5678" class="field" />
               </div>
-              <div>
+              <div class="reg-extra">
                 <label for="bizHours" class="mb-1.5 block text-sm font-semibold text-soil-800">Horario <span class="font-normal text-soil-600">(opcional)</span></label>
                 <input id="bizHours" maxlength="80" placeholder="Ej: Lun a Vie 10:00–19:00" class="field" />
               </div>
             </div>
-            <div>
+            <div class="reg-extra">
               <label for="bizOwner" class="mb-1.5 block text-sm font-semibold text-soil-800">Contacto del dueño <span class="font-normal text-soil-600">(privado, no se publica)</span></label>
               <input id="bizOwner" maxlength="120" placeholder="Nombre y celular para verificar la ficha" class="field" />
             </div>
-            <div>
-              <label for="bizStaff" class="mb-1.5 block text-sm font-semibold text-soil-800">¿Buscas personal? <span class="font-normal text-soil-600">(opcional · se publica en tu ficha y en Bici Jobs)</span></label>
+            <div class="reg-extra">
+              <label for="bizStaff" class="mb-1.5 block text-sm font-semibold text-soil-800">¿Buscas personal? <span class="font-normal text-soil-600">(opcional · se publica en tu ficha y en Empleos)</span></label>
               <input id="bizStaff" maxlength="200" placeholder="Ej: mecánico part-time, vendedor fin de semana" class="field" />
             </div>
             <div>
               <label for="bizBrands" class="mb-1.5 block text-sm font-semibold text-soil-800"><i class="i i-tag" aria-hidden="true"></i> Marcas que trabajas <span class="font-normal text-soil-600">(opcional · la principal primero, separadas por coma)</span></label>
               <input id="bizBrands" maxlength="200" list="brandList" placeholder="Ej: Specialized, Fox, Shimano" class="field" />
             </div>
-            <label for="bizFeatured" class="flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
+            <div>
+              <label for="bizWeb" class="mb-1.5 block text-sm font-semibold text-soil-800">Web o Instagram <span class="font-normal text-soil-600">(opcional)</span></label>
+              <input id="bizWeb" maxlength="120" placeholder="tu.cl o @tutaller" class="field" />
+            </div>
+            <label for="bizFeatured" class="reg-extra flex cursor-pointer items-start gap-3 rounded-lg bg-ochre-300/25 p-3 ring-1 ring-ochre-400/60">
               <input id="bizFeatured" type="checkbox" class="mt-0.5 h-4 w-4 accent-[#56743a]" />
               <span class="text-sm text-soil-700"><strong class="font-semibold text-soil-950">Quiero una ficha destacada.</strong> Te enviamos la propuesta comercial con WhatsApp directo, pin destacado y prioridad en búsquedas.</span>
             </label>
@@ -847,7 +915,7 @@
             </div>
           </div>
 
-          <div>
+          <div class="reg-extra">
             <label for="message" class="mb-1.5 block text-sm font-semibold text-soil-800"><span id="messageLabel">Cuéntanos sobre tu negocio</span> <span id="messageOptional" class="font-normal text-soil-600">(opcional)</span></label>
             <textarea id="message" rows="4" maxlength="600" placeholder="Servicios, marcas con las que trabajas, horario…" class="field resize-y"></textarea>
             <p class="mt-1 text-right font-mono text-[11px] text-soil-600"><span id="charCount">0</span>/600</p>
@@ -867,7 +935,7 @@
   </main>
 
   <!-- ============ PUBLICIDAD: RASCACIELOS LATERALES (escritorio) ============ -->
-  <aside class="ad-slot ad-shimmer ad-rail is-left flex-col" data-ad-slot="rail-left" aria-label="Espacio publicitario">
+  <aside class="ad-slot ad-shimmer ad-rail is-left flex-col" data-ad-slot="rail-left" data-feature="publicidad" aria-label="Espacio publicitario">
     <div class="ad-grid" aria-hidden="true"></div>
     <div data-ad-creative class="flex h-full flex-col items-center justify-between px-4 py-5 text-center">
       <span class="ad-label">Publicidad</span>
@@ -879,7 +947,7 @@
       <button type="button" data-plan="pro" data-ad-cta="rail-left" class="w-full rounded-lg bg-brand px-2 py-2 text-[10.5px] font-semibold uppercase tracking-[.12em] text-sand-50 transition hover:bg-brand-600">Activa tu Ficha Pro</button>
     </div>
   </aside>
-  <aside class="ad-slot ad-shimmer ad-rail is-right flex-col" data-ad-slot="rail-right" aria-label="Espacio publicitario">
+  <aside class="ad-slot ad-shimmer ad-rail is-right flex-col" data-ad-slot="rail-right" data-feature="publicidad" aria-label="Espacio publicitario">
     <div class="ad-grid" aria-hidden="true"></div>
     <div data-ad-creative class="flex h-full flex-col items-center justify-between px-4 py-5 text-center">
       <span class="ad-label">Publicidad</span>
@@ -893,7 +961,7 @@
   </aside>
 
   <!-- ============ PUBLICIDAD: FRANJA INFERIOR ============ -->
-  <aside class="ad-slot ad-shimmer border-t border-soil-700" data-ad-slot="footer" aria-label="Espacio publicitario">
+  <aside class="ad-slot ad-shimmer border-t border-soil-700" data-ad-slot="footer" data-feature="publicidad" aria-label="Espacio publicitario">
     <div class="ad-grid" aria-hidden="true"></div>
     <div data-ad-creative class="mx-auto flex min-h-[56px] max-w-6xl items-center gap-3 px-4 py-2.5 sm:px-6">
       <svg viewBox="0 0 32 32" class="h-6 w-6 shrink-0" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#2e7d32"/><g fill="#f6f1e7"><circle class="ad-node" cx="8" cy="8" r="2"/><circle class="ad-node" cx="16" cy="8" r="2"/><circle class="ad-node" cx="24" cy="8" r="2"/><circle class="ad-node" cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="3"/><circle class="ad-node" cx="24" cy="16" r="2"/><circle class="ad-node" cx="8" cy="24" r="2"/><circle class="ad-node" cx="16" cy="24" r="2"/><circle class="ad-node" cx="24" cy="24" r="2"/></g></svg>
@@ -907,15 +975,15 @@
     <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm sm:px-6 md:grid-cols-[1.2fr_2fr]">
       <div>
         <a href="#inicio" class="inline-flex items-center gap-2.5" aria-label="BIKEGRID, inicio"><svg viewBox="0 0 32 32" class="h-9 w-9 shrink-0" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#2e7d32"/><path d="M8 8H24V24H8Z M16 8v2.6 M16 21.4V24 M8 16h2.6 M21.4 16H24" fill="none" stroke="#f6f1e7" stroke-width="1.2" stroke-linecap="round" opacity=".55"/><g fill="#f6f1e7"><circle cx="8" cy="8" r="1.7"/><circle cx="16" cy="8" r="1.7"/><circle cx="24" cy="8" r="1.7"/><circle cx="8" cy="16" r="1.7"/><circle cx="24" cy="16" r="1.7"/><circle cx="8" cy="24" r="1.7"/><circle cx="16" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/></g><circle cx="16" cy="16" r="5.9" fill="none" stroke="#f6f1e7" stroke-width="1.7" stroke-dasharray="1.55 1.54"/><circle cx="16" cy="16" r="4.3" fill="none" stroke="#f6f1e7" stroke-width="1.6"/><circle cx="16" cy="16" r="1.4" fill="#f6f1e7"/></svg><span class="font-display text-2xl uppercase leading-none tracking-[.06em] text-sand-50"><span class="font-normal">Bike</span><span class="font-extrabold text-brand">Grid</span></span></a>
-        <p class="mt-3 max-w-xs text-sand-300">BIKEGRID — La red global de servicios, mapas y comunidad del pedal.</p>
-        <p class="mt-3 inline-flex items-center gap-2 text-xs text-[#8fd18f]"><i class="i i-sprout" aria-hidden="true"></i>Programa Trail Care: 10% de Ficha Pro a los senderos</p>
-        <button type="button" id="privacyLink" class="mt-4 block text-xs text-sand-300/70 underline-offset-4 hover:text-sand-50 hover:underline">Privacidad &amp; Seguridad</button>
+        <p class="mt-3 max-w-sm text-sand-300">BIKEGRID opera este mapa de tiendas, talleres y cerros en Chile.</p>
+        <p class="mt-3 max-w-sm text-sm leading-relaxed">¿Hay un error en una ficha o quieres que la retiremos? <a href="#registrar" data-register="dato" class="font-semibold text-sand-50 underline underline-offset-2">Pide la corrección o el retiro</a>. La revisamos y no la publicamos si nos pides sacarla.</p>
+        <p data-feature="trailCare" class="mt-3 inline-flex items-center gap-2 text-xs text-[#8fd18f]"><i class="i i-sprout" aria-hidden="true"></i>Programa Trail Care: 10% de Ficha Pro a los senderos</p>
+        <button type="button" id="privacyLink" class="mt-4 block text-xs text-sand-300/70 underline-offset-4 hover:text-sand-50 hover:underline">Privacidad</button>
       </div>
-      <nav class="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4" aria-label="Pie de página">
-        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="led led-green" aria-hidden="true"></i>Estado de pistas</p><button type="button" data-trail-view class="mt-2 block text-left hover:text-sand-50">Ver cerros en el mapa</button></div>
-        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-briefcase" aria-hidden="true"></i>Bici Jobs</p><a href="#comunidad" class="mt-2 block text-left hover:text-sand-50">Ofertas de trabajo</a><button type="button" data-post-job="footer" class="mt-2 block text-left hover:text-sand-50">Publicar oferta</button></div>
-        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-badge-check" aria-hidden="true"></i>Directorio Pro</p><button type="button" data-dir-open class="mt-2 block text-left hover:text-sand-50">Directorio completo</button><a href="#anunciate" class="mt-2 block text-left hover:text-sand-50 text-ochre-400">Planes y tarifas</a><button type="button" data-sos="footer" class="mt-2 block text-left hover:text-sand-50">Urgencia GPS</button></div>
-        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-mountain" aria-hidden="true"></i>Shuttles & guías</p><button type="button" data-trip="footer" class="mt-2 block text-left hover:text-sand-50">Planificador de viajes</button><button type="button" data-shuttle="footer" class="mt-2 block text-left hover:text-sand-50">Cupos shuttle</button><button type="button" data-guides-filter="footer" class="mt-2 block text-left hover:text-sand-50">Guías locales</button></div>
+      <nav class="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3" aria-label="Pie de página">
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="led led-green" aria-hidden="true"></i>Estado de cerros</p><button type="button" data-trail-view class="mt-2 block text-left hover:text-sand-50">Ver cerros en el mapa</button></div>
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-briefcase" aria-hidden="true"></i>Empleos</p><a href="#comunidad" class="mt-2 block text-left hover:text-sand-50">Ver ofertas</a><button type="button" data-post-job="footer" class="mt-2 block text-left hover:text-sand-50">Publicar oferta</button></div>
+        <div><p class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.16em] text-sand-50"><i class="i i-store" aria-hidden="true"></i>Para tiendas</p><a href="#anunciate" class="mt-2 block text-left hover:text-sand-50">Planes</a><button type="button" data-dir-open class="mt-2 block text-left hover:text-sand-50">Directorio completo</button></div>
       </nav>
     </div>
   </footer>
@@ -980,9 +1048,9 @@
         <button type="button" id="claimClose" class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
       </div>
       <ul class="mt-4 space-y-3 text-sm">
-        <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-crosshair" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Visibilidad GPS de Urgencias &amp; Repuestos</strong><span class="text-soil-700">Canaliza riders que necesitan solución inmediata el fin de semana.</span></span></li>
-        <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-briefcase" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Bici Jobs Ilimitado</strong><span class="text-soil-700">Publicación directa de ofertas para mecánicos, vendedores y personal especializado.</span></span></li>
-        <li class="flex gap-3"><span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand ring-1 ring-brand/25"><i class="i i-sprout" aria-hidden="true"></i></span><span><strong class="block text-[13px] font-semibold uppercase tracking-[.08em] text-soil-950">Sello Trail Care</strong><span class="text-soil-700">Validación y prestigio comunitario al apoyar los senderos locales.</span></span></li>
+        <li class="flex gap-3"><span class="mt-0.5 text-[#9c6f22]"><i class="i i-check" aria-hidden="true"></i></span><span class="text-soil-800">Apareces primero en tu comuna.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 text-[#9c6f22]"><i class="i i-check" aria-hidden="true"></i></span><span class="text-soil-800">Informe mensual de visitas y clics a tu WhatsApp.</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 text-[#9c6f22]"><i class="i i-check" aria-hidden="true"></i></span><span class="text-soil-800">Avisos de empleo incluidos.</span></li>
       </ul>
       <div class="mt-5 rounded-2xl bg-sand-100 p-3.5 ring-1 ring-sand-300" role="group" aria-labelledby="claimLocalesTitle">
         <p id="claimLocalesTitle" class="font-mono text-[10.5px] font-semibold uppercase tracking-[.18em] text-soil-700">¿Cuántos locales tiene tu negocio?</p>
@@ -991,11 +1059,11 @@
             <span><span class="block text-[11px] font-semibold uppercase tracking-[.14em] text-soil-950">Local único · Ficha Pro</span><span class="block text-xs text-soil-600">GPS de urgencias · Bici Jobs ilimitado · Sello Trail Care</span></span>
             <span class="shrink-0 text-right font-display text-lg font-extrabold uppercase leading-none text-soil-950">$19.990<span class="block font-sans text-[10px] font-semibold normal-case text-soil-600">CLP / mes</span></span>
           </button>
-          <button type="button" data-locales="2" aria-pressed="false" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
+          <button type="button" data-locales="2" data-feature="planesExtendidos" aria-pressed="false" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
             <span><span class="block text-[11px] font-semibold uppercase tracking-[.14em] text-soil-950">2° local · Segunda sucursal</span><span class="block text-xs text-soil-600">50% dcto. en la segunda Ficha Pro</span></span>
             <span class="shrink-0 text-right font-display text-lg font-extrabold uppercase leading-none text-soil-950">+ $9.990<span class="block font-sans text-[10px] font-semibold normal-case text-soil-600">CLP / mes</span></span>
           </button>
-          <button type="button" data-locales="3" aria-pressed="false" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
+          <button type="button" data-locales="3" data-feature="planesExtendidos" aria-pressed="false" class="locales-opt flex items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-left ring-1 ring-sand-300 transition">
             <span><span class="block text-[11px] font-semibold uppercase tracking-[.14em] text-soil-950">Plan Enterprise · 3 o más</span><span class="block text-xs text-soil-600">Plan corporativo consolidado con atención personalizada</span></span>
             <span class="shrink-0 text-right font-display text-lg font-extrabold uppercase leading-none text-soil-950">A medida</span>
           </button>
@@ -1009,7 +1077,7 @@
         <a id="claimWhatsApp" href="#" target="_blank" rel="noopener" class="btn-wa-pro py-3.5 text-[15px]" hidden><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Escribir por WhatsApp</a>
         <a id="claimForm" href="#registrar" class="rounded-xl bg-soil-950 py-3 text-center text-sm font-semibold text-sand-50 transition hover:bg-soil-800">Enviar solicitud por formulario</a>
       </div>
-      <p class="mt-4 rounded-lg bg-moss-600/10 px-3 py-2 text-xs leading-relaxed text-moss-700 ring-1 ring-moss-600/25"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
+      <p data-feature="trailCare" class="mt-4 rounded-lg bg-moss-600/10 px-3 py-2 text-xs leading-relaxed text-moss-700 ring-1 ring-moss-600/25"><i class="i i-sprout" aria-hidden="true"></i> <strong class="font-semibold">Programa BIKEGRID Trail Care:</strong> El 10% de los ingresos por suscripciones Ficha Pro se destina directamente a la adquisición de herramientas e insumos para los mantenedores locales de senderos y paleros.</p>
       <p class="mt-3 text-center text-xs text-soil-600"><a href="#anunciate" data-close-claim class="font-semibold text-moss-700 underline underline-offset-2">Ver planes y tarifas</a> · Para ciclistas, BIKEGRID es gratis.</p>
     </div>
   </dialog>
@@ -1018,8 +1086,8 @@
   <dialog id="gateDialog" class="w-[min(92vw,26rem)] rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70" aria-labelledby="gateTitle" aria-describedby="gateSubtitle">
     <form id="gateForm" class="space-y-4 p-6" novalidate>
       <div>
-        <h2 id="gateTitle" class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-soil-950">Desbloqueá el contacto</h2>
-        <p id="gateSubtitle" class="mt-1 text-sm leading-relaxed text-soil-700">El mapa es gratis. Dejá tu correo para ver WhatsApp y guardar spots.</p>
+        <h2 id="gateTitle" class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight text-soil-950">Guarda este spot</h2>
+        <p id="gateSubtitle" class="mt-1 text-sm leading-relaxed text-soil-700">Deja tu correo para guardar este lugar. El WhatsApp de la tienda se abre directo, sin formulario.</p>
       </div>
       <div>
         <label for="gateEmail" class="mb-1.5 block text-sm font-semibold text-soil-800">Email</label>
@@ -1028,7 +1096,7 @@
         <p id="gateEmailError" class="mt-1.5 text-sm font-medium text-red-800" hidden></p>
       </div>
       <fieldset aria-describedby="gateChipsError">
-        <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué pedaleás?</legend>
+        <legend class="mb-2 text-sm font-semibold text-soil-800">¿Qué pedaleas?</legend>
         <div id="gateChips" class="flex flex-wrap gap-2">
           <button type="button" data-interest="mtb_enduro" aria-pressed="false" class="gate-chip">MTB / Enduro</button>
           <button type="button" data-interest="ebike" aria-pressed="false" class="gate-chip">e-bike</button>
@@ -1059,7 +1127,7 @@
         <p><strong class="text-soil-950">Qué publicamos de cada negocio:</strong> nombre, categoría, ubicación, comuna, dirección, WhatsApp, horario, descripción y, si lo indica, qué personal busca.</p>
         <p><strong class="text-soil-950">Qué no publicamos:</strong> el contacto del dueño que se deja en el registro. Solo lo ve el equipo editorial para verificar la ficha.</p>
         <p><strong class="text-soil-950">Cómo lo protegemos:</strong> las fichas se guardan en una base de datos con reglas de acceso. Cualquiera puede enviar una solicitud, pero solo el equipo editorial puede aprobar, editar o eliminar fichas.</p>
-        <p><strong class="text-soil-950">Tu correo:</strong> si desbloqueás el contacto, guardamos tu correo y lo que pedaleás para enviarte novedades y spots útiles. No lo publicamos ni lo vendemos, y podés pedir que lo borremos.</p>
+        <p><strong class="text-soil-950">Tu correo:</strong> si dejas tu correo para guardar un spot, guardamos tu correo y lo que pedaleas para enviarte novedades y spots útiles. No lo publicamos ni lo vendemos, y puedes pedir que lo borremos.</p>
         <p><strong class="text-soil-950">Estadísticas de fichas:</strong> contamos de forma anónima las visitas y los clics (WhatsApp, "Cómo llegar") que recibe cada ficha, para entregar informes a los negocios. No guardamos quién hizo el clic.</p>
         <p><strong class="text-soil-950">En tu navegador:</strong> no usamos cookies de seguimiento; recordamos la capa de mapa, tus spots guardados y si ya desbloqueaste el contacto. El mapa y las tipografías se cargan desde servicios externos (Esri, Google Fonts).</p>
         <p><strong class="text-soil-950">Corregir o eliminar una ficha:</strong> <a href="#registrar" data-register="dato" class="font-semibold text-moss-700 underline" id="privacyContact">envíanos un dato</a> con el nombre del negocio y lo revisamos.</p>
@@ -1131,7 +1199,7 @@
       <div class="border-b border-sand-300 px-4 pb-3 pt-4 sm:px-6">
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0">
-            <h2 id="sosTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950"><i class="i i-siren" aria-hidden="true"></i> Repuesto / Taller de urgencia</h2>
+            <h2 id="sosTitle" class="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-soil-950"><i class="i i-siren" aria-hidden="true"></i> Urgencia</h2>
             <p id="sosWhere" class="mt-1 truncate text-sm text-soil-600" aria-live="polite">Buscando tu ubicación…</p>
           </div>
           <button type="button" data-close class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand-100 text-soil-700 hover:bg-sand-200" aria-label="Cerrar"><i class="i i-x" aria-hidden="true"></i></button>
@@ -1582,7 +1650,7 @@
   </dialog>
 
   <!-- Flotante móvil del configurador -->
-  <button type="button" id="tripFab" data-trip="fab" class="fixed bottom-4 right-4 z-[1500] inline-flex items-center gap-1.5 rounded-full bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-xl ring-2 ring-ochre-400/80 md:hidden" style="margin-bottom:env(safe-area-inset-bottom)"><i class="i i-map" aria-hidden="true"></i> Arma tu Salida / Viaje</button>
+  <button type="button" id="tripFab" data-trip="fab" data-feature="planificadorFab" class="fixed bottom-4 right-4 z-[1500] inline-flex items-center gap-1.5 rounded-full bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 shadow-xl ring-2 ring-ochre-400/80 md:hidden" style="margin-bottom:env(safe-area-inset-bottom)"><i class="i i-map" aria-hidden="true"></i> Arma tu salida</button>
 
   <!-- Configurador por pasos: arma tu salida / viaje -->
   <dialog id="tripDialog" class="w-[min(94vw,38rem)] overflow-hidden rounded-2xl bg-sand-50 p-0 text-ink shadow-2xl backdrop:bg-soil-950/70 backdrop:backdrop-blur-[2px]" aria-labelledby="tripTitle">
@@ -2150,75 +2218,74 @@
     }
 
     let drawerPoint = null;
+
+    // Abierto/cerrado ahora, hora de Chile. Si el horario no se puede leer, se omite (no dice "Por confirmar").
+    function abiertoAhora(horario) {
+      const t = norm(String(horario || '')).replace(/[–—]/g, '-');
+      if (!t) return null;
+      const days = { lun: 1, mar: 2, mie: 3, jue: 4, vie: 5, sab: 6, dom: 0 };
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Santiago', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+      const wk = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[parts.find((p) => p.type === 'weekday').value];
+      const now = (+parts.find((p) => p.type === 'hour').value) * 60 + (+parts.find((p) => p.type === 'minute').value);
+      const dayRe = '(lun(?:es)?|mar(?:tes)?|mie(?:rcoles)?|jue(?:ves)?|vie(?:rnes)?|sab(?:ado)?|dom(?:ingo)?)';
+      const re = new RegExp(`${dayRe}\\s*(?:a|-|al)\\s*${dayRe}[^\\d]{0,24}(\\d{1,2})[:h.](\\d{2})?\\s*(?:a|-|al|hasta)\\s*(\\d{1,2})[:h.](\\d{2})?`, 'g');
+      let m, any = false, open = false;
+      while ((m = re.exec(t))) {
+        any = true;
+        const a = days[m[1].slice(0, 3)];
+        const b = days[m[2].slice(0, 3)];
+        if (a == null || b == null) continue;
+        const start = (+m[3]) * 60 + (+m[4] || 0);
+        let end = (+m[5]) * 60 + (+m[6] || 0);
+        const inDay = a <= b ? wk >= a && wk <= b : wk >= a || wk <= b;
+        if (end <= start) end += 1440;
+        const n = now < start && end > 1440 ? now + 1440 : now;
+        if (inDay && n >= start && n < end) open = true;
+      }
+      return any ? open : null;
+    }
+
     function drawerHtml(p) {
       if (p.categoria === 'guias' && typeof guideDrawerHtml === 'function') return guideDrawerHtml(p); // perfil de guía (módulo Guías)
       const loading = p.detailsLoaded === false && !p.detailsError;
       const failed = p.detailsLoaded === false && p.detailsError;
-      const skel = (w) => `<span class="inline-block h-3.5 ${w} animate-pulse rounded bg-sand-200 align-middle" aria-hidden="true"></span>`;
       const c = CATEGORIES[p.categoria];
-      const status = [
-        isPro(p) ? '<span class="badge-pro px-2.5 py-1 text-xs"><i class="i i-badge-check" aria-hidden="true"></i> Verificado</span>' : '',
-        p.amigoTrail ? '<span class="rounded-full bg-moss-600 px-2.5 py-1 text-xs font-bold text-sand-50">Amiga del Trail</span>' : '',
-      ].join('');
+      const extra = window.BIKEGRID_CONFIG?.FEATURES?.fichaDetalleExtra;
+      const oldCta = window.BIKEGRID_CONFIG?.FEATURES?.ctaFichaProAntigua;
       const place = [p.comuna, REGIONES[p.region].label].filter(Boolean).map(esc).join(' · ');
+      const open = !loading && p.horario ? abiertoAhora(p.horario) : null;
+      const openBadge = open == null ? '' : `<p class="mt-2 inline-flex items-center gap-2 text-sm font-semibold ${open ? 'text-moss-700' : 'text-soil-700'}"><i class="led ${open ? 'led-green' : 'led-red'}" aria-hidden="true"></i>${open ? 'Abierto ahora' : 'Cerrado ahora'}</p>`;
 
-      const row = (label, value, missing) => `
-        <div class="flex gap-3 py-2.5">
-          <dt class="w-24 shrink-0 font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">${label}</dt>
-          <dd class="text-sm ${missing ? 'text-soil-600/80 italic' : 'text-ink'}">${value}</dd>
-        </div>`;
-
-      const contactBlock = loading
-        ? `<div class="h-[52px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
+      const waBtn = loading
+        ? `<div class="mt-4 h-[52px] animate-pulse rounded-xl bg-sand-200" aria-label="Cargando contacto"></div>`
         : failed
-        ? `<p class="rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el contacto. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
-        : p.whatsapp && isPro(p)
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="btn-wa-pro py-3.5 text-[15px]"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> Contactar por WhatsApp</a>`
+        ? `<p class="mt-4 rounded-xl bg-sand-100 p-3.5 text-sm text-soil-700 ring-1 ring-sand-300">No pudimos cargar el contacto. <button type="button" data-retry-details class="font-semibold text-moss-700 underline">Reintentar</button></p>`
         : p.whatsapp
-        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] py-3.5 font-semibold text-white shadow-sm transition hover:bg-[#18733f]">${WA_ICON} Enviar WhatsApp</a>`
-        : `<a href="#registrar" data-register="destacada" class="block rounded-xl border border-dashed border-ochre-500/60 bg-ochre-300/15 p-3.5 text-sm text-soil-700 transition hover:border-ochre-500">
-             <strong class="block text-soil-950">¿Es tu negocio?</strong>
-             Agrega tu WhatsApp, horario y dirección con una ficha destacada <span class="text-ochre-600">→</span>
-           </a>`;
+        ? `<a href="${waUrl(p)}" target="_blank" rel="noopener" data-gate="whatsapp" data-ref="${esc(p.id)}" class="${isPro(p) ? 'btn-wa-pro' : 'flex items-center justify-center gap-2 rounded-xl bg-[#1f8a4c] font-semibold text-white shadow-sm transition hover:bg-[#18733f]'} mt-4 py-3.5 text-[15px]"><span aria-hidden="true"><i class="i i-message" aria-hidden="true"></i></span> WhatsApp</a>`
+        : '';
 
-      // Alerta Bici Jobs: el negocio busca personal
       const jobBlock = p.necesidad ? `
         <div class="mt-4 rounded-xl bg-ochre-300/30 p-3.5 ring-1 ring-ochre-500/50">
-          <p class="text-sm font-bold text-soil-950"><i class="i i-briefcase" aria-hidden="true"></i> Buscando personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
-          <button type="button" data-apply="ficha-${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline"><i class="i i-mail" aria-hidden="true"></i> Postular a este trabajo →</button>
+          <p class="text-sm font-bold text-soil-950"><i class="i i-briefcase" aria-hidden="true"></i> Busca personal: <span class="font-semibold text-soil-800">${esc(p.necesidad)}</span></p>
+          <button type="button" data-apply="ficha-${esc(p.id)}" class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-moss-700 hover:underline">Postular a este trabajo</button>
         </div>` : '';
 
       return `
-        <div class="flex flex-wrap items-center gap-2 pr-10">
-          <span class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-sand-50" style="background:${c.color}">${svgIcon(p.categoria, 'h-3.5 w-3.5')}${c.short}</span>
-          ${status}
-        </div>
-        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '<i class="i i-star" aria-hidden="true"></i> Guardado' : '<i class="i i-star-o" aria-hidden="true"></i> Guardar spot'}</button>
-        <h3 id="drawerTitle" class="mt-3 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
-        <p class="mt-1.5 text-sm text-soil-600">${place}</p>
-        ${typeof trailDrawerBlock === 'function' ? trailDrawerBlock(p) : ''}
-        ${jobBlock}
-        ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
+        <h3 id="drawerTitle" class="pr-10 font-display text-[1.7rem] font-extrabold uppercase leading-none tracking-tight text-soil-950 [text-wrap:balance]">${esc(p.nombre)}</h3>
+        <p class="mt-2 text-sm text-soil-700">${esc(c.label)}${place ? ` · ${place}` : ''}${isPro(p) ? ' · <span class="font-semibold text-soil-950">Verificado</span>' : ''}</p>
+        ${openBadge}
+        ${waBtn}
+        <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="mt-2 flex items-center justify-center gap-2 rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200"><i class="i i-pin" aria-hidden="true"></i> Cómo llegar</a>
         ${typeof brandBlock === 'function' ? brandBlock(p) : ''}
-
-        <dl class="mt-4 divide-y divide-sand-200 border-y border-sand-200">
-          ${row('Dirección', loading ? skel('w-40') : p.direccion ? esc(p.direccion) : 'Por confirmar', !loading && !p.direccion)}
-          ${row('Horario', loading ? skel('w-28') : p.horario ? esc(p.horario) : 'Por confirmar', !loading && !p.horario)}
-          ${row('Coordenadas', `<span class="font-mono text-xs tabular-nums">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</span>`)}
-        </dl>
-
+        ${!loading && p.horario ? `<p class="mt-3 text-sm text-soil-800"><span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-soil-600">Horario</span><span class="mt-0.5 block">${esc(p.horario)}</span></p>` : ''}
+        ${typeof trailDrawerBlock === 'function' ? trailDrawerBlock(p) : ''}
+        ${p.descripcion ? `<p class="mt-3 text-sm leading-relaxed text-soil-700">${esc(p.descripcion)}</p>` : ''}
+        ${extra && p.direccion ? `<p class="mt-2 text-sm text-soil-700">${esc(p.direccion)}</p>` : ''}
+        ${extra ? `<p class="mt-1 font-mono text-[11px] text-soil-600">${p.coords[0].toFixed(4)}, ${p.coords[1].toFixed(4)}</p><a href="${searchUrl(p)}" target="_blank" rel="noopener" class="mt-2 inline-block text-sm font-semibold text-moss-700 underline">Ver en Google</a>` : ''}
+        ${jobBlock}
         ${typeof socialBlock === 'function' ? socialBlock(p) : ''}
-
-        <div class="mt-5 grid gap-2.5">
-          ${contactBlock}
-          <div class="grid grid-cols-2 gap-2.5">
-            <a href="${directionsUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition ${p.whatsapp ? 'bg-sand-100 text-soil-950 ring-1 ring-sand-300 hover:bg-sand-200' : 'bg-moss-600 text-sand-50 hover:bg-moss-700'}">
-              <span aria-hidden="true"><i class="i i-pin" aria-hidden="true"></i></span> Cómo llegar
-            </a>
-            <a href="${searchUrl(p)}" target="_blank" rel="noopener" class="flex items-center justify-center rounded-xl bg-sand-100 py-3 text-sm font-semibold text-soil-950 ring-1 ring-sand-300 transition hover:bg-sand-200">Ver en Google</a>
-          </div>
-        </div>
-        ${isPro(p) ? '' : `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 transition hover:text-soil-950"><i class="i i-key" aria-hidden="true"></i> ¿Eres el dueño? Activa tu Ficha Pro</button>`}`;
+        <button type="button" data-gate="guardar" data-ref="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" class="save-btn mt-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${isSaved(p.id) ? 'bg-ochre-400 text-soil-950 ring-ochre-500' : 'bg-sand-50 text-soil-800 ring-sand-300 hover:ring-soil-600'}">${isSaved(p.id) ? '<i class="i i-star" aria-hidden="true"></i> Guardado' : '<i class="i i-star-o" aria-hidden="true"></i> Guardar spot'}</button>
+        ${!isPro(p) && oldCta ? `<button type="button" data-claim="${esc(p.id)}" class="mt-4 w-full rounded-lg py-2 text-center text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4">¿Eres el dueño? Activa tu Ficha Pro</button>` : ''}`;
     }
 
     function openDrawer(p) {
@@ -2538,15 +2605,30 @@
 
     // --- Búsqueda ---
     const searchInput = document.getElementById('search');
+    const searchWhere = document.getElementById('searchWhere');
     const resultsEl = document.getElementById('searchResults');
     let searchHits = [];
+    const WHAT_CATS = [
+      [/taller|mecan/, 'talleres'],
+      [/tienda|shop|bici/, 'tiendas'],
+      [/cerro|sendero|bikepark|pista/, 'senderos'],
+      [/guia|instructor/, 'guias'],
+      [/shuttle|tour/, 'tours'],
+      [/clase|escuela/, 'clases'],
+    ];
     function hideResults() { resultsEl.classList.add('hidden'); searchInput.setAttribute('aria-expanded', 'false'); }
     function runSearch() {
       const q = norm(searchInput.value.trim());
-      if (!q) { searchHits = []; return hideResults(); }
-      searchHits = puntos.filter((p) =>
-        norm(`${p.nombre} ${p.comuna} ${REGIONES[p.region].label} ${CATEGORIES[p.categoria].label} ${typeof brandText === 'function' ? brandText(p) : ''}`).includes(q))
-        .sort((a, b) => isPro(b) - isPro(a)); // fichas PRO primero
+      const where = norm(searchWhere.value.trim());
+      if (!q && !where) { searchHits = []; return hideResults(); }
+      const catHit = WHAT_CATS.find(([re]) => re.test(q));
+      searchHits = puntos.filter((p) => {
+        const blob = norm(`${p.nombre} ${CATEGORIES[p.categoria].label} ${CATEGORIES[p.categoria].short} ${typeof brandText === 'function' ? brandText(p) : ''}`);
+        const loc = norm(`${p.comuna} ${REGIONES[p.region].label}`);
+        const whatOk = !q || blob.includes(q) || (catHit && p.categoria === catHit[1] && (q.length < 18 || blob.includes(q)));
+        const whereOk = !where || loc.includes(where);
+        return whatOk && whereOk;
+      }).sort((a, b) => isPro(b) - isPro(a)); // fichas PRO primero
       resultsEl.innerHTML = searchHits.length
         ? searchHits.map((p, i) => `<li role="option"><button type="button" data-i="${i}" class="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-sand-100 focus:bg-sand-100 focus:outline-none">
             <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full" style="background:${CATEGORIES[p.categoria].color}">${svgIcon(p.categoria, 'h-3 w-3', '#f6f1e7')}</span>
@@ -2564,7 +2646,12 @@
       openDrawer(p);
     }
     searchInput.addEventListener('input', debounce(runSearch, 160));
+    searchWhere.addEventListener('input', debounce(runSearch, 160));
     searchInput.addEventListener('focus', runSearch);
+    searchWhere.addEventListener('focus', runSearch);
+    searchWhere.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); runSearch(); if (searchHits[0]) pickResult(searchHits[0]); }
+    });
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); runSearch(); if (searchHits[0]) pickResult(searchHits[0]); } // sin esperar el debounce
       if (e.key === 'ArrowDown') { e.preventDefault(); resultsEl.querySelector('button')?.focus(); }
@@ -2654,9 +2741,13 @@
       const el = e.target.closest('[data-gate]');
       if (!el) return;
       const action = { type: el.dataset.gate, url: el.getAttribute('href'), ref: el.dataset.ref || null };
+      // WhatsApp y postular son directos. El correo queda solo para Guardar spot.
+      if (action.type !== 'guardar') {
+        if (action.type === 'whatsapp' || action.type === 'postular') track('whatsapp_clicked', { accion: action.type, ref: action.ref });
+        return;
+      }
       if (isUnlocked()) {
-        if (action.type === 'guardar') { toast(runSave(action.ref) ? 'Spot guardado ' : 'Spot quitado de guardados'); }
-        else track('whatsapp_clicked_after_unlock', { accion: action.type, ref: action.ref }); // el enlace se abre normal
+        toast(runSave(action.ref) ? 'Spot guardado' : 'Spot quitado de guardados');
         return;
       }
       e.preventDefault();
@@ -2704,8 +2795,8 @@
       const email = gate.email.value.trim().toLowerCase();
       const intereses = selectedInterests();
       let ok = true;
-      if (!EMAIL_RE.test(email) || email.length > 254) { showErr(gate.emailErr, gate.email, 'Revisá el correo: debe tener el formato nombre@dominio.cl'); ok = false; }
-      if (!intereses.length) { showErr(gate.chipsErr, null, 'Elegí al menos una opción.'); ok = false; }
+      if (!EMAIL_RE.test(email) || email.length > 254) { showErr(gate.emailErr, gate.email, 'Revisa el correo: debe tener el formato nombre@dominio.cl'); ok = false; }
+      if (!intereses.length) { showErr(gate.chipsErr, null, 'Elige al menos una opción.'); ok = false; }
       if (!ok) return (gate.email.getAttribute('aria-invalid') === 'true' ? gate.email : gate.chips.querySelector('button')).focus();
       if (document.getElementById('gateWebsite').value) return; // bot
 
@@ -3375,7 +3466,7 @@
       chip.type = 'button';
       chip.dataset.trailView = '';
       chip.className = 'inline-flex items-center gap-2 rounded-full bg-sand-50 px-3.5 py-2 text-sm font-semibold text-soil-800 shadow-sm ring-1 ring-sand-300 transition hover:ring-soil-600';
-      chip.innerHTML = '<i class="led led-green" aria-hidden="true"></i> Estado de pistas';
+      chip.innerHTML = '<i class="led led-green" aria-hidden="true"></i> Estado de cerros';
       shortcutsEl.insertBefore(chip, resetBtn);
     })();
 
@@ -3955,9 +4046,9 @@
       const items = allJobs().filter((j) => jobFilter === 'all' || j.type === jobFilter);
       const hasWork = items.some((j) => j.type === 'trabajo');
       const empty = `<li class="rounded-2xl border border-dashed border-sand-300 p-6 text-center">
-          <p class="font-semibold text-soil-950">${jobFilter === 'trabajo' || jobFilter === 'all' ? 'Aún no hay ofertas de trabajo publicadas.' : 'No hay avisos en esta categoría todavía.'}</p>
-          <p class="mt-1 text-sm text-soil-600">¿Tu taller o tienda busca personal? Publica tu aviso y recibe postulaciones por WhatsApp.</p>
-          <button type="button" data-post-job="vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 hover:bg-soil-800"><i class="i i-briefcase" aria-hidden="true"></i> Publicar Oferta de Trabajo</button>
+          <p class="font-semibold text-soil-950">${jobFilter === 'trabajo' || jobFilter === 'all' ? 'Todavía no hay ofertas publicadas.' : 'No hay avisos en esta categoría todavía.'}</p>
+          <p class="mt-1 text-sm text-soil-600">Si tu tienda o taller busca a alguien, puedes dejar la primera oferta.</p>
+          <button type="button" data-post-job="vacio" class="mt-3 rounded-xl bg-soil-950 px-4 py-2.5 text-sm font-bold text-sand-50 hover:bg-soil-800">Publica la primera, gratis</button>
         </li>`;
       jobListEl.innerHTML = items.length
         ? items.map((j) => `<li>${j.type === 'trabajo' ? jobCard(j) : communityCard(j)}</li>`).join('')
@@ -4685,9 +4776,19 @@
       dato:    { label: 'Detalle',                    optional: false, placeholder: 'Ej: el sendero X está cerrado por derrumbe desde el lunes', submit: 'Enviar dato' },
     };
     const currentKind = () => form.querySelector('input[name="kind"]:checked').value;
+    const featureOn = (name) => window.BIKEGRID_CONFIG?.FEATURES?.[name] !== false;
+    function applyRegistroMode() {
+      const simple = !featureOn('registroExtendido');
+      const correcting = form.dataset.correccion === '1' && currentKind() !== 'negocio';
+      document.querySelectorAll('.reg-extra').forEach((el) => {
+        if (el.id === 'pickBlock' && form.dataset.needPin === '1') { el.hidden = false; return; }
+        el.hidden = simple && !correcting;
+      });
+    }
     function syncKind() {
       const kind = currentKind();
       form.querySelectorAll('[data-kind]').forEach((el) => { el.hidden = !el.dataset.kind.split(' ').includes(kind); });
+      applyRegistroMode();
       const c = COPY[kind];
       $('messageLabel').textContent = c.label;
       $('messageOptional').hidden = !c.optional;
@@ -4700,7 +4801,7 @@
         : supabaseClient
           ? 'Tu solicitud queda pendiente hasta que el equipo de BIKEGRID la revise.'
           : 'Registro no disponible por ahora: falta conectar la base de datos.';
-      if (kind === 'negocio') requestAnimationFrame(initPickMap);
+      if (kind === 'negocio' && !$('pickBlock').hidden) requestAnimationFrame(initPickMap);
     }
     form.querySelectorAll('input[name="kind"]').forEach((r) => r.addEventListener('change', syncKind));
     $('message').addEventListener('input', () => ($('charCount').textContent = $('message').value.length));
@@ -4712,6 +4813,8 @@
       if (!a) return;
       const mode = a.dataset.register;
       const kind = mode === 'destacada' ? 'negocio' : mode;
+      form.dataset.correccion = kind === 'dato' ? '1' : '';
+      if (kind === 'dato') form.dataset.needPin = '';
       $(`kind-${kind}`).checked = true;
       if (kind === 'negocio') {
         if (mode === 'destacada') $('bizFeatured').checked = true;
@@ -4765,6 +4868,38 @@
 
     form.addEventListener('input', () => { $('formSuccess').hidden = true; });
 
+    // Centro aproximado de comunas frecuentes. Si no está, se usa un pin ya publicado en esa comuna.
+    const COMUNA_CENTROS = [
+      ['santiago', 'metropolitana', -33.4489, -70.6693], ['nunoa', 'metropolitana', -33.4569, -70.5978],
+      ['providencia', 'metropolitana', -33.4314, -70.6093], ['las condes', 'metropolitana', -33.4088, -70.5670],
+      ['vitacura', 'metropolitana', -33.3905, -70.5720], ['lo barnechea', 'metropolitana', -33.3512, -70.5180],
+      ['maipu', 'metropolitana', -33.5110, -70.7580], ['la florida', 'metropolitana', -33.5225, -70.5980],
+      ['puente alto', 'metropolitana', -33.6117, -70.5758], ['san bernardo', 'metropolitana', -33.5920, -70.6990],
+      ['recoleta', 'metropolitana', -33.4060, -70.6400], ['independencia', 'metropolitana', -33.4150, -70.6650],
+      ['valparaiso', 'valparaiso', -33.0472, -71.6127], ['vina del mar', 'valparaiso', -33.0245, -71.5518],
+      ['quilpue', 'valparaiso', -33.0475, -71.4425], ['concon', 'valparaiso', -32.9270, -71.5160],
+      ['concepcion', 'biobio', -36.8270, -73.0503], ['talcahuano', 'biobio', -36.7248, -73.1169],
+      ['los angeles', 'biobio', -37.4697, -72.3537], ['temuco', 'araucania', -38.7359, -72.5904],
+      ['pucon', 'araucania', -39.2723, -71.9776], ['villarrica', 'araucania', -39.2852, -72.2277],
+      ['valdivia', 'losrios', -39.8142, -73.2459], ['puerto montt', 'loslagos', -41.4693, -72.9424],
+      ['puerto varas', 'loslagos', -41.3195, -72.9854], ['osorno', 'loslagos', -40.5739, -73.1335],
+      ['chillan', 'nuble', -36.6063, -72.1034], ['pinto', 'nuble', -36.7000, -71.8900],
+      ['rancagua', 'ohiggins', -34.1708, -70.7444], ['talca', 'maule', -35.4264, -71.6554],
+      ['curico', 'maule', -34.9828, -71.2394], ['la serena', 'coquimbo', -29.9027, -71.2519],
+      ['coquimbo', 'coquimbo', -29.9533, -71.3395], ['antofagasta', 'antofagasta', -23.6509, -70.3975],
+      ['calama', 'antofagasta', -22.4544, -68.9294], ['iquique', 'tarapaca', -20.2202, -70.1394],
+      ['arica', 'arica', -18.4783, -70.3126], ['copiapo', 'atacama', -27.3668, -70.3323],
+      ['coyhaique', 'aysen', -45.5752, -72.0662], ['punta arenas', 'magallanes', -53.1638, -70.9171],
+    ];
+    function resolveComuna(name) {
+      const q = norm(name);
+      const hit = (typeof puntos !== 'undefined' ? puntos : []).find((p) => p.comuna && norm(p.comuna) === q);
+      if (hit) return { region: hit.region, lat: hit.coords[0], lng: hit.coords[1] };
+      const seed = COMUNA_CENTROS.find(([n]) => n === q);
+      if (seed) return { region: seed[1], lat: seed[2], lng: seed[3] };
+      return null;
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if ($('website').value) return; // bot
@@ -4776,13 +4911,28 @@
         const comuna = $('bizComuna').value.trim();
         const phone = normalizePhone($('bizPhone').value);
         const owner = $('bizOwner').value.trim();
-        if (nombre.length < 3) return showError('Escribe el nombre de tu negocio o proyecto.');
+        const simple = !featureOn('registroExtendido');
+        if (nombre.length < 3) return showError('Escribe el nombre de tu negocio.');
         if (comuna.length < 3) return showError('Indica la comuna donde está tu negocio.');
-        if (!pickedLatLng) return showError('Marca la ubicación de tu negocio en el mapa del formulario.');
+        if (simple && (!phone || phone.length < 8 || phone.length > 15)) return showError('Escribe el WhatsApp del negocio, con formato +56 9 1234 5678.');
+        if (!simple && !pickedLatLng) return showError('Marca la ubicación de tu negocio en el mapa del formulario.');
         if (phone && (phone.length < 8 || phone.length > 15)) return showError('Revisa el WhatsApp: usa el formato +56 9 1234 5678.');
-        if (owner.length < 6) return showError('Deja un contacto (nombre y celular) para verificar tu ficha. No se publica.');
+        if (!simple && owner.length < 6) return showError('Deja un contacto (nombre y celular) para verificar tu ficha. No se publica.');
+        if (simple && !pickedLatLng) {
+          const loc = resolveComuna(comuna);
+          if (!loc) {
+            form.dataset.needPin = '1';
+            applyRegistroMode();
+            requestAnimationFrame(initPickMap);
+            return showError('No ubicamos esa comuna. Márcala en el mapa para terminar el registro.');
+          }
+          $('bizRegion').value = loc.region;
+          pickedLatLng = { lat: loc.lat, lng: loc.lng };
+        }
         if (!supabaseClient) return showError('El registro de negocios no está disponible por ahora. Inténtalo más tarde.');
 
+        const web = $('bizWeb').value.trim();
+        const descripcion = [body, web ? `Web o Instagram: ${web}` : ''].filter(Boolean).join(' · ').slice(0, 600) || null;
         const nuevoRegistro = {
           nombre_comercio: nombre,
           categoria: $('bizCat').value,
@@ -4793,8 +4943,8 @@
           longitud: +pickedLatLng.lng.toFixed(6),
           whatsapp: phone || null,
           horario: $('bizHours').value.trim() || null,
-          descripcion: body || null,
-          contacto_admin: owner,
+          descripcion,
+          contacto_admin: owner || (phone ? `WhatsApp ${phone}` : null),
           necesidad_personal: $('bizStaff').value.trim() || null,
           marcas_sugeridas: $('bizBrands').value.split(',').map((x) => x.trim()).filter(Boolean).join(', ').slice(0, 200) || null,
           solicita_destacado: $('bizFeatured').checked,
@@ -5047,10 +5197,12 @@
       pro:      { name: 'Plan Tienda / Taller PRO', price: () => '$19.990 CLP/mes por local; 2° local + $9.990' },
       enterprise: { name: 'Plan Enterprise (3 o más locales)', price: () => 'plan a medida' },
       auspicio: { name: 'Auspicios y Banners Regionales', price: () => '' },
+      otros:    { name: 'Otros planes', price: () => 'segundo local, Enterprise, Guía PRO o auspicios' },
     };
     // --- Botones de plan → WhatsApp comercial con el plan indicado ---
     const planMessage = (key) => {
       const p = PLANS[key];
+      if (key === 'otros') return 'Hola BIKEGRID. Quiero conversar por *Otros planes* (segundo local, Enterprise, Guía PRO o auspicios).\n• Nombre del negocio: \n• Comuna: \n• Qué plan te interesa: ';
       if (key === 'auspicio') return 'Hola BIKEGRID. Represento a una marca de bicis, repuestos o equipamiento y me interesan los *Auspicios y Banners Regionales*.\n• Marca: \n• Regiones de interés: \n• Contacto: ';
       if (key === 'enterprise') return 'Hola BIKEGRID. Operamos 3 o más sucursales y nos interesa el *Plan Enterprise* (plan corporativo consolidado).\n• Marca / empresa: \n• Cantidad de locales y comunas: \n• Contacto: ';
       return `Hola BIKEGRID. Me interesa el *${p.name}* (${p.price()}).\n• ${key === 'guia' ? 'Nombre / escuela' : 'Nombre del negocio'}: \n• Comuna: \n• ${key === 'guia' ? 'Zonas donde guío' : 'Categoría (tienda, taller, shuttle…)'}: `;
@@ -5068,6 +5220,7 @@
       pro: () => goToBusinessForm(true),
       auspicio: () => toast('Escríbenos para auspicios: pronto habilitamos el contacto directo'),
       enterprise: () => openClaim(null, '3'),
+      otros: () => { toast('El WhatsApp de BIKEGRID todavía no está en la configuración. Mientras tanto, registra el negocio con el formulario.'); goToBusinessForm(false); },
     };
     document.addEventListener('click', (e) => {
       const b = e.target.closest('[data-plan]');
@@ -5201,14 +5354,7 @@
 
     function socialBlock(p) {
       if (!hasDigitalPlan(p)) {
-        return `
-        <div class="social-locked mt-4 rounded-xl p-3.5 ring-1 ring-sand-300" aria-label="Redes sociales no verificadas">
-          <div class="grid grid-cols-2 gap-2 opacity-80" aria-hidden="true">
-            <span class="ghost"><i class="i i-lock" aria-hidden="true"></i> <i class="i i-globe" aria-hidden="true"></i> Sitio web</span><span class="ghost"><i class="i i-lock" aria-hidden="true"></i> <i class="i i-instagram" aria-hidden="true"></i> Instagram</span>
-          </div>
-          <p class="mt-2.5 text-sm font-semibold text-soil-700"><i class="i i-lock" aria-hidden="true"></i> Redes sociales y catálogo web no verificados.</p>
-          <button type="button" data-claim="${esc(p.id)}" class="mt-1 text-left text-xs font-semibold text-soil-600 underline decoration-ochre-500/60 underline-offset-4 hover:text-soil-950">¿Eres el dueño? Vincula tu Instagram y Web activando tu Ficha Pro</button>
-        </div>`;
+        return `<p class="mt-4 text-sm"><button type="button" data-claim="${esc(p.id)}" class="font-semibold text-moss-700 underline underline-offset-2 hover:text-moss-600">¿Es tu negocio? Reclámalo gratis</button></p>`;
       }
       loadSocial(p);
       if (!p.socialLoaded) return `<div class="mt-4 h-24 animate-pulse rounded-xl bg-sand-200" aria-label="Cargando redes"></div>`;
