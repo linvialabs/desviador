@@ -31,6 +31,8 @@ La portada le dice al ciclista dónde encontrar tienda, taller o cerro, y a la t
 
 Navegación visible: Mapa · Estado de cerros · Empleos · Para tiendas. El nombre del listado es **Directorio completo**. El botón del mapa se llama **Urgencia**.
 
+Si enciendes `navExtendida`, «Arma tu salida» sigue oculto mientras `planificador` esté en `false`, y el enlace Noticias del menú sigue oculto mientras `noticias` esté en `false`. Cada botón lleva su propio `data-feature`.
+
 Para tiendas hay dos planes a la vista: Gratis y Pro a **$19.990/mes** (el mismo precio que ya tenía el plan). Segundo local, Enterprise, Guía PRO y auspicios quedan en "Otros planes". El formulario de registro pide nombre, tipo, comuna, WhatsApp, marcas y web o Instagram. El pin se ubica en el centro de la comuna; si la comuna no está en la lista, se pide marcar el mapa.
 
 El WhatsApp de una ficha se abre directo. El correo queda solo para "Guardar spot". El clic sigue yendo a `eventos_ficha`.
